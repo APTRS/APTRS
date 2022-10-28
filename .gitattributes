@@ -1,5 +1,6 @@
 
-./static/ckeditor/* linguist-vendored
+* linguist-vendored
 
 *.js linguist-vendored=false
 *.py linguist-vendored=false
+*.html linguist-vendored=false
