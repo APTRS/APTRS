@@ -1,0 +1,63 @@
+{% load static %}
+<html>
+<head>
+  
+<style>
+    .reporttitlepage{
+      
+      height: 1320px;
+      margin: 50px;
+    }
+   .reporttitle {
+       
+        font-size: 70px;
+        text-align: center;
+        margin-top: 165px;
+        font-family: Calibri;
+        font-weight: 600;
+        font-size:90px;
+        padding: 30px;
+      }
+    
+   
+    .imagelogo {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+ 
+    body {
+        /* The image used */
+        background-image: url("https://i.ibb.co/xLBbrkz/BG.jpg");
+      
+        /* Full height */
+        height: 100%;
+      
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+<div class="reporttitlepage">
+    <!-- HTML Content -->
+<br><br><br><br><br><br>
+   <p class="reporttitle">{{project.projecttype}} Report Of {{project.name}} For {{project.companyname.name}} </p>
+   <img src="{{project.companyname.img.path}}" class="imagelogo">
+    <div onload="substitutePdfVariables()">
+      
+   
+</div> 
+<header>
+ 
+
+</body>
+</html>

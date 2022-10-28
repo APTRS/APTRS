@@ -1,0 +1,170 @@
+{% load static %}
+{% include 'Header.html' %}
+      
+        {% csrf_token %}
+        <div class="bootstrap-dark">
+            <div class="dashboard-content">
+                <div class="row">
+                    <div class="col">
+                        
+                        <div class="container">
+                      
+                    </div>
+                       <br>
+
+                        <div>
+   
+                            <div>
+
+
+
+
+                                
+                                <div class="card">
+                                    
+
+<h4 class="card-header d-flex justify-content-between align-items-center text-white">
+  <div>
+    Setting
+  </div>
+  <a role="button" class="btn btn-primary" href="/accounts/add">Add New</a>
+</h4>
+									
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead class="">
+                                                    <tr class="border-0">
+                                                        <th class="border-0 text-white">#</th>
+                                                        <th class="border-0 text-white">User Name</th>
+                                                        <th class="border-0 text-white">Email</th>
+                                                        <th class="border-0 text-white">Number</th>
+                                                        <th class="border-0 text-white">Company</th>
+                                                        <th class="border-0 text-white">Edit</th>
+                                                        <th class="border-0 text-white">Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+
+                                                {% for users in profile %}
+                                                <tr class="btnDelete" data-id={{users.user.id}}>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{users.user.username}}</td>
+                                                    <td>{{users.user.email}}</td>
+                                                    <td>{{users.number}}</td>
+                                                    <td>{{users.company}}</td>
+                                                    <td><a href="/accounts/profile/{{users.user.id}}/"><button type="button" class="btn btn-primary">Edit</button> </a></td>
+                                                    <td><button type="button" class="btn btn-danger btnDelete" href="">Delete</button></td>
+                                                </tr>
+                                                {% endfor %}
+
+
+
+
+                                                   
+                                                   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                </div>
+                                <div class="modal-body">Are you sure you want to DELETE?</div>
+                                <div class="modal-footer">
+                                  <button type="button" id="btnDelteYes" class="btn btn-secondary">Yes</button>
+                                  <button type="button" class="btn btn-primary" data-dismiss="modal" >No</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div class="footer bootstrap-dark">
+                <div class="container-fluid bootstrap-dark">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            Copyright © 2022 APTRS. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end footer -->
+            <!-- ============================================================== -->
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <script src="{% static "vendor/jquery/jquery-3.3.1.min.js" %}"></script>
+    <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        $('table').DataTable({
+            
+            
+            
+            dom: '<"toolbar">frtip',
+            "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": true,
+          "responsive": true,
+          "bDestroy": true,
+          paging: true,
+          searching: true
+        });
+        
+    });
+        </script>
+    
+        <script>
+            $('button.btnDelete').on('click', function(e) {
+                e.preventDefault();
+                var id = $(this).closest('tr').data('id');
+                $('#myModal').data('id', id).modal('show');
+            });
+        
+        $('#btnDelteYes').click(function() {
+            var id = $('#myModal').data('id');
+            var xhr = new XMLHttpRequest()
+            
+            xhr.open('GET', '/accounts/delete/'+id, true);
+           
+            xhr.onload = function() { //Call a function when the state changes.
+        
+                if (xhr.status == 200) {
+                  
+                    $('[data-id=' + id + ']').remove();
+                    $('#myModal').modal('hide');
+                        
+                    }
+                }
+                xhr.send();
+            })
+            
+        
+        ; </script>
+</body>
+ 
+</html>

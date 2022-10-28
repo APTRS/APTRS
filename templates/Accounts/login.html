@@ -1,0 +1,81 @@
+{% load static %}
+{% include 'Header.html' %}
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+   
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        {% csrf_token %}
+        <div class="bootstrap-dark">
+            <div class="splash-container">
+
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- valifation types -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card ">
+                            <h5 class="card-header text-white">APTRS Login</h5>
+                            <div class="card-body">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input class="form-control form-control-lg" name="username"id="username" type="text" placeholder="Username" autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control form-control-lg" id="password" name="password"type="password" placeholder="Password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox"><span class="custom-control-label">Remember Me</span>
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end valifation types -->
+                    <!-- ============================================================== -->
+                </div>
+                
+
+
+                       
+                    <!-- ============================================================== -->
+                    <!-- end sidenavbar -->
+                    <!-- ============================================================== -->
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div class="footer bootstrap-dark">
+                <div class="container-fluid bootstrap-dark">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            Copyright © 2022 APTRS. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end footer -->
+            <!-- ============================================================== -->
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+  
+</body>
+ 
+</html>

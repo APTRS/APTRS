@@ -1,0 +1,111 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>APTRS - Automated Penetration Testing Reporting System</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static "vendor/bootstrap/css/bootstrap.min.css" %}">
+    <link href="{% static "/vendor/fonts/circular-std/style.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "/libs/css/style.css" %}">
+    
+    
+  
+    <link rel="stylesheet" href="{% static "/vendor/fonts/fontawesome/css/fontawesome-all.css" %}">
+    <link rel="stylesheet" href="{% static "/vendor/datepicker/tempusdominus-bootstrap-4.css" %}" />
+    <link rel="stylesheet" href="{% static "/vendor/inputmask/css/inputmask.css" %}" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@forevolve/bootstrap-dark@1.0.0/dist/css/bootstrap-dark.min.css" />
+<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+
+
+    <style>
+        .bs-example{
+    	margin: 20px;
+    }
+    img.cke_widget_element {
+        height: 50px !important;
+  width: 50% !important;
+    }
+
+.es-list {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #d1d1d1;
+    display: none;
+    z-index: 1000;
+    background: BLACK;
+    max-height: 160px;
+    overflow-y: auto;
+    -moz-box-shadow: 0 2px 3px #ccc;
+    -webkit-box-shadow: 0 2px 3px #ccc;
+    box-shadow: 0 2px 3px #ccc;
+}
+.es-list li.selected {
+    background: lightblue;
+    color: black;
+}
+input.es-input {
+    padding-right: 20px!important;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG2YAABzjgAA4DIAAIM2AAB5CAAAxgwAADT6AAAgbL5TJ5gAAABGSURBVHjaYvz//z8DOYCJgUzA0tnZidPK8vJyRpw24pLEpwnuVHRFhDQxMDAwMPz//x+OOzo6/iPz8WFGuocqAAAA//8DAD/sORHYg7kaAAAAAElFTkSuQmCC) right center no-repeat;
+    width: 100%;
+    background-color: black;
+    border: 1px solid #d2d2e4;
+    height: 35px;
+}
+    </style>
+</head>
+
+<body class="bootstrap-dark">
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper bootstrap-dark">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header bg-black">
+            <nav class="navbar navbar-expand-lg bg-black fixed-top">
+                <a class="navbar-brand" href="/">APTRS</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-right-top">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/">Project</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/company">Company</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/company/customer">Customer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/vulnerability">Vulnerability Database</a>
+                        </li>
+                       
+                       
+                       
+                        <li class="nav-item dropdown nav-user">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{request.user.userprofile.profilepic.url}}" alt="" class="user-avatar-md rounded-circle"></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
+                                <div class="nav-user-info">
+                                    <h5 class="mb-0 text-white nav-user-name">
+                                        {{request.user.username}}
+                                    </h5>
+                                    
+                                </div>
+                                <a class="dropdown-item text-white" href="/accounts/profile/{{request.user.id}}/"><i class="fas fa-user mr-2"></i>Account</a>
+                                <a class="dropdown-item text-white" href="/accounts/setting"><i class="fas fa-cog mr-2"></i>Setting</a>
+                                <a class="dropdown-item text-white" href="/accounts/logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>

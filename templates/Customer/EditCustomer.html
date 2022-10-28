@@ -1,0 +1,116 @@
+{% load static %}
+{% include 'Header.html' %}
+
+
+        {% csrf_token %}
+        <div class="bootstrap-dark">
+            <div class="dashboard-content">
+
+                <div class="row">
+                   
+
+                    
+                    <!-- ============================================================== -->
+                    <!-- valifation types -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header text-white">Edit Customer</h5>
+                            <div class="card-body">
+                                
+                                {% for message in messages %}
+                                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    
+                                    {{message}} 
+                                    
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  {% endfor %}
+
+                                <form id="validationform" method="POST", action="/company/customer/edit">{% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Company</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                        <select class="form-control text-white" id="input-select" data-live-search="true" name="company">
+                                            {% for companies in company %}
+                                            <option>{{companies.name}}</option>
+                                            {% endfor %}
+                                            <option selected>{{customer.company.name}}</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Name</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            <input type="hidden" required="" name="customer" value="{{customer.pk}}">
+                                            <input type="text" required="" name="name" placeholder="Type something" class="form-control" value="{{customer.name}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Name</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            
+                                            <input type="text" required="" name="email" placeholder="Type something" class="form-control" value="{{customer.email}}">
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Number</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            
+                                            <input type="text" required="" name="Number" placeholder="Type something" class="form-control" value="{{customer.phoneNumber}}">
+                                        </div>
+                                    </div>
+                                    
+
+                             
+
+                                    <div class="form-group row text-right">
+                                        <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                            <input type="submit" class="btn btn-space btn-primary" value="Submit">
+                                            
+                                            
+                                            <a href="/company/customer/"><button type="button" class="btn btn-space btn-secondary">Cancel</button> </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+
+
+                       
+                   
+                </div>
+            </div>
+          
+            
+            <div class="footer bootstrap-dark">
+                <div class="container-fluid bootstrap-dark">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            Copyright © 2022 APTRS. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+   
+
+    <script src="{% static "vendor/jquery/jquery-3.3.1.min.js" %}"></script>
+    <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
+ 
+</body>
+ 
+</html>

@@ -1,0 +1,176 @@
+{% load static %}
+{% include 'Header.html' %}
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+   
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        {% csrf_token %}
+        <div class="bootstrap-dark">
+            <div class="dashboard-content">
+
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- valifation types -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header text-white">Add New Project</h5>
+                            <div class="card-body">
+                                <form id="validationform" method="POST", action="/project/add">{% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Company</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                        <select class="form-control text-white" id="input-select" data-live-search="true" name="company">
+                                            {% for companies in company %}
+                                            <option>{{companies.name}}</option>
+                                            {% endfor %}
+                                            
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Name</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            
+                                            <input type="text" required="" name="projectname" placeholder="Application Name" class="form-control" >
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Description</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            
+                                            <input type="text" required="" name="projectdescription" placeholder="Type something" class="form-control" >
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Scope URL</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            
+                                            <input type="text" required="" name="scope" placeholder="https://google.com" class="form-control" >
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Type</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                        <select class="form-control text-white form-select" id="input-select" data-live-search="true" name="projecttype">
+                                            
+                                            <option>Web Application Penetration Testing</option>
+                                            <option>Android Application Penetration Testing</option>
+                                            <option>Mobile Application Penetration Testing</option>
+                                            <option>Thick Client Application Penetration Testing</option>
+                                           
+                                            
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                               
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Start Date</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+
+
+                                            <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" name="startname" data-target="#datetimepicker4" value=""/>
+                                                <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            
+                                        </div>
+
+
+
+
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">End Date</label>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+
+
+                                            <div class="input-group date" id="datetimepicker5" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" name="enddate" data-target="#datetimepicker5" value=""/>
+                                                <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                             
+
+                                    <div class="form-group row text-right">
+                                        <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                            <input type="submit" class="btn btn-space btn-primary" value="Submit">
+                                            
+                                            
+                                            <a href="/"><button type="button" class="btn btn-space btn-secondary">Cancel</button> </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end valifation types -->
+                    <!-- ============================================================== -->
+                </div>
+                
+
+
+                       
+                    <!-- ============================================================== -->
+                    <!-- end sidenavbar -->
+                    <!-- ============================================================== -->
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div class="footer bootstrap-dark">
+                <div class="container-fluid bootstrap-dark">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            Copyright © 2022 APTRS. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end footer -->
+            <!-- ============================================================== -->
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <script src="{% static "vendor/jquery/jquery-3.3.1.min.js" %}"></script>
+    <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
+    
+<script src="{% static "vendor/datepicker/moment.js" %}"></script>
+<script src="{% static "vendor/datepicker/tempusdominus-bootstrap-4.js" %}"></script>
+<script src="{% static "vendor/datepicker/datepicker.js" %}"></script>
+  
+</body>
+ 
+</html>

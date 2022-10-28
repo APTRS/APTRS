@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:outline="http://wkhtmltopdf.org/outline"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <xsl:output doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+                doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+                indent="yes"/>
+    <xsl:template match="outline:outline">
+        <html>
+            <head>
+                <title>Table of Contents</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+                <style>
+                    @import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
+                    p {
+                    text-align: center;
+                    font-size: 60px;
+                    margin-top: 305px;
+                    margin-bottom: 305px;
+                    padding-right: 60px;
+                    margin-left: 50px;
+                    padding-top: 290px;
+                    color: #ffa500;
+                    }
+                    
+                    
+                 
+                    
+                    h1,
+                    h2,
+                    h3,
+                    h4,
+                    h5,
+                    h6{
+                    font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                    font-weight: bold;
+                    
+                    color: inherit;
+                    }
+             .bodyclass{
+                
+             }
+            .topgreen{
+                width:25%;height:20px;background:#52C776;
+                margin-top: -250px;
+                margin-left: 45px;
+             }
+             .topyellow{
+                width:25%;height:20px;background:#F4D13B;
+                margin-top: -30px;
+             }
+             .topblue{
+                width:25%;height:20px;background:#9BDCFF;
+                margin-top: -30px;
+                margin-left: 670px;
+                margin-bottom: 90px;
+             }
+
+             .bottomgreen{
+                width:25%;height:20px;background:#52C776;
+                margin-left: 45px;
+                margin-top: 500px;
+             }
+
+
+
+            .bottomyellow{
+                width:25%;height:20px;background:#F4D13B;
+                margin-top: -30px;
+            }
+
+
+            .bottomblue{
+
+                width:25%;height:20px;background:#9BDCFF;
+                margin-left: 670px;
+                margin-top: -30px;
+            }
+
+
+             #menu ul{
+              list-style: none;
+            }
+            #menu li{
+              display: inline;
+            }
+           
+          
+
+            .pagenumber{
+                color:#ffa500;
+                font-size:30px;
+                font-family:Times New Roman;
+                font-weight:400;
+                
+                padding-right: 70px;
+                padding-left: 270px;
+                padding-top: -45px;
+                
+                
+            }
+            .toctitle{
+                
+                font-size:30px;
+                font-family:Times New Roman;
+                font-weight:400;
+                
+                magrin-right: 570px;
+                padding-top: -45px;
+              
+                
+            }
+            
+                </style>
+            </head>
+            <body class="bodyclass">
+              
+                <p style=" color: #ffa500;">Table of Contents</p>
+                
+               <div>
+                <hr class="topgreen"></hr>
+                <hr class="topyellow"></hr>
+                <hr class="topblue"></hr>
+               </div>
+                <ul class="leaders">
+                    <xsl:apply-templates select="outline:item/outline:item"/>
+                </ul>
+                <div>
+                    <hr class="bottomgreen"></hr>
+                    <hr class="bottomyellow"></hr>
+                    <hr class="bottomblue"></hr>
+                   </div>
+    
+            </body>
+          
+        </html>
+    </xsl:template>
+    <xsl:template match="outline:item">
+
+      
+              <span class="pagenumber"><xsl:value-of select="@page"/></span>
+              <span class="toctitle"><xsl:value-of select="@title"/></span>
+             
+          
+              
+       
+        
+            <a>
+            <xsl:if test="@link">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="@link"/>
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@backLink">
+                <xsl:attribute name="name">
+                    <xsl:value-of select="@backLink"/>
+                </xsl:attribute>
+            </xsl:if></a>
+            <div id="menu">
+
+          
+      </div>
+      
+      
+    </xsl:template>
+</xsl:stylesheet>

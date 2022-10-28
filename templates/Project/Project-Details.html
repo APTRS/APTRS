@@ -1,0 +1,362 @@
+{% load static %}
+{% include 'Header.html' %}
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+   
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        {% csrf_token %}
+        <div class="bootstrap-dark">
+            <div class="dashboard-content">
+
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- valifation types -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+
+
+
+
+                        <div class="card">
+                          
+                            <div class="card-header d-flex">
+                                <h4 class="card-header-title ">{{project.name}}</h4>
+                                <div class="toolbar card-toolbar-tabs  ml-auto">
+                                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="Projectdetail-tab" data-toggle="pill" href="#Projectdetail" role="tab" aria-controls="Projectdetail" aria-selected="true">Project</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="Vulnerability-tab" data-toggle="pill" href="#Vulnerability" role="tab" aria-controls="Vulnerability" aria-selected="false">Vulnerability</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="Report-tab" data-toggle="pill" href="#Report" role="tab" aria-controls="Report" aria-selected="false">Reports</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content mb-3" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="Projectdetail" role="tabpanel" aria-labelledby="Projectdetail-tab">
+                                        {% for message in messages %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                          
+                                          {{message}} 
+                                          
+                                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        {% endfor %}
+
+                                        <form id="validationform" method="POST", action="/project/edit/{{project.id}}/">{% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Company</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                <select class="form-control text-white" disabled id="input-select" data-live-search="true" name="company">
+                                                   
+                                                    <option>{{project.companyname.name}}</option>
+                                                  
+                                                    
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                            <div class="form-group row">
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Name</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    
+                                                    <input type="text" required="" name="projectname" placeholder="Application Name" class="form-control" value="{{project.name}}">
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Description</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    
+                                                    <input type="text" required="" name="projectdescription" placeholder="Type something" class="form-control" value="{{project.description}}">
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Scope URL</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    
+                                                    <input type="text" required="" name="scope" placeholder="https://google.com" class="form-control" value="{{project.scope}}">
+                                                </div>
+                                            </div>
+        
+        
+                                            <div class="form-group row">
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Type</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                <select class="form-control text-white form-select" id="input-select" data-live-search="true" name="projecttype">
+                                                    <option select>{{project.projecttype}}</option>
+                                                    <option>Web Application Penetration Testing</option>
+                                                    <option>Android Application Penetration Testing</option>
+                                                    <option>Mobile Application Penetration Testing</option>
+                                                    <option>Thick Client Application Penetration Testing</option>
+                                                   
+                                                    
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+        
+        
+                                       
+                                            
+                                            <div class="form-group row">
+                                               
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Start Date</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" name="startname" data-target="#datetimepicker4" value="{{project.startdate|date:'d-m-Y'}}"/>
+                                                    <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                    </div>
+                                                </div>
+                                                </div>
+
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">End Date</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+
+                                                 
+
+
+
+                                                <div class="input-group date" id="datetimepicker5" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" name="enddate" data-target="#datetimepicker5" value="{{project.enddate|date:'d-m-Y'}}"/>
+                                                    <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                
+                                            </div>
+        
+                                     
+        
+                                            <div class="form-group row text-right">
+                                                <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                                    <input type="submit" class="btn btn-space btn-primary" value="Submit">
+                                                    
+                                                    
+                                                    <a href="/"><button type="button" class="btn btn-space btn-secondary">Cancel</button> </a>
+                                                </div>
+                                            </div>
+                                        </form>
+
+
+
+
+
+                                    </div>
+                                    <div class="tab-pane fade" id="Vulnerability" role="tabpanel" aria-labelledby="Vulnerability-tab">
+                                        <div>
+                                        <a role="button" class="btn btn-primary float-right" href="/project/newvulnerability/{{project.id}}/">Add New</a>
+                                    </div><br>
+                                        
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class="">
+                                                <tr class="border-0">
+                                                    <th class="border-0 text-white">#</th>
+                                                    <th class="border-0 text-white">Vulnerability Name</th>
+                                                    <th class="border-0 text-white">Severity</th>
+                                                    <th class="border-0 text-white">Status</th>
+                                                    <th class="border-0 text-white">Edit</th>
+                                                    <th class="border-0 text-white">Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+
+                                                {% for vulnerability in vulnerability %}
+                                                <tr class="btnDelete" data-id={{vulnerability.id}}>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{vulnerability.vulnerabilityname}}</td>
+                                                   
+                                                    {% if vulnerability.vulnerabilityseverity == "Critical" %}
+                                                    
+                                                    <td><button type="button" class="btn text-white" style="background-color:#FF491C;" href="">Critical</button></td>
+                                                    {% elif vulnerability.vulnerabilityseverity == "High" %}
+                                                    <td><button type="button" class="btn text-white" style="background-color:#F66E09;" href="">High</button></td>
+
+
+                                                    {% elif vulnerability.vulnerabilityseverity == "Medium" %}
+                                                    <td><button type="button" class="btn text-white"style="background-color:#FBBC02" href="">Medium</button></td>
+                                                    
+                                                    {% elif vulnerability.vulnerabilityseverity == "Low" %}
+                                                    <td><button type="button" class="btn text-white"style="background-color:#20B803" href="">Low</button></td>
+
+                                                    {% elif vulnerability.vulnerabilityseverity == "Informational" %}
+                                                    <td><button type="button" class="btn text-white"style="background-color:#3399FF" href="">Informational</button></td>
+
+
+
+                                                    {% endif %}
+                                                    <td>{{vulnerability.status}}</td>
+                                                    <td><a href="/project/editvulnerability/{{vulnerability.id}}"><button type="button" class="btn btn-primary">Edit</button> </a></td>
+                                                <td><button type="button" class="btn btn-danger btnDelete" href="">Delete</button></td>
+                                            </tr>
+
+                                                {% endfor %}
+
+
+                                           
+
+
+
+
+                                               
+                                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    </div>
+                                    <div class="tab-pane fade" id="Report" role="tabpanel" aria-labelledby="Report-tab">
+                                        <a href="/project/report/pdf/{{project.id}}/" class="btn btn-outline-success" target="_blank"><i class="fas fa-file-pdf"></i> PDF Report</a>
+                                        </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end valifation types -->
+                    <!-- ============================================================== -->
+                </div>
+                
+
+
+                       
+                    <!-- ============================================================== -->
+                    <!-- end sidenavbar -->
+                    <!-- ============================================================== -->
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">Are you sure you want to DELETE?</div>
+                    <div class="modal-footer">
+                      <button type="button" id="btnDelteYes" class="btn btn-secondary">Yes</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal" >No</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div class="footer bootstrap-dark">
+                <div class="container-fluid bootstrap-dark">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            Copyright © 2022 APTRS. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end footer -->
+            <!-- ============================================================== -->
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <script src="{% static "vendor/jquery/jquery-3.3.1.min.js" %}"></script>
+    <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+  
+<script src="{% static "vendor/datepicker/moment.js" %}"></script>
+<script src="{% static "vendor/datepicker/tempusdominus-bootstrap-4.js" %}"></script>
+<script src="{% static "vendor/datepicker/datepicker.js" %}"></script>
+<script>
+    $(document).ready(function () {
+    $('table').DataTable({
+        
+        
+        dom: '<"toolbar">frtip',
+        "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+    });
+    
+});
+    </script>
+    <script>
+        $('button.btnDelete').on('click', function(e) {
+            e.preventDefault();
+            var id = $(this).closest('tr').data('id');
+            $('#myModal').data('id', id).modal('show');
+        });
+    
+    $('#btnDelteYes').click(function() {
+        var id = $('#myModal').data('id');
+        var xhr = new XMLHttpRequest()
+        
+        xhr.open('GET', '/project/vulnerability/delete/'+ id +'/', true);
+       
+        xhr.onload = function() { //Call a function when the state changes.
+    
+            if (xhr.status == 200) {
+              
+                $('[data-id=' + id + ']').remove();
+                $('#myModal').modal('hide');
+                    
+                }
+            }
+            xhr.send();
+        })
+        
+    
+    ; </script>
+
+  
+</body>
+ 
+</html>
