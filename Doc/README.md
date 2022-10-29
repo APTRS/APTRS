@@ -1,7 +1,7 @@
 # APTRS
-<p align="center">
-  <img src="https://i.ibb.co/JQdKWHL/APTRS.png" />
-</p>
+
+![APTRS](https://i.ibb.co/JQdKWHL/APTRS.png)
+
 APTRS (Automated Penetration Testing Reporting System) is an automated reporting tool in Python and Django. The tool allows Penetration testers to create a report directly without using the Traditional Docx file. It also provides an approach to keeping track of the projects and vulnerabilities.
 
 ### Sponsor
@@ -10,7 +10,6 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 ### Team 
 ##### [Sourav Kalal](https://twitter.com/)
 
-<br></br>
 ### Documentation
 - #### [Prerequisites](Prerequisites.md)
 - #### [Installation](installation.md)
