@@ -5,10 +5,10 @@ command -v python3 > /dev/null 2>&1 || { echo >&2 "Python3 is not installed yet"
 python_version="$(python3 --version 2>&1 | awk '{print $2}')"
 py_major=$(echo "$python_version" | cut -d'.' -f1)
 py_minor=$(echo "$python_version" | cut -d'.' -f2)
-if [ "$py_major" -eq "3" ] && [ "$py_minor" -gt "6" ]; then
+if [ "$py_major" -eq "3" ] && [ "$py_minor" -gt "8" ]; then
     echo "Python ${python_version} is installed"
 else
-    echo "APTRS require Python 3.6."
+    echo "APTRS require Python 3.8."
     exit 1
 fi
 
@@ -43,7 +43,3 @@ if ! [ $? -eq 0 ]; then
 fi
 
 echo 'Installation Complete'
-
-
-
- #.\win\Scripts\waitress-serve.exe --listen=0.0.0.0:8000 --threads=10 --channel-timeout=3600 APTRS.wsgi:application
