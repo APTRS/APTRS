@@ -8,14 +8,15 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
-[![Python Version](https://img.shields.io/badge/Python-3.6-green)](https://www.python.org/downloads/release/python-3810/)
+[![Python Version](https://img.shields.io/badge/Python-3.8-brightgreen)](https://www.python.org/downloads/release/python-3810/)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
-![Twitter Follow](https://img.shields.io/twitter/follow/ano_f_?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/ano_f_)
 
 
 ## Prerequisites
 
-- Python 3.6 and above (https://www.python.org/downloads/release/python-3810/)
+- Python 3.8 and above (https://www.python.org/downloads/release/python-3810/)
 - wkhtmltopdf 0.12.6 and above (https://wkhtmltopdf.org/downloads.html)
 
 
@@ -83,3 +84,13 @@ Linux
 
 ### Project Add Vulnerability
 ![App Screenshot](/Doc/Project%20New%20Vulnerability.png)
+
+
+## Roadmap
+
+- Improving Report Quality
+- Bulk Instance Upload
+- [Pentest Mapper](https://portswigger.net/bappstore/af490ae7e79546fa81a28d8d0b90874e) Burp Suite Extension Integration
+- Allowing Multiple Project Scope
+- Improving Code, Error handling and Security
+- Docker Support
