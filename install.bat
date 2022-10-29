@@ -5,7 +5,7 @@ SET var=%%F
 )
 ECHO %var%
 if "%var%" GEQ "Python 3.8" (
-    echo Python 3.6 and above found
+    echo Python 3.8 and above found
   ) else (
     echo "%var%"
     echo APTRS require Python 3.8+ .
