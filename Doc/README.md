@@ -8,7 +8,7 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
 
 ### Team 
-##### [Sourav Kalal](https://twitter.com/)
+##### [Sourav Kalal](https://twitter.com/ano_f_)
 
 ### Documentation
 - #### [Prerequisites](Prerequisites.md)
