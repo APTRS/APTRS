@@ -9,7 +9,7 @@ The same implice on the customer as well. All the customer add for any company w
 
 If you acess the `http://127.0.0.1:8000/accounts/setting` you are see all the users in the table. You can either delete, edit or add new new from the same page.
 
-![View User](image/view%20User.png)
+![View User](image/View%20User.png)
 
 ## Edit/Add User 
 
