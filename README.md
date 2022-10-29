@@ -63,3 +63,23 @@ Linux
 - Dynamicly add POC, Description and Recommendations
 - Manage Customers and Comapany
 
+
+## Screenshots
+
+### Project
+![App Screenshot](/Doc/Project.png)
+
+
+### View Project
+![App Screenshot](/Doc/View%20Project.png)
+
+
+### Project Vulnerability
+![App Screenshot](/Doc/Project%20Vulnerability.png)
+
+### Project Report
+![App Screenshot](/Doc/Project%20Report.png)
+
+
+### Project Add Vulnerability
+![App Screenshot](/Doc/Project%20New%20Vulnerability.png)
