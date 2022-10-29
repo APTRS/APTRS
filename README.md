@@ -56,7 +56,7 @@ Linux
 
 
 ## Features
-
+- [Demo Report](/Doc/Report/Web%20Application%20Penetration%20Testing%20Report%20of%20Juice%20Shop.pdf)
 - Managing Vulnerabilities
 - Manage All Projects in one place
 - Create a Vulnerability Database and avoid writing the same description and recommendations again
@@ -68,22 +68,22 @@ Linux
 ## Screenshots
 
 ### Project
-![App Screenshot](/Doc/Project.png)
+![App Screenshot](/Doc/image/Project.png)
 
 
 ### View Project
-![App Screenshot](/Doc/View%20Project.png)
+![App Screenshot](/Doc/image/View%20Project.png)
 
 
 ### Project Vulnerability
-![App Screenshot](/Doc/Project%20Vulnerability.png)
+![App Screenshot](/Doc/image/Project%20Vulnerability.png)
 
 ### Project Report
-![App Screenshot](/Doc/Project%20Report.png)
+![App Screenshot](/Doc/image/Project%20Report.png)
 
 
 ### Project Add Vulnerability
-![App Screenshot](/Doc/Project%20New%20Vulnerability.png)
+![App Screenshot](/Doc/image/Project%20New%20Vulnerability.png)
 
 
 ## Roadmap
