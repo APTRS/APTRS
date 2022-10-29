@@ -48,5 +48,4 @@ When you click on the edit/add button you will be able to add details like `vuln
 
 ### Report
 
-Last you have option to download the PDF report. You can view the demo report from [here](/Report/Web%20Application%20Penetration%20Testing%20Report%20of%20Juice%20Shop.pdf)
-
+Last you have option to download the PDF report. You can view the demo report from [here](https://github.com/Anof-cyber/APTRS/blob/main/Doc/Report/Web%20Application%20Penetration%20Testing%20Report%20of%20Juice%20Shop.pdf)
