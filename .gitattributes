@@ -1,5 +1,5 @@
 static/ckeditor/* linguist-vendored
 *.css linguist-vendored
 Doc/* linguist-documentation
-*.html linguist-vendored
-static/ckeditor/*.html linguist-vendored
+#*.html linguist-vendored
+static/*.html linguist-vendored
