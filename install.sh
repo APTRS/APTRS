@@ -5,7 +5,7 @@ command -v python3 > /dev/null 2>&1 || { echo >&2 "Python3 is not installed yet"
 python_version="$(python3 --version 2>&1 | awk '{print $2}')"
 py_major=$(echo "$python_version" | cut -d'.' -f1)
 py_minor=$(echo "$python_version" | cut -d'.' -f2)
-if [ "$py_major" -eq "3" ] && [ "$py_minor" -gt "8" ]; then
+if [ "$py_major" -eq "3" ] && [ "$py_minor" -gt "7" ]; then
     echo "Python ${python_version} is installed"
 else
     echo "APTRS require Python 3.8."
