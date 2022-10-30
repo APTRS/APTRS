@@ -1,2 +1,3 @@
 static/ckeditor/* linguist-vendored
 *.css linguist-vendored
+static/ckeditor/*.html linguist-vendored
