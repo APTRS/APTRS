@@ -40,5 +40,5 @@ if "%var%" GEQ "Python 3.8" (
   echo Installation Complete
   exit /b 0
 ) || (
-  echo APTRS require Python 3.6.
+  echo APTRS require Python 3.8.
 )
