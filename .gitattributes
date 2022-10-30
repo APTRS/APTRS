@@ -2,5 +2,4 @@ static/ckeditor/* linguist-vendored
 static/* linguist-vendored
 *.css linguist-vendored
 /Doc/* linguist-documentation
-#*.html linguist-language=Python
 /static/*.html linguist-vendored
