@@ -1,6 +1,2 @@
 static/ckeditor/* linguist-vendored
-static/* linguist-vendored
-*.css linguist-detectable=false
-*.js linguist-vendored=false
-*.py linguist-vendored=false
-*.html linguist-vendored=false
+*.css linguist-vendored
