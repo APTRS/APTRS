@@ -101,3 +101,6 @@ Linux
 - Allowing Multiple Project Scope
 - Improving Code, Error handling and Security
 - Docker Support
+- Implementing Rest API
+- Project and Project Retest Handler
+- Access Control and Authorization
