@@ -4,3 +4,5 @@ static/* linguist-vendored
 /Doc/* linguist-documentation
 /static/*.html linguist-detectable=false
 *.html linguist-language=Python
+*.sh linguist-language=Shell
+
