@@ -9,6 +9,7 @@
     sudo apt install python3-dev python3-venv python3-pip build-essential wkhtmltopdf
     ```
   * If you get error while genetrating PDF report uninstall the `wkhtmltopdf` with `sudo apt remove -y wkhtmltopdf` and install it again manually using debian file or according to your system [Dowload for here](https://wkhtmltopdf.org/downloads.html).
+  * If you are using kali linux 64 bit install this `wkhtmltopdf`  https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
   * APTRS requires `wkhtmltopdf` version 0.12.6
 
 * **Windows**
