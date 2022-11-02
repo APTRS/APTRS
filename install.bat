@@ -34,6 +34,8 @@ if "%var%" GEQ "Python 3.8" (
 
   echo Installing Python Requirements
   %venv% -m pip install -r requirements.txt
+  %venv% manage.py makemigrations
+  %venv% migrate
   
 
   echo Download and Install wkhtmltopdf Version 0.12.6 for PDF Report Generation - https://wkhtmltopdf.org/downloads.html
