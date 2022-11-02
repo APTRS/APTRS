@@ -37,7 +37,7 @@ fi
 echo 'Installing Python Requirements'
 python3 -m pip install -r requirements.txt
 python3 manage.py makemigrations
-python3 migrate
+python3 manage.py migrate
 
 wkhtmltopdf -V
 if ! [ $? -eq 0 ]; then
