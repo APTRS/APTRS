@@ -104,3 +104,15 @@ Linux
 - Implementing Rest API
 - Project and Project Retest Handler
 - Access Control and Authorization
+
+
+
+## Authors
+
+- [Sourav Kalal](https://twitter.com/Ano_F_)
+
+## Contributors
+
+<a href = "https://github.com/Anof-cyber/APTRS/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo=Anof-cyber/APTRS"/>
+</a>
