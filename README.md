@@ -13,7 +13,7 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Anof-cyber/APTRS/Django%20CI)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Anof-cyber/aptrs)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
-![Twitter Follow](https://img.shields.io/twitter/follow/ano_f_)
+[![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
 
 
 ## Documentation
