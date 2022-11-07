@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+# Make sure you have gone through the Documentation
+https://anof-cyber.github.io/APTRS/#/
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
