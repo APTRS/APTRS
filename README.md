@@ -68,7 +68,7 @@ Linux
 - Manage All Projects in one place
 - Create a Vulnerability Database and avoid writing the same description and recommendations again
 - Easily Create PDF Reprot
-- Dynamicly add POC, Description and Recommendations
+- Dynamically add POC, Description and Recommendations
 - Manage Customers and Comapany
 
 
@@ -104,7 +104,7 @@ Linux
 - Implementing Rest API
 - Project and Project Retest Handler
 - Access Control and Authorization
-
+- Support Nessus Parsing
 
 
 ## Authors
