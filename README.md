@@ -113,6 +113,8 @@ Linux
 
 ## Contributors
 
+A volunteer is required to improve the project and add features to make it more secure and better. We are looking for Django or Front End developers. You can contact kalalsourav20@gmail.com if you are interested. 
+
 <a href = "https://github.com/Anof-cyber/APTRS/graphs/contributors">
   <img src = "https://contrib.rocks/image?repo=Anof-cyber/APTRS"/>
 </a>
