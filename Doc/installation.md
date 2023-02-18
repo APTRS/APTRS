@@ -6,6 +6,7 @@
 
 !> Please make sure that all the [prerequisites](Prerequisites.md) mentioned are installed first.
 
+!> it is recommended to delete the `db.sqlite3` file and then run the install file.
 
 ## Linux
 ```bash

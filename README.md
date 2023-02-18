@@ -10,15 +10,21 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
 [![Python Version](https://img.shields.io/badge/Python-3.8-brightgreen)](https://www.python.org/downloads/release/python-3810/)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Anof-cyber/APTRS/Django%20CI)
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Anof-cyber/APTRS/django.yml?branch=main)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Anof-cyber/aptrs)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
-![Twitter Follow](https://img.shields.io/twitter/follow/ano_f_)
+[![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
+
+
+## Support
+
+<a href="https://www.buymeacoffee.com/AnoF"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=AnoF&button_colour=FF5F5F&font_colour=ffffff&font_family=Arial&outline_colour=000000&coffee_colour=FFDD00" /></a>
 
 
 ## Documentation
 
-[Documentation](https://anof-cyber.github.io/APTRS/)
+<a href="https://anof-cyber.github.io/APTRS/"><img src="https://i.ibb.co/NLTJ6MR/70686099-3855f780-1c79-11ea-8141-899e39459da2.png" alt="70686099-3855f780-1c79-11ea-8141-899e39459da2" border="0"></a>
+
 
 
 ## Prerequisites
@@ -68,7 +74,7 @@ Linux
 - Manage All Projects in one place
 - Create a Vulnerability Database and avoid writing the same description and recommendations again
 - Easily Create PDF Reprot
-- Dynamicly add POC, Description and Recommendations
+- Dynamically add POC, Description and Recommendations
 - Manage Customers and Comapany
 
 
@@ -104,3 +110,17 @@ Linux
 - Implementing Rest API
 - Project and Project Retest Handler
 - Access Control and Authorization
+- Support Nessus Parsing
+
+
+## Authors
+
+- [Sourav Kalal](https://twitter.com/Ano_F_)
+
+## Contributors
+
+We are seeking a volunteer developer with experience in Django or Front End development to help improve our project by adding more security and features. If you're interested, please reach out to kalalsourav20@gmail.com. For reporting errors or bugs, please use the Github issues feature rather than emailing.
+
+<a href = "https://github.com/Anof-cyber/APTRS/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo=Anof-cyber/APTRS"/>
+</a>
