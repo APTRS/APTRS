@@ -326,27 +326,38 @@ function editvulnerabilitydb(oFormElement){
     function addrowfunction() {
         var url = document.getElementById('newurl').value
         var paramter = document.getElementById('NewParamter').value
+        var project = document.getElementsByName("project")[0].value
+        var csrf = document.getElementsByName("csrfmiddlewaretoken")[0].value
+
+
         
-        var deletebutton = '<button type="button" class="btn btn-danger btnDelete" id="deletebuttonid" onclick="deleterowfunction()" href="">Delete</button>'
         var xhr = new XMLHttpRequest();
         var full_url = document.URL;
         var id = url_array = full_url.split('/')[5]
         //var id = {{ id }}
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "/project/report/addurl/"+id+"/");
+        xmlhttp.open("POST", "/api/project/vulnerability/add/instances/");
         xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.setRequestHeader("X-CSRFToken", csrf);
+
+
         
         xmlhttp.onload  = function(){
             if (xmlhttp.status == 200) {
                 var jsonResponse = JSON.parse(xmlhttp.responseText);
-                var instanceid = jsonResponse.insntaceid
+                var instanceid = jsonResponse[0].id
             var t = $('#editvulninstace').DataTable()
-            t.row.add(['', url, paramter, deletebutton, instanceid]).draw(false);
+            var deletebutton = '<button type="button" class="btn btn-danger btnDelete" id="deletebuttonid" onclick="deleterowfunction()" href="">Delete</button>'
+        
+            t.row.add(['', jsonResponse[0].URL, jsonResponse[0].Paramter, deletebutton, instanceid.toString()]).draw(false);
             $('#addnew').modal('hide')
+            t.column( 4 ).visible( false );
+            $("#editvulninstace").dataTable().fnDestroy();
+
             }
             
         }
-        xmlhttp.send(JSON.stringify([{"URL":url,"Paramter":paramter}]));
+        xmlhttp.send(JSON.stringify([{"project":project,"vulnerabilityid":id,"URL":url,"Paramter":paramter}]));
 
 
      
@@ -580,4 +591,77 @@ function editvulnerabilitydb(oFormElement){
       xhr.send(new FormData(oFormElement));
       return false;
     }
+
+
+
+// moment(startdate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+
+"use strict";
+
+function submiteditcompanyform(oFormElement){
+  var projectname = document.getElementById("projectname").value
+  var projectdescription = document.getElementById("projectdescription").value
+  var scope = document.getElementById("scope").value
+  var projecttype = document.getElementById('input-select projecttype').value
+  var testingtype = document.getElementById('input-select testingtype').value
+  var startdate = moment(document.getElementById("startdate").value, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  var enddate = moment(document.getElementById("enddate").value, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  var notes = document.getElementById('Notes').innerHTML
+  var XCSRFToken = document.getElementsByName("csrfmiddlewaretoken")[0].value
+  data = {
+    "name":projectname,
+    "description":projectdescription,
+    "scope":scope,
+    "projecttype":projecttype,
+    "startdate":startdate,
+    "enddate":enddate,
+    "testingtype":testingtype,
+    "projectexception":notes
+}
+
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function(){
+    var jsonResponse = JSON.parse(xhr.responseText);
+    if (jsonResponse.Status == "Success") {
+      swal("Success", "", "success");
+
+   }
+  else {
+    swal("Fail", jsonResponse, "error");
+  }
+}
+  
+  xhr.open(oFormElement.method, oFormElement.getAttribute("action"));
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.setRequestHeader("X-CSRFToken", XCSRFToken);
+
+  xhr.send(JSON.stringify(data));
+
+
+
+  //xhr.send(new FormData(oFormElement));
+  return false;
+
+
+
+}
+
+function submitretestform(oFormElement)
+{
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function(){ 
+
+    var jsonResponse = JSON.parse(xhr.responseText);
+    if (jsonResponse.status == "Success") {
+      var t = $('#testtable').DataTable();
+      t.row.add([jsonResponse.count, jsonResponse.startdate, jsonResponse.enddate]).draw(false);
+ 
+      }
+
+   }
+  xhr.open(oFormElement.method, oFormElement.getAttribute("action"));
+  xhr.send(new FormData(oFormElement));
+  return false;
+}
   

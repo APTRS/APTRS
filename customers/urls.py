@@ -14,8 +14,10 @@ urlpatterns = [
     path('customer/delete', views.customerdelete, name='customerdelete'),
     path('customer/edit', views.customeredit, name='customeredit'),
     path('customer/add', views.customeradd, name='customeradd'),
+    path('all-company',views.getallcompnay),
     
 
 ]
+
 
 

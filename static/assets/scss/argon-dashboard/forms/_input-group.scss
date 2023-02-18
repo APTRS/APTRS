@@ -1,0 +1,62 @@
+.input-group {
+  @include border-radius($input-border-radius, 0);
+
+  &,
+  .input-group-text {
+    transition: $input-transition;
+  }
+
+  & > :not(:first-child):not(.dropdown-menu) {
+    margin-left: 0;
+  }
+
+	.form-control {
+    &:focus {
+      border-left: $input-border-width solid $input-focus-border-color !important;
+      border-right: $input-border-width solid $input-focus-border-color !important;
+    }
+
+		&:not(:first-child) {
+	    border-left: 0;
+	    padding-left: 0;
+		}
+		&:not(:last-child) {
+			border-right: 0;
+			padding-right: 0;
+		}
+
+    & + .input-group-text {
+      border-left: 0;
+      border-right: $input-border-width solid $input-border-color;
+    }
+	}
+
+  .input-group-text {
+    border-right: 0;
+  }
+
+  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    border-left: $white !important;
+  }
+
+  &.focused {
+    .input-group-text {
+      border-color: $primary !important;
+    }
+  }
+}
+
+.form-control {
+  &.form-control-alternative {
+    border: 0;
+    box-shadow: $input-alternative-box-shadow;
+
+    &:focus {
+      box-shadow: $input-alternative-focus-box-shadow;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}

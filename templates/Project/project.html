@@ -1,196 +1,667 @@
 {% load static %}
-{% include 'Header.html' %}
-      
-        {% csrf_token %}
-        <div class="bootstrap-dark">
-            <div class="dashboard-content">
-                <div class="row">
-                    <div class="col">
-                        
-                        <div class="container">
-                      
-                    </div>
-                       <br>
 
-                        <div>
-   
-                            <div>
+<!--
+=========================================================
+* Argon Dashboard 2 - v2.0.4
+=========================================================
 
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
 
+=========================================================
 
-
-                                
-                                <div class="card">
-                                    
-
-<h4 class="card-header d-flex justify-content-between align-items-center text-white">
-  <div>
-    Project
-  </div>
-  <a role="button" class="btn btn-primary" href="/project/add">Add New</a>
-</h4>
-									
-                                    <div class="card-body p-0">
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <thead class="">
-                                                    <tr class="border-0">
-                                                        <th class="border-0 text-white">#</th>
-                                                        <th class="border-0 text-white">Company Name</th>
-                                                        <th class="border-0 text-white">Project Name</th>
-                                                        <th class="border-0 text-white">Scope URL</th>
-                                                        <th class="border-0 text-white">Type</th>
-                                                        <th class="border-0 text-white">Start Date</th>
-                                                        <th class="border-0 text-white">End Date</th>
-                                                        <th class="border-0 text-white">View</th>
-                                                        <th class="border-0 text-white">Delete</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-
-
-                                                {% for projects in project %}
-                                                <tr class="btnDelete" data-id={{projects.id}}>
-                                                    <td>{{forloop.counter}}</td>
-                                                    <td>{{projects.companyname.name}}</td>
-                                                    <td>{{projects.name}}</td>
-                                                    <td>{{projects.scope}}</td>
-                                                    <td>{{projects.projecttype}}</td>
-                                                    <td>{{projects.startdate|date:'d-m-Y'}}</td>
-                                                    <td>{{projects.enddate|date:'d-m-Y'}}</td>
-                                                    <td><a href="/project/{{projects.id}}/"><button type="button" class="btn btn-primary">View</button> </a></td>
-                                                    <td><button type="button" class="btn btn-danger btnDelete" href="">Delete</button></td>
-                                                </tr>
-                                                {% endfor %}
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
 
 
 
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static "/assets/img/apple-icon.png" %}">
+  <link rel="icon" type="image/png" href="{% static "/assets/img/favicon.png" %}">
+  <title>
+   APTRS
+  </title>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <!-- Nucleo Icons -->
+  <link href="{% static "/assets/css/nucleo-icons.css" %}" rel="stylesheet" />
+  <link href="{% static "/assets/css/nucleo-svg.css" %}" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/9ecaf54e3a.js" crossorigin="anonymous"></script>
+  <link href="{% static "/assets/css/nucleo-svg.css" %}" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{% static "/assets/css/argon-dashboard.css" %}" rel="stylesheet" />
+</head>
 
-                                                   
-                                                   
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                </div>
-                                <div class="modal-body">Are you sure you want to DELETE?</div>
-                                <div class="modal-footer">
-                                  <button type="button" id="btnDelteYes" class="btn btn-secondary">Yes</button>
-                                  <button type="button" class="btn btn-primary" data-dismiss="modal" >No</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- footer -->
-            <!-- ============================================================== -->
-            <div class="footer bootstrap-dark">
-                <div class="container-fluid bootstrap-dark">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                            Copyright © 2022 APTRS. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- end footer -->
-            <!-- ============================================================== -->
-        </div>
+<body class="g-sidenav-show   bg-gray-100">
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href="/" target="_blank">
+        <img src="{% static "/assets/img/logo-ct-dark.png" %}" class="navbar-brand-img h-100" alt="main_logo">
+        <span class="ms-1 font-weight-bold">APTRS - Projects</span>
+      </a>
     </div>
-    <!-- ============================================================== -->
-    <!-- end main wrapper -->
-    <!-- ============================================================== -->
-    <!-- Optional JavaScript -->
-    <script src="{% static "vendor/jquery/jquery-3.3.1.min.js" %}"></script>
-    <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.js" %}"></script>
-  
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-        $(document).ready(function () {
-        $('table').DataTable({
-            
-            
-            
-            dom: '<"toolbar">frtip',
-            "paging": true,
-          "lengthChange": false,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "autoWidth": true,
-          "responsive": true,
-        });
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Project</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/customer">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Customer</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="./Company">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Company</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="./">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-app text-info text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Vulnerabbility DB</span>
+          </a>
+        </li>
+    
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="./pages/profile.html">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/User-Management">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-copy-04 text-warning text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="./change password">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-collection text-info text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Change Password</span>
+          </a>
+        </li>
+		
+		
+		 <li class="nav-item">
+          <a class="nav-link " href="./Logout">
+		  
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-collection text-info text-sm opacity-10 fa-solid fa-user"></i>
+            </div>
+            <span class="nav-link-text ms-1">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </aside>
+  <main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Project</li>
+          </ol>
+          <h6 class="font-weight-bolder text-white mb-0">Projects</h6>
+        </nav>
+       
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+      
+ 
+ 
+      <div class="row mt-4">
+        <div class=" mb-lg-0 mb-4">
+          <div class="card ">
+            <div class="card-header pb-0 p-3">
+              <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Projects</h6>
+              </div>
+            </div>
+<div class="text-left" style="margin-left: 10px;">
+    <button class="btn btn-primary btn-sm edit-btn "data-bs-toggle="modal" data-bs-target="#modal-form">New Project</button>
+    
+         <button class="btn btn-danger btn-xs">Delete Selected</button>
         
+         <br>
+		
+		 
+    </div>
+            <div class="table-responsive">
+			     <table id="example" class="table align-items-center">
+				 
+       <thead>
+          <tr>
+            <th># <input type="checkbox" id="select_all"></th>
+			<th>SR</th>
+		
+            <th>Name</th>
+            <th>Scope</th>
+            <th>Project Type</th>
+			<th>Company</th>
+			 <th>Owner</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Action</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+		<!--
+          <tr>
+            <td><input type="checkbox" class="checkbox"> </td>
+           <td></td>
+		   <td></td>
+            <td>Juice Shop2</td>
+            <td>http://10.10.14.68/</td>
+            <td>Web Application Penetration Testing</td>
+            <td>2022-10-26</td>
+            <td>2022-10-31</td>
+            <td>
+              <button class="btn btn-success btn-xs">Edit</button>
+              <button class="btn btn-danger btn-xs">Delete</button>
+            </td>
+          
+          </tr>
+		  -->
+        </tbody>
+      </table>
+			
+			
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <footer class="footer pt-3  ">
+        <div class="container-fluid">
+          <div class="row align-items-center justify-content-lg-between">
+            <div class="col-lg-6 mb-lg-0 mb-4">
+              <div class="copyright text-center text-sm text-muted text-lg-start">
+                © <script>
+                  document.write(new Date().getFullYear())
+                </script>,
+                made with <i class="fa fa-heart"></i> by
+                <a href="https://twitter.com/ano_f_" class="font-weight-bold" target="_blank">Sourav Kalal</a>
+                for a better web.
+              </div>
+            </div>
+        
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="fa fa-cog py-2"> </i>
+    </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3 ">
+        <div class="float-start">
+          <h5 class="mt-3 mb-0">APTRS Configurator</h5>
+         
+        </div>
+        <div class="float-end mt-4">
+          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+            <i class="fa fa-close"></i>
+          </button>
+        </div>
+        <!-- End Toggle Button -->
+      </div>
+      <hr class="horizontal dark my-1">
+      <div class="card-body pt-sm-3 pt-0 overflow-auto">
+        <!-- Sidebar Backgrounds -->
+        <div>
+          <h6 class="mb-0">Sidebar Colors</h6>
+        </div>
+        <a href="javascript:void(0)" class="switch-trigger background-color">
+          <div class="badge-colors my-2 text-start">
+            <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+          </div>
+        </a>
+        <!-- Sidenav Type -->
+        <div class="mt-3">
+          <h6 class="mb-0">Sidenav Type</h6>
+          <p class="text-sm">Choose between 2 different sidenav types.</p>
+        </div>
+        <div class="d-flex">
+          <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+          <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
+        </div>
+        <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+        <!-- Navbar Fixed -->
+        <div class="d-flex my-3">
+          <h6 class="mb-0">Navbar Fixed</h6>
+          <div class="form-check form-switch ps-0 ms-auto my-auto">
+            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+          </div>
+        </div>
+        <hr class="horizontal dark my-sm-4">
+        <div class="mt-2 mb-5 d-flex">
+          <h6 class="mb-0">Light / Dark</h6>
+          <div class="form-check form-switch ps-0 ms-auto my-auto">
+            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+          </div>
+        </div>
+        
+     
+      </div>
+    </div>
+  </div>
+
+
+  
+ <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-info text-gradient">New Project</h3>
+                <p class="mb-0"></p>
+              </div>
+              <div class="card-body">
+                <form role="form text-left">
+                  <label>Company</label>
+                  <div class="input-group mb-3">
+               <select class="selectpicker1 selectpicker" data-live-search="true">
+
+  
+</select>
+                  </div>
+                  <label>Project Name</label>
+                  <div class="input-group mb-3">
+                    <input type="Text" class="form-control" id="project-name" placeholder="Juice Shop" aria-label="Text">
+                  </div>
+				  
+				  <label>Project Description</label>
+                  <div class="input-group mb-3">
+                    <input type="Text" class="form-control" id="project-description" placeholder="Description" aria-label="Text">
+                  </div>
+				  
+				  <label>Project Scope</label>
+                  <div class="input-group mb-3">
+                    <input type="Text" class="form-control" id="project-scope" placeholder="https://juiceshop.com" aria-label="Text">
+                  </div>
+                 
+				 <label>Project Type</label>
+                  <div class="input-group mb-3">
+				 <select class="form-select" id="project-type" aria-label="Default select example">
+  <option selected>Web Application Penetration Testing</option>
+  <option value="1">Android Application Penetration Testing</option>
+  <option value="2">iOS Application Penetration Testing</option>
+  <option value="3">Thick Client Application Penetration Testing</option>
+  <option value="3">API Penetration Testing</option>
+   <option value="3">Network Penetration Testing</option>
+</select>
+			</div>	
+			 <label>Type</label>
+                  <div class="input-group mb-3">
+				 <select class="form-select" id="project-testing-type"aria-label="Default select example">
+  <option selected>White Box</option>
+  <option value="1">Black Box</option>
+  <option value="2">Grey Box</option>
+
+</select>
+			</div>
+			
+			
+
+ <label>Project Dates</label>
+                  <div class="input-group mb-3">
+                  <input class="form-control datepicker" id="project-date"placeholder="Please select date" type="text" onfocus="focused(this)" onfocusout="defocused(this)">
+
+                  </div>	
+<div >
+<label class="proejctownerdiv"></label>
+                  <div class="input-group mb-3 projectownerrdivselect">
+                    
+                  </div>
+				  </div>
+				  
+                  <div class="text-center">
+                     <button type="button" class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0" id ="addprojectsubmit">Submit</button>
+                  </div>
+                </form>
+              </div>
+           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+
+
+
+  <!--   Core JS Files   -->
+
+
+  <script src="{% static "/assets/js/core/popper.min.js" %}"></script>
+  <script src="{% static "/assets/js/core/bootstrap.min.js" %}"></script>
+  <script src="{% static "/assets/js/plugins/perfect-scrollbar.min.js" %}"></script>
+  <script src="{% static "/assets/js/plugins/smooth-scrollbar.min.js" %}"></script>
+  <script src="{% static "/assets/js/plugins/chartjs.min.js" %}"></script>
+ 
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="{% static "/assets/js/argon-dashboard.min.js" %}"></script>
+  
+  
+  
+     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css">
+    <script src="{% static "/assets/js/plugins/flatpickr.min.js" %}"></script>
+
+
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+<script>
+
+
+$(document).ready(function() {
+  var token = localStorage.getItem("accessToken");
+
+
+  // Make the API request
+  $.ajax({
+    type: "GET",
+    url: "/api/project/get-projects/",
+    dataType: "json",
+    headers: {
+      Authorization: "Bearer " + token
+    },
+    success: function(data) {
+      // Loop through the response data and add it to the table
+      $.each(data, function(index, project) {
+        var sr = index + 1;
+        var row = "<tr id='row-" + project.id + "'><td><input type='checkbox' class='checkbox'></td><td>" + sr + "</td><td>" + project.name + "</td><td>" + project.scope + "</td><td>" + project.projecttype + "</td><td>" + project.companyname + "</td><td>" + project.owner + "</td><td>" + project.startdate + "</td><td>" + project.enddate + '</td><td><button class="btn btn-primary btn-sm edit-btn">Edit</button> <button class="btn btn-danger btn-sm delete-btn delete-btn-selected-project-row">Delete</button></td></tr>';
+        $("#example tbody").append(row);
+      });
+      $('#example').DataTable();
+      // Handle the delete button click
+ $(".delete-btn-selected-project-row").click(function() {
+        var rowId = $(this).closest("tr").attr("id");
+        var id = rowId.split("-")[1];
+        var ids = [id];
+		
+		
+		
+		swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover this Project!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+  $.ajax({
+          type: "DELETE",
+          url: "/api/project/delete-projects/",
+          dataType: "json",
+          contentType: "application/json",
+          data: JSON.stringify(ids),
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          success: function(response) {
+            $("#" + rowId).remove();
+            updateSRNumbers();
+			swal("Good job!", "You clicked the button!", "success");
+;
+          },
+          error: function(error) {
+            if (error.status === 401) {
+              window.location.href = "/accounts/login";
+            } else {
+              console.log(error);
+            }
+          }
+        });
+    
+  } else {
+    
+  }
+});
+
+        // Make the DELETE API request
+        
+      });
+    },
+    error: function(error) {
+      if (error.status === 401) {
+        window.location.href = "/accounts/login";
+      } else {
+        console.log(error);
+      }
+    }
+  });
+
+  // Function to update the SR numbers after a row is deleted
+  function updateSRNumbers() {
+    $("#example tbody tr").each(function(index) {
+      $(this).find("td:nth-child(2)").text(index + 1);
     });
-        </script>
+  }
+});
+
+
+	 $("#example").on("click", ".edit-btn", function() {
+	 var rowId = $(this).closest("tr").attr("id");
+        var id = rowId.split("-")[1];
+        var ids = [id];
+  
+    window.location.href = "/project/" + ids;
+  });
+	
+
+
+
+// To style only selects with the my-select class
+$('.my-select').selectpicker();
+
+</script>
+	
+	
+  <script>
+      $("#select_all").change(function () {
+        $(".checkbox").prop('checked', $(this).prop("checked"));
+      });
+      $('.checkbox').change(function () {
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+          $('#select_all').prop('checked', true);
+        } else {
+          $('#select_all').prop('checked', false);
+        }
+      });
+    </script>
+
+   <script>
+$(document).ready(function() {
+  $('#modal-form').on('shown.bs.modal', function () {
+    $.ajax({
+      url: '/api/customer/all-company',
+      type: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      },
+      success: function (data) {
+        var select = $('.selectpicker1');
+        select.empty();
+        select.selectpicker('refresh');
+        $.each(data, function (index, item) {
+          select.append($("<option></option>")
+            .attr("value", item.name)
+            .text(item.name));
+        });
+        select.selectpicker('render');
+        select.selectpicker('refresh');
+      }
+    });
+	$('.datepicker').flatpickr({
+      mode: "range",
+      altInput: true,
+      altFormat: "F j, Y",
+      dateFormat: "Y-m-d",
+      defaultDate: [new Date(), new Date().fp_incr(7)]
+    });
+  });
+
+
+
+
+ var userData = JSON.parse(localStorage.getItem('userData'));
+ document.getElementsByClassName("projectownerrdivselect")[0].innerHTML = '<select class="selectpicker selectpicker2" data-live-search="true"></select>'
+	  document.getElementsByClassName("proejctownerdiv")[0].innerHTML = "Project Owner"
+  if (userData && userData.isAdmin) {
     
 
-<script>
-    $(document).ready(function(){
+    // send HTTP request to get all usernames
+    $.ajax({
+      type: 'GET',
+      url: '/api/auth/get-users',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      },
+      success: function(response) {
+	  
+	  var select = $('.selectpicker2');
+	  select.empty();
+        select.selectpicker('refresh');
+        // loop through the response and add each username as an option in the select
+        for (var i = 0; i < response.length; i++) {
+		select.append($("<option></option>")
+            .attr("value", response[i].id)
+            .text(response[i].username));
+        };
+		select.selectpicker('render');
+        select.selectpicker('refresh');
+          //select.append($('<option>' + response[i].name + '</option>'));
+        }
+      })
+    
+ 
 
-     });
-     
-     
-     function tableToJSON(tblObj){  
-        var data = [];
-        var $headers = $(tblObj).find("th");
-        var $rows = $(tblObj).find("tbody tr").each(function(index) {
-        $cells = $(this).find("td");
-        data[index] = {};
-        $cells.each(function(cellIndex) {
-          data[index][$($headers[cellIndex]).html()] = $(this).html();
-        });    
-     });
-       return data;
-     }
-    //console.log(data)
+  }
+  else {
+  var select = $('.selectpicker2');
+	  select.empty();
+	  username = userData.username
+        select.selectpicker('refresh');
+		select.append($("<option></option>")
+            .attr("value", username)
+            .text(username));
+        
+		select.selectpicker('render');
+        select.selectpicker('refresh');
+		};
+ })
+  
+;
+
+
+
+
+
+
+$('#addprojectsubmit').click(function() {
+	var data = {};
+	data.name = document.getElementById("project-name").value
+	data.companyname = document.getElementsByClassName("selectpicker1")[0].value
+	data.scope = document.getElementById("project-scope").value
+	data.owner_id = document.getElementsByClassName("selectpicker2")[0].value
+	data.description = document.getElementById("project-description").value
+	data.startdate = document.getElementsByClassName("datepicker")[0].value.split(" to ")[0]
+	data.enddate = document.getElementsByClassName("datepicker")[0].value.split(" to ")[1]
+	data.testingtype = document.getElementById("project-testing-type").value
+	data.projecttype = document.getElementById("project-type").value
+	data.projectexception = ""
+
+	$.ajax({
+		type: 'POST',
+		url: '/api/project/add-project/',
+		data: JSON.stringify(data),
+		contentType: 'application/json',
+		headers: {
+			'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+		},
+		success: function(response) {
+			// add the data from the response to the data table
+			// for example, using jQuery DataTables:
+			var sr = $('#example').DataTable().data().length + 1;
+				var row = "<tr id='row-" + response.id + "'><td><input type='checkbox' class='checkbox'></td><td>" + sr + "</td><td>" + response.name + "</td><td>" + response.scope + "</td><td>" + response.projecttype + "</td><td>" + response.companyname + "</td><td>" + response.owner + "</td><td>" + response.startdate + "</td><td>" + response.enddate + '</td><td><button class="btn btn-primary btn-sm edit-btn">Edit</button> <button class="btn btn-danger btn-sm delete-btn delete-btn-selected-project-row">Delete</button></td></tr>';
+				$("#example tbody").append(row);
+		$('#modal-form').modal('hide');
+		}
+	});
+});
+
+
+
+
+
+
+ 
 </script>
 
-
-
-        <script>
-            $('button.btnDelete').on('click', function(e) {
-                e.preventDefault();
-                var id = $(this).closest('tr').data('id');
-                $('#myModal').data('id', id).modal('show');
-            });
-        
-        $('#btnDelteYes').click(function() {
-            var id = $('#myModal').data('id');
-            var xhr = new XMLHttpRequest()
-            
-            xhr.open('GET', '/project/delete/'+ id +'/', true);
-           
-            xhr.onload = function() { //Call a function when the state changes.
-        
-                if (xhr.status == 200) {
-                  
-                    $('[data-id=' + id + ']').remove();
-                    $('#myModal').modal('hide');
-                        
-                    }
-                }
-                xhr.send();
-            })
-            
-        
-        ; </script>
 </body>
- 
+
 </html>

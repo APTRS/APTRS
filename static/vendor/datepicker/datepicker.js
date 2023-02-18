@@ -7,28 +7,20 @@ jQuery(document).ready(function($) {
     }
 
     /* Calender jQuery **/
-
-    if ($("datetimepicker2").length) {
-
+    if ($("#datetimepicker2").length) {
         $('#datetimepicker2').datetimepicker({
-            locale: 'ru',
-            icons: {
-                time: "far fa-clock",
-                date: "fa fa-calendar-alt",
-                up: "fa fa-arrow-up",
-                down: "fa fa-arrow-down"
-            }
+            format: 'L'
         });
+
     }
 
 
     if ($("#datetimepicker3").length) {
-
         $('#datetimepicker3').datetimepicker({
-            format: 'LT'
+            format: 'L'
         });
-    }
 
+    }
     if ($("#datetimepicker4").length) {
         $('#datetimepicker4').datetimepicker({
             format: 'L'
@@ -41,6 +33,7 @@ jQuery(document).ready(function($) {
         });
 
     }
+
 
     if ($("#datetimepicker6").length) {
         $('#datetimepicker6').datetimepicker({

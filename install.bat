@@ -4,7 +4,7 @@ FOR /F "tokens=* USEBACKQ" %%F IN (`python --version`) DO (
 SET var=%%F
 )
 ECHO %var%
-if "%var%" GEQ "Python 3.8" (
+if "%var%" GEQ "Python 3.11.1" (
     echo Python 3.8 and above found
   ) else (
     echo "%var%"

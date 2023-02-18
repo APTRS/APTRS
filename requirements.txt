@@ -6,12 +6,14 @@ django-js-asset==2.0.0
 django-pdfkit==0.3.1
 django-phonenumber-field==7.0.0
 django-phonenumbers==1.0.1
+djangorestframework==3.14.0
 gunicorn==20.1.0
 pdfkit==0.6.0
 phonenumbers==8.12.57
 Pillow==9.2.0
 PyPDF2==2.11.1
+pytz==2022.6
 sqlparse==0.4.3
-typing-extensions==4.4.0
+typing_extensions==4.4.0
 tzdata==2022.5
 waitress==2.1.2

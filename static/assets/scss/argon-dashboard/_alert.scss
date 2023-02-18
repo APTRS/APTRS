@@ -1,0 +1,21 @@
+@each $state, $value in $theme-gradient-colors {
+  .alert-#{$state} {
+    @include gradient-directional(nth($value, 1) 0%, darken(nth($value, -1), 8%) 100%, $deg: 310deg);
+  }
+}
+
+.btn-close{
+  &:focus{
+    box-shadow: none;
+  }
+}
+
+.alert-dismissible{
+  .btn-close{
+    background-image: none;
+  }
+}
+
+.alert {
+  z-index: 999;
+}

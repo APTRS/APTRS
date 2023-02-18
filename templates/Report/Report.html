@@ -10,7 +10,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
   .heading{
-    color: #ffa500;
+    color: #1b67d8;
     margin: 25px;
     padding-top: 60px;
   }
@@ -23,7 +23,7 @@
   .paragraph2 {
     color: black !important;
     font-size:20px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     font-family: 'Open Sans', sans-serif !important;
     margin-right: 25px;
     margin-left: 25px;
@@ -60,21 +60,64 @@
 
   }
   .vulnpages{
-    margin-right: 25px;
-    margin-left: 25px;
-    margin-bottom: 30px;
+    
     font-family: 'Open Sans', sans-serif;
-    font-size:45px;
-    color: #2070D1;
+    font-size:40px;
+    color: white;
+    text-align: left;
+    padding: 10 15px;
+    
+    font-weight: bold;
     
   }
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Create two equal columns that floats next to each other */
+  .column {
+    float: left;
+    width: 80%;
+    ; /* Should be removed. Only for demonstration */
+  }
+  .column2 {
+    float: right;
+    width: 20%;
+    ; /* Should be removed. Only for demonstration */
+  }
+
+  .column3 {
+    float: left;
+    width: 20%;
+    padding: 10px;
+    height: 90px; /* Should be removed. Only for demonstration */
+  }
+  .column4 {
+    float: left;
+    width: 20%;
+    padding: 10px;
+    height: 90px; /* Should be removed. Only for demonstration */
+  }
+  .column5 {
+    float: left;
+    width: 50%;
+    padding: 10px;
+    height: 90px; /* Should be removed. Only for demonstration */
+  }
+  .vulntitlepagediv{
+    background: #23415D;
+    padding: 15px;
+    height: 100px;
+   } 
+   .vulntitlepagediv2{
+    padding: 15px;
+   } 
+  
   .vulnstatus{
-    padding-right: 500px;
-    margin-right: 20px;
-    margin-left: 20px;
-    text-align:left;
-    font-size:30px;
-    margin-top: 20px;
+    
+    text-align:center;
+    font-size:20px;
+    
   }
   .vulnseverity{
  
@@ -85,16 +128,13 @@
   }
   .vulnseverity2{
     
-    margin-right: 20px;
-    margin-left: 120px;
+    margin-left: 50px;
     text-align:right;
     font-size:20px;
   }
   .vulntitle{
     font-family: 'Open Sans', sans-serif;
-    font-size:20px;
-    margin-right: 25px;
-    margin-left: 25px;
+    font-size:25px;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -282,27 +322,17 @@ document.getElementsByTagName("img")[i].src = doaminurl + image;
     <canvas id="myChart" style="width:100%;max-width:900px;text-align:center;"></canvas>
     </div>
   
-  </div>
+  </div></div>
 
 
 
 
     {% for vulnerabilities in vuln %}
     <div class="vulndetails"style="page-break-before:always;">
-    <div><h2 class="vulnpages">{{vulnerabilities.vulnerabilityname}}</h2></div>
+    <div class="vulntitlepagediv">
+    <div class="column"><h2 class="vulnpages">{{vulnerabilities.vulnerabilityname}}</h2></div>
     
-
-    <div>
-
-      {% if vulnerabilities.status == "Vulnerable" %}
-      <span class="vulnstatus text-danger">{{vulnerabilities.status}}</span>
-      {% elif vulnerabilities.status == "Confirm Fixed" %}
-      <span class="vulnstatus text-success">{{vulnerabilities.status}}</span>
-      {% endif %}
-
-
-
-
+    <div class="column2">
       {% if vulnerabilities.vulnerabilityseverity == "Critical" %}
                     <button type="button" class="vulnseverity2 btn text-white" style="background-color:#FF491C;font-weight: bold;" href="">{{vulnerabilities.vulnerabilityseverity}}</button>
 
@@ -319,18 +349,37 @@ document.getElementsByTagName("img")[i].src = doaminurl + image;
                    <button type="button" class="vulnseverity btn text-white" style="background-color:#3399FF;font-weight: bold;" href="">{{vulnerabilities.vulnerabilityseverity}}</button>
 
                     {% endif %}
-
+                    
     </div>
-
     
-
-
-
-    <div>
-      
-      <div class="paragraph2"><span class="vulntitle2">CVSS Score - </span> {{vulnerabilities.cvssscore}}<br><span class="vulntitle2">CVSS Vector - </span>{{vulnerabilities.cvssvector}}</div>
-      <div class="paragraph2"></div>
     </div>
+   
+
+
+
+
+
+
+
+      <div class="row vulntitlepagediv2">
+        <div class="column3">
+          <span class="vulntitle2">Status </span><br>
+          {% if vulnerabilities.status == "Vulnerable" %}
+      <span class="vulnstatus text-danger">{{vulnerabilities.status}}</span>
+      {% elif vulnerabilities.status == "Confirm Fixed" %}
+      <span class="vulnstatus text-success">{{vulnerabilities.status}}</span>
+      {% endif %}
+        </div>
+        <div class="column4">
+          <span class="vulntitle2">CVSS Score</span> <br><span class="vulnstatus">{{vulnerabilities.cvssscore}}</span>
+        </div>
+        <div class="column5" >
+          <span class="vulntitle2">CVSS Vector</span><br><span class="vulnstatus">{{vulnerabilities.cvssvector}}</span>
+        </div>
+      </div>
+
+      
+
 
    
     <h3 class="vulntitle">Description</h3>
@@ -344,25 +393,25 @@ document.getElementsByTagName("img")[i].src = doaminurl + image;
     <div class="paragraph2">{{vulnerabilities.vulnerabilityreferlnk|safe}}</div>
     <h3 class="vulntitle">Vulnerable Instances</h3>
     <div class="scopetable">
+      
       <table class="table">
-          <thead class="bg-blue">
-              <tr class="border-0">
-                  <th class="border-0">URL</th>
-                  <th class="border-0">Paramter</th>
-                  
-          </thead>
-          <tbody>
-            {% for instance in instances %}
-            {% if instance.vulnerabilityid.id == vulnerabilities.id %}
-              <tr>
-                  <td>{{instance.URL}}</td>
-                  <td>{{instance.Paramter}}</td>
-                 
-              
-              </tr>
-              {% endif %}
-              {% endfor %}
-          </tbody>
+        <thead>
+          <tr>
+            <th scope="col">URL</th>
+            <th scope="col">Paramter</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for instance in instances %}
+          {% if instance.vulnerabilityid.id == vulnerabilities.id %}
+          <tr>
+            <td>{{instance.URL}}</td>
+            <td>{{instance.Paramter}}</td>
+          </tr>
+          
+          {% endif %}
+          {% endfor %}
+        </tbody>
       </table>
   </div>
 

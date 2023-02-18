@@ -93,11 +93,6 @@ img.left
 	padding: 5px;
 }
 
-img {
-	vertical-align: baseline;
-	max-width: 100%;
-	height: auto !important;  // this line can cause problems in your design
-  }
 pre
 {
 	white-space: pre-wrap; /* CSS 2.1 */

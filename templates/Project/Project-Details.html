@@ -34,7 +34,10 @@
                                             <a class="nav-link active" id="Projectdetail-tab" data-toggle="pill" href="#Projectdetail" role="tab" aria-controls="Projectdetail" aria-selected="true">Project</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="Vulnerability-tab" data-toggle="pill" href="#Vulnerability" role="tab" aria-controls="Vulnerability" aria-selected="false">Vulnerability</a>
+                                            <a class="nav-link" id="Retest-tab" data-toggle="pill" href="#Retestdetail" role="tab" aria-controls="Retestdetail" onclick="retestdata()" aria-selected="false">Retest</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="Vulnerability-tab" data-toggle="pill" href="#Vulnerability" role="tab" aria-controls="Vulnerability" onclick="vulnerabilitydata()" aria-selected="false">Vulnerability</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="Report-tab" data-toggle="pill" href="#Report" role="tab" aria-controls="Report" aria-selected="false">Reports</a>
@@ -43,6 +46,10 @@
                                 </div>
                                 
                             </div>
+
+                                       
+
+
                             <div class="card-body">
                                 <div class="tab-content mb-3" id="pills-tabContent">
                                     <div class="tab-pane fade show active" id="Projectdetail" role="tabpanel" aria-labelledby="Projectdetail-tab">
@@ -57,24 +64,19 @@
                                         </div>
                                         {% endfor %}
 
-                                        <form id="validationform" method="POST", action="/project/edit/{{project.id}}/">{% csrf_token %}
+                                        <form id="validationform" method="POST", onsubmit="return submiteditcompanyform(this);" action="/api/project/edit-project/{{project.id}}/">{% csrf_token %}
                                             <div class="form-group row">
                                                 <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Company</label>
                                                 <div class="col-12 col-sm-8 col-lg-6">
-                                                <select class="form-control text-white" disabled id="input-select" data-live-search="true" name="company">
-                                                   
-                                                    <option>{{project.companyname.name}}</option>
-                                                  
-                                                    
-                                                    
-                                                </select>
+                                                    <input type="text" readonly id="companny"name="companny" placeholder="Application Name" class="form-control" value="">
+                                                
                                             </div>
                                         </div>
                                             <div class="form-group row">
                                                 <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Name</label>
                                                 <div class="col-12 col-sm-8 col-lg-6">
                                                     
-                                                    <input type="text" required="" name="projectname" placeholder="Application Name" class="form-control" value="{{project.name}}">
+                                                    <input type="text" required="" id="projectname"name="projectname" placeholder="Application Name" class="form-control" value="">
                                                 </div>
                                             </div>
         
@@ -82,7 +84,7 @@
                                                 <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Description</label>
                                                 <div class="col-12 col-sm-8 col-lg-6">
                                                     
-                                                    <input type="text" required="" name="projectdescription" placeholder="Type something" class="form-control" value="{{project.description}}">
+                                                    <input type="text" required="" id="projectdescription" name="projectdescription" placeholder="Type something" class="form-control" value="">
                                                 </div>
                                             </div>
         
@@ -90,7 +92,7 @@
                                                 <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Scope URL</label>
                                                 <div class="col-12 col-sm-8 col-lg-6">
                                                     
-                                                    <input type="text" required="" name="scope" placeholder="https://google.com" class="form-control" value="{{project.scope}}">
+                                                    <input type="text" required="" id="scope" name="scope" placeholder="https://google.com" class="form-control" value="">
                                                 </div>
                                             </div>
         
@@ -98,18 +100,33 @@
                                             <div class="form-group row">
                                                 <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Type</label>
                                                 <div class="col-12 col-sm-8 col-lg-6">
-                                                <select class="form-control text-white form-select" id="input-select" data-live-search="true" name="projecttype">
-                                                    <option select>{{project.projecttype}}</option>
+                                                <select class="form-control text-white form-select" id="input-select projecttype" id="projecttype" data-live-search="true" name="projecttype">
+                                                   
                                                     <option>Web Application Penetration Testing</option>
                                                     <option>Android Application Penetration Testing</option>
                                                     <option>Mobile Application Penetration Testing</option>
                                                     <option>Thick Client Application Penetration Testing</option>
+                                                    <option>Network Penetration Testing</option>
                                                    
                                                     
                                                     
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Testing Type</label>
+                                            <div class="col-12 col-sm-8 col-lg-6">
+                                            <select class="form-control text-white form-select" id="input-select testingtype" data-live-search="true" name="testingtype">
+                                                <option>White Box</option>
+                                                <option>Grey Box</option>
+                                                <option>Black Box</option>
+                                               
+                                                
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+    
         
         
                                        
@@ -119,7 +136,7 @@
                                                 <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Start Date</label>
                                                 <div class="col-12 col-sm-8 col-lg-6">
                                                 <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" name="startname" data-target="#datetimepicker4" value="{{project.startdate|date:'d-m-Y'}}"/>
+                                                    <input type="text" class="form-control datetimepicker-input" id="startdate"name="startname" data-target="#datetimepicker4" value=""/>
                                                     <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                     </div>
@@ -134,15 +151,24 @@
 
 
                                                 <div class="input-group date" id="datetimepicker5" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" name="enddate" data-target="#datetimepicker5" value="{{project.enddate|date:'d-m-Y'}}"/>
+                                                    <input type="text" class="form-control datetimepicker-input" id="enddate"name="enddate" data-target="#datetimepicker5" value=""/>
                                                     <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                     </div>
                                                 </div>
                                                 </div>
                                                 
+                                                
                                             </div>
         
+                                            <div class="form-group row">
+                                                <label class="col-12 col-sm-3 col-form-label text-sm-right text-white">Project Notes/ Exception</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <textarea class="form-control" id="Notes"name="Exception" rows="4" cols="80"></textarea>
+                                                    
+
+                                                     </div>
+                                            </div>
                                      
         
                                             <div class="form-group row text-right">
@@ -156,17 +182,81 @@
                                         </form>
 
 
+                                    </div>
+
+
+
+
+                                    <div class="tab-pane fade" id="Retestdetail" role="tabpanel" aria-labelledby="Retest-tab">
+
+
+                                        <div class="form-row">
+                                            
+                                            <div class="col-xl-2 col-lg-2 col-md-5 col-sm-12 col-12 mb-2">
+                                                <form method="POST", action="/project/add-retest/{{project.id}}/" onsubmit="return submitretestform(this);">
+                                                    {% csrf_token %}
+                                                   
+                                                <label for="validationCustom03">Start Date</label>
+                                                <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                                                    <input type="text" id="reteststartdate" class="form-control datetimepicker-input" name="startdate" data-target="#datetimepicker2" value=""/>
+                                                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-2 col-md-5 col-sm-12 col-12 mb-2">
+                                                <label for="validationCustom04">End Date</label>
+                                                <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+                                                    <input type="text" id="retestenddate" class="form-control datetimepicker-input" name="enddate" data-target="#datetimepicker3" value=""/>
+                                                    <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-2 col-lg-2 col-md-5 col-sm-12 col-12 mb-2">
+                                                <br><button class="btn btn-primary" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+
+
+                                        <table class="table" id="testtable">
+                                            <thead class="">
+                                                <tr class="border-0">
+                                                    <th class="border-0 text-white">#</th>
+                                                    <th class="border-0 text-white">Start Date</th>
+                                                    <th class="border-0 text-white">End Date</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                               
+                                               
+                                            </tbody>
+                                        </table>
+                                    
+                                    
+
+
+
 
 
 
                                     </div>
+
+
+
+
+
+
                                     <div class="tab-pane fade" id="Vulnerability" role="tabpanel" aria-labelledby="Vulnerability-tab">
                                         <div>
                                         <a role="button" class="btn btn-primary float-right" href="/project/newvulnerability/{{project.id}}/">Add New</a>
                                     </div><br>
                                         
                                     <div class="table-responsive">
-                                        <table class="table">
+                                        <table class="table" id="vulnerabilitytable">
                                             <thead class="">
                                                 <tr class="border-0">
                                                     <th class="border-0 text-white">#</th>
@@ -308,6 +398,8 @@
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
   
+  <script src="{% static "libs/js/main.js" %}"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="{% static "vendor/datepicker/moment.js" %}"></script>
 <script src="{% static "vendor/datepicker/tempusdominus-bootstrap-4.js" %}"></script>
 <script src="{% static "vendor/datepicker/datepicker.js" %}"></script>
@@ -318,6 +410,7 @@
         
         dom: '<"toolbar">frtip',
         "paging": true,
+        destroy: true,
       "lengthChange": false,
       "searching": true,
       "ordering": true,
@@ -329,9 +422,12 @@
 });
     </script>
     <script>
-        $('button.btnDelete').on('click', function(e) {
-            e.preventDefault();
-            var id = $(this).closest('tr').data('id');
+        function triggerpopup() {
+            $('button.btnDelete').on('click', function(e) {
+            //e.preventDefault();
+            var id = $(this).closest('tr')
+            //var id = $(this).data('id')
+            var id = $(this).attr('id');
             $('#myModal').data('id', id).modal('show');
         });
     
@@ -353,10 +449,143 @@
             xhr.send();
         })
         
-    
+    }
     ; </script>
 
+    <script>
+        window.onload = function getproject() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.status == 200) {
+            var jsonResponse = JSON.parse(this.responseText);
+            document.getElementById("companny").value = jsonResponse.companyname
+            document.getElementById("projectname").value = jsonResponse.name
+            document.getElementById("projectdescription").value = jsonResponse.description
+            document.getElementById("scope").value = jsonResponse.scope
+            document.getElementById('input-select projecttype').value = jsonResponse.projecttype
+            document.getElementById('input-select testingtype').value = jsonResponse.testingtype
+            document.getElementById("startdate").value = moment(jsonResponse.startdate ).format('DD/MM/YYYY');
+            document.getElementById("enddate").value = moment(jsonResponse.enddate ).format('DD/MM/YYYY');
+            document.getElementById('Notes').innerHTML = jsonResponse.projectexception
+        }
+      };
+      xhttp.open("GET", "/api/project/{{project}}/", true);
+      xhttp.send();
+    }
+
+          </script>  
+    <script>
+        function vulnerabilitydata(){
+        $("#vulnerabilitytable").dataTable().fnDestroy();
+        $.ajax({
+            type: 'GET',
+            url: '/api/project/findings/{{project}}/',
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+              myJsonData = data;
+              populateDataTable1(myJsonData);
+            },
+            error: function (e) {
+              console.log("There was an error with your request...");
+              console.log("error: " + JSON.stringify(e));
+            }
+          });
+
+          function populateDataTable1(data) {
+            console.log("populating data table...");
+            // clear the table before populating it with more data
+            $("#vulnerabilitytable").DataTable().clear();
+            var length = Object.keys(data).length;
+            for(var i = 0; i < length+1; i++) {
+              var vulndata = data[i];
+        
+              // You could also use an ajax property on the data table initialization
+              var t = $('#vulnerabilitytable').DataTable();
+              function editbutton(values){
+                return '<a href="/project/editvulnerability/'+ values + '"><button type="button" class="btn btn-primary">Edit</button> </a>'
+              }
+              function deletebutton(values){
+                return   '<button type="button" id='+values+' onclick="triggerpopup()" class="btn btn-danger btnDelete">Delete</button>'
+              }
+              function getseverity(values) {
+                if (values == "Critical") {
+                    return '<button type="button" class="btn text-white" style="background-color:#FF491C;" href="">Critical</button>'
+                }
+                else if (values == "High") {
+                    return '<button type="button" class="btn text-white" style="background-color:#F66E09;" href="">High</button>'
+                }
+                else if (values == "Medium") {
+                    return '<button type="button" class="btn text-white"style="background-color:#FBBC02" href="">Medium</button>'
+                }
+                else if (values == "Low") {
+                    return '<button type="button" class="btn text-white"style="background-color:#20B803" href="">Low</button>'
+                }
+                else if (values == "Informational") {
+                    return '<button type="button" class="btn text-white"style="background-color:#3399FF" href="">Informational</button>'
+                }
+              }
+  var addedrow = t.row.add([i,
+  vulndata.vulnerabilityname,
+  getseverity(vulndata.vulnerabilityseverity),vulndata.status,editbutton(vulndata.id),deletebutton(vulndata.id)]).node().id = vulndata.id
+  //t.row(vulndata.id).nodes().to$().addClass('btnDelete');
+  //t.addClass('btnDelete');
+  //$( addedrow ).addClass('btnDelete');
+  $(addedrow).addClass("label-warning");
+
+
+//$(t.row).addClass( 'btnDelete' );
+      
+    
   
+  t.draw(false);
+  
+            }
+          }
+
+
+
+
+
+        
+    
+          $("#vulnerabilitytable").dataTable().fnDestroy();
+    }
+</script>
+    <script>
+
+        function retestdata(){
+            $("#testtable").dataTable().fnDestroy();
+            $.ajax({
+                type: 'GET',
+                url: '/api/project/Retest/{{project}}/',
+                contentType: "text/plain",
+                dataType: 'json',
+                success: function (data) {
+                  myJsonData = data;
+                  populateDataTable(myJsonData);
+                },
+                error: function (e) {
+                  console.log("There was an error with your request...");
+                  console.log("error: " + JSON.stringify(e));
+                }
+              });
+
+              function populateDataTable(data) {
+                console.log("populating data table...");
+                // clear the table before populating it with more data
+                $("#testtable").DataTable().clear();
+                var length = Object.keys(data).length;
+                for(var i = 0; i < length+1; i++) {
+                  var retestdata = data[i];
+            
+                  // You could also use an ajax property on the data table initialization
+                  var t = $('#testtable').DataTable();
+      t.row.add([retestdata.retestcount,retestdata.startdate,retestdata.enddate]).draw(false);
+                }
+              }
+        }
+    </script>
 </body>
  
 </html>

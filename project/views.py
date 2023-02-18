@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Project, Vulnerability, Vulnerableinstance
+from .models import Project, Vulnerability, Vulnerableinstance,ProjectRetest
 from customers.models import Company, Customer
 from vulnerability.models import VulnerabilityDB
 from datetime import datetime
@@ -19,12 +19,257 @@ import PyPDF2
 from PyPDF2 import PdfFileWriter
 from accounts.models import Profile
 
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.response import Response
+from .serializers import Projectserializers, Retestserializers,Vulnerabilityserializers,Instanceserializers
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAdminUser
+from rest_framework import views
+from django.contrib.auth.models import User
 
-@login_required
+
+
+@api_view(['POST'])
+def newproject(request):
+
+    serializer = Projectserializers(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        company = Company.objects.get(name=request.data.get('companyname'))
+        if request.user.is_superuser:
+            owner = request.data.get('owner', None)
+
+            if owner:
+                owner = User.objects.get(username=owner,companyname=company)
+                serializer.save(owner=owner,companyname=company)
+            else:
+                serializer.save(owner=request.user,companyname=company)
+        else:
+            serializer.save(owner=request.user,companyname=company)
+        return Response(serializer.data)
+    
+
+
+
+
+    if request.user.is_superuser:
+        owner = request.data.get('owner', None)
+        if owner:
+            owner = User.objects.get(username=owner)
+            serializer.save(owner=owner, companyname=self.request.user.company)
+        else:
+            serializer.save(owner=self.request.user, companyname=self.request.user.company)
+    else:
+        serializer.save(owner=self.request.user, companyname=self.request.user.company)
+
+
+
+
+
+@api_view(['POST'])
+@permission_classes([IsOwnerOrReadOnly])
+def projecteditapi(request,pk):
+    project = Project.objects.get(pk=pk)
+    serializer = Projectserializers(instance=project,data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        if not request.user.is_superuser:
+            serializer.validated_data['owner'] = request.user
+            #serializer.object.owner = 
+        serializer.save()
+        respdata={'Status':"Success"}
+        respdata.update(serializer.data)
+
+        return Response(respdata)
+'''
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,IsOwnerOrReadOnly])
+def projectview(request,pk):
+    project = Project.objects.get(pk=pk)
+    serializer = Projectserializers(project,many=False)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getallproject(request):
+    print("hello   ")
+    instances = Project.objects.all()
+    serializer = Projectserializers(instances,many=True)
+    return Response(serializer.data)
+    #return Response("gello")
+
+'''
+class GetAllProjects(views.APIView):
+    def get(self, request):
+        projects = Project.objects.all()
+        
+        serializer = Projectserializers(projects, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def deleteproject(request):
+    projects = Project.objects.filter(id__in=request.data)
+    projects.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+
+@api_view(['GET'])
+def projectfindingview(request,pk):
+    vulnerability = Vulnerability.objects.filter(project=pk)
+    serializer = Vulnerabilityserializers(vulnerability,many=True)
+    return Response(serializer.data)
+
+
+
+
+@api_view(['POST'])
+def projectvulnedit(request,pk):
+    vulnerability = Vulnerability.objects.get(pk=pk)
+    serializer = Vulnerabilityserializers(instance=vulnerability,data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        respdata={'Status':"Success"}
+        respdata.update(serializer.data)
+
+        return Response(respdata)
+
+
+@api_view(['POST'])
+def projectvulnadd(request):
+    
+    serializer = Vulnerabilityserializers(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data)
+    
+
+
+@api_view(['DELETE'])
+def projectvulndelete(request):
+    vuln = Vulnerability.objects.filter(id__in=request.data)
+    vuln.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+@api_view(['GET'])
+def projectvulnview(request,pk):
+    vulnerability = Vulnerability.objects.get(pk=pk)
+    serializer = Vulnerabilityserializers(vulnerability,many=False)
+    return Response(serializer.data)
+
+
+
+
+
+@api_view(['GET'])
+def projectvulninstances(request,pk):
+    instances = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
+    serializer = Instanceserializers(instances,many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+def projectaddinstances(request):
+    serializer = Instanceserializers(data=request.data,many=True)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        #respdata={'Status':"Success"}
+        #respdata.update(serializer.data)
+
+        return Response(serializer.data)
+
+@api_view(['DELETE'])
+def projectdeleteinstances(request):
+    vluninstace = Vulnerableinstance.objects.filter(id__in=request.data)
+    vluninstace.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+       
+@api_view(['DELETE'])
+def Retestdelete(request,pk):
+    retest = ProjectRetest.objects.get(pk=pk)
+    retest.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+
+
+@api_view(['GET'])
+def RetestList(request,pk):
+
+    
+    retest = ProjectRetest.objects.filter(project=pk)
+    serializer = Retestserializers(retest,many=True)
+    return Response(serializer.data)
+
+
 def project(request):
 
-    project = Project.objects.all()
-    return render(request, "Project/project.html",{'project': project})
+    #project = Project.objects.all()
+    return render(request, "Project/project.html")#,{'project': project})
+
+
+
+@api_view(['POST'])
+def Retestadd(request,pk):
+    projectdata = Project.objects.get(pk=pk)
+    retest = ProjectRetest.objects.filter(project=projectdata).exists()
+    if retest:
+        retestproject=ProjectRetest.objects.filter(project=projectdata)
+        retestcount =  retestproject.count() + 1
+        newdict={'retestcount':retestcount}
+        newdict.update(request.data)
+        serializer = Retestserializers(data=newdict,many=False)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        #respdata={'Status':"Success"}
+        #respdata.update(serializer.data)
+            return Response(serializer.data)
+
+
+
+
+@login_required
+def addretest(request,pk):
+    if request.method == "POST":
+        projectdata = Project.objects.get(pk=pk)
+        retest = ProjectRetest.objects.filter(project=projectdata).exists()
+        if retest:
+            retestproject=ProjectRetest.objects.filter(project=projectdata)
+            retestproject.count()
+            count =  retestproject.count() + 1
+            startdate = request.POST['startdate']
+            enddate = request.POST['enddate']
+            startdate1 = datetime.strptime(startdate, '%d/%m/%Y').strftime('%Y-%m-%d')
+            enddate1 = datetime.strptime(enddate, '%d/%m/%Y').strftime('%Y-%m-%d')
+            retestadd = ProjectRetest(project=projectdata,retestcount=count,startdate=startdate1,enddate=enddate1)
+            retestadd.save()
+            responseData = {'status': "Success",'count':count,'startdate':startdate,"enddate":enddate}
+            
+            return JsonResponse(responseData)
+        else:
+            startdate = request.POST['startdate']
+            enddate = request.POST['enddate']
+            startdate1 = datetime.strptime(startdate, '%d/%m/%Y').strftime('%Y-%m-%d')
+            enddate1 = datetime.strptime(enddate, '%d/%m/%Y').strftime('%Y-%m-%d')
+            retestadd = ProjectRetest(project=projectdata,retestcount=1,startdate=startdate1,enddate=enddate1)
+            retestadd.save()
+            responseData = {'status': "Success",'count':'1','startdate':startdate,"enddate":enddate}
+            
+            return JsonResponse(responseData)
+
+    
+
+
+
+
+
 
 @login_required
 def projectadd(request):
@@ -41,13 +286,14 @@ def projectadd(request):
         projecttype = request.POST['projecttype']
         startname = request.POST['startname']
         enddate = request.POST['enddate']
+        testingtype = request.POST['testingtype']
         startname = datetime.strptime(startname, '%d/%m/%Y').strftime('%Y-%m-%d')
         enddate = datetime.strptime(enddate, '%d/%m/%Y').strftime('%Y-%m-%d')
 
 
         company = Company.objects.get(name=company)
 
-        projectadd = Project(companyname=company,name=projectname, scope=scope, description=projectdescription,projecttype=projecttype,startdate=startname,enddate=enddate)
+        projectadd = Project(companyname=company,name=projectname, scope=scope, description=projectdescription,projecttype=projecttype,startdate=startname,enddate=enddate,testingtype=testingtype)
         projectadd.save()
 
         project = Project.objects.all()
@@ -64,12 +310,11 @@ def projectdelete(request, pk):
 @login_required
 def projectView(request,pk):
     if request.method == 'GET':
+        project = pk
+        return render(request, "Project/Project-Details.html", {'project': project})
 
-        project =  Project.objects.get(pk=pk)
-        vulnerability = Vulnerability.objects.filter(project=pk)
-        
-        return render(request, "Project/Project-Details.html", {'vulnerability': vulnerability, 'project': project})
 
+'''
 @login_required
 def projectedit(request,pk):
     if request.method == 'POST':
@@ -79,7 +324,8 @@ def projectedit(request,pk):
         projecttype = request.POST['projecttype']
         startname = request.POST['startname']
         enddate = request.POST['enddate']
-
+        testingtype = request.POST['testingtype']
+        projectException = request.POST['Exception']
 
         startname = datetime.strptime(startname, '%d/%m/%Y').strftime('%Y-%m-%d')
         enddate = datetime.strptime(enddate, '%d/%m/%Y').strftime('%Y-%m-%d')
@@ -91,15 +337,19 @@ def projectedit(request,pk):
         project.projecttype = projecttype
         project.startdate = startname
         project.enddate = enddate
+        project.testingtype = testingtype
+        project.projectexception = projectException
         project.save()
         messages.info(request,'Project Updated successfully')
         return HttpResponseRedirect('/project/'+pk+'/')
 
+'''
+'''
 @login_required
 def projectvulndelete(request,pk):
     Vulnerability.objects.get(pk=pk).delete()
     return HttpResponse(status=200)
-
+'''
 @login_required
 @csrf_exempt
 def projectnewvuln(request,pk):
@@ -153,8 +403,7 @@ def projecteditvuln(request,pk):
        
     if request.method == 'GET':        
         vulnerabilityDB = VulnerabilityDB.objects.all().values('vulnerabilityname')
-        instances = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
-        context = {'form':form,'vulnerabilityDB': vulnerabilityDB,'instances':instances,'id':pk}
+        context = {'form':form,'vulnerabilityDB': vulnerabilityDB,'id':pk}
         
         return render(request, 'Project/Edit-Vulnerability.html', context)
 
@@ -231,7 +480,7 @@ def pdf(request,pk):
     
     
     pdfpage = template.render({'vuln':vuln,'project':project,"settings":settings,"url":url,'userdetails':userdetails,'profile':profile,'customer':customer,'ciritcal':ciritcal,'high':high,'medium':medium,'low':low,'info':info,'instances':instances})
-    pdfpageoptions = {'javascript-delay':'800','margin-left': '0','margin-right': '0','margin-top': '10','margin-bottom': '7','enable-local-file-access': '','footer-font-name':'Segoe UI','enable-javascript':'','footer-html':footerpage}
+    pdfpageoptions = {'javascript-delay':'800','margin-left': '5','margin-right': '5','margin-top': '15','margin-bottom': '14','enable-local-file-access': '','footer-font-name':'Segoe UI','enable-javascript':'','footer-html':footerpage}
     pdfpagepdf = pdfkit.from_string(pdfpage,"reportpage.pdf",pdfpageoptions,cover = coverpage,cover_first=True,toc={"toc-header-text": "Table of Contents",'xsl-style-sheet':tocstyle,'disable-dotted-lines':''})
     
     

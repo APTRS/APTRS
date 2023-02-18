@@ -1,0 +1,187 @@
+.btn {
+  margin-bottom: $btn-margin-bottom;
+  letter-spacing: $a-letter-spacing;
+  text-transform: none;
+  box-shadow: $btn-box-shadow;
+
+  &:not([class*="btn-outline-"]) {
+    border: 0;
+  }
+
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    box-shadow: $btn-hover-box-shadow;
+    transform: $btn-active-hover-transform;
+  }
+
+  @include hover {
+    &:not(.btn-icon-only){
+      box-shadow: $btn-hover-box-shadow;
+      transform: $btn-hover-transform;
+    }
+  }
+
+  &.bg-white {
+    @include hover {
+      color: $body-color;
+    }
+  }
+
+  &.btn-link{
+    box-shadow: none;
+    font-weight: $btn-font-weight;
+
+    &:hover,
+    &:focus{
+      box-shadow: none;
+    }
+  }
+
+  &.btn-round {
+    border-radius: $btn-border-rounded;
+  }
+
+  &.btn-xs {
+    padding: $btn-padding-y-xs $btn-padding-x-xs;
+    font-size: $btn-font-size-xs;
+  }
+  
+  // Button Just Icon
+
+  &.btn-icon-only {
+    width: $btn-just-icon-width;
+    height: $btn-just-icon-height;
+    padding: $btn-just-icon-padding-y $btn-just-icon-padding-x;
+  }
+
+  // Button Icon Sizes
+
+  &.btn-sm {
+    &.btn-icon-only {
+      width: $btn-just-icon-width-sm;
+      height: $btn-just-icon-height-sm;
+      padding: $btn-just-icon-padding-y-sm $btn-just-icon-padding-x-sm;
+    }
+
+    i {
+      font-size: $btn-just-icon-sm-font-size;
+    }
+  }
+
+  &.btn-lg {
+    &.btn-icon-only {
+      width: $btn-just-icon-width-lg;
+      height: $btn-just-icon-height-lg;
+      padding: $btn-just-icon-padding-y-lg $btn-just-icon-padding-x-lg;
+    }
+
+    i {
+      font-size: $btn-just-icon-lg-font-size;
+      position: $btn-just-icon-lg-position;
+      top: $btn-just-icon-lg-top;
+    }
+  }
+
+  &.btn-rounded {
+    border-radius: $btn-border-rounded;
+  }
+}
+
+.btn-check{
+  &:checked{
+    +.btn{
+      svg{
+        .color-background{
+          fill: $white;
+        }
+      }
+      &:hover{
+        svg{
+          .color-background{
+            fill: $dark;
+          }
+        }
+      }
+    }
+  }
+}
+
+.icon-move-right {
+  i {
+    transition: $btn-icon-transition;
+  }
+  &:hover,
+  &:focus {
+    i {
+      transform: $btn-icon-transform-right;
+    }
+  }
+}
+
+.icon-move-left{
+  i {
+    transition: $btn-icon-transition;
+  }
+  &:hover,
+  &:focus {
+    i {
+      transform: $btn-icon-transform-left;
+    }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color},
+  .btn.bg-gradient-#{$color} {
+    @include hover {
+      background-color: $value;
+      border-color: $value;
+    }
+    .btn.bg-outline-#{$color} {
+      border: $border-width solid $value;
+    }
+
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active,
+    .show > &.dropdown-toggle {
+      color: color-yiq($value);
+      background-color: $value;
+    }
+
+    @if $value != $white and $value != $light {
+      &.focus,
+      &:focus {
+        color: $white;
+      }
+    }
+  }
+
+  .btn-outline-#{$color} {
+    box-shadow: none;
+    @include hover {
+      &:not(.active){
+        background-color: transparent;
+        opacity: .75;
+        box-shadow: none;
+        color: $value;
+      }
+    }
+  }
+}
+
+.btn-outline-white{
+  border-color: rgba($white, .75);
+  background: rgba($white, .1);
+}
+
+@each $color, $value in $btn-font-colors {
+  .btn-#{$color},
+  .btn.bg-gradient-#{$color} {
+    color: $value;
+    @include hover {
+      color: $value;
+    }
+  }
+}
+

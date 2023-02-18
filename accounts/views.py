@@ -10,6 +10,60 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 
 
+
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+
+
+
+
+from rest_framework import generics
+from .serializers import UserSerializer
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def getallusers(request):
+    userrdetails = User.objects.all()
+    serializer = UserSerializer(userrdetails,many=True)
+    return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+
+        # Add extra responses here
+        data['Status'] = "True"
+        data['username'] = self.user.username
+        data['Pic'] = self.user.userprofile.profilepic.url
+        data['isAdmin'] = self.user.is_superuser
+        return data
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+
+
+
+
+
 def Login(request):
     if request.method == 'GET':
         return render(request, "Accounts/login.html")

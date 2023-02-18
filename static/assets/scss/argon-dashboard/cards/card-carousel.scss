@@ -1,0 +1,21 @@
+.card {
+  &.card-carousel {
+    .carousel {
+      .carousel-control-prev {
+        left: auto;
+        right: $card-carousel-prev-icon-position;
+      }
+      .carousel-control-prev,
+      .carousel-control-next {
+        bottom: auto;
+        top: $card-carousel-icons-top;
+        z-index: $card-carousel-icons-zindex;
+      }
+      .carousel-control-prev-icon, 
+      .carousel-control-next-icon {
+        width: $card-carousel-icons-width;
+        height: $card-carousel-icons-height;
+      }
+    }
+  }
+}
