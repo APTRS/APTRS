@@ -9,7 +9,7 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
 [![Python Version](https://img.shields.io/badge/Python-3.8-brightgreen)](https://www.python.org/downloads/release/python-3810/)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
+![GitHub's release (latest by date, including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Anof-cyber/APTRS/django.yml?branch=main)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Anof-cyber/aptrs)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
@@ -73,9 +73,9 @@ Linux
 - Managing Vulnerabilities
 - Manage All Projects in one place
 - Create a Vulnerability Database and avoid writing the same description and recommendations again
-- Easily Create PDF Reprot
+- Easily Create PDF Report
 - Dynamically add POC, Description and Recommendations
-- Manage Customers and Comapany
+- Manage Customers and Company Information
 
 
 ## Screenshots
@@ -119,7 +119,7 @@ Linux
 
 ## Contributors
 
-We are seeking a volunteer developer with experience in Django or Front End development to help improve our project by adding more security and features. If you're interested, please reach out to kalalsourav20@gmail.com. For reporting errors or bugs, please use the Github issues feature rather than emailing.
+We are seeking a volunteer developer with experience in Django or Front End development to help improve our project by adding more security and features. If you're interested, please reach out to kalalsourav20@gmail.com. For reporting errors or bugs, please use the GitHub issues feature rather than emailing.
 
 <a href = "https://github.com/Anof-cyber/APTRS/graphs/contributors">
   <img src = "https://contrib.rocks/image?repo=Anof-cyber/APTRS"/>
