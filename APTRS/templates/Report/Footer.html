@@ -5,11 +5,11 @@
     <style>
         body{
             text-align: right;
-            background: #263E64;
-            color: white;
+           
+            color: black;
         }
         p{
-            padding-top: 10px;
+            
             margin-right: 10px;
         }
     </style>
@@ -23,10 +23,10 @@
               var y = document.getElementsByClassName(x[i]);
               for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
   
-              if(vars['page'] == 2){ // If page is 1, set FakeHeaders display to none
-                 document.getElementById("FakeHeaders").style.display = 'none';
-                 document.getElementById("bodyid").style.display = 'none';
-              }
+  //            if(vars['page'] == 2){ // If page is 1, set FakeHeaders display to none
+             //    document.getElementById("FakeHeaders").style.display = 'none';
+              //   document.getElementById("bodyid").style.display = 'none';
+              //}
   
             }
           }
@@ -34,6 +34,6 @@
    
 </head>
 <body onload="subst()" id="bodyid"style="border:0;margin:0;">
-    <p><span class="page"></span></p>
+    <p> Page <span class="page"></span></p>
 </body>
 </html>

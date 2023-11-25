@@ -13,11 +13,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 import logging
+from datetime import timedelta
+import sys
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-logging.disable(logging.CRITICAL)
+#logging.disable(logging.CRITICAL)
 ADMIN_ENABLED = False
 
 # Quick-start development settings - unsuitable for production
@@ -27,7 +30,7 @@ ADMIN_ENABLED = False
 SECRET_KEY = 'django-insecure--b83(+esj0aubo_gr!f*k)tyvs*_t_&4e2ty00beroxof8@d!7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,6 +51,9 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'project',
+    'rest_framework',
+    'corsheaders',
+  
 ]
 
 MIDDLEWARE = [
@@ -58,7 +64,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 ROOT_URLCONF = 'APTRS.urls'
 
@@ -144,7 +158,8 @@ MEDIA_URL = '/media/'
 MEDIA_PATH = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(MEDIA_PATH, 'media')
 Company_LOGO = os.path.join(MEDIA_URL, 'company')
-
+CKEDITOR_UPLOAD_LOCATION = os.path.join(MEDIA_ROOT, 'uploads')
+CKEDITOR_UPLOAD_URL = os.path.join(MEDIA_URL, 'uploads')
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
@@ -204,8 +219,130 @@ CKEDITOR_CONFIGS = {
     }
 }
 
+
+
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '[%(levelname)s] %(asctime)-15s - %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S',
+        },
+        'color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format':
+                '%(log_color)s[%(levelname)s] %(asctime)-15s - %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S',
+            'log_colors': {
+                'DEBUG': 'cyan',
+                'INFO': 'green',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'red,bg_white',
+            },
+        },
+    },'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'color',
+        },
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+    'handlers': ['console', 'logfile'],
+    'level': 'WARNING',
+    'propagate': True,
+},
+'django.db.backends': {
+    'handlers': ['console', 'logfile'],
+    'level': 'INFO',
+    'propagate': False,
+},
+'rest_framework':{
+    'handlers': ['console', 'logfile'],
+    'level': 'WARNING',
+    'propagate': False,},
+
+        'accounts': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'customers': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'vulnerability': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'project': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+    
+}
+
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 WKHTMLTOPDF_CMD_OPTIONS = {'disable-javascript': True}
 
 LOGIN_URL= '/accounts/login'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+
+SIMPLE_JWT = {
+'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
+'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
+'ROTATE_REFRESH_TOKENS': True,
+'BLACKLIST_AFTER_ROTATION': True,
+'ALGORITHM': 'HS256',
+'SIGNING_KEY': SECRET_KEY,
+'VERIFYING_KEY': None,
+'AUTH_HEADER_TYPES': ('Bearer',),
+'USER_ID_FIELD': 'id',
+'USER_ID_CLAIM': 'user_id',
+'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+'TOKEN_TYPE_CLAIM': 'token_type',
+}
+
+#Your Organization Details
+ORG = "AnoF PVT LTD"
+MY_ORG_LOGO = os.path.join(MEDIA_ROOT, 'company','APTRS.png')
+
+
+#CVSS 3.1 for Nessus
+CVSS_BASE_SCORE_INFO = 0.0
+CVSS_BASE_INFO = "CVSS:3.1/AV:A/AC:H/PR:L/UI:R/S:U/C:N/I:N/A:N"
+
+CVSS_BASE_SCORE_LOW = 3.5
+CVSS_BASE_LOW = "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N"
+
+CVSS_BASE_SCORE_MEDIUM = 5.7
+CVSS_BASE_MEDIUM = "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:N/A:N"
+
+
+CVSS_BASE_SCORE_HIGH = 3.5
+CVSS_BASE_HIGH = "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N"
+
+CVSS_BASE_SCORE_CRITICAL = 3.5
+CVSS_BASE_CRITICAL = "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N"

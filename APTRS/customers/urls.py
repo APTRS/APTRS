@@ -6,16 +6,14 @@ from django.conf.urls import include
 
 
 urlpatterns = [
-    path('', views.company, name='index'),
-    path('delete', views.delete, name='delete'),
-    path('edit', views.edit, name='edit'),
-    path('add', views.add, name='add'),
-    path('customer/', views.customer, name='customer'),
-    path('customer/delete', views.customerdelete, name='customerdelete'),
-    path('customer/edit', views.customeredit, name='customeredit'),
-    path('customer/add', views.customeradd, name='customeradd'),
-    
-
+    path('all-company',views.getallcompnay),
+    path('all-customer',views.getallcustomer),
+    path('customer/<str:pk>/',views.getcustomer),
+    path('customer/edit/<str:pk>/',views.customeredit),
+    path('customer/add',views.customeradd),
+    path('customer/delete',views.customerdelete),
+    path('company/<str:pk>/',views.getcompany),
+    path('company/add',views.add_company),
+    path('company/edit/<str:pk>/',views.edit_company),
+    path('company/delete',views.companydelete),
 ]
-
-

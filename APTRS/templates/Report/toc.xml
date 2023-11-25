@@ -13,16 +13,7 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
                 <style>
                     @import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
-                    p {
-                    text-align: center;
-                    font-size: 60px;
-                    margin-top: 305px;
-                    margin-bottom: 305px;
-                    padding-right: 60px;
-                    margin-left: 50px;
-                    padding-top: 290px;
-                    color: #ffa500;
-                    }
+                 
                     
                     
                  
@@ -38,45 +29,7 @@
                     
                     color: inherit;
                     }
-             .bodyclass{
-                
-             }
-            .topgreen{
-                width:25%;height:20px;background:#52C776;
-                margin-top: -250px;
-                margin-left: 45px;
-             }
-             .topyellow{
-                width:25%;height:20px;background:#F4D13B;
-                margin-top: -30px;
-             }
-             .topblue{
-                width:25%;height:20px;background:#9BDCFF;
-                margin-top: -30px;
-                margin-left: 670px;
-                margin-bottom: 90px;
-             }
-
-             .bottomgreen{
-                width:25%;height:20px;background:#52C776;
-                margin-left: 45px;
-                margin-top: 500px;
-             }
-
-
-
-            .bottomyellow{
-                width:25%;height:20px;background:#F4D13B;
-                margin-top: -30px;
-            }
-
-
-            .bottomblue{
-
-                width:25%;height:20px;background:#9BDCFF;
-                margin-left: 670px;
-                margin-top: -30px;
-            }
+       
 
 
              #menu ul{
@@ -86,63 +39,79 @@
               display: inline;
             }
            
+            table {
+                margin-left: 40px;
+                width: 90%;
+                padding-top: 60px;
+                padding-right: 60px;
+                margin-right: 40px;
+                border-collapse: collapse;
+              }
+              th, td {
+               
+                text-align: left;
+                padding: 8px;
+              }
+              th.pagenumber {
+                text-align: center;
+                width: 20%;
+              }
           
 
-            .pagenumber{
-                color:#ffa500;
-                font-size:30px;
-                font-family:Times New Roman;
-                font-weight:400;
-                
-                padding-right: 70px;
-                padding-left: 270px;
-                padding-top: -45px;
-                
-                
+            .tocitem {
+                display: flex; /* use flexbox to arrange items horizontally */
+                align-items: center; /* vertically center items */
+                position: relative;
             }
-            .toctitle{
-                
-                font-size:30px;
-                font-family:Times New Roman;
-                font-weight:400;
-                
-                magrin-right: 570px;
-                padding-top: -45px;
-              
-                
+            .toctitle {
+                font-family: Calibri;
+                width: 80%;
+
+                font-size: 20px;
+                /* add some right margin */
             }
+            .pagenumber {
+                font-family: Calibri;
+                width: 20%;
+                font-size: 20px;
+                           }
+            
+            .tocheading{
+                color: #FF7D41;
+                font-weight:400;
+                font-family:Calibri;
+                font-size:50px;
+                margin-left: 40px;
+                padding-top: 60px;
+            }
+
             
                 </style>
             </head>
             <body class="bodyclass">
               
-                <p style=" color: #ffa500;">Table of Contents</p>
+                <p class="tocheading" >Table of Contents</p>
                 
-               <div>
-                <hr class="topgreen"></hr>
-                <hr class="topyellow"></hr>
-                <hr class="topblue"></hr>
-               </div>
+           
                 <ul class="leaders">
                     <xsl:apply-templates select="outline:item/outline:item"/>
                 </ul>
-                <div>
-                    <hr class="bottomgreen"></hr>
-                    <hr class="bottomyellow"></hr>
-                    <hr class="bottomblue"></hr>
-                   </div>
     
             </body>
           
         </html>
     </xsl:template>
     <xsl:template match="outline:item">
+    
 
-      
-              <span class="pagenumber"><xsl:value-of select="@page"/></span>
-              <span class="toctitle"><xsl:value-of select="@title"/></span>
-             
-          
+    <table>
+        <tbody>
+          <tr>
+            <td class="toctitle"><xsl:value-of select="@title"/></td>
+            <td class="pagenumber"><xsl:value-of select="@page"/></td>
+          </tr>
+        </tbody>
+      </table>
               
        
         

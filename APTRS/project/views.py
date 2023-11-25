@@ -1,264 +1,566 @@
-from django.shortcuts import render
-from .models import Project, Vulnerability, Vulnerableinstance
-from customers.models import Company, Customer
-from vulnerability.models import VulnerabilityDB
-from datetime import datetime
-from django.http import HttpResponse
-from django.contrib import messages
-from django.http import JsonResponse, HttpResponseRedirect
-from .forms import ProjectVulnerabilityForm
-from django.views.decorators.csrf import csrf_exempt
-import json
-from django.contrib.auth.decorators import login_required
-from io import BytesIO
-from django.template.loader import get_template
+from .models import Project, Vulnerability, Vulnerableinstance,ProjectRetest,PrjectScope
 from django.conf import settings
+from rest_framework.decorators import api_view,permission_classes,parser_classes
+from rest_framework.response import Response
+from .serializers import Projectserializers, Retestserializers,Vulnerabilityserializers,Instanceserializers,VulnerableinstanceSerializer, VulnerabilitySerializer2,ImageSerializer,PrjectScopeserializers
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import views,status
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+from django.db.models.signals import post_save
+import logging
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser,FormParser
+from django.core.files.storage import FileSystemStorage
+from .nessus import is_valid_csv
+from .report import generate_pdf_report
 import os
-import pdfkit
-import PyPDF2
-from PyPDF2 import PdfFileWriter
-from accounts.models import Profile
 
 
-@login_required
-def project(request):
-
-    project = Project.objects.all()
-    return render(request, "Project/project.html",{'project': project})
-
-@login_required
-def projectadd(request):
-    if request.method == 'GET':
-
-        company = Company.objects.all().values('name')
-        return render(request, "Project/projectadd.html", {'company': company})
-        
-    elif request.method == 'POST':
-        company = request.POST['company']
-        projectname = request.POST['projectname']
-        projectdescription = request.POST['projectdescription']
-        scope = request.POST['scope']
-        projecttype = request.POST['projecttype']
-        startname = request.POST['startname']
-        enddate = request.POST['enddate']
-        startname = datetime.strptime(startname, '%d/%m/%Y').strftime('%Y-%m-%d')
-        enddate = datetime.strptime(enddate, '%d/%m/%Y').strftime('%Y-%m-%d')
-
-
-        company = Company.objects.get(name=company)
-
-        projectadd = Project(companyname=company,name=projectname, scope=scope, description=projectdescription,projecttype=projecttype,startdate=startname,enddate=enddate)
-        projectadd.save()
-
-        project = Project.objects.all()
-        return render(request, "Project/project.html",{'project': project})
+logger = logging.getLogger(__name__)
 
 
 
-@login_required
-def projectdelete(request, pk):
-    Project.objects.get(pk=pk).delete()
-    return HttpResponse(status=200)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser,FormParser])
+def Nessus_CSV(request, pk):
+    try:
+        Project.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Project Not Found, Project: %s is incorrect", pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+    file = request.FILES['file']
+    output = is_valid_csv(file,pk)
+    
+    if output == False:
+        return Response({'status': 'Failed',"message": "Invalid CSV, Unable to parse or missing required fields"})
+      
+    else:
+        allvuln = Vulnerability.objects.filter(project=pk)
+        serializer = VulnerabilitySerializer2(allvuln, many=True)
+        return Response(serializer.data)
+       
 
 
-@login_required
-def projectView(request,pk):
-    if request.method == 'GET':
+@api_view(['DELETE'])
+def delete_images(request):
+    media_path = settings.STATIC_ROOT
 
-        project =  Project.objects.get(pk=pk)
-        vulnerability = Vulnerability.objects.filter(project=pk)
-        
-        return render(request, "Project/Project-Details.html", {'vulnerability': vulnerability, 'project': project})
+    image_paths = request.data
 
-@login_required
-def projectedit(request,pk):
-    if request.method == 'POST':
-        projectname = request.POST['projectname']
-        projectdescription = request.POST['projectdescription']
-        scope = request.POST['scope']
-        projecttype = request.POST['projecttype']
-        startname = request.POST['startname']
-        enddate = request.POST['enddate']
+    for path in image_paths:
+        path = path.lstrip('/')
+        image_path =  os.path.join(settings.STATIC_ROOT, path)
+        try:
+            os.remove(image_path)
+        except FileNotFoundError:
+            pass 
+
+    return Response({'message': 'Images deleted successfully'})
 
 
-        startname = datetime.strptime(startname, '%d/%m/%Y').strftime('%Y-%m-%d')
-        enddate = datetime.strptime(enddate, '%d/%m/%Y').strftime('%Y-%m-%d')
-        
+
+class ImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request):
+        serializer = ImageSerializer(data=request.data)
+        if serializer.is_valid():
+            images = serializer.validated_data['images']        
+            paths = []
+            for image in images:
+              
+                fss = FileSystemStorage(location=settings.CKEDITOR_UPLOAD_LOCATION, base_url=settings.CKEDITOR_UPLOAD_URL)
+                file = fss.save(image.name, image)
+                file_url = fss.url(file)
+                paths.append(file_url)
+                
+            return Response({'paths': paths})
+        else:
+            return Response(serializer.errors, status=400)
+
+
+
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def projectaddscope(request,pk):
+    try:
         project = Project.objects.get(pk=pk)
-        project.name = projectname
-        project.description = projectdescription
-        project.scope = scope 
-        project.projecttype = projecttype
-        project.startdate = startname
-        project.enddate = enddate
-        project.save()
-        messages.info(request,'Project Updated successfully')
-        return HttpResponseRedirect('/project/'+pk+'/')
-
-@login_required
-def projectvulndelete(request,pk):
-    Vulnerability.objects.get(pk=pk).delete()
-    return HttpResponse(status=200)
-
-@login_required
-@csrf_exempt
-def projectnewvuln(request,pk):
-    form = ProjectVulnerabilityForm()
-    if request.method == 'GET':
-        vulnerabilityDB = VulnerabilityDB.objects.all().values('vulnerabilityname')
-        context = {'form':form,'vulnerabilityDB': vulnerabilityDB,'project':pk}
-        return render(request, "Project/newvulnerability.html", context)
-    
-    if request.method == 'POST':
-        
-        vulntitle = request.POST.get('vulnerabilityname')
-        
-        form = ProjectVulnerabilityForm(request.POST)
-        
-        if form.is_valid():
+        serializer = PrjectScopeserializers(data=request.data,many=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(project=project)
+            return Response(serializer.data)
+        else:
+            logger.error("Serializer errors: %s", str(serializer.errors))
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
-            responseid = form.save()
-            responseData = {'Vulnerability': responseid.id,'Status':'Success','Project':pk}
-            return JsonResponse(responseData)
-        else:
-            print(form.errors )
-            #print(form.non_field_errors )
-
-
-
-
-@login_required
-def fetchvuln(request):
-    vulntitle = request.GET['title']
-    project =  VulnerabilityDB.objects.get(vulnerabilityname=vulntitle)
-    print(project.vulnerabilityseverity)
-    return JsonResponse({'severity':project.vulnerabilityseverity,'Description':project.vulnerabilitydescription,'solution':project.vulnerabilitysolution,'refer':project.vulnerabilityreferlnk,'vector':project.cvssvector})
-
-@login_required
-def projecteditvuln(request,pk):
-    vlun = Vulnerability.objects.get(id=pk)
-    form = ProjectVulnerabilityForm(instance=vlun)
+    except ObjectDoesNotExist:
+        logger.error("Project not found for id=%s", pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
     
-    if request.method == 'POST':
-        form = ProjectVulnerabilityForm(request.POST, instance=vlun)
-        print(form.non_field_errors())
-        if form.is_valid():
-            form.save()
-            project = vlun.project
-        
-            return HttpResponse(status=200)
+   
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteprojectscope(request):
+    projects = PrjectScope.objects.filter(id__in=request.data)
+    projects.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def projectscopedit(request,pk):
+    try:
+        projectscope = PrjectScope.objects.get(pk=pk)
+        serializer = PrjectScopeserializers(instance=projectscope,data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            respdata={'Status':"Success"}
+            respdata.update(serializer.data)
+
+            return Response(respdata)
         else:
-            print(form.errors )
-            print(form.non_field_errors )
-       
-    if request.method == 'GET':        
-        vulnerabilityDB = VulnerabilityDB.objects.all().values('vulnerabilityname')
-        instances = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
-        context = {'form':form,'vulnerabilityDB': vulnerabilityDB,'instances':instances,'id':pk}
-        
-        return render(request, 'Project/Edit-Vulnerability.html', context)
-
-@login_required
-@csrf_exempt
-def deleteinstace(request,pk):
-    #vulnid = request.POST['id']
-    Vulnerableinstance.objects.get(pk=pk).delete()
-    responseData = {'status':'success'}
-    return JsonResponse(responseData)
+            logger.error("Sccope are incorrect")
+            return Response(serializer.errors, status=400)
+    except ObjectDoesNotExist:
+        logger.error("Scope Not Found, : %s is incorrect", projectid)
+        return Response({"message": "Scope not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
-        
-@login_required
-@csrf_exempt
-def addurl(request,pk):
-    body = json.loads(request.body)
-    vulnerability = Vulnerability.objects.get(id=pk)
-    for index in range(len(body)):
-        url =body[index]['URL']
-        paramter = body[index]['Paramter']
-        print(url)
-        print(paramter)
-        vuln = Vulnerableinstance(URL=url,Paramter=paramter,vulnerabilityid=vulnerability,project=vulnerability.project)
-        vuln.save()
-    insntaceid = vuln.pk
-    vlun = Vulnerability.objects.get(id=pk)
-    project = vlun.project
-    locationid = '/project/'+str(project.id)+'/'
-    responseData = {'redirect':locationid,'insntaceid':insntaceid}
-    return JsonResponse(responseData)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getprojectscopes(request,pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Project not found for id=%s", pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+    projectscope = PrjectScope.objects.filter(project=project)
+    serializer = PrjectScopeserializers(projectscope,many=True)
+    return Response(serializer.data)
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_vulnerability(request):
+    projectid = request.data.get('project')
+
+    try:
+        Projectobject = Project.objects.get(pk=projectid)
+    except ObjectDoesNotExist:
+        logger.error("Project Not Found, Project: %s is incorrect", projectid)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    vulnserializer = VulnerabilitySerializer2(data=request.data)
+    if vulnserializer.is_valid(raise_exception=True):
+        instacesserilization = VulnerableinstanceSerializer(data=request.data.get('instance'), many=True)
+        if instacesserilization.is_valid():
+            vulnerability = vulnserializer.save()
+            instances = instacesserilization.save(vulnerabilityid=vulnerability, project=Projectobject)
+            respdata = vulnserializer.data
+            respdata.update({'instance': instacesserilization.data})
+            return Response(respdata, status=201)
+        else:
+            logger.error("instances are incorrect")
+            return Response(vulnserializer.errors, status=400)
+    else:
+        logger.error(vulnserializer.errors)
+        return Response(vulnserializer.errors, status=400)
 
 
 
 
-@login_required
-def pdf(request,pk):
-    project = Project.objects.get(pk=pk)
 
-    order = ['Critical', 'High', 'Medium', 'Low', 'Informational']
-    vuln = Vulnerability.objects.filter(project=project)
-   
-    instances = Vulnerableinstance.objects.filter(project=project)
-    #print(request.user.profile.company)
-   
-    vuln = sorted(vuln, key=lambda x: order.index(x.vulnerabilityseverity))
-    ciritcal =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Critical').count()
-    high =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='High').count()
-    medium =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Medium').count()
-    low =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Low').count()
-    info =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Informational').count()
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def newproject(request):
+    serializer = Projectserializers(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        try:
+
+            company = Company.objects.get(name=request.data.get('companyname'))
+        except ObjectDoesNotExist:
+            logger.error("Company Not Found, Company: %s is incorrect", str(request.data.get('companyname')))
+            return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
+        if request.user.is_superuser:
+            owner = request.data.get('owner', None)
+
+            if owner:
+                try:
+                    owner = User.objects.get(username=owner)
+                except ObjectDoesNotExist:
+                    logger.error("User Not Found, Owner: %s is incorrect", str(owner))
+                    return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+                serializer.save(owner=owner,companyname=company)
+            else:
+                serializer.save(owner=request.user,companyname=company)
+        else:
+            serializer.save(owner=request.user,companyname=company)
+            logger.info("Project Creted by %s", request.user)
+        return Response(serializer.data)
+    else:
+        logger.error("Serializer errors: %s", str(serializer.errors))
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
   
-    customer = Customer.objects.filter(company=project.companyname)
-    profile = Profile.objects.all()
-    userid = request.user.id
-    userdetails = Profile.objects.get(user=userid)
-    #print(userdetails.company)
-   
-    tocstyle = (os.path.join(settings.BASE_DIR,'templates','Report','toc.xml'))
-    url = request.build_absolute_uri()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def project_edit(request, pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Project not found with pk=%s", pk)
+        
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
     
-    
-    
-    template = get_template('Report/Report.html')
-    footerpage = (os.path.join(settings.BASE_DIR,'templates','Report','Footer.html'))
-    content = {'vuln':vuln,'project':project,"settings":settings} 
-    
-    cover = get_template('Report/cover.html')
-    bgimage = (os.path.join(settings.BASE_DIR,'assets','images','BG.jpg'))
-    coverpage = cover.render({'project':project,"settings":settings,'bgimage':bgimage})
-    
-    
-    pdfpage = template.render({'vuln':vuln,'project':project,"settings":settings,"url":url,'userdetails':userdetails,'profile':profile,'customer':customer,'ciritcal':ciritcal,'high':high,'medium':medium,'low':low,'info':info,'instances':instances})
-    pdfpageoptions = {'javascript-delay':'800','margin-left': '0','margin-right': '0','margin-top': '10','margin-bottom': '7','enable-local-file-access': '','footer-font-name':'Segoe UI','enable-javascript':'','footer-html':footerpage}
-    pdfpagepdf = pdfkit.from_string(pdfpage,"reportpage.pdf",pdfpageoptions,cover = coverpage,cover_first=True,toc={"toc-header-text": "Table of Contents",'xsl-style-sheet':tocstyle,'disable-dotted-lines':''})
-    
-    
+    if not request.user.is_superuser:
+        request.data['owner'] = request.user
+    else:
+        try:
+            User.objects.get(username=request.data['owner'])
+            request.data['owner'] = request.data['owner']
+        except ObjectDoesNotExist:
+            logger.error("User not found with username=%s", request.data['owner'])
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
    
-    options = {'margin-left': '0','margin-right': '0','margin-top': '0','margin-bottom': '0','enable-local-file-access': '','footer-font-name':'Segoe UI','enable-javascript':''}
-    pdf = pdfkit.from_string(coverpage, 'coverpage.pdf',options)
+    serializer = Projectserializers(instance=project, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        
+        serializer.save()
+        respdata = {'Status': "Success"}
+        respdata.update(serializer.data)
+        logger.info("Project updated by %s for Project id=%s", request.user, pk)
+        return Response(respdata)
+    else:
+        logger.error("Serializer errors: %s", str(serializer.errors))
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getproject(request,pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Project not found for id=%s", pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
     
+    serializer = Projectserializers(project,many=False)
+    return Response(serializer.data)
 
 
-    pdfWriter = PyPDF2.PdfFileWriter()
-    pdf1Reader = PyPDF2.PdfReader('coverpage.pdf')
-    pdf2Reader = PyPDF2.PdfReader('reportpage.pdf')
-    #print(pdf1Reader)
-    pageObj = pdf1Reader.getPage(0)
-    pdfWriter.addPage(pageObj)
-    for pageNum in range(pdf2Reader.numPages):
-        if not pageNum == 0:
-            pageObj = pdf2Reader.getPage(pageNum)
+
+class GetAllProjects(views.APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        projects = Project.objects.all()    
+        serializer = Projectserializers(projects, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteproject(request):
+    projects = Project.objects.filter(id__in=request.data)
+    projects.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def projectfindingview(request, pk):
+    try:
+        vulnerability = Vulnerability.objects.filter(project=pk)
+        serializer = Vulnerabilityserializers(vulnerability, many=True)
+        return Response(serializer.data)
+    except ObjectDoesNotExist:
+        logger.error("Project Vulnerrability not found for id=%s", pk)
+        return Response({"message": "Vulnerrability not found"}, status=status.HTTP_404_NOT_FOUND)
        
-            pdfWriter.addPage(pageObj)
-    response_bytes_stream = BytesIO()
-    pdfWriter.write(response_bytes_stream)
-    os.remove('coverpage.pdf')
-    os.remove('reportpage.pdf')
-    filename = project.projecttype + " Report of " + project.name+".pdf"
-    response = HttpResponse(response_bytes_stream.getvalue(), content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename={filename}'
 
-    return response 
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def projectvulnedit(request,pk):
+    vulnerability = Vulnerability.objects.get(pk=pk)
+    serializer = Vulnerabilityserializers(instance=vulnerability,data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        respdata={'Status':"Success"}
+        respdata.update(serializer.data)
+
+        return Response(respdata)
+
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def projectvulndelete(request):
+    vuln = Vulnerability.objects.filter(id__in=request.data)
+    vuln.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def projectvulnview(request,pk):
+    try:
+        vulnerability = Vulnerability.objects.get(pk=pk)
+        serializer = Vulnerabilityserializers(vulnerability,many=False)
+        return Response(serializer.data)
+    except ObjectDoesNotExist:
+        logger.error("Vulnerrability not found for id=%s", pk)
+        return Response({"message": "Vulnerrability not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def projectvulninstances(request,pk):
+    instances = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
+    if not instances:
+        logger.error("Vulnerrability Instance not found for id=%s", pk)
+        return Response({"message": "Instancce not found"}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        serializer = Instanceserializers(instances,many=True)
+        return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def projectaddinstances(request,pk):
+    try:
+        vulnerability = Vulnerability.objects.get(pk=pk)
+        project = vulnerability.project
+        #request.data['vulnerabilityid'] = pk
+        serializer = Instanceserializers(data=request.data,many=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(vulnerabilityid=vulnerability,project=project)
+            return Response(serializer.data)
+        else:
+            logger.error("Serializer errors: %s", str(serializer.errors))
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+    except ObjectDoesNotExist:
+        logger.error("Vulnerrability not found for id=%s", pk)
+        return Response({"message": "Vulnerrability not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+   
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def projecteditinstances(request,pk):
+    try:
+        instance = Vulnerableinstance.objects.get(pk=pk)
+
+        serializer = Instanceserializers(instance=instance,data=request.data,partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            logger.error("Serializer errors: %s", str(serializer.errors))
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except ObjectDoesNotExist:
+        logger.error("Instance not found for id=%s", pk)
+        return Response({"message": "Instance not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def projectdeleteinstances(request):
+    vluninstace = Vulnerableinstance.objects.filter(id__in=request.data)
+    if not vluninstace:
+        logger.error("Instance not found")
+        return Response({"message": "Instance not found"}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        vluninstace.delete()
+        respdata={'Status':"Success"}
+        return Response(respdata)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def projectinstancesstatus(request):
+    vluninstace = Vulnerableinstance.objects.filter(id__in=request.data)
+    if not vluninstace:
+        logger.error("Instance not found")
+        return Response({"message": "Instance not found"}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        instancestatus = request.query_params.get('status')
+        if instancestatus is None:
+            logger.error("Status not defined")
+            return Response({"message": "Missing 'status' parameter"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        choices = dict(Vulnerableinstance.status.field.choices)
+        if instancestatus not in choices:
+            logger.error("Instance Status is not valid from %s", choices)
+            return Response({"message": f"Invalid status choice: {instancestatus}"}, status=status.HTTP_400_BAD_REQUEST)
+        rows_updated = vluninstace.update(status=instancestatus)
+        respdata = {'status': 'Success'}
+        vulnerability_ids = vluninstace.values_list('vulnerabilityid', flat=True).distinct()
+        for vulnerability_id in vulnerability_ids:
+            vulnobject = Vulnerability.objects.get(id=vulnerability_id)
+            post_save.send(sender=Vulnerability, instance=vulnobject, created=False)
+
+
+      
+        return Response(respdata)
+    
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def projectvulnerabilitystatus(request,pk):
+    try:
+        vuln = Vulnerability.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Vulnerability not found for id=%s", pk)
+        return Response({"Vulnerability": "Retest not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    instancestatus = request.query_params.get('status')
+    if instancestatus is None:
+        logger.error("Status not defined")
+        return Response({"message": "Missing 'status' parameter"}, status=status.HTTP_400_BAD_REQUEST)
+        
+    choices = dict(Vulnerability.status.field.choices)
+    if instancestatus not in choices:
+        logger.error("Instance Status is not valid from %s", choices)
+        return Response({"message": f"Invalid status choice: {instancestatus}"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    vluninstace = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
+    rows_updated = vluninstace.update(status=instancestatus)
+    vuln.status = instancestatus
+    vuln.save()
+    respdata = {'status': 'Success'}
+    return Response(respdata)
+    
+
+
+
+
+       
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def Retestdelete(request,pk):
+    try:
+        retest = ProjectRetest.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Retest not found for id=%s", pk)
+        return Response({"message": "Retest not found"}, status=status.HTTP_404_NOT_FOUND)
+    retest.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def RetestList(request,pk):
+    retest = ProjectRetest.objects.filter(project=pk)
+
+    if not retest:
+        logger.error("Retest not found for id=%s", pk)
+        return Response({"message": "Retest not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    else:
+        serializer = Retestserializers(retest,many=True)
+        return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Retestadd(request):
+    serializer_context = {'request': request}
+    serializer = Retestserializers(data=request.data,many=False,context=serializer_context)
+    #userid = request.user.id
+    
+    
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        logger.info("Project retest added by %s for Project id=%s", request.user, request.data.get('project'))
+        return Response(serializer.data)
+
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def project_report(request, pk):
+    try:
+        project = Project.objects.get(pk=pk)
+        #print(project.companyname.name)
+
+        #Checking if project has any vulnerabilities added
+        has_vulnerabilities = Vulnerability.objects.filter(project=project).exists()
+        if not has_vulnerabilities:
+            logger.error("Project has no vulnerabilities, Project: %s is Empty", pk)
+            return Response({"Status": "Failed", "Message": "Project has no vulnerabilities, Kindly add vulnerabilities to generate project"})
+        
+        has_scope = PrjectScope.objects.filter(project=project).exists()
+        if not has_scope:
+            logger.error("Project has no Sccope added, Project: %s is Empty", pk)
+            return Response({"Status": "Failed", "Message": "Project has no Sccope added, Kindly add Scope to generate project"})
+        
+        for vulnerability in project.vulnerability_set.all():
+            if vulnerability.instances.count() == 0:
+                logger.error("Vulnerability %s has no Instance added", vulnerability.vulnerabilityname)
+                response_data = {"Status": "Failed", "Message": "Vulnerability %s has no Instance added, Kindly add Instance to generate project" % vulnerability.vulnerabilityname}
+                return Response(response_data)
+            
+        if (request.data.get('Format')) == 'pdf':
+            Report_format = request.data.get('Format')
+        else:
+            logger.error("Report Format is incorrect Only pdf is supported")
+            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf is supported"})
+        
+
+
+        if request.data.get('Type') == 'Audit':
+            Report_type = request.data.get('Type')
+        elif request.data.get('Type') == 'Re-Audit':
+            if ProjectRetest.objects.filter(project=project).exists():
+                Report_type = request.data.get('Type')
+            else:
+                logger.error("Project Has no Retest generate ReAudit Report")
+                return Response({"Status": "Failed", "Message": "Project Has no Retest generate ReAudit Report"})
+        else:
+            logger.error("Report Type is incorrect Only Audit or Re-Audit are supported")
+            return Response({"Status": "Failed", "Message": "Report Type is incorrect Only Audit or Re-Audit are supported"})
+
+        url = request.build_absolute_uri()
+        standard = request.data.get('Standard')
+        output = generate_pdf_report(Report_format,Report_type,pk,url,standard)
+        #response = HttpResponse(content_type='application/pdf')
+        #response['Content-Disposition'] = "attachment; filename='mypdf.pdf'"
+        response = HttpResponse(output, content_type='application/pdf')
+        return response
+
+        #return Response({"Status": "OK"})
+    except ObjectDoesNotExist:
+        logger.error("Project Not Found, Project: %s is incorrect", pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
