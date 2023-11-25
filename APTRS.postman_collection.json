@@ -1,0 +1,1726 @@
+{
+	"info": {
+		"_postman_id": "131e5e02-32e5-45be-9c15-02c91fe9230a",
+		"name": "APTRS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24236036",
+		"_collection_link": "https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&source=collection_link&creator=24236036"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"const accessToken = jsonData.access;\r",
+									"\r",
+									"pm.collectionVariables.set(\"JWT\", accessToken);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin\",\"password\":\"admin\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/auth/login/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/auth/users",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/auth/myprofile",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"myprofile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Profile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "admin@aptrs.com",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "sourav11",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "kalal",
+									"type": "text"
+								},
+								{
+									"key": "profilepic",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "number",
+									"value": "+911234567891",
+									"type": "text"
+								},
+								{
+									"key": "company",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "is_superuser",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domainname}}/api/auth/editprofile",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"editprofile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newpassword\": \"admin\",\r\n    \"oldpassword\": \"admin12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/auth/changepassword",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"changepassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"user1\",\r\n    \"last_name\": \"user1\",\r\n    \"company\": \"helloworld\",\r\n    \"number\":\"+911123334567\",\r\n    \"is_superuser\": false,\r\n    \"is_active\": true,\r\n    \"username\": \"user1\",\r\n    \"email\": \"user1@anof.com\",\r\n    \"password\": \"user1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/auth/adduser",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"adduser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"Sourav\",\r\n    \"last_name\": \"Kalal\",\r\n    \"company\": \"helloworld\",\r\n    \"number\":\"+911122345522\",\r\n    \"is_superuser\": false,\r\n    \"is_active\": true,\r\n    \"username\": \"sourav\",\r\n    \"email\": \"sourav@anof.com\",\r\n    \"password\": \"Pass@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/auth/edituser/73",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"edituser",
+								"73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    73\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/auth/deleteuser",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"deleteuser"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "All Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/project/get-projects/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"get-projects",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Juice Shop2\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2021-10-26\",\r\n    \"enddate\": \"2021-10-31\",\r\n    \"companyname\": \"OWASP\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"owner_id\": \"user2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/add-project/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"add-project",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "Content-Length",
+								"value": "355"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "t5s177WKrB9G67Z5piltnC7zceuVkVh69wGRAyTnbYo6FwJ9J3KJCadckaZKyGBH"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8"
+							},
+							{
+								"key": "Origin",
+								"value": "ggg"
+							},
+							{
+								"key": "Connection",
+								"value": "close"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Juice Shop\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2022-10-26\",\r\n    \"enddate\": \"2022-10-31\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"companyname\": \"OWASP\",\r\n    \"owner\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/edit-project/42/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"edit-project",
+								"42",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/project/get-project/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"get-project",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Projects",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  25,\r\n  26,\r\n  27,\r\n  28,\r\n  29,\r\n  30,\r\n  31,\r\n  32,\r\n  33,\r\n  34,\r\n  35,\r\n  36,\r\n  37,\r\n  40,\r\n  41\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/delete-project/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"delete-project",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Project Scope",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/project/scope/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"scope",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Project Scope",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"scope\": \"https://map.google.com\",\r\n        \"description\": \"Google MAp\"\r\n    },\r\n    {\r\n        \"scope\": \"google.com\",\r\n        \"description\": \"Google App\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/scope/add/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"scope",
+								"add",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Project Scope",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"scope\": \"https://map.google.com\",\r\n    \"description\": \"Google Aps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/scope/edit/5/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"scope",
+								"edit",
+								"5",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project Scope",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"1\",\r\n    \"2\",\r\n    \"3\",\r\n    \"4\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/scope/delete/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"scope",
+								"delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project Retest",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							}
+						],
+						"url": {
+							"raw": "{{domainname}}/api/project/Retest/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"Retest",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Retest",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Content-Length",
+								"value": "101"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"startdate\": \"2023-03-03\",\r\n        \"enddate\": \"2023-03-25\",\r\n        \"project\": 1\r\n    }"
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/Retest/add",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"Retest",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Retest",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "User-Agent",
+								"value": "PostmanRuntime/7.29.2"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Postman-Token",
+								"value": "388999ac-bae0-4258-a085-30c06b1c4c54"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Connection",
+								"value": "close"
+							}
+						],
+						"url": {
+							"raw": "{{domainname}}/api/project/Retest/delete/14/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"Retest",
+								"delete",
+								"14",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Findings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/project/findings/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"findings",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Vulnerability with Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vulnerabilityname\": \"Cross Origin Resource Sharing (CORS)\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Confirm Fixed\"\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/add/vulnerability/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"add",
+								"vulnerability",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project Edit Vulnerability",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Content-Length",
+								"value": "1626"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vulnerabilityname\": \"Cross Origin Resource Sharing (CORS)\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Confirm Fixed\",\r\n    \"vulnerabilitydescription\": \"<p>Cross-origin resource sharing (CORS) is a browser mechanism which enables controlled access to resources located outside of a given domain. It extends and adds flexibility to the same-origin policy (SOP). However, it also provides potential for cross-domain attacks, if a website\",\r\n    \"POC\": \"<ul>\\n\\t<li>The application use wild card for CORS</li>\\n</ul>\\n\\n<p><img alt=\\\"\\\" height=\\\"500\\\" src=\\\"/media/uploads/2022/10/27/cors.png\\\" width=\\\"500\\\" /></p>\",\r\n    \"vulnerabilitysolution\": \"<ul>\\n\\t<li>\\n\\t<p>If a web resource contains sensitive information, the origin should be properly specified in the Access-Control-Allow-Origin header.</p>\\n\\t</li>\\n\\t<li>\\n\\t<p>It may seem obvious but origins specified in the Access-Control-Allow-Origin header should only be sites that are trusted. In particular, dynamically reflecting origins from cross-origin requests without validation is readily exploitable and should be avoided.</p>\\n\\t</li>\\n\\t<li>\\n\\t<p>Avoid using the header Access-Control-Allow-Origin: null. Cross-origin resource calls from internal documents and sandboxed requests can specify the null origin. CORS headers should be properly defined in respect of trusted origins for private and public servers.</p>\\n\\t</li>\\n</ul>\",\r\n    \"vulnerabilityreferlnk\": \"<ul>\\n\\t<li><a href=\\\"https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny\\\">OWASP</a></li>\\n</ul>\",\r\n    \"project\": 42\r\n}"
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/edit/88/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"edit",
+								"88",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Vulnerable Instances",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8"
+							},
+							{
+								"key": "Connection",
+								"value": "close"
+							},
+							{
+								"key": "Content-Length",
+								"value": "165"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"URL\": \"https://google.com\",\r\n        \"Paramter\": \"username\",\r\n        \"status\": \"Vulnerable\"\r\n    },\r\n    {\r\n        \"URL\": \"google.com\",\r\n        \"Paramter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/add/instances/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"add",
+								"instances",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Vulnerable Instances",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"URL\": \"googl.com\",\r\n        \"Paramter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/edit/instances/41/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"edit",
+								"instances",
+								"41",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vulnerability Instance Status Update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    16,\r\n    17,\r\n    35,\r\n    36,\r\n    37,\r\n    38,\r\n    39,\r\n    40,\r\n    41\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/status/instances/?status=Confirm Fixed",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"status",
+								"instances",
+								""
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Confirm Fixed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vulnerability Status Update",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/status/vulnerability/88?status=Vulnerable",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"status",
+								"vulnerability",
+								"88"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Vulnerable"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Instances",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Content-Length",
+								"value": "11"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"72\",\"34\"]"
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/delete/instances/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"delete",
+								"instances",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vulnerability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vulnerability Instances",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "Connection",
+								"value": "close"
+							}
+						],
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/instances/88/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"instances",
+								"88",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Vulnerability",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Content-Length",
+								"value": "11"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"64\",\"73\"]"
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/delete/vulnerability/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"delete",
+								"vulnerability",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Nessus CSV",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/AnoF/Downloads/exiftool-12.58/My Basic Network Scan_a9b0sh.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/vulnerability/Nessus/csv/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"vulnerability",
+								"Nessus",
+								"csv",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ckeditor Image Upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/AnoF/Downloads/ParaForge.png"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/AnoF/Downloads/ParaForge.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/ckeditor/imageupload/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"ckeditor",
+								"imageupload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report - PDF",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Format\": \"pdf\",\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 Web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/report/1/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"report",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Images",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"/media/uploads/ParaForge.png\",\r\n    \"/media/uploads/ParaForge_kJvGvXr.png\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/project/ckeditor/delete-images/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"ckeditor",
+								"delete-images",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vulnerability Database",
+			"item": [
+				{
+					"name": "Search Database",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "Connection",
+								"value": "close"
+							}
+						],
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/filter/?search=s",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"filter",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "s"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vulnerability Details - Title",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Host",
+								"value": "127.0.0.1:8000"
+							},
+							{
+								"key": "Connection",
+								"value": "close"
+							}
+						],
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/database/?title=Insecure%20Direct%20Object%20Reference%20(IDOR)",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"database",
+								""
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Insecure%20Direct%20Object%20Reference%20(IDOR)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Vunerability Database",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/all-vulndb",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"all-vulndb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vulnerability Details - ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/16",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Vulnerability DB",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vulnerabilityname\": \"Possible XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"vulnerabilitydescription\": \"<p>IDOR.</p>\",\r\n    \"vulnerabilitysolution\": \"<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\\n\\n<ul>\\n\\t<li>Never rely on obfuscation alone for access control.</li>\\n\\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\\n\\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\\n\\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\\n\\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\\n</ul>\",\r\n    \"vulnerabilityreferlnk\": \"<ul>\\n\\t<li><a href=\\\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\\\">OWASP</a></li>\\n</ul>\",\r\n    \"cvssscore\": 0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/add-vulndb",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"add-vulndb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Vulnerability DB",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vulnerabilityname\": \"21 Escalation\",\r\n    \"vulnerabilityseverity\": \"High\",\r\n    \"vulnerabilitydescription\": \"<p>Privilege escalation occurs when a user gets access to more resources or functionality than they are normally allowed, and such elevation or changes should have been prevented by the application. This is usually caused by a flaw in the application. The result is that the application performs actions with more privileges than those intended by the developer or system administrator.</p>\",\r\n    \"vulnerabilitysolution\": \"<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\\n\\n<ul>\\n\\t<li>Never rely on obfuscation alone for access control.</li>\\n\\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\\n\\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\\n\\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\\n\\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\\n</ul>\",\r\n    \"vulnerabilityreferlnk\": \"<ul>\\n\\t<li><a href=\\\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\\\">OWASP</a></li>\\n</ul>\",\r\n    \"cvssscore\": 8.3,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:H\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/edit-vulndb/17/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"edit-vulndb",
+								"17",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Vulnerability DB",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    16,\r\n    14\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/delete-vulndb",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"delete-vulndb"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Conpany",
+			"item": [
+				{
+					"name": "All Company",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/customer/all-company",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"all-company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Company",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/customer/company/12/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"company",
+								"12",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Company",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "img",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "name",
+									"value": "OWASP",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "USA",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domainname}}/api/customer/company/add",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"company",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Company",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "img",
+									"type": "file",
+									"src": "/C:/Users/AnoF/Downloads/OWASP.png"
+								},
+								{
+									"key": "address",
+									"value": "India",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "OWASP",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domainname}}/api/customer/company/edit/2/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"company",
+								"edit",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Company",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    1,\r\n    13\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/customer/company/delete",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"company",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/customer/all-customer",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"all-customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/customer/customer/14/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"customer",
+								"14",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Tes\",\r\n        \"email\": \"test@owasp.org\",\r\n        \"phoneNumber\": \"+911234567890\",\r\n        \"company\": \"OWASP\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/customer/customer/edit/14/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"customer",
+								"edit",
+								"14",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Linkedin customer\",\r\n        \"email\": \"test2@linkedin.com\",\r\n        \"phoneNumber\": \"+911234566991\",\r\n        \"company\": \"Linkedin\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/customer/customer/add",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"customer",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customers",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    15\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/customer/customer/delete",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"customer",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{JWT}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "JWT",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "domainname",
+			"value": "https://aptrsapi.souravkalal.tech",
+			"type": "string"
+		}
+	]
+}

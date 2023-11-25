@@ -36,8 +36,12 @@ fi
 
 echo 'Installing Python Requirements'
 python3 -m pip install -r requirements.txt
-python3 manage.py makemigrations
-python3 manage.py migrate
+python3 APTRS/manage.py makemigrations
+python3 APTRS/manage.py migrate
+cd APTRS
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); user = User.objects.create_superuser('admin', 'admin1@example.com', 'admin'); from accounts.models import Profile; Profile.objects.create(user=user, profilepic='profile/avatar-1.jpg', number='+911234564674', company='Example Inc.')" | python3 manage.py shell
+
+
 
 wkhtmltopdf -V
 if ! [ $? -eq 0 ]; then

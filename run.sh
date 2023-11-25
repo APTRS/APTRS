@@ -56,4 +56,4 @@ if [ ! -z "$var" ]; then
     IP='0.0.0.0'
     PORT='8000'
 fi	
-source venv/bin/activate && python3 -m gunicorn -b ${IP}:${PORT} APTRS.wsgi:application --workers=1 --threads=10 --timeout=5600
+source venv/bin/activate && cd APTRS && python3 -m gunicorn -b ${IP}:${PORT} APTRS.wsgi:application --workers=1 --threads=10 --timeout=5600
