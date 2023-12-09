@@ -1,4 +1,5 @@
 from .models import Project, Vulnerability, Vulnerableinstance,ProjectRetest,PrjectScope
+from customers.models import Company
 from django.conf import settings
 from rest_framework.decorators import api_view,permission_classes,parser_classes
 from rest_framework.response import Response
@@ -130,7 +131,7 @@ def projectscopedit(request,pk):
             logger.error("Sccope are incorrect")
             return Response(serializer.errors, status=400)
     except ObjectDoesNotExist:
-        logger.error("Scope Not Found, : %s is incorrect", projectid)
+        logger.error("Scope Not Found, : %s is incorrect", pk)
         return Response({"message": "Scope not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -257,6 +258,22 @@ def getproject(request,pk):
     
     serializer = Projectserializers(project,many=False)
     return Response(serializer.data)
+
+
+@api_view(['GET'])  # You can use PUT request to update the status
+@permission_classes([IsAuthenticated])
+def complete_project_status(request, pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        logger.error("Project not found for id=%s", pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Set the project status to 'Completed'
+    project.status = 'Completed'
+    project.save()
+    
+    return Response({'message': f'Status of project {pk} updated to Completed'})
 
 
 

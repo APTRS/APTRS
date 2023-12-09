@@ -14,6 +14,13 @@ STATUS_CHOICES = [
         (ACCEPTED_RISK, 'Accepted Risk'),
     ]
 
+PROJECT_STATUS_CHOICES = [
+        ('Upcoming', 'Upcoming'),
+        ('In Progress', 'In Progress'),
+        ('Delay', 'Delay'),
+        ('Completed', 'Completed'),
+    ]
+
 class Project(models.Model):
     name = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
     companyname = models.ForeignKey(Company, on_delete=models.CASCADE,editable=False)
@@ -25,6 +32,18 @@ class Project(models.Model):
     testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
     projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
     owner = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
+    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
+    
+
+    @property
+    def calculate_status(self):
+        current_date = timezone.now().date()
+        if current_date < self.startdate:
+            return 'Upcoming'
+        elif self.startdate <= current_date <= self.enddate:
+            return 'In Progress'
+        elif current_date > self.enddate:
+            return 'Delay'
 
 
 class PrjectScope(models.Model):

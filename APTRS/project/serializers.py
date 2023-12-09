@@ -7,6 +7,7 @@ class ImageSerializer(serializers.Serializer):
     images = serializers.ListField(child=serializers.ImageField(allow_empty_file=False),allow_empty=False)
     
 class Projectserializers(serializers.ModelSerializer):
+    status = serializers.CharField(read_only=True)
     
     class Meta:
         model = Project
