@@ -68,7 +68,7 @@ RUN ./wkhtmltopdf.sh
 WORKDIR /home/APTRS/APTRS
 # Copy source code
 COPY . .
-
+RUN python3 /home/APTRS/APTRS/APTRS/manage.py collectstatic --no-input
 
 EXPOSE 8000 8000 
 
