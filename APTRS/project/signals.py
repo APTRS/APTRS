@@ -73,7 +73,10 @@ def update_project_status(sender, instance, **kwargs):
     if not instance.id:  # Check if it's a new project being created
         instance.status = instance.status  # Calculate status for a new project
     else:  # For existing projects, check and update status based on date change
-        previous_instance = sender.objects.get(id=instance.id)
-        if (previous_instance.startdate != instance.startdate or
-                previous_instance.enddate != instance.enddate):
-            instance.status = instance.status  # Recalculate status if start/end date changes
+        try:
+            previous_instance = sender.objects.get(id=instance.id)
+            if (previous_instance.startdate != instance.startdate or
+                    previous_instance.enddate != instance.enddate):
+                instance.status = instance.status  # Recalculate status if start/end date changes
+        except sender.DoesNotExist:
+            pass  # Ignore if the previous instance doesn't exist (happens during loaddata)

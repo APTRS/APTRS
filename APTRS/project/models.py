@@ -3,6 +3,8 @@ from customers.models import Company, Customer
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.conf import settings
+from accounts.models import CustomUser
 
 
 VULNERABLE = 'Vulnerable'
@@ -31,7 +33,7 @@ class Project(models.Model):
     enddate = models.DateField()
     testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
     projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
-    owner = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
+    owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
     
 
@@ -105,5 +107,5 @@ class ProjectRetest(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     startdate = models.DateField()
     enddate = models.DateField()
-    owner = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
+    owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
     

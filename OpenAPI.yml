@@ -1,0 +1,1628 @@
+openapi: 3.0.0
+info:
+  title: APTRS
+  version: 1.0.0
+servers:
+  - url: http://{{domainname}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: Account
+  - name: Account > Admin
+  - name: Project
+  - name: Project > Project
+  - name: Project > Vulnerability
+  - name: Vulnerability Database
+  - name: Conpany
+  - name: Customer
+paths:
+  /api/auth/adduser:
+    post:
+      tags:
+        - Account > Admin
+      summary: Add User
+      description: >-
+        ### Endpoint Description: Add New User (Admin Only API)
+
+
+        This API endpoint allows you to add a new user to the system. It is an
+        HTTP POST request to the `{{domainname}}/api/auth/adduser` URL.
+
+
+        #### Request Method
+
+
+        - **Method:** POST
+
+        - **Endpoint:** `{{domainname}}/api/auth/adduser`
+            
+
+        #### Request Parameters
+
+
+        ``` json
+
+        {
+            "first_name": "user1",
+            "last_name": "user1",
+            "company": "helloworld",
+            "number":"+911123334567",
+            "is_superuser": false,
+            "is_active": true,
+            "username": "user1",
+            "email": "user1@anof.com",
+            "password": "user1"
+        }
+
+         ```
+
+        - `username` (string): The username of the new user.
+
+        - `email` (string): The email address of the new user.
+
+        - `first_name` (string): The first name of the new user.
+
+        - `last_name` (string): The last name of the new user.
+
+        - `is_superuser` (boolean): Indicates whether the new user is a
+        superuser or not.
+
+        - `is_active` (boolean): Indicates whether the new user is active or
+        not.
+
+        - `number` (string): The contact number of the new user.
+
+        - `company` (string): The company name of the new user.
+
+        - `username` (string): The unique username of the new user.
+            
+
+        #### Note
+
+
+        The API is only for Admin User
+
+
+        #### Example Response
+
+
+        The response to this request will have a status code of 200 if the user
+        was successfully added. The response body will include the following
+        parameters:
+
+
+        ``` json
+
+        {
+            "id": 5,
+            "username": "1user1",
+            "email": "1user1@anof.com",
+            "first_name": "user1",
+            "last_name": "user1",
+            "is_superuser": false,
+            "is_active": true,
+            "profile": {
+                "id": 4,
+                "profilepic": "http://aptrsapi.souravkalal.tech/media/profile/avatar-1.svg",
+                "number": "+911613334567",
+                "company": "AnoF PVT LTD",
+                "user": 5
+            },
+            "message": "User object created successfully.",
+            "status": "true"
+        }
+
+        ```
+
+
+        - `id` (integer): The ID of the newly created user.
+
+        - `username` (string): The username of the newly created user.
+
+        - `email` (string): The email address of the newly created user.
+
+        - `first_name` (string): The first name of the newly created user.
+
+        - `last_name` (string): The last name of the newly created user.
+
+        - `is_superuser` (boolean): Indicates whether the newly created user is
+        a superuser or not.
+
+        - `is_active` (boolean): Indicates whether the newly created user is
+        active or not.
+
+        - `profile` (object): An object containing additional profile
+        information for the newly created user.
+            - `id` (integer): The ID of the profile.
+            - `profilepic` (string): The profile picture of the newly created user.
+            - `number` (string): The contact number of the newly created user.
+            - `company` (string): The company name of the newly created user.
+        - `message` (string): A message indicating the status of the request.
+
+        - `status` (string): The status of the request.
+            
+
+        Please note that the values provided in the response example are
+        placeholders and may not reflect the actual values returned by the API.
+
+
+        The response will have a status code of 400 if there are any errors in
+        the request. The response body will provide details about the errors,
+        including specific error messages for each parameter.
+
+
+        For example, if the `username` and `email` parameters are missing or
+        empty, the response will be:
+
+
+        ``` json
+
+        {
+            "username": ["This field is required."],
+            "email": ["This field is required."]
+        }
+
+         ```
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"full_name\": \"Sourav Kalal\", \r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@anof.com\",\r\n    \"is_active\":true,\r\n    \"number\":\"+911122445522\",\r\n    \"is_superuser\": false,\r\n    \"position\":\"Security Engineer\", // text field\r\n    \"password\": \"admin\",\r\n    \"groups\":[\r\n            \"User Level Group\"   // Multiple Groups can be selected\r\n        ]\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/edituser/73:
+    post:
+      tags:
+        - Account > Admin
+      summary: Edit User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"full_name\": \"Sourav Kalal\",\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@anof.com\",\r\n    \"is_active\":true,\r\n    \"number\":\"+911122445522\",\r\n    \"is_superuser\": false,\r\n    \"position\":\"Security Engineer\",\r\n    \"password\": \"admin\", // Optional\r\n    \"groups\":[\r\n            \"User Level Group\"   // Multiple Groups can be selected\r\n        ]\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/deleteuser:
+    delete:
+      tags:
+        - Account > Admin
+      summary: Delete User
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/groups/create/:
+    post:
+      tags:
+        - Account > Admin
+      summary: Create Permission Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"name\": \"Manager Groups\",\r\n    \"description\": \"Permission for Managers\",\r\n    \"list_of_permissions\": [  //multiple permissions can be selected\r\n        \"Change Password\",\r\n        \"Create Project\"\r\n    ]\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/groups/update/4/:
+    post:
+      tags:
+        - Account > Admin
+      summary: Edit Permission Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Managers
+                description: Permission for Managers
+                list_of_permissions:
+                  - Change Password
+                  - Create Project
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/list/permission/:
+    get:
+      tags:
+        - Account > Admin
+      summary: List Available Permissions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/groups/list/:
+    get:
+      tags:
+        - Account > Admin
+      summary: List All Permission Group
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/login/:
+    post:
+      tags:
+        - Account
+      summary: Login
+      description: >-
+        ### Endpoint Description: User Authentication
+
+
+        #### Endpoint
+
+
+        This API endpoint is used to authenticate a user and obtain access and
+        refresh tokens for further API calls. Send a POST request to
+        `{{domainname}}/api/auth/login/` with the required credentials.
+
+
+        #### Request Method
+
+
+        - **Method:** POST
+
+        - **Endpoint:** `{{domainname}}/api/auth/login/`
+            
+
+        #### Request Body
+
+
+        ``` json
+
+        {
+            "username": "admin",
+            "password": "admin"
+        }
+
+         ```
+
+        ### Response
+
+
+        The response will include the following information:
+
+
+        ``` json
+
+
+        {
+            "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzQzMzQ3MywiaWF0IjoxNzAyMTM3NDczLCJqdGkiOiJiN2YwNjliNDMyYTc0OWU4OWIwNzNmZTEzZWIzM2M0YiIsInVzZXJfaWQiOjF9.J_TGKeQlbPFfpU_PLMPuQwDD2F8QOlGpxroHUslLlRw",
+            "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA0NzI5NDczLCJpYXQiOjE3MDIxMzc0NzMsImp0aSI6IjMwMTk5Y2EyNzQwZTQxZDViZWZhNDc1YTA4MTQxYTBhIiwidXNlcl9pZCI6MX0.rrmMbsxkcpG8hWKvvUElOY4sUjjsWmQHcridGcE4LuA",
+            "Status": "True",
+            "username": "admin",
+            "Pic": "/media/profile/avatar-1.svg",
+            "isAdmin": true
+        }
+
+
+        ```
+
+
+        - `refresh`: A refresh token that can be used to obtain a new access
+        token when it expires.
+
+        - `access`: An access token that should be included in the headers of
+        subsequent requests to authorize the user.
+
+        - `Status`: The status of the authentication process.
+
+        - `username`: The username of the authenticated user.
+
+        - `Pic`: The profile picture of the authenticated user.
+
+        - `isAdmin`: A boolean value indicating whether the authenticated user
+        has admin privileges.  
+            Please note that the values for `refresh`, `access`, `Status`, `username`, `Pic`, and `isAdmin` will be specific to the authenticated user and should not be shared with others.  
+            To use the access token for authorization, include it in the `Authorization` header of subsequent requests using the Bearer token scheme.  
+            Example:
+            
+            ``` json
+                  Authorization: Bearer {access_token}
+            
+             ```
+            
+
+        Make sure to handle token expiration by using the refresh token to
+        obtain a new access token when necessary.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\"email\":\"admin@anof.com\",\"password\":\"admin\"}\r\n\r\n\r\n//{\"email\":\"manager@manager.com\",\"password\":\"manager\"}\r\n//{\"email\":\"user@user.com\",\"password\":\"user\"}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/token/refresh/:
+    post:
+      tags:
+        - Account
+      summary: Refresh Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                refresh: >-
+                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzQxMjYxNCwiaWF0IjoxNzAyMTE2NjE0LCJqdGkiOiJlNzQyZDFjMTQxZWI0OGQwYjlkOTg5NzViZWE1OGM3ZCIsInVzZXJfaWQiOjF9.MKSr0X-x2m6HZoZUQ4qBhOZVPUiBoC9vP8z9c4-91zw
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/users:
+    get:
+      tags:
+        - Account
+      summary: Get All User
+      description: >-
+        This API endpoint allows you to retrieve a list of users from the
+        server. The HTTP GET request should be sent to
+        `{{domainname}}/api/auth/users`.
+
+
+        ### Request Parameters
+
+
+        This endpoint does not require any request parameters.
+
+
+        ### Response
+
+
+        The last execution of this request returned a response with a status
+        code of 200. The response body was an array of user objects, each
+        containing the following properties:
+
+
+        - `id` (integer): The unique identifier of the user.
+
+        - `username` (string): The username of the user.
+
+        - `email` (string): The email address of the user.
+
+        - `first_name` (string): The first name of the user.
+
+        - `last_name` (string): The last name of the user.
+
+        - `is_superuser` (boolean): Indicates whether the user has superuser
+        privileges.
+
+        - `profile` (object): An object containing additional profile
+        information for the user, with the following properties:
+            - `id` (integer): The unique identifier of the profile.
+            - `profilepic` (string): The URL of the user's profile picture.
+            - `number` (string): The contact number of the user.
+            - `company` (string): The company name associated with the user.
+            - `user` (integer): The ID of the user associated with this profile.
+
+        Please note that the actual values of the properties may vary in
+        different responses.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/myprofile:
+    get:
+      tags:
+        - Account
+      summary: Profile
+      description: >-
+        This API endpoint allows users to retrieve their own profile
+        information. It is an HTTP GET request to
+        `{{domainname}}/api/auth/myprofile`.
+
+
+        ### Request
+
+
+        The request does not require any parameters or headers. This request
+        allows users to retrieve their own profile information.
+
+
+        ### Response
+
+
+        The response will have a status code of 200 if the request is
+        successful. The response body will contain the following information:
+
+
+        ``` json
+
+        {
+            "id": 1,
+            "username": "admin",
+            "email": "admin1@example.com",
+            "first_name": "Sourav",
+            "last_name": "Kalal",
+            "is_superuser": true,
+            "profile": {
+                "id": 1,
+                "profilepic": "/media/profile/avatar-1.svg",
+                "number": "+911234564674",
+                "company": "Example Inc.",
+                "user": 1
+            }
+        }
+
+         ```
+
+        - `id` (integer): The unique identifier of the user.
+
+        - `username` (string): The username of the user.
+
+        - `email` (string): The email address of the user.
+
+        - `first_name` (string): The first name of the user.
+
+        - `last_name` (string): The last name of the user.
+
+        - `is_superuser` (boolean): Indicates whether the user has superuser
+        privileges.
+
+        - `profile` (object): An object containing additional profile
+        information.
+            - `id` (integer): The unique identifier of the profile.
+            - `profilepic` (string): The URL of the user's profile picture.
+            - `number` (string): The contact number of the user.
+            - `company` (string): The name of the company associated with the user.
+            - `user` (integer): The ID of the user associated with the profile.
+
+        Please note that the response may contain empty or default values for
+        some fields if the user has not provided the information.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/editprofile:
+    post:
+      tags:
+        - Account
+      summary: Edit Profile
+      description: >-
+        ### Endpoint Description: Edit User Profile
+
+
+        #### Endpoint
+
+
+        This API endpoint allows users to edit their profile information. It is
+        an HTTP POST request that should be sent to
+        `{{domainname}}/api/auth/editprofile`.
+
+
+        #### Request Method
+
+
+        - **Method:** POST
+
+        - **Endpoint:** `{{domainname}}/api/auth/editprofile`
+            
+
+        #### Request Parameters
+
+
+        - `id` (integer): The unique identifier of the user.
+
+        - `username` (string): The username of the user.
+
+        - `email` (string): The email address of the user.
+
+        - `first_name` (string): The first name of the user.
+
+        - `last_name` (string): The last name of the user.
+
+        - `is_superuser` (boolean): Indicates whether the user is a superuser or
+        not.
+
+        - `profile` (object): An object containing additional profile
+        information.
+            - `id` (integer): The unique identifier of the profile.
+            - `profilepic` (string): The URL of the user's profile picture.
+            - `number` (string): The contact number of the user.
+            - `company` (string): The company name of the user.
+            - `user` (integer): The user ID associated with the profile.
+
+        #### Note
+
+
+        Please send this request using form data, not JSON. Additionally, ensure
+        to include the necessary information to update the desired profile
+        fields.
+
+
+        #### Response
+
+
+        The response to this request will have a status code of `200`,
+        indicating a successful operation. The response body will contain the
+        updated profile information of the user.
+
+
+        #### Example Response
+
+
+        ``` json
+
+        {
+            "id": 1,
+            "username": "admin",
+            "email": "admin@aptrs.com",
+            "first_name": "sourav11",
+            "last_name": "kalal",
+            "is_superuser": true,
+            "profile": {
+                "id": 1,
+                "profilepic": "http://aptrsapi.souravkalal.tech/media/profile/avatar-1.svg",
+                "number": "+911234567891",
+                "company": "AnoF PVT LTD",
+                "user": 1
+            }
+        }
+
+         ```
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin
+                email:
+                  type: string
+                  example: admin@aptrs.com
+                full_name:
+                  type: string
+                  example: AnoF Cyber
+                profilepic:
+                  type: string
+                  description: Optional
+                  format: binary
+                number:
+                  type: string
+                  example: '+911234567891'
+                company:
+                  type: string
+                  example: test
+                is_superuser:
+                  type: boolean
+                  example: 'true'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/changepassword:
+    post:
+      tags:
+        - Account
+      summary: Change Password
+      description: >-
+        ### Endpoint Description: Change Password
+
+
+        This API endpoint is used to change the password of a user. It is an
+        HTTP POST request that should be sent to
+        `{{domainname}}/api/auth/changepassword`.
+
+
+        #### Request Method
+
+
+        - **Method:** POST
+
+        - **Endpoint:** `{{domainname}}/api/auth/changepassword`
+            
+
+        #### Request Parameters
+
+
+        - `old_password` (string): The current password of the user.
+
+        - `new_password` (string): The new password to be set.
+            
+
+        ``` json
+
+        {
+            "newpassword": "admin",
+            "oldpassword": "admin"
+        }
+
+         ```
+
+        ### Response
+
+
+        In case of a successful password change, the API will return a response
+        with a status code of `200` and a message in the following format:
+
+
+        ``` json
+
+        {
+            "message": "Password updated."
+        }
+
+         ```
+
+        If there is an error in the request, the API will respond with a status
+        code of `400` and an error message in the following format:
+
+
+        ``` json
+
+        {
+          "non_field_errors": [""]
+        }
+
+         ```
+
+        Please note that the error message may contain additional information if
+        there are specific errors related to the request parameters.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                newpassword: admin
+                oldpassword: admin
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/get-projects/:
+    get:
+      tags:
+        - Project > Project
+      summary: All Project
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/get-project/1/:
+    get:
+      tags:
+        - Project > Project
+      summary: Get Project
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/add-project/:
+    post:
+      tags:
+        - Project > Project
+      summary: New Project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"name\": \"Juice Shop2\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2021-10-26\",\r\n    \"enddate\": \"2021-10-31\",\r\n    \"companyname\": \"OWASP\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"owner_id\": \"user\" // only admin user can select owner\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/edit-project/42/:
+    post:
+      tags:
+        - Project > Project
+      summary: Edit Project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Juice Shop
+                description: >-
+                  The project is about Juice Shop application security
+                  assessment. The project involves finding security
+                  vulnerabilities in the application
+                projecttype: Web Application Penetration Testing
+                startdate: '2022-10-26'
+                enddate: '2022-10-31'
+                testingtype: Black Box
+                projectexception: ''
+                companyname: OWASP
+                owner: admin
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '355'
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: t5s177WKrB9G67Z5piltnC7zceuVkVh69wGRAyTnbYo6FwJ9J3KJCadckaZKyGBH
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          example: ggg
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/1/:
+    get:
+      tags:
+        - Project > Project
+      summary: All Project Scope
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/add/1/:
+    post:
+      tags:
+        - Project > Project
+      summary: Add Project Scope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - scope: https://map.google.com
+                  description: Google MAp
+                - scope: google.com
+                  description: Google App
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/edit/5/:
+    post:
+      tags:
+        - Project > Project
+      summary: Edit Project Scope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                scope: https://map.google.com
+                description: Google Aps
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/delete/:
+    delete:
+      tags:
+        - Project > Project
+      summary: Delete Project Scope
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/delete-project/:
+    delete:
+      tags:
+        - Project > Project
+      summary: Delete Projects
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/Retest/add:
+    post:
+      tags:
+        - Project > Project
+      summary: Add Retest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                startdate: '2023-03-03'
+                enddate: '2023-03-25'
+                project: 1
+                owner: user
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '101'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/Retest/delete/14/:
+    delete:
+      tags:
+        - Project > Project
+      summary: Delete Retest
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: User-Agent
+          in: header
+          schema:
+            type: number
+          example: PostmanRuntime/7.29.2
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: '*/*'
+        - name: Postman-Token
+          in: header
+          schema:
+            type: string
+          example: 388999ac-bae0-4258-a085-30c06b1c4c54
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/Retest/1/:
+    get:
+      tags:
+        - Project > Project
+      summary: Project Retest
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/status/completed/1/:
+    get:
+      tags:
+        - Project > Project
+      summary: Mark Project as Completed
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/findings/1/:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Get Project Findings
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/add/vulnerability/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Add Vulnerability with Instance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/edit/88/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Project Edit Vulnerability
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                vulnerabilityname: Cross Origin Resource Sharing (CORS)
+                vulnerabilityseverity: None
+                cvssscore: 0
+                cvssvector: CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N
+                status: Confirm Fixed
+                vulnerabilitydescription: >-
+                  <p>Cross-origin resource sharing (CORS) is a browser mechanism
+                  which enables controlled access to resources located outside
+                  of a given domain. It extends and adds flexibility to the
+                  same-origin policy (SOP). However, it also provides potential
+                  for cross-domain attacks, if a website
+                POC: "<ul>\n\t<li>The application use wild card for CORS</li>\n</ul>\n\n<p><img alt=\"\" height=\"500\" src=\"/media/uploads/2022/10/27/cors.png\" width=\"500\" /></p>"
+                vulnerabilitysolution: "<ul>\n\t<li>\n\t<p>If a web resource contains sensitive information, the origin should be properly specified in the Access-Control-Allow-Origin header.</p>\n\t</li>\n\t<li>\n\t<p>It may seem obvious but origins specified in the Access-Control-Allow-Origin header should only be sites that are trusted. In particular, dynamically reflecting origins from cross-origin requests without validation is readily exploitable and should be avoided.</p>\n\t</li>\n\t<li>\n\t<p>Avoid using the header Access-Control-Allow-Origin: null. Cross-origin resource calls from internal documents and sandboxed requests can specify the null origin. CORS headers should be properly defined in respect of trusted origins for private and public servers.</p>\n\t</li>\n</ul>"
+                vulnerabilityreferlnk: "<ul>\n\t<li><a href=\"https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny\">OWASP</a></li>\n</ul>"
+                project: 42
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '1626'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/add/instances/1/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Add Vulnerable Instances
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - URL: https://google.com
+                  Paramter: username
+                  status: Vulnerable
+                - URL: google.com
+                  Paramter: hellworld
+                  status: Vulnerable
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '165'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/edit/instances/41/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Edit Vulnerable Instances
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                URL: googl.com
+                Paramter: hellworld
+                status: Vulnerable
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/status/instances/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Vulnerability Instance Status Update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - 16
+                - 17
+                - 35
+                - 36
+                - 37
+                - 38
+                - 39
+                - 40
+                - 41
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+          example: Confirm Fixed
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/status/vulnerability/88:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Vulnerability Status Update
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+          example: Vulnerable
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/delete/instances/:
+    delete:
+      tags:
+        - Project > Vulnerability
+      summary: Delete Instances
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '11'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/1/:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Get Vulnerability
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/instances/88/:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Get Vulnerability Instances
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/delete/vulnerability/:
+    delete:
+      tags:
+        - Project > Vulnerability
+      summary: Delete Vulnerability
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '11'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/Nessus/csv/1/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Nessus CSV
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/ckeditor/imageupload/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Ckeditor Image Upload
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/report/1/:
+    post:
+      tags:
+        - Project > Vulnerability
+      summary: Report - PDF
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Format: pdf
+                Type: Re-Audit
+                Standard:
+                  - OWASP Top 10 Web
+                  - OWASP Top 10 API
+                  - NIST
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/ckeditor/delete-images/:
+    delete:
+      tags:
+        - Project > Vulnerability
+      summary: Delete Images
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/filter/:
+    get:
+      tags:
+        - Vulnerability Database
+      summary: Search Database
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+        - name: search
+          in: query
+          schema:
+            type: string
+          example: s
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/database/:
+    get:
+      tags:
+        - Vulnerability Database
+      summary: Get Vulnerability Details - Title
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+        - name: title
+          in: query
+          schema:
+            type: string
+          example: Insecure Direct Object Reference (IDOR)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/all-vulndb:
+    get:
+      tags:
+        - Vulnerability Database
+      summary: Get All Vunerability Database
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/16:
+    get:
+      tags:
+        - Vulnerability Database
+      summary: Get Vulnerability Details - ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/add-vulndb:
+    post:
+      tags:
+        - Vulnerability Database
+      summary: Add Vulnerability DB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                vulnerabilityname: Remote Code Execution
+                vulnerabilityseverity: None
+                vulnerabilitydescription: <p>IDOR.</p>
+                vulnerabilitysolution: "<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\n\n<ul>\n\t<li>Never rely on obfuscation alone for access control.</li>\n\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\n\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\n\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\n\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\n</ul>"
+                vulnerabilityreferlnk: "<ul>\n\t<li><a href=\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\">OWASP</a></li>\n</ul>"
+                cvssscore: 0
+                cvssvector: CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/edit-vulndb/17/:
+    post:
+      tags:
+        - Vulnerability Database
+      summary: Edit Vulnerability DB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                vulnerabilityname: 21 Escalation
+                vulnerabilityseverity: High
+                vulnerabilitydescription: >-
+                  <p>Privilege escalation occurs when a user gets access to more
+                  resources or functionality than they are normally allowed, and
+                  such elevation or changes should have been prevented by the
+                  application. This is usually caused by a flaw in the
+                  application. The result is that the application performs
+                  actions with more privileges than those intended by the
+                  developer or system administrator.</p>
+                vulnerabilitysolution: "<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\n\n<ul>\n\t<li>Never rely on obfuscation alone for access control.</li>\n\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\n\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\n\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\n\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\n</ul>"
+                vulnerabilityreferlnk: "<ul>\n\t<li><a href=\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\">OWASP</a></li>\n</ul>"
+                cvssscore: 8.3
+                cvssvector: CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:H
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/delete-vulndb:
+    delete:
+      tags:
+        - Vulnerability Database
+      summary: Delete Vulnerability DB
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/all-company:
+    get:
+      tags:
+        - Conpany
+      summary: All Company
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/company/1/:
+    get:
+      tags:
+        - Conpany
+      summary: Get Company
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/company/add:
+    post:
+      tags:
+        - Conpany
+      summary: Add Company
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+                  example: OWASP
+                address:
+                  type: string
+                  example: USA
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/company/edit/2/:
+    post:
+      tags:
+        - Conpany
+      summary: Edit Company
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                  format: binary
+                address:
+                  type: string
+                  example: India
+                name:
+                  type: string
+                  example: OWASP
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/company/delete:
+    delete:
+      tags:
+        - Conpany
+      summary: Delete Company
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/all-customer:
+    get:
+      tags:
+        - Customer
+      summary: Get All Customers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/customer/14/:
+    get:
+      tags:
+        - Customer
+      summary: Get Customer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/customer/edit/14/:
+    post:
+      tags:
+        - Customer
+      summary: Edit Customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n        \"name\": \"Tes\",\r\n        \"email\": \"test@owasp.org\",\r\n        \"phoneNumber\": \"+911234567890\",\r\n        \"company\": \"OWASP\",\r\n        \"position\":\"Project Manager\" // optional Field\r\n    }"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/customer/add:
+    post:
+      tags:
+        - Customer
+      summary: Add Customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n        \"name\": \"James Lee\",\r\n        \"email\": \"james@owasp-test.com\",\r\n        \"phoneNumber\": \"+911234566991\",\r\n        \"company\": \"OWASP\",\r\n        \"position\":\"Project Manager\" // optional field\r\n    }"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/customer/delete:
+    delete:
+      tags:
+        - Customer
+      summary: Delete Customers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

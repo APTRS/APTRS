@@ -1,0 +1,69 @@
+[
+    
+{"model": "accounts.custompermission", "pk": 1, "fields": {"name": "Change Password", "description": "Users have the option to change their own password."}}, 
+
+{"model": "accounts.custompermission", "pk": 2, "fields": {"name": "Create Project", "description": "Can have permission to create project"}},
+
+{"model": "accounts.custompermission", "pk": 3, "fields": {"name": "View All Users", "description": "Can view all users details"}},
+{"model": "accounts.custompermission", "pk": 4, "fields": {"name": "View Profile", "description": "Can view self profile details"}},
+{"model": "accounts.custompermission", "pk": 5, "fields": {"name": "Edit Profile", "description": "Can edit self profile details"}},
+{"model": "accounts.custompermission", "pk": 6, "fields": {"name": "Add User", "description": "Allow users to create new user account"}},
+
+{"model": "accounts.custompermission", "pk": 7, "fields": {"name": "Edit User", "description": "Allow users to edit other users profile"}},
+{"model": "accounts.custompermission", "pk": 8, "fields": {"name": "Delete User", "description": "Allow users to Delete other users profile"}},
+{"model": "accounts.custompermission", "pk": 9, "fields": {"name": "Create Group", "description": "Allow users to Create Permission Groups"}},
+{"model": "accounts.custompermission", "pk": 10, "fields": {"name": "View Permissions", "description": "Allow users to View all available Permissions"}},
+{"model": "accounts.custompermission", "pk": 11, "fields": {"name": "Edit Group", "description": "Allow users to Edit Permission Groups"}},
+{"model": "accounts.custompermission", "pk": 12, "fields": {"name": "View Group", "description": "Allow users to list All Available Permission Groups"}},
+
+{"model": "accounts.custompermission", "pk": 13, "fields": {"name": "View all Client Companies List", "description": "Allow users to list All Available Client Companies, Rememember User who create project need to select client company and will need this permission to create project"}},
+
+
+{"model": "accounts.custompermission", "pk": 14, "fields": {"name": "View all Customers List", "description": "Allow users to list All Customers"}},
+
+{"model": "accounts.custompermission", "pk": 15, "fields": {"name": "View specific customer", "description": "Allow users to view specific Customers, Users with edit customer permission should have this permission"}},
+
+{"model": "accounts.custompermission", "pk": 16, "fields": {"name": "Edit customer", "description": "Allow users to Edit Customers."}},
+
+{"model": "accounts.custompermission", "pk": 17, "fields": {"name": "Add customer", "description": "Allow users to Add new Customers."}},
+
+{"model": "accounts.custompermission", "pk": 18, "fields": {"name": "Delete customer", "description": "Allow users to Delete new Customers."}},
+
+{"model": "accounts.custompermission", "pk": 19, "fields": {"name": "Get specific Client Company", "description": "Allow users to Get specific Client Company., User with edit client company permission should have this permission"}},
+
+{"model": "accounts.custompermission", "pk": 20, "fields": {"name": "Add Company", "description": "Allow users to Add new Company."}},
+
+{"model": "accounts.custompermission", "pk": 21, "fields": {"name": "Edit Company", "description": "Allow users to Edit Company."}},
+
+{"model": "accounts.custompermission", "pk": 22, "fields": {"name": "Delete Company", "description": "Allow users to Delete Company."}},
+
+{"model": "accounts.custompermission", "pk": 23, "fields": {"name": "Upload Nessus CSV", "description": "Allow users to Upload the Nessus CSV file to parse the data and add vulnerabilities to project."}},
+
+{"model": "accounts.custompermission", "pk": 24, "fields": {"name": "Delete Images", "description": "Allow users to Delete Upload Images, including Company Loogo, POC images etc."}},
+{"model": "accounts.custompermission", "pk": 25, "fields": {"name": "Upload Images for Vulnerability", "description": "Allow users to Upload images while creating a vulnerability."}},
+{"model": "accounts.custompermission", "pk": 26, "fields": {"name": "Add Scope to Projects", "description": "Allow users to add scope url/ip in a project."}},
+{"model": "accounts.custompermission", "pk": 27, "fields": {"name": "Delete Scope from Projects", "description": "Allow users to delete scope url/ip in a project."}},
+{"model": "accounts.custompermission", "pk": 28, "fields": {"name": "Edit Scope from Projects", "description": "Allow users to edit scope url/ip in a project."}},
+{"model": "accounts.custompermission", "pk": 29, "fields": {"name": "View Scope from Projects", "description": "Allow users to view scope url/ip in a project."}},
+{"model": "accounts.custompermission", "pk": 30, "fields": {"name": "Add Vulnerability in Projects", "description": "Allow users to add vulnerability in a project."}},
+{"model": "accounts.custompermission", "pk": 31, "fields": {"name": "Create new Projects", "description": "Allow users to create a new project."}},
+{"model": "accounts.custompermission", "pk": 32, "fields": {"name": "Edit Projects", "description": "Allow users to edit project."}},
+{"model": "accounts.custompermission", "pk": 33, "fields": {"name": "View Specific Project", "description": "Allow users to view specific project details."}},
+{"model": "accounts.custompermission", "pk": 33, "fields": {"name": "Change Project Status to Complete", "description": "Allow users to mark project as completed"}},
+{"model": "accounts.custompermission", "pk": 34, "fields": {"name": "View All Projects", "description": "Allow users to view all projects."}},
+{"model": "accounts.custompermission", "pk": 35, "fields": {"name": "Delete Projects", "description": "Allow users to delete projects."}},
+{"model": "accounts.custompermission", "pk": 36, "fields": {"name": "View Specific Vulnerability", "description": "Allow users to view specific vulnerability in a project."}},
+{"model": "accounts.custompermission", "pk": 37, "fields": {"name": "Edit Vulnerability", "description": "Allow users to edit vulnerability in a project."}},
+{"model": "accounts.custompermission", "pk": 38, "fields": {"name": "Delete Vulnerability", "description": "Allow users to delete vulnerability in a project."}},
+{"model": "accounts.custompermission", "pk": 39, "fields": {"name": "View all Vulnerability for Project", "description": "Allow users to view all vulnerability in a project."}},
+{"model": "accounts.custompermission", "pk": 40, "fields": {"name": "View All Instances For Vulnerability", "description": "Allow users to view instances in a vulnerability."}},
+{"model": "accounts.custompermission", "pk": 41, "fields": {"name": "Add Instances", "description": "Allow users to add instances in a vulnerability."}},
+{"model": "accounts.custompermission", "pk": 42, "fields": {"name": "Edit Instances", "description": "Allow users to edit instances in a vulnerability."}},
+{"model": "accounts.custompermission", "pk": 43, "fields": {"name": "Delete Instances", "description": "Allow users to delete instances in a vulnerability."}},
+{"model": "accounts.custompermission", "pk": 44, "fields": {"name": "Change Instances Status", "description": "Allow users to change instances status in a vulnerability."}},
+{"model": "accounts.custompermission", "pk": 45, "fields": {"name": "Vulnerability Status", "description": "Allow users to change vulnerability status project."}},
+{"model": "accounts.custompermission", "pk": 46, "fields": {"name": "Delete Retest Task", "description": "Allow users to delete retest task in a project."}},
+{"model": "accounts.custompermission", "pk": 47, "fields": {"name": "View Retest for Projects", "description": "Allow users to view all retest in a project."}},
+{"model": "accounts.custompermission", "pk": 48, "fields": {"name": "Add Retest for Projects", "description": "Allow users to add retest in a project.."}},
+{"model": "accounts.custompermission", "pk": 49, "fields": {"name": "Report Access", "description": "Allow users to View and Download Report."}}
+]

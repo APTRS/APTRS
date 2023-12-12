@@ -1,108 +1,56 @@
 
-
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-
-from django.contrib.auth.models import User
-from .models import Profile
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.db.models.functions import Lower
-from phonenumber_field.modelfields import PhoneNumberField
+from .models import CustomUser, CustomGroup,CustomPermission
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    profilepic = serializers.ImageField(required=False)
-    number = PhoneNumberField(blank=False, null=False)
+
+
+class CustomPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomPermission
+        fields = ['id', 'name', 'description']
+
+class CustomGroupSerializer(serializers.ModelSerializer):
+    list_of_permissions = serializers.SlugRelatedField(
+        many=True,
+        queryset=CustomPermission.objects.all(),
+        slug_field='name',
+        required=False
+    )
 
     class Meta:
-        model = Profile
-        fields = '__all__' #('user, profilepic', 'number', 'company')
-    
+        model = CustomGroup
+        fields = ['id', 'name', 'description', 'list_of_permissions']
+        extra_kwargs = {
+            'name': {'required': False}
+        }
+
     def create(self, validated_data):
-        if not validated_data.get('number'):
-            raise serializers.ValidationError({'number': 'This field is required.'})
-        validated_data['company'] = settings.ORG
-        validated_data['number'] = validated_data.get('number')
-        return super().create(validated_data)
+        permissions_names = validated_data.pop('list_of_permissions', [])  # Extract permission names
+        group = CustomGroup.objects.create(**validated_data)
+        self._handle_permissions(group, permissions_names)
+        return group
 
     def update(self, instance, validated_data):
-        validated_data['company'] = settings.ORG
-        return super().update(instance, validated_data)
-
-        
-
-class UserSerializer(serializers.ModelSerializer):
-    #profile = ProfileSerializer()
-    profile = ProfileSerializer(source='userprofile', required=False)
-    is_superuser = serializers.ReadOnlyField()
-    
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_superuser', 'profile']
-        #read_only_fields = ['is_superuser']
-
-    def validate(self, data):
-        if 'is_superuser' in data:
-            if self.context['request'].user.is_superuser:
-                data['is_superuser'] = self.initial_data.get('is_superuser')
-            else:
-                return data
-        else:
-            return data
-    
-class AdminUserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(source='userprofile', required=False)
-    email = serializers.EmailField(required=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_superuser', 'is_active','password','profile']
-
-
-    def validate_email(self, value):
-        email = value.lower()
-        queryset = User.objects.filter(email=email)
-        if self.instance:
-            queryset = queryset.exclude(pk=self.instance.pk)
-        if queryset.exists():
-            raise ValidationError('A user with that email already exists.')
-        return email
-    
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-        #profile_data = validated_data.pop('userprofile', {})
-        #profile_serializer = self.fields['profile']
-        number = self.context['request'].data.get('number')
-        validated_data['password'] = make_password(password)
-        user = super().create(validated_data)
-
-        profile = Profile.objects.create(user=user, number=number)
-        user.userprofile = profile
-        user.save()
-        return user
-
-    def update(self, instance, validated_data):
-        password =  validated_data.pop('password')
-        if password is not None:
-            validated_data['password'] = make_password(password)
-        else:
-            validated_data['password'] = instance.password
-        instance = super().update(instance, validated_data)
-        profile = instance.userprofile
-        profile.number = self.context['request'].data.get('number')
-        profile.save()
+        permissions_names = validated_data.pop('list_of_permissions', [])  # Extract permission names
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.save()
+        self._handle_permissions(instance, permissions_names)
         return instance
-        #return super().update(instance, validated_data)
-    
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['message'] = 'User object created successfully.'
-        data['status'] = 'true'
-        del data['password']
-        return data
+
+    def _handle_permissions(self, group, permission_names):
+        permissions = []
+        for permission_name in permission_names:
+            try:
+                permission = CustomPermission.objects.get(name=permission_name)
+                permissions.append(permission)
+            except CustomPermission.DoesNotExist:
+                raise serializers.ValidationError(f"Permission with name '{permission_name}' does not exist.")
+        group.list_of_permissions.set(permissions)
+
+
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -122,3 +70,81 @@ class ChangePasswordSerializer(serializers.Serializer):
             user.set_password(newpassword)
             user.save()
             return data
+
+class CustomGroupRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.name  # Returns group name in response
+
+    def to_internal_value(self, data):
+        try:
+            group = CustomGroup.objects.get(name=data)
+            return group  # Returns group object based on name
+        except CustomGroup.DoesNotExist:
+            raise serializers.ValidationError(f"Group with name '{data}' does not exist.")
+
+
+
+class ProfileUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'full_name', 'email', 'profilepic', 'number']
+        read_only_fields = ['date_joined', 'company', 'is_staff', 'groups', 'position', 'is_active']
+
+    def update(self, instance, validated_data):
+        instance.profilepic = validated_data.get('profilepic', instance.profilepic)
+        instance.save()
+        return instance
+
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    profilepic = serializers.ImageField(required=False)  # Profile pic is optional
+    groups = CustomGroupRelatedField(many=True, queryset=CustomGroup.objects.all())
+
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'company', 'position', 'groups','password']
+        read_only_fields = ['date_joined','company','is_staff']  
+
+    def create(self, validated_data):
+
+        # Set is_staff to True by default for new user
+        validated_data['is_staff'] = True
+        groups_data = validated_data.pop('groups', [])  # Extract groups data
+        password = validated_data.pop('password')
+        user = CustomUser.objects.create(**validated_data)
+        user.set_password(password)  
+        user.save()
+
+        # Assign groups using set method
+        user.groups.set(groups_data)
+
+        return user
+
+    
+    
+
+    def update(self, instance, validated_data):
+        request_user = self.context['request'].user
+
+        # Set is_staff to True during update
+        validated_data['is_staff'] = True
+
+        if 'password' in validated_data:
+            if not validated_data['password']:
+                # If password is empty, remove it from validated_data
+                validated_data.pop('password')
+            else:
+                # Hash the password before saving
+                validated_data['password'] = make_password(validated_data['password'])
+                
+
+
+        return super().update(instance, validated_data)
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if 'password' in data:
+            del data['password']  # Remove password from the response
+        return data

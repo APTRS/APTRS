@@ -17,7 +17,9 @@ from django.core.files.storage import FileSystemStorage
 from .nessus import is_valid_csv
 from .report import generate_pdf_report
 import os
+from django.utils.decorators import method_decorator
 
+from accounts.permissions import custom_permission_required
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Upload Nessus CSV'])
 @parser_classes([MultiPartParser,FormParser])
 def Nessus_CSV(request, pk):
     try:
@@ -46,6 +49,7 @@ def Nessus_CSV(request, pk):
 
 
 @api_view(['DELETE'])
+@custom_permission_required(['Delete Images'])
 def delete_images(request):
     media_path = settings.STATIC_ROOT
 
@@ -66,7 +70,8 @@ def delete_images(request):
 class ImageUploadView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
-
+    
+    @custom_permission_required(['Upload Images for Vulnerability'])
     def post(self, request):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
@@ -90,6 +95,7 @@ class ImageUploadView(APIView):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Add Scope to Projects'])
 def projectaddscope(request,pk):
     try:
         project = Project.objects.get(pk=pk)
@@ -108,6 +114,7 @@ def projectaddscope(request,pk):
    
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete Scope from Projects'])
 def deleteprojectscope(request):
     projects = PrjectScope.objects.filter(id__in=request.data)
     projects.delete()
@@ -117,6 +124,7 @@ def deleteprojectscope(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit Scope from Projects'])
 def projectscopedit(request,pk):
     try:
         projectscope = PrjectScope.objects.get(pk=pk)
@@ -137,6 +145,7 @@ def projectscopedit(request,pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View Scope from Projects'])
 def getprojectscopes(request,pk):
     try:
         project = Project.objects.get(pk=pk)
@@ -150,6 +159,7 @@ def getprojectscopes(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Add Vulnerability in Projects'])
 def create_vulnerability(request):
     projectid = request.data.get('project')
 
@@ -181,6 +191,7 @@ def create_vulnerability(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Create new Projects'])
 def newproject(request):
     serializer = Projectserializers(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -215,6 +226,7 @@ def newproject(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit Projects'])
 def project_edit(request, pk):
     try:
         project = Project.objects.get(pk=pk)
@@ -249,6 +261,7 @@ def project_edit(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View Specific Project'])
 def getproject(request,pk):
     try:
         project = Project.objects.get(pk=pk)
@@ -260,8 +273,9 @@ def getproject(request,pk):
     return Response(serializer.data)
 
 
-@api_view(['GET'])  # You can use PUT request to update the status
+@api_view(['GET']) 
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Change Project Status to Complete'])
 def complete_project_status(request, pk):
     try:
         project = Project.objects.get(pk=pk)
@@ -279,6 +293,7 @@ def complete_project_status(request, pk):
 
 class GetAllProjects(views.APIView):
     permission_classes = [IsAuthenticated]
+    @custom_permission_required(['View All Projects'])
     def get(self, request):
         projects = Project.objects.all()    
         serializer = Projectserializers(projects, many=True)
@@ -287,6 +302,7 @@ class GetAllProjects(views.APIView):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete Projects'])
 def deleteproject(request):
     projects = Project.objects.filter(id__in=request.data)
     projects.delete()
@@ -297,6 +313,7 @@ def deleteproject(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View all Vulnerability for Project'])
 def projectfindingview(request, pk):
     try:
         vulnerability = Vulnerability.objects.filter(project=pk)
@@ -311,6 +328,7 @@ def projectfindingview(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit Vulnerability'])
 def projectvulnedit(request,pk):
     vulnerability = Vulnerability.objects.get(pk=pk)
     serializer = Vulnerabilityserializers(instance=vulnerability,data=request.data)
@@ -327,6 +345,7 @@ def projectvulnedit(request,pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete Vulnerability'])
 def projectvulndelete(request):
     vuln = Vulnerability.objects.filter(id__in=request.data)
     vuln.delete()
@@ -336,6 +355,7 @@ def projectvulndelete(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View Specific Vulnerability'])
 def projectvulnview(request,pk):
     try:
         vulnerability = Vulnerability.objects.get(pk=pk)
@@ -351,6 +371,7 @@ def projectvulnview(request,pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View All Instances For Vulnerability'])
 def projectvulninstances(request,pk):
     instances = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
     if not instances:
@@ -364,6 +385,7 @@ def projectvulninstances(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Add Instances'])
 def projectaddinstances(request,pk):
     try:
         vulnerability = Vulnerability.objects.get(pk=pk)
@@ -386,6 +408,7 @@ def projectaddinstances(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit Instances'])
 def projecteditinstances(request,pk):
     try:
         instance = Vulnerableinstance.objects.get(pk=pk)
@@ -407,6 +430,7 @@ def projecteditinstances(request,pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete Instances'])
 def projectdeleteinstances(request):
     vluninstace = Vulnerableinstance.objects.filter(id__in=request.data)
     if not vluninstace:
@@ -420,6 +444,7 @@ def projectdeleteinstances(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Change Instances Status'])
 def projectinstancesstatus(request):
     vluninstace = Vulnerableinstance.objects.filter(id__in=request.data)
     if not vluninstace:
@@ -450,6 +475,7 @@ def projectinstancesstatus(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Vulnerability Status'])
 def projectvulnerabilitystatus(request,pk):
     try:
         vuln = Vulnerability.objects.get(pk=pk)
@@ -481,6 +507,7 @@ def projectvulnerabilitystatus(request,pk):
        
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete Retest Task'])
 def Retestdelete(request,pk):
     try:
         retest = ProjectRetest.objects.get(pk=pk)
@@ -496,6 +523,7 @@ def Retestdelete(request,pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View Retest for Projects'])
 def RetestList(request,pk):
     retest = ProjectRetest.objects.filter(project=pk)
 
@@ -511,6 +539,7 @@ def RetestList(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Add Retest for Projects'])
 def Retestadd(request):
     serializer_context = {'request': request}
     serializer = Retestserializers(data=request.data,many=False,context=serializer_context)
@@ -527,6 +556,7 @@ def Retestadd(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Report Access'])
 def project_report(request, pk):
     try:
         project = Project.objects.get(pk=pk)

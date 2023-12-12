@@ -16,6 +16,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=100, null = False, blank = False, default=None)
     email = models.EmailField(max_length=300, unique = True, null = False, blank = False, default=None)
     phoneNumber = PhoneNumberField(unique = True, null = False, blank = False, default=None)
+    position = models.CharField(max_length=100, null = True, blank = True, default=None)
 
     class Meta:
         unique_together = (("company", "name"),)

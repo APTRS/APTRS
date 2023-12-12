@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from .models import Customer,Company
 import logging
-
+from accounts.permissions import custom_permission_required
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View all Client Companies List'])
 def getallcompnay(request):
     companyname = Company.objects.all()
     serializer = CompanySerializer(companyname,many=True)
@@ -26,6 +27,7 @@ def getallcompnay(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View all Customers List'])
 def getallcustomer(request):
     customername = Customer.objects.all()
     serializer = CustomerSerializer(customername,many=True)
@@ -35,6 +37,7 @@ def getallcustomer(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['View specific customer'])
 def getcustomer(request,pk):
     try:
         customer = Customer.objects.get(pk=pk)
@@ -50,6 +53,7 @@ def getcustomer(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit customer'])
 def customeredit(request,pk):
     try:
         customer = Customer.objects.get(pk=pk)
@@ -78,6 +82,7 @@ def customeredit(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Add customer'])
 def customeradd(request):
     try:
         company = Company.objects.get(name=request.data.get('company'))
@@ -97,6 +102,7 @@ def customeradd(request):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete customer'])
 def customerdelete(request):
     customers = Customer.objects.filter(id__in=request.data)
     customers.delete()
@@ -109,6 +115,7 @@ def customerdelete(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Get specific Client Company'])
 def getcompany(request,pk):
     try:
         company = Company.objects.get(pk=pk)
@@ -123,6 +130,7 @@ def getcompany(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Add Company'])
 def add_company(request):
     serializer = CompanySerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -138,6 +146,7 @@ def add_company(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit Company'])
 def edit_company(request,pk):
     try:
         company = Company.objects.get(pk=pk)
@@ -158,6 +167,7 @@ def edit_company(request,pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@custom_permission_required(['Delete Company'])
 def companydelete(request):
     company = Company.objects.filter(id__in=request.data)
     company.delete()

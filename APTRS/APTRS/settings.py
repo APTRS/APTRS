@@ -33,6 +33,16 @@ SECRET_KEY = 'django-insecure--b83(+esj0aubo_gr!f*k)tyvs*_t_&4e2ty00beroxof8@d!7
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+#AUTH_GROUP_MODEL = 'accounts.Group'
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+
 
 
 # Application definition
@@ -163,7 +173,7 @@ CKEDITOR_UPLOAD_URL = os.path.join(MEDIA_URL, 'uploads')
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
-        'skin': 'moono-dark',
+        #'skin': 'moono-dark',
         # 'skin': 'office2013',
         'toolbar_Basic': [
             ['Source', '-', 'Bold', 'Italic']
@@ -190,7 +200,7 @@ CKEDITOR_CONFIGS = {
             
             
         ],
-        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+        'toolbar': 'sourcedialog',  # put selected toolbar config here
         # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
         # 'height': 291,
         # 'width': '100%',

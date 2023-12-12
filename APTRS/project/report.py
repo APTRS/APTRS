@@ -5,7 +5,7 @@ import PyPDF2
 from PyPDF2 import PdfFileWriter
 from customers.models import Company, Customer
 from vulnerability.models import VulnerabilityDB
-from accounts.models import Profile
+#from accounts.models import Profile
 from django.shortcuts import render
 from django.conf import settings
 
@@ -43,7 +43,7 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard):
     customer = Customer.objects.filter(company=project.companyname)
     companydetails = Company.objects.get(pk=project.companyname.id)
     
-    userdetails = Profile.objects.all()
+    userdetails = Customer.objects.all() ## Temporary
 
     tocstyle = (os.path.join(settings.BASE_DIR,'templates','Report','toc.xml'))
     url = url
