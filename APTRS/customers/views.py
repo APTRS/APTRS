@@ -87,7 +87,7 @@ def customeradd(request):
     try:
         company = Company.objects.get(name=request.data.get('company'))
     except ObjectDoesNotExist:
-        logger.error("Company not found with pk=%s", pk)
+        logger.error("Company not found with name=%s", request.data.get('company'))
         return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
     request.data['company'] = company.id
     serializer = CustomerSerializer(data=request.data)

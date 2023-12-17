@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./scripts/nginx.conf:/etc/nginx/conf.d/aptrs.conf
+      - static_volume:/home/aptrs/APTRS/static/  
+    ports:
+      - 80:80
+    restart: unless-stopped
+    depends_on:
+      - aptrs
+    networks:
+        - aptrs
+
+
+
+
+
+  #postgres:
+   # image: "postgres:latest"
+    #restart: always
+    #volumes:
+    #  - $HOME/APTRS/postgresql_data:/var/lib/postgresql
+    #environment:
+     # - POSTGRES_USER=aptrsdbuser
+      #- POSTGRES_PASSWORD=aptrsdbpassword
+      #- POSTGRES_DB=aptrs
+    #ports:
+     # - "5432:5432"
+    #networks:
+     #   - aptrs
+        
+      
+  aptrs:
+    environment:
+      - POSTGRES_USER=aptrsdbuser
+      - POSTGRES_PASSWORD=aptrsdbpassword
+      - POSTGRES_DB=aptrs
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+       - POSTGRES=False
+    volumes:
+      - $HOME/aptrs:/home/aptrs/.aptrs
+      - static_volume:/home/aptrs/APTRS/static/
+    ports:
+     - "8000:8000"
+    networks:
+      - aptrs
+
+    #depends_on:
+    #  - postgres
+    #links:
+    #  - "postgres"
+networks:
+  aptrs:
+
+
+volumes:
+  static_volume: 
+  

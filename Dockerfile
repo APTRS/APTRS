@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 
 # Labels and Credits
 LABEL \
-    name="AAPTRS" \
+    name="APTRS" \
     author="Sourav Kalal <kalalsourav20@gmail.com>" \
     maintainer="Sourav Kalal <kalalsourav20@gmail.com>" \
     description="APTRS (Automated Penetration Testing Reporting System) is an automated reporting tool in Python and Django. The tool allows Penetration testers to create a report directly without using the Traditional Docx file. It also provides an approach to keeping track of the projects and vulnerabilities."
@@ -31,7 +31,8 @@ RUN apt update -y && apt install -y  --no-install-recommends \
     python3-pip \
     wget \
     curl \
-    git 
+    git \
+    nginx
 
 ARG TARGETPLATFORM
 
@@ -65,19 +66,35 @@ RUN chmod +x ./wkhtmltopdf.sh
 RUN ./wkhtmltopdf.sh
 
 
-WORKDIR /home/APTRS/APTRS
+WORKDIR /home/aptrs
 # Copy source code
 COPY . .
-RUN python3 /home/APTRS/APTRS/APTRS/manage.py collectstatic --no-input
+
+ARG POSTGRES=False
+ENV POSTGRES_USER=aptrsdbuser \
+    POSTGRES_PASSWORD=aptrsdbpassword \
+    POSTGRES_DB=aptrs \
+    POSTGRES_HOST=postgres
+
+
+RUN if [ "$POSTGRES" = "True" ]; then \
+    pip3 install psycopg2-binary && \
+    sed -i '/# Sqlite3 support/,/# End Sqlite3 support/d' /home/aptrs/APTRS/APTRS/settings.py && \
+    sed -i '/# Postgres DB - Install psycopg2/,/"""/d' /home/aptrs/APTRS/APTRS/settings.py && \
+    sed -i '/# End Postgres support/,/"""/d' /home/aptrs/APTRS/APTRS/settings.py; \
+  fi
+
+
+RUN python3 /home/aptrs/APTRS/manage.py collectstatic --no-input
 
 EXPOSE 8000 8000 
 
 
 
-RUN chown -R aptrs:aptrs /home/APTRS/APTRS
+RUN chown -R aptrs:aptrs /home/aptrs/
 
 USER aptrs
 
-RUN ["chmod", "+x", "/home/APTRS/APTRS/scripts/entrypoint.sh"]
+RUN ["chmod", "+x", "/home/aptrs/scripts/entrypoint.sh"]
 
-CMD ["/home/APTRS/APTRS/scripts/entrypoint.sh"]
+CMD ["/home/aptrs/scripts/entrypoint.sh"]
