@@ -175,3 +175,14 @@ def list_custom_groups(request):
     groups = CustomGroup.objects.all()
     serializer = CustomGroupSerializer(groups, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def user_detail(request, pk):
+    try:
+        user = CustomUser.objects.get(pk=pk)
+    except CustomUser.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = CustomUserSerializer(user)
+    return Response(serializer.data)

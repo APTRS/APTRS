@@ -15,6 +15,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('changepassword', views.change_password, name='change_password'),
     path('users', views.getallusers, name='getallusers'),
+    path('user/<int:pk>', views.user_detail, name='user_detail'),
     path('myprofile', views.myprofile, name='getmyprofile'),
     path('editprofile', views.edit_profile, name='editprofile'),
     path('adduser', views.add_user, name='adduser'),
