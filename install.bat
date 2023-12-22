@@ -1,18 +1,25 @@
 @echo off
 
-FOR /F "tokens=* USEBACKQ" %%F IN (`python --version`) DO (
-SET var=%%F
+FOR /F "tokens=2-4 delims=." %%A IN ('python --version 2^>^&1') DO (
+    SET python_version=%%A.%%B.%%C
 )
-ECHO %var%
-if "%var%" GEQ "Python 3.11.1" (
-    echo Python 3.8 and above found
-  ) else (
-    echo "%var%"
-    echo APTRS require Python 3.8+ .
+ECHO Installed Python version: %python_version%
+
+REM Remove spaces in version string for comparison
+SET python_version_no_spaces=%python_version: =%
+
+REM Compare the major and minor version numbers
+IF "%python_version_no_spaces%" GEQ "3.8" (
+    IF "%python_version_no_spaces%" LSS "3.12" (
+        echo Python 3.8 and above found, but below 3.12
+    ) ELSE (
+        echo Python version %python_version% is 3.12 or above, which is not supported.
+        exit /b
+    )
+) ELSE (
+    echo Python version %python_version% is below 3.8.
     exit /b
-  )
-
-
+)
 
 
   pip >nul 2>&1 && (
