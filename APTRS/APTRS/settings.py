@@ -23,16 +23,55 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #logging.disable(logging.CRITICAL)
 ADMIN_ENABLED = False
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+
+'''
+Security settings, Make sure that you change the configuration before deploying the application
+'''
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
+'''
+Change the security key, The same key is used for JWT Token Signing
+'''
 SECRET_KEY = 'django-insecure--b83(+esj0aubo_gr!f*k)tyvs*_t_&4e2ty00beroxof8@d!7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+####### Make Sure to change this to your desired domain name/hostname ['yourdomain.com','anotherdomaiin.com']
 ALLOWED_HOSTS = ['*']
+
+
+'''
+CORS Security settings
+'''
+####### Make sure to only allow the  frontend domain/IP and not all domains Check - https://pypi.org/project/django-cors-headers/ for more examples to configure it
+
+## Remove the CORS_ORIGIN_ALLOW_ALL = True and use this instead with appropriate domain/ip:port and protocol
+#CORS_ALLOWED_ORIGINS = ["https://example.com","http://127.0.0.1:9000"]  
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+
+'''
+CORS Headers Security
+For Additional security add this
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+)
+
+'''
+
+#### Do Not Change this
+CORS_ALLOW_CREDENTIALS = True
+
+
+
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
@@ -63,6 +102,7 @@ INSTALLED_APPS = [
     'project',
     'rest_framework',
     'corsheaders',
+    'django_filters',
   
 ]
 
@@ -125,6 +165,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'aptrs',
+        #'CONN_MAX_AGE': 0,   ## Depending on your DB enable this setting if required. 0 will decrease the DB connection but might increase the HTTP Response delay
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],
@@ -334,8 +375,7 @@ WKHTMLTOPDF_CMD_OPTIONS = {'disable-javascript': True}
 
 LOGIN_URL= '/accounts/login'
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+
 
 
 

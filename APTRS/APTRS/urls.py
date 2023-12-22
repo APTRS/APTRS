@@ -14,10 +14,7 @@ urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT,}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT,}),
     path('', RedirectView.as_view(url='/api/auth/login/', permanent=True)),
-    path('admin/', admin.site.urls),
-    path('ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'), 
-    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    
 
 
    
@@ -26,4 +23,12 @@ urlpatterns = [
 #urlpatterns = urlpatterns + static('/media/', document_root = settings.MEDIA_ROOT)
 #urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+if settings.DEBUG:
+    urlpatterns = urlpatterns + [
+    path('admin/', admin.site.urls),
+    path('ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'), 
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+
+    ]
 

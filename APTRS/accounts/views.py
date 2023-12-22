@@ -12,8 +12,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import CustomGroup
 from .serializers import ChangePasswordSerializer, CustomUserSerializer,ProfileUserSerializer, CustomGroupSerializer,CustomPermissionSerializer
-from .permissions import custom_permission_required
+from utils.permissions import custom_permission_required
 from .models import CustomUser , CustomPermission
+from utils.filters import UserFilter, paginate_queryset
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['Pic'] = self.user.profilepic.url
         data['isAdmin'] = self.user.is_superuser
+        data['company'] = self.user.company
         
         permissions = set()  # Use set to avoid duplicate permissions
 
@@ -64,6 +66,20 @@ def getallusers(request):
     userdetails = CustomUser.objects.all()
     serializer = CustomUserSerializer(userdetails, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View All Users'])
+def getallusers_filter(request):
+    userdetails = CustomUser.objects.all()
+
+    user_filter = UserFilter(request.GET, queryset=userdetails)
+    filtered_queryset = user_filter.qs
+    paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
+    serializer = CustomUserSerializer(paginated_queryset, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])

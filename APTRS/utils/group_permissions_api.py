@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import GroupSerializer
-from .models import Group
+from accounts.serializers import GroupSerializer
+from accounts.models import Group
 from rest_framework.permissions import BasePermission
 
 @api_view(['POST'])

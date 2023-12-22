@@ -1,7 +1,7 @@
 
 
 from rest_framework.permissions import BasePermission
-from .models import Group, CustomPermission
+from accounts.models import Group, CustomPermission
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status

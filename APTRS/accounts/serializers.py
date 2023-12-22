@@ -104,14 +104,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'company', 'position', 'groups','password']
+        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'company', 'position', 'groups']
         read_only_fields = ['date_joined','company','is_staff']  
 
     def create(self, validated_data):
 
         # Set is_staff to True by default for new user
         validated_data['is_staff'] = True
-        groups_data = validated_data.pop('groups', [])  # Extract groups data
+        groups_data = validated_data.pop('groups', [])  # Extract groups 
+        if 'password' not in validated_data:
+            raise serializers.ValidationError("Password is required for creating a new user.")
         password = validated_data.pop('password')
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)  

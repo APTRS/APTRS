@@ -19,7 +19,7 @@ from .report import generate_pdf_report
 import os
 from django.utils.decorators import method_decorator
 
-from accounts.permissions import custom_permission_required
+from utils.permissions import custom_permission_required
 
 logger = logging.getLogger(__name__)
 

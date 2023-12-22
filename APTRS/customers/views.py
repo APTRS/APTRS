@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from .models import Customer,Company
 import logging
-from accounts.permissions import custom_permission_required
+from utils.permissions import custom_permission_required
 
 logger = logging.getLogger(__name__)
 
