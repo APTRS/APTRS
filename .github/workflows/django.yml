@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Setup ${{ matrix.python }} ${{ matrix.os }}
+    name: Setup ${{ matrix.python-version }} ${{ matrix.os }}
     runs-on:  ${{ matrix.os }}
     strategy:
       max-parallel: 4
