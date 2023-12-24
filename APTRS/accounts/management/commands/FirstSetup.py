@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
 
     def CreateSuperUser(self):
-        admin_group= Group.objects.get(name='Administrator')
+        admin_group= CustomGroup.objects.get(name='Administrator')
 
         if not CustomUser.objects.filter(username=USERNAME).exists():
             user = CustomUser.objects.create(
