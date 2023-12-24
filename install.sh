@@ -36,7 +36,7 @@ fi
 
 
 echo 'Installing Python Requirements'
-rm db.sqlite3
+rm -f db.sqlite3
 python3 -m pip install -r ../requirements.txt
 python3 APTRS/manage.py makemigrations
 python3 APTRS/manage.py makemigrations accounts
