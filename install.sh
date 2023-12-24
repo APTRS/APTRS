@@ -34,14 +34,20 @@ else
     exit 1
 fi
 
+rm -f db.sqlite3
+if [ $? -eq 0 ]; then
+    echo "File db.sqlite3 deleted successfully."
+else
+    echo "Failed to delete db.sqlite3 file."
+fi
 
 echo 'Installing Python Requirements'
-rm -f db.sqlite3
+
 python3 -m pip install -r ../requirements.txt
-python3 APTRS/manage.py makemigrations
-python3 APTRS/manage.py makemigrations accounts
-python3 APTRS/manage.py makemigrations project
-python3 APTRS/manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py makemigrations accounts
+python3 manage.py makemigrations project
+python3 manage.py migrate
 python3 manage.py migrate accounts 
 
 
