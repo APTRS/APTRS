@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from accounts.models import CustomUser , CustomGroup, CustomPermission
 from django.core.management import call_command
 import subprocess
+import json
 
 
 USERNAME = 'aptrs'
@@ -30,8 +31,17 @@ class Command(BaseCommand):
 
 
     def LoadPermissions(self):
-        Permission_path = '../Dummy-Data/CustomPermission.json'
-        call_command('loaddata', Permission_path)
+        Permission_path = '../Dummy-Data/Permission.json'
+        with open(Permission_path, 'r') as file:
+            data = json.load(file)
+
+        for item in data:
+            permission = CustomPermission.objects.create(
+            name=item['name'],
+            description=item['description']
+            )
+            
+        #call_command('loaddata', Permission_path)
 
         self.stdout.write(self.style.SUCCESS("All permissions were successfully loaded"))
 

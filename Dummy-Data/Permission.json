@@ -1,0 +1,202 @@
+[
+    {
+      "name": "Change Password",
+      "description": "Users have the option to change their own password."
+    },
+    {
+      "name": "Create Project",
+      "description": "Can have permission to create project"
+    },
+    {
+      "name": "View All Users",
+      "description": "Can view all users details"
+    },
+    {
+      "name": "View Profile",
+      "description": "Can view self profile details"
+    },
+    {
+      "name": "Edit Profile",
+      "description": "Can edit self profile details"
+    },
+    {
+      "name": "Add User",
+      "description": "Allow users to create new user account"
+    },
+    {
+      "name": "Edit User",
+      "description": "Allow users to edit other users profile"
+    },
+    {
+      "name": "Delete User",
+      "description": "Allow users to Delete other users profile"
+    },
+    {
+      "name": "Create Group",
+      "description": "Allow users to Create Permission Groups"
+    },
+    {
+      "name": "View Permissions",
+      "description": "Allow users to View all available Permissions"
+    },
+    {
+      "name": "Edit Group",
+      "description": "Allow users to Edit Permission Groups"
+    },
+    {
+      "name": "View Group",
+      "description": "Allow users to list All Available Permission Groups"
+    },
+    {
+      "name": "View all Client Companies List",
+      "description": "Allow users to list All Available Client Companies, Rememember User who create project need to select client company and will need this permission to create project"
+    },
+    {
+      "name": "View all Customers List",
+      "description": "Allow users to list All Customers"
+    },
+    {
+      "name": "View specific customer",
+      "description": "Allow users to view specific Customers, Users with edit customer permission should have this permission"
+    },
+    {
+      "name": "Edit customer",
+      "description": "Allow users to Edit Customers."
+    },
+    {
+      "name": "Add customer",
+      "description": "Allow users to Add new Customers."
+    },
+    {
+      "name": "Delete customer",
+      "description": "Allow users to Delete new Customers."
+    },
+    {
+      "name": "Get specific Client Company",
+      "description": "Allow users to Get specific Client Company., User with edit client company permission should have this permission"
+    },
+    {
+      "name": "Add Company",
+      "description": "Allow users to Add new Company."
+    },
+    {
+      "name": "Edit Company",
+      "description": "Allow users to Edit Company."
+    },
+    {
+      "name": "Delete Company",
+      "description": "Allow users to Delete Company."
+    },
+    {
+      "name": "Upload Nessus CSV",
+      "description": "Allow users to Upload the Nessus CSV file to parse the data and add vulnerabilities to project."
+    },
+    {
+      "name": "Delete Images",
+      "description": "Allow users to Delete Upload Images, including Company Loogo, POC images etc."
+    },
+    {
+      "name": "Upload Images for Vulnerability",
+      "description": "Allow users to Upload images while creating a vulnerability."
+    },
+    {
+      "name": "Add Scope to Projects",
+      "description": "Allow users to add scope url/ip in a project."
+    },
+    {
+      "name": "Delete Scope from Projects",
+      "description": "Allow users to delete scope url/ip in a project."
+    },
+    {
+      "name": "Edit Scope from Projects",
+      "description": "Allow users to edit scope url/ip in a project."
+    },
+    {
+      "name": "View Scope from Projects",
+      "description": "Allow users to view scope url/ip in a project."
+    },
+    {
+      "name": "Add Vulnerability in Projects",
+      "description": "Allow users to add vulnerability in a project."
+    },
+    {
+      "name": "Create new Projects",
+      "description": "Allow users to create a new project."
+    },
+    {
+      "name": "Edit Projects",
+      "description": "Allow users to edit project."
+    },
+    {
+      "name": "View Specific Project",
+      "description": "Allow users to view specific project details."
+    },
+    {
+      "name": "Change Project Status to Complete",
+      "description": "Allow users to mark project as completed"
+    },
+    {
+      "name": "View All Projects",
+      "description": "Allow users to view all projects."
+    },
+    {
+      "name": "Delete Projects",
+      "description": "Allow users to delete projects."
+    },
+    {
+      "name": "View Specific Vulnerability",
+      "description": "Allow users to view specific vulnerability in a project."
+    },
+    {
+      "name": "Edit Vulnerability",
+      "description": "Allow users to edit vulnerability in a project."
+    },
+    {
+      "name": "Delete Vulnerability",
+      "description": "Allow users to delete vulnerability in a project."
+    },
+    {
+      "name": "View all Vulnerability for Project",
+      "description": "Allow users to view all vulnerability in a project."
+    },
+    {
+      "name": "View All Instances For Vulnerability",
+      "description": "Allow users to view instances in a vulnerability."
+    },
+    {
+      "name": "Add Instances",
+      "description": "Allow users to add instances in a vulnerability."
+    },
+    {
+      "name": "Edit Instances",
+      "description": "Allow users to edit instances in a vulnerability."
+    },
+    {
+      "name": "Delete Instances",
+      "description": "Allow users to delete instances in a vulnerability."
+    },
+    {
+      "name": "Change Instances Status",
+      "description": "Allow users to change instances status in a vulnerability."
+    },
+    {
+      "name": "Vulnerability Status",
+      "description": "Allow users to change vulnerability status project."
+    },
+    {
+      "name": "Delete Retest Task",
+      "description": "Allow users to delete retest task in a project."
+    },
+    {
+      "name": "View Retest for Projects",
+      "description": "Allow users to view all retest in a project."
+    },
+    {
+      "name": "Add Retest for Projects",
+      "description": "Allow users to add retest in a project.."
+    },
+    {
+      "name": "Report Access",
+      "description": "Allow users to View and Download Report."
+    }
+  ]
