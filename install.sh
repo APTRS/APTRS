@@ -8,7 +8,7 @@ py_minor=$(echo "$python_version" | cut -d'.' -f2)
 if [ "$py_major" -eq "3" ] && [ "$py_minor" -gt "7" ]; then
     echo "Python ${python_version} is installed"
 else
-    echo "APTRS require Python 3.8."
+    echo "APTRS require Python 3.8 and above"
     exit 1
 fi
 
@@ -22,6 +22,7 @@ fi
 
 
 echo 'Creating Python virtualenv'
+cd APTRS
 rm -rf ./venv
 python3 -m venv ./venv
 if [ $? -eq 0 ]; then
@@ -35,17 +36,15 @@ fi
 
 
 echo 'Installing Python Requirements'
-python3 -m pip install -r requirements.txt
+rm db.sqlite3
+python3 -m pip install -r ../requirements.txt
 python3 APTRS/manage.py makemigrations
+python3 APTRS/manage.py makemigrations accounts
+python3 APTRS/manage.py makemigrations project
 python3 APTRS/manage.py migrate
-cd APTRS
-echo "from django.contrib.auth import get_user_model; User = get_user_model(); user = User.objects.create_superuser('admin', 'admin1@example.com', 'admin'); from accounts.models import Profile; Profile.objects.create(user=user, profilepic='profile/avatar-1.jpg', number='+911234564674', company='Example Inc.')" | python3 manage.py shell
+python3 manage.py migrate accounts 
 
 
+echo "Setting up the Django Project"
+python3 manage.py FirstSetup
 
-wkhtmltopdf -V
-if ! [ $? -eq 0 ]; then
-    echo 'Download and Install wkhtmltopdf Version 0.12.6 for PDF Report Generation - https://wkhtmltopdf.org/downloads.html'
-fi
-
-echo 'Installation Complete'

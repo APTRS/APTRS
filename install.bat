@@ -44,8 +44,8 @@ IF %minor% GEQ 8 (
 
 
   echo [INSTALL] Creating venv
-  rmdir "venv" /q /s >nul 2>&1
   cd APTRS
+  rmdir "venv" /q /s >nul 2>&1
   python -m venv ./venv
   set venv=.\venv\Scripts\python
   echo "%venv%"

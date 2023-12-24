@@ -12,7 +12,7 @@ Number = '916661234586'
 Position = 'Security Engineer'
 ADMIN = True
 PASSWORD = 'iamweakpassword'
-Group = ['Administrator']
+Group = 'Administrator'
 
 
 class Command(BaseCommand):
@@ -56,6 +56,7 @@ class Command(BaseCommand):
 
 
     def CreateSuperUser(self):
+        admin_group = CustomGroup.objects.get(name=Group)
         if not CustomUser.objects.filter(username=USERNAME).exists():
             user = CustomUser.objects.create(
                 username=USERNAME,
@@ -68,7 +69,7 @@ class Command(BaseCommand):
             )
             user.set_password(PASSWORD)
             user.save()
-            user.groups.set(Group)
+            user.groups.set([admin_group])
             self.stdout.write(self.style.SUCCESS("Superuser created successfully"))
         else:
             self.stdout.write(self.style.NOTICE("Superuser already exists"))
