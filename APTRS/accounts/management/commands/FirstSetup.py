@@ -64,11 +64,11 @@ class Command(BaseCommand):
                 is_active=True,
                 number=Number,
                 position=Position,
-                groups=Group,
                 is_superuser=ADMIN
             )
             user.set_password(PASSWORD)
             user.save()
+            user.groups.set(Group)
             self.stdout.write(self.style.SUCCESS("Superuser created successfully"))
         else:
             self.stdout.write(self.style.NOTICE("Superuser already exists"))
