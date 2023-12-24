@@ -82,6 +82,16 @@ def getallusers_filter(request):
     return paginator.get_paginated_response(serializer.data)
 
 
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View All Users'])
+def ActiveUserList(request):
+    usernames = CustomUser.objects.filter(is_active=True).values_list('username', flat=True)
+    return Response(usernames)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View Profile'])

@@ -11,11 +11,12 @@ import os
 import warnings
 from . import settings
 from django.core.wsgi import get_wsgi_application
+from .init import current_version
 
 
-
+BANNER, VERSION , version = current_version()
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'APTRS.settings')
-
 application = get_wsgi_application()
+print(BANNER+ "" +VERSION)

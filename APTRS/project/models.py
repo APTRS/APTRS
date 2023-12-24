@@ -46,6 +46,11 @@ class Project(models.Model):
             return 'In Progress'
         elif current_date > self.enddate:
             return 'Delay'
+        
+    def save(self, *args, **kwargs):
+        self.status = self.calculate_status
+        super(Project, self).save(*args, **kwargs)
+
 
 
 class PrjectScope(models.Model):

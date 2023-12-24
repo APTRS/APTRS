@@ -15,6 +15,10 @@ import os
 import logging
 from datetime import timedelta
 import sys
+from .init import current_version
+
+
+BANNER, VERSION , version= current_version()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

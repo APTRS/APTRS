@@ -10,14 +10,9 @@ SET python_version_no_spaces=%python_version: =%
 
 REM Compare the major and minor version numbers
 IF "%python_version_no_spaces%" GEQ "3.8" (
-    IF "%python_version_no_spaces%" LSS "3.12" (
-        echo Python 3.8 and above found, but below 3.12
-    ) ELSE (
-        echo Python version %python_version% is 3.12 or above, which is not supported.
-        exit /b
-    )
+    echo Python 3.8 and above found
 ) ELSE (
-    echo Python version %python_version% is below 3.8.
+    echo Python version %python_version% is below 3.8, which is not supported.
     exit /b
 )
 
@@ -33,6 +28,7 @@ IF "%python_version_no_spaces%" GEQ "3.8" (
 
   echo [INSTALL] Creating venv
   rmdir "venv" /q /s >nul 2>&1
+  cd APTRS
   python -m venv ./venv
   set venv=.\venv\Scripts\python
   echo "%venv%"
@@ -45,9 +41,13 @@ IF "%python_version_no_spaces%" GEQ "3.8" (
   %venv% manage.py migrate
   
 
-  echo Download and Install wkhtmltopdf Version 0.12.6 for PDF Report Generation - https://wkhtmltopdf.org/downloads.html
-  echo Installation Complete
+
+  del db.sqlite3
+  
+  echo Setting up the Django Project
+  %venv% manage.py FirstSetup
+
   exit /b 0
-) || (
+ || (
   echo APTRS require Python 3.8.
 )

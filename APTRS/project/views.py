@@ -193,29 +193,11 @@ def create_vulnerability(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Create new Projects'])
 def newproject(request):
-    serializer = Projectserializers(data=request.data)
+    serializer = Projectserializers(data=request.data, context={'request': request})
+
     if serializer.is_valid(raise_exception=True):
-        try:
-
-            company = Company.objects.get(name=request.data.get('companyname'))
-        except ObjectDoesNotExist:
-            logger.error("Company Not Found, Company: %s is incorrect", str(request.data.get('companyname')))
-            return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
-        if request.user.is_superuser:
-            owner = request.data.get('owner', None)
-
-            if owner:
-                try:
-                    owner = User.objects.get(username=owner)
-                except ObjectDoesNotExist:
-                    logger.error("User Not Found, Owner: %s is incorrect", str(owner))
-                    return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-                serializer.save(owner=owner,companyname=company)
-            else:
-                serializer.save(owner=request.user,companyname=company)
-        else:
-            serializer.save(owner=request.user,companyname=company)
-            logger.info("Project Creted by %s", request.user)
+        serializer.save()
+        logger.info("Project Creted by %s", request.user)
         return Response(serializer.data)
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
@@ -235,18 +217,7 @@ def project_edit(request, pk):
         
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
     
-    if not request.user.is_superuser:
-        request.data['owner'] = request.user
-    else:
-        try:
-            User.objects.get(username=request.data['owner'])
-            request.data['owner'] = request.data['owner']
-        except ObjectDoesNotExist:
-            logger.error("User not found with username=%s", request.data['owner'])
-            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-   
-    serializer = Projectserializers(instance=project, data=request.data)
+    serializer = Projectserializers(instance=project, data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
         
         serializer.save()
