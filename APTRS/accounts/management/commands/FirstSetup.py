@@ -10,9 +10,9 @@ EMAIL = 'admin@aptrs.com'
 FullName = 'Aptrs Admin'
 Number = '916661234586'
 Position = 'Security Engineer'
-Group = 'Administrator'
 ADMIN = True
 PASSWORD = 'iamweakpassword'
+Group = ['Administrator']
 
 
 class Command(BaseCommand):
@@ -56,8 +56,6 @@ class Command(BaseCommand):
 
 
     def CreateSuperUser(self):
-        admin_group= CustomGroup.objects.get(name='Administrator')
-
         if not CustomUser.objects.filter(username=USERNAME).exists():
             user = CustomUser.objects.create(
                 username=USERNAME,
@@ -70,7 +68,7 @@ class Command(BaseCommand):
             )
             user.set_password(PASSWORD)
             user.save()
-            user.groups.set(admin_group)
+            user.groups.set(Group)
             self.stdout.write(self.style.SUCCESS("Superuser created successfully"))
         else:
             self.stdout.write(self.style.NOTICE("Superuser already exists"))
