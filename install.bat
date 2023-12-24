@@ -53,7 +53,7 @@ IF %minor% GEQ 8 (
 
 
   echo Installing Python Requirements
-  %venv% -m pip install -r requirements.txt
+  %venv% -m pip install -r ../requirements.txt
   %venv% manage.py makemigrations
   %venv% manage.py migrate
   
