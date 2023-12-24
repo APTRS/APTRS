@@ -1,29 +1,38 @@
 @echo off
 
-FOR /F "tokens=2-4 delims=." %%A IN ('python --version 2^>^&1') DO (
-    SET python_version=%%A.%%B.%%C
-)
-ECHO Installed Python version: %python_version%
-
-REM Split the version string into major and minor versions
-FOR /F "tokens=1-2 delims=." %%A IN ("%python_version%") DO (
-    SET /A python_major_version=%%A
-    SET /A python_minor_version=%%B
+FOR /F "tokens=* USEBACKQ" %%F IN (`python --version 2^>^&1`) DO (
+    SET "var=%%F"
 )
 
-REM Check if the major version is 3
-IF %python_major_version% NEQ 3 (
-    echo Python version %python_version% is not in the 3.x series, which is not supported.
-    exit /b
+SET "var=%var:Python =%"
+
+SET "major="
+SET "minor="
+SET "patch="
+
+REM Split the version string by dots and set each part to a variable
+FOR /F "tokens=1-3 delims=." %%A IN ("%var%") DO (
+    SET "major=%%A"
+    SET "minor=%%B"
+    SET "patch=%%C"
 )
 
-REM Check if the minor version is 8 or above
-IF %python_minor_version% GEQ 8 (
-    echo Python 3.8 and above found
+REM Check if the first part is 3
+IF "%major%" EQU "3" (
+    ECHO Python 3.X found
 ) ELSE (
-    echo Python version %python_version% is below 3.8, which is not supported.
-    exit /b
+    ECHO Found version %var%, APTRS only support Python 3.8 and Above
+    EXIT /B 1
 )
+
+
+IF %minor% GEQ 8 (
+    ECHO Python 3.%minor% found.
+) ELSE (
+    ECHO Found version %var%, APTRS only support Python 3.8 and Above
+    EXIT /B 1
+)
+
 
   pip >nul 2>&1 && (
     echo pip3 is installed
