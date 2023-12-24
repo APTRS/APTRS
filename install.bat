@@ -51,17 +51,17 @@ IF %minor% GEQ 8 (
   echo "%venv%"
   %venv% -m pip install --upgrade pip
 
-
+  del db.sqlite3
   echo Installing Python Requirements
   %venv% -m pip install -r ../requirements.txt
   %venv% manage.py makemigrations
   %venv% manage.py makemigrations accounts
   %venv% manage.py makemigrations project
   %venv% manage.py migrate
+  %venv% manage.py migrate accounts 
   
 
 
-  del db.sqlite3
   
   echo Setting up the Django Project
   %venv% manage.py FirstSetup
