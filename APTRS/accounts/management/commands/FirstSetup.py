@@ -1,18 +1,24 @@
 from django.core.management.base import BaseCommand
 from accounts.models import CustomUser , CustomGroup, CustomPermission
-from django.core.management import call_command
 import subprocess
 import json
+import os
+from dotenv import load_dotenv
+from django.conf import settings
 
 
-USERNAME = 'aptrs'
-EMAIL = 'admin@aptrs.com'
-FullName = 'Aptrs Admin'
-Number = '916661234586'
-Position = 'Security Engineer'
-ADMIN = True
-PASSWORD = 'iamweakpassword'
-Group = 'Administrator'
+
+dotenv_path = os.path.join(settings.BASE_DIR, '.env')
+load_dotenv(dotenv_path)
+
+USERNAME = os.getenv('USERNAME')
+EMAIL = os.getenv('EMAIL')
+FullName = os.getenv('FullName')
+Number = os.getenv('Number')
+Position = os.getenv('Position')
+ADMIN = os.getenv('ADMIN')
+PASSWORD = os.getenv('PASSWORD')
+Group = os.getenv('Group')
 
 
 class Command(BaseCommand):

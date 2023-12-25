@@ -22,3 +22,4 @@ django-cors-headers==3.13.0
 djangorestframework-simplejwt==5.2.2
 colorlog==6.7.0
 django-filter==23.5
+python-dotenv==1.0.0

@@ -16,13 +16,16 @@ import logging
 from datetime import timedelta
 import sys
 from .init import current_version
+from dotenv import load_dotenv
 
 
-BANNER, VERSION , version= current_version()
+#BANNER, VERSION , version= current_version()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
 
 #logging.disable(logging.CRITICAL)
 ADMIN_ENABLED = False
@@ -37,7 +40,7 @@ Security settings, Make sure that you change the configuration before deploying 
 '''
 Change the security key, The same key is used for JWT Token Signing
 '''
-SECRET_KEY = 'django-insecure--b83(+esj0aubo_gr!f*k)tyvs*_t_&4e2ty00beroxof8@d!7'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -399,7 +402,7 @@ SIMPLE_JWT = {
 }
 
 #Your Organization Details
-ORG = "AnoF PVT LTD"
+ORG = os.getenv('YOUR_COMPANY')
 MY_ORG_LOGO = os.path.join(MEDIA_ROOT, 'company','APTRS.png')
 
 
