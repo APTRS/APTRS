@@ -1,7 +1,7 @@
 spec:
   name: APTRS
   services:
-    - name: APTRS
+    - name: aptrs
       git:
         branch: main
         repo_clone_url: https://github.com/Anof-cyber/APTRS.git
