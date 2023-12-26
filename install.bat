@@ -54,8 +54,14 @@ IF %minor% GEQ 8 (
   del db.sqlite3
   echo Installing Python Requirements
   %venv% -m pip install -r ../requirements.txt
-  REM for /f %%i in ('%venv% -c "import secrets; print(secrets.token_hex(24))"') do set "NEW_SECRET_KEY=%%i"
-  REM python -c "import os; os.environ['SECRET_KEY'] = '%NEW_SECRET_KEY%'"
+
+  echo Creating a New Secret Key
+  for /f %%i in ('%venv% -c "import secrets; print(secrets.token_hex(24))"') do set "NEW_SECRET_KEY=%%i"
+  set "PYTHON_CODE=import os; import dotenv; dotenv_file = dotenv.find_dotenv(); dotenv.load_dotenv(dotenv_file); os.environ['SECRET_KEY'] = '%NEW_SECRET_KEY%'; dotenv.set_key(dotenv_file, 'SECRET_KEY', os.environ['SECRET_KEY'])"
+  %venv% -c "%PYTHON_CODE%"
+
+
+ echo Migrating Database
   %venv% manage.py makemigrations
   %venv% manage.py makemigrations accounts
   %venv% manage.py makemigrations project

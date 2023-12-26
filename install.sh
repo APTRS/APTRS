@@ -44,8 +44,13 @@ fi
 echo 'Installing Python Requirements'
 
 python3 -m pip install -r ../requirements.txt
-#NEW_SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(24))")
-#python -c "import os; os.environ['SECRET_KEY'] = '$NEW_SECRET_KEY'"
+
+echo 'Creating a New Secret Key'
+
+NEW_SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(24))")
+sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" .env
+
+echo 'Migrating Database'
 python3 manage.py makemigrations
 python3 manage.py makemigrations accounts
 python3 manage.py makemigrations project
