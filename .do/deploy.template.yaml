@@ -1,5 +1,5 @@
 spec:
-  name: APTRS
+  name: aptrs
   services:
     - name: aptrs
       git:
