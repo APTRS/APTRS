@@ -28,11 +28,13 @@ jobs:
       if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
       run: |
         bash install.sh
-        python3 APTRS/manage.py test
+        cd APTRS
+        python3 manage.py test
 
     - name: Run install.bat and test on Windows
       if: matrix.os == 'windows-latest'
       run: |
         cmd /c "install.bat"
+        cd APTRS
         python manage.py test
    
