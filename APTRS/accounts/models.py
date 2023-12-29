@@ -2,7 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from django.contrib.auth.models import Group
-
+from customers.models import Company
 
 # Create your models here.
 
@@ -66,7 +66,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-
+from customers.models import Company
 
 
 
@@ -110,7 +110,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(default='profile/avatar-1.svg', upload_to='profile')
     number = PhoneNumberField(unique=True, blank=False, null=True, default=None)
     date_joined = models.DateTimeField(auto_now_add=True)
-    company = models.CharField(max_length=300, default=settings.ORG)
+    #company = models.CharField(max_length=300, default=settings.ORG)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,editable=False,to_field='name',null=True, blank=True)
     position = models.CharField(max_length=100, blank=True, null=True)
     groups = models.ManyToManyField(
         CustomGroup,

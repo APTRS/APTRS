@@ -3,7 +3,7 @@ import os
 import pdfkit
 import PyPDF2
 from PyPDF2 import PdfFileWriter
-from customers.models import Company, Customer
+from customers.models import Company
 from vulnerability.models import VulnerabilityDB
 #from accounts.models import Profile
 from django.shortcuts import render
@@ -40,10 +40,10 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard):
     lastretest = ProjectRetest.objects.filter(project_id=pk).order_by('-id').first()
     totalretest = ProjectRetest.objects.filter(project_id=pk)
 
-    customer = Customer.objects.filter(company=project.companyname)
-    companydetails = Company.objects.get(pk=project.companyname.id)
+    #customer = Customer.objects.filter(company=project.companyname)
+    #companydetails = Company.objects.get(pk=project.companyname.id)
     
-    userdetails = Customer.objects.all() ## Temporary
+    #userdetails = Customer.objects.all() ## Temporary
 
     tocstyle = (os.path.join(settings.BASE_DIR,'templates','Report','toc.xml'))
     url = url
@@ -56,7 +56,7 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard):
     bgimage = (os.path.join(settings.BASE_DIR,'assets','images','BG.jpg'))
     coverpage = cover.render({'project':project,"settings":settings,'bgimage':bgimage,'Report_type':Report_type,'lastretest':lastretest})
 
-    pdfpage = template.render({'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'userdetails':userdetails,'profile':userdetails,'customer':customer,'ciritcal':ciritcal,'high':high,'medium':medium,'low':low,'info':info,'instances':instances})
+    pdfpage = template.render({'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,'medium':medium,'low':low,'info':info,'instances':instances})
     pdfpageoptions = {'no-stop-slow-scripts':'','page-size':'Letter','viewport-size':'1280x1024','javascript-delay':'1000','margin-left': '0','margin-right': '0','margin-top': '15','margin-bottom': '10','enable-local-file-access': '','footer-font-name':'Segoe UI','enable-javascript':'','footer-html':footerpage}
     pdf_bytes = pdfkit.from_string(pdfpage,False,pdfpageoptions,cover = coverpage,cover_first=True,toc={"toc-header-text": "Table of Contents",'xsl-style-sheet':tocstyle,'disable-dotted-lines':''})
     

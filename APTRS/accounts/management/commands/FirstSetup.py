@@ -58,7 +58,9 @@ class Command(BaseCommand):
         all_permissions = CustomPermission.objects.all()
         admin_group.list_of_permissions.set(all_permissions)
 
-        self.stdout.write(self.style.SUCCESS("Administrator group created with all permission"))
+        customer_group, created = CustomGroup.objects.get_or_create(name='Customer')
+
+        self.stdout.write(self.style.SUCCESS("Administrator and Customer group created with all permission"))
 
 
     def CreateSuperUser(self):
@@ -67,10 +69,12 @@ class Command(BaseCommand):
             user = CustomUser.objects.create(
                 username=USERNAME,
                 email=EMAIL,
+                company=None,
                 full_name=FullName,
                 is_active=True,
                 number=Number,
                 position=Position,
+                is_staff=True,
                 is_superuser=ADMIN
             )
             user.set_password(PASSWORD)

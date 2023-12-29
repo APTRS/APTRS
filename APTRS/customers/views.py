@@ -6,9 +6,10 @@ from rest_framework.response import Response
 from rest_framework import status    
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
-from .models import Customer,Company
+from .models import Company
 import logging
 from utils.permissions import custom_permission_required
+from accounts.models import CustomUser
 
 logger = logging.getLogger(__name__)
 
@@ -29,68 +30,16 @@ def getallcompnay(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View all Customers List'])
 def getallcustomer(request):
-    customername = Customer.objects.all()
+    customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
     serializer = CustomerSerializer(customername,many=True)
     return Response(serializer.data)
-
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View specific customer'])
-def getcustomer(request,pk):
-    try:
-        customer = Customer.objects.get(pk=pk)
-    except ObjectDoesNotExist:
-        logger.error("Customer not found with pk=%s", pk)
-        return Response({"message": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = CustomerSerializer(customer,many=False)
-    return Response(serializer.data)
-
-
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit customer'])
-def customeredit(request,pk):
-    try:
-        customer = Customer.objects.get(pk=pk)
-        
-    except ObjectDoesNotExist:
-        logger.error("Customer not found with pk=%s", pk)
-        return Response({"message": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
-    try:
-        company = Company.objects.get(name=request.data.get('company'))
-    except ObjectDoesNotExist:
-        logger.error("Company not found with pk=%s", request.data.get('company'))
-        return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    request.data['company'] = company.id
-    serializer = CustomerSerializer(instance=customer,data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        
-        serializer.save()
-        respdata={'Status':"Success"}
-        respdata.update(serializer.data)
-        return Response(respdata)
-    else:
-        logger.error("Serializer errors: %s", str(serializer.errors))
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Add customer'])
 def customeradd(request):
-    try:
-        company = Company.objects.get(name=request.data.get('company'))
-    except ObjectDoesNotExist:
-        logger.error("Company not found with name=%s", request.data.get('company'))
-        return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
-    request.data['company'] = company.id
-    serializer = CustomerSerializer(data=request.data)
+    serializer = CustomerSerializer(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response(serializer.data)
@@ -100,15 +49,51 @@ def customeradd(request):
 
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View specific customer'])
+def getcustomer(request,pk):
+    try:
+        customer = CustomUser.objects.get(pk=pk, is_staff=False)
+    except ObjectDoesNotExist:
+        logger.error("Customer not found with pk=%s", pk)
+        return Response({"message": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CustomerSerializer(customer,many=False)
+    return Response(serializer.data)
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Delete customer'])
 def customerdelete(request):
-    customers = Customer.objects.filter(id__in=request.data)
+    customers = CustomUser.objects.filter(id__in=request.data,is_staff=False)
     customers.delete()
     respdata={'Status':"Success"}
     return Response(respdata)
 
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['Edit customer'])
+def customeredit(request,pk):
+    try:
+        customer = CustomUser.objects.get(pk=pk,is_staff=False)
+        
+    except ObjectDoesNotExist:
+        logger.error("Customer not found with pk=%s", pk)
+        return Response({"message": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = CustomerSerializer(instance=customer, data=request.data, context={'request': request})
+    if serializer.is_valid(raise_exception=True):
+        
+        serializer.save()
+        respdata={'Status':"Success"}
+        respdata.update(serializer.data)
+        return Response(respdata)
+    else:
+        logger.error("Serializer errors: %s", str(serializer.errors))
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

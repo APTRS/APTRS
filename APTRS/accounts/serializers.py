@@ -87,13 +87,13 @@ class CustomGroupRelatedField(serializers.RelatedField):
 class ProfileUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'full_name', 'email', 'profilepic', 'number']
-        read_only_fields = ['date_joined', 'company', 'is_staff', 'groups', 'position', 'is_active']
+        fields = ['id', 'full_name', 'profilepic', 'number']
+        read_only_fields = ['date_joined', 'is_staff', 'email', 'groups', 'position', 'is_active','username']
 
-    def update(self, instance, validated_data):
-        instance.profilepic = validated_data.get('profilepic', instance.profilepic)
-        instance.save()
-        return instance
+    #def update(self, instance, validated_data):
+        #instance.profilepic = validated_data.get('profilepic', instance.profilepic)
+     #   instance.save()
+      #  return instance
 
 
 
@@ -104,8 +104,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'company', 'position', 'groups']
-        read_only_fields = ['date_joined','company','is_staff']  
+        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'position', 'groups']
+        read_only_fields = ['date_joined','is_staff']  
 
     def create(self, validated_data):
 

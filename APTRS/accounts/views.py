@@ -29,7 +29,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['Pic'] = self.user.profilepic.url
         data['isAdmin'] = self.user.is_superuser
-        data['company'] = self.user.company
+        #data['company'] = self.user.company
+        data['isStaff'] = self.user.is_staff
         
         permissions = set()  # Use set to avoid duplicate permissions
 
@@ -63,7 +64,7 @@ def change_password(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Users'])
 def getallusers(request):
-    userdetails = CustomUser.objects.all()
+    userdetails = CustomUser.objects.filter(is_staff=True)
     serializer = CustomUserSerializer(userdetails, many=True)
     return Response(serializer.data)
 
@@ -72,7 +73,7 @@ def getallusers(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Users'])
 def getallusers_filter(request):
-    userdetails = CustomUser.objects.all()
+    userdetails = CustomUser.objects.filter(is_staff=True)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)
     filtered_queryset = user_filter.qs
@@ -88,7 +89,7 @@ def getallusers_filter(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Users'])
 def ActiveUserList(request):
-    usernames = CustomUser.objects.filter(is_active=True).values_list('username', flat=True)
+    usernames = CustomUser.objects.filter(is_active=True,is_staff=True).values_list('username', flat=True)
     return Response(usernames)
 
 
@@ -100,7 +101,7 @@ def myprofile(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated,IsAdminUser ])  ## IsAdminUser is allow only staff internal users not for is_superuser(admin)
 @custom_permission_required(['Edit Profile'])
 def edit_profile(request):
     user = request.user
