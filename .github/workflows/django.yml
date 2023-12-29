@@ -29,6 +29,7 @@ jobs:
       run: |
         bash install.sh
         cd APTRS
+        source venv/bin/activate
         python3 manage.py test
 
     - name: Run install.bat and test on Windows
@@ -36,5 +37,6 @@ jobs:
       run: |
         cmd /c "install.bat"
         cd APTRS
+        .\venv\Scripts\activate
         python manage.py test
    
