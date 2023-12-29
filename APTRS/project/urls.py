@@ -24,7 +24,7 @@ urlpatterns = [
     path('Retest/add',views.Retestadd),
     path('Retest/delete/<str:pk>/',views.Retestdelete),
     path('get-projects/',views.GetAllProjects.as_view()),
-    path('add-project/',views.newproject),
+    path('add-project/',views.newproject,name="Add Project"),
     path('get-project/<str:pk>/',views.getproject),
     path('status/completed/<str:pk>/',views.complete_project_status),
     path('delete-project/',views.deleteproject),

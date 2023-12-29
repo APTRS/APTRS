@@ -28,7 +28,6 @@ class Projectserializers(serializers.ModelSerializer):
     def create(self, validated_data):
         # Access the request object from the context
         request = self.context.get('request')
-        print(validated_data)
 
         company_name = validated_data.pop('companyname', None) 
         if company_name:
