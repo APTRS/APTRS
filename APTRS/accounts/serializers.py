@@ -100,11 +100,12 @@ class ProfileUserSerializer(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     profilepic = serializers.ImageField(required=False)  # Profile pic is optional
     groups = CustomGroupRelatedField(many=True, queryset=CustomGroup.objects.all())
+    password = serializers.CharField(write_only=True, required=False)
 
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'position', 'groups']
+        fields = ['id', 'username', 'full_name', 'email', 'is_staff', 'is_active', 'is_superuser','profilepic', 'number', 'position', 'groups','password']
         read_only_fields = ['date_joined','is_staff']  
 
     def create(self, validated_data):
