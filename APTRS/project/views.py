@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser,FormParser
 from django.core.files.storage import FileSystemStorage
 from .nessus import is_valid_csv
-from .report import generate_pdf_report
+from .report import generate_pdf_report, generate_pdf_report2
 import os
 from django.utils.decorators import method_decorator
 
@@ -572,11 +572,11 @@ def project_report(request, pk):
 
         url = request.build_absolute_uri()
         standard = request.data.get('Standard')
-        output = generate_pdf_report(Report_format,Report_type,pk,url,standard)
+        output = generate_pdf_report2(Report_format,Report_type,pk,url,standard,request)
         #response = HttpResponse(content_type='application/pdf')
         #response['Content-Disposition'] = "attachment; filename='mypdf.pdf'"
-        response = HttpResponse(output, content_type='application/pdf')
-        return response
+        #response = HttpResponse(output)
+        return output
 
         #return Response({"Status": "OK"})
     except ObjectDoesNotExist:

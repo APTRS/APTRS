@@ -76,3 +76,63 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard):
     merged_pdf_bytes = BytesIO()
     pdf_writer.write(merged_pdf_bytes)
     return merged_pdf_bytes.getvalue()
+
+
+from django.http import HttpResponse
+from django_weasyprint import WeasyTemplateResponse
+from django.template.loader import render_to_string
+from django.http import HttpResponseServerError
+
+def generate_pdf_report2(Report_format,Report_type,pk,url,standard,request):
+
+
+    # Get Project Details 
+    project = Project.objects.get(pk=pk)
+    Report_type = Report_type
+    standard = standard
+    
+    ## Get All Projects Vulnerability filter higher to lower CVSS Score
+    vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
+
+    #### Get ALL Instances for the Projects  (Not using Vulnerability colum)  ### Need to optimize to speed up the HTML generation
+    instances = Vulnerableinstance.objects.filter(project=project)
+
+    ### Get Total Count for each severity
+    #ciritcal =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Critical',status='Vulnerable').count()
+    #high =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='High',status='Vulnerable').count()
+    #medium =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Medium',status='Vulnerable').count()
+    #low =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Low',status='Vulnerable').count()
+    #info = Vulnerability.objects.filter(Q(project=project) & (Q(status='Vulnerable')) & (Q(vulnerabilityseverity='Informational') | Q(vulnerabilityseverity='None'))).count()
+
+
+    ciritcal =  vuln.filter(project=project,vulnerabilityseverity='Critical',status='Vulnerable').count()
+    high =  vuln.filter(project=project,vulnerabilityseverity='High',status='Vulnerable').count()
+    medium =  vuln.filter(project=project,vulnerabilityseverity='Medium',status='Vulnerable').count()
+    low =  vuln.filter(project=project,vulnerabilityseverity='Low',status='Vulnerable').count()
+    info = vuln.filter((Q(status='Vulnerable')) & (Q(vulnerabilityseverity='Informational') | Q(vulnerabilityseverity='None'))).count()
+
+    ### Get Total Vulnerability Count
+    totalvulnerability = vuln.filter(project=project).count()
+
+    ### Get All Scope from the project
+    projectscope = PrjectScope.objects.filter(project=project)
+
+    ## Get Retest Details
+    lastretest = ProjectRetest.objects.filter(project_id=pk).order_by('-id').first()
+    totalretest = ProjectRetest.objects.filter(project_id=pk)
+    data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,'medium':medium,'low':low,'info':info,'instances':instances}
+
+    try:
+        # Render the template to a string
+        rendered_content = render_to_string('Reportt/report.html', data, request=request)
+
+        # Create a WeasyTemplateResponse using the rendered content
+        pdf_response = WeasyTemplateResponse(template='Reportt/report.html', context=data,request=request)
+
+        # Return the PDF response
+        return pdf_response
+    except Exception as e:
+        # Return a server error response if there's an issue
+        return HttpResponseServerError(f"An error occurred: {e}")
+
+    
