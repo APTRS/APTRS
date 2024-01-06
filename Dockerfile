@@ -32,7 +32,13 @@ RUN apt update -y && apt install -y  --no-install-recommends \
     wget \
     curl \
     git \
-    nginx
+    nginx \
+    python3-cffi \
+    python3-brotli \
+    libpango-1.0-0 \
+    libharfbuzz0b \
+    libpangoft2-1.0-0
+
 
 ARG TARGETPLATFORM
 
