@@ -305,7 +305,7 @@ CKEDITOR_CONFIGS = {
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'standard': {
             'format': '[%(levelname)s] %(asctime)-15s - %(message)s',
@@ -423,3 +423,37 @@ CVSS_BASE_HIGH = "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N"
 
 CVSS_BASE_SCORE_CRITICAL = 3.5
 CVSS_BASE_CRITICAL = "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N"
+
+
+
+
+
+
+
+
+'''
+SSRF Protection for HTML to PDF Report
+
+Report will load images/js/css etc either over http,https or file protocol
+
+File protocol is used to speed up the loading proccess and avoid load on web server.
+
+All JS/CSS present in static folder will be loaded as file protocol and will have whitelisted, so only required css/js files can be loaded in html/pdf to avoid internal file read over SSRF.
+
+Static images like cover page image or design image/ internal Company logo will be loaded using protocol
+
+Images like Client company logo, POC images etc might be loaded over http/https from the whitelisted IP:PORT
+
+'''
+
+
+WHITE_LISTED_COMPANY_LOGOS = os.path.join(MEDIA_ROOT, 'company'),
+WHITE_LISTED_UPLOADED_POC = os.path.join(MEDIA_ROOT, 'uploads'),
+WHITE_LISTED_REPORT_DESIGN_IMAGES = os.path.join(MEDIA_ROOT, 'report'),
+WHITE_LISTED_REPORT_CSS = os.path.join(STATIC_ROOT, 'css','style.css')
+WHITE_LISTED_REPORT_FONT = os.path.join(STATIC_ROOT, 'font')
+WHITE_LISTED_REPORT_JS = os.path.join(STATIC_ROOT, 'js')
+
+
+WHITE_LISTED_PATH = [WHITE_LISTED_COMPANY_LOGOS,WHITE_LISTED_UPLOADED_POC,WHITE_LISTED_REPORT_DESIGN_IMAGES,WHITE_LISTED_REPORT_CSS,WHITE_LISTED_REPORT_FONT,WHITE_LISTED_REPORT_JS]
+

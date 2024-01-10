@@ -1,0 +1,42 @@
+/* removing the page number for first page and add a cover page image as background for whole page*/
+@page :first {  
+    background: url('file:////static//media//report//cover.png') no-repeat center;
+    
+    
+    background-size: cover;
+    margin: 0;
+}
+
+
+/**  Cover page heading **/
+#coverheading {
+    align-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    height: 9.75cm;
+    font-size: 48.4px;
+    width: 414.141pt;
+    color: #FFFFFF;
+    line-height: 1.20;
+    margin-bottom: 70px;
+    margin: 6cm 2cm 0 2cm;
+
+
+  }
+
+   /** CSS for Cover page  for project basic details **/
+   #cover .project-details {
+
+    align-content: space-between;
+    padding-left: 75px; 
+    padding-bottom: 20px;
+    color: #FFFFFF;
+    font-size: 18.4px;
+  }
+
+
+  /** Break the page as soon as cover page ends, page 2 start**/
+  #cover {
+
+    page-break-after: always;
+  }

@@ -1,108 +1,44 @@
-{% load static %}
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="report.css" rel="stylesheet">
+    <link href="file:////static//css//report-page.css" rel="stylesheet">
+    <link href="file:////static//css//report-cover-page.css" rel="stylesheet">
+    <link href="file:////static//css//report-table-of-content.css" rel="stylesheet">
+    <link href="file:////static//css//report-executive-summary.css" rel="stylesheet">
+    <link href="file:////static//css//report-vulnerabilities-summary.css" rel="stylesheet">
+    <link href="file:////static//css//report-vulnerability-details.css" rel="stylesheet">
+
+   
     <title>Report</title>
     <meta name="description" content="Pentest Report">
 
     <style>
         /* Font File */
-        @font-face {
-            font-family: Fira Sans;
-            font-weight: 400;
-            src: url('{{settings.BASE_DIR}}/static/font/firasans-regular.otf')
-          }
-          @font-face {
-            font-family: Fira Sans;
-            font-style: italic;
-            font-weight: 400;
-            src: url(firasans-italic.otf);
-          }
-          @font-face {
-            font-family: Fira Sans;
-            font-weight: 300;
-            src: url(firasans-light.otf);
-          }
-          @font-face {
-            font-family: Fira Sans;
-            font-style: italic;
-            font-weight: 300;
-            src: url(firasans-lightitalic.otf);
-          }
-          @font-face {
-            font-family: Fira Sans;
-            font-weight: 700;
-            src: url(firasans-bold.otf);
-          }
-
-
-          /* Page Settings */
-
-          @page {
-            @top-left {
-              background: #fbc847;
-              content: counter(page);
-              height: 1cm;
-              text-align: center;
-              width: 1cm;
-            }
-            @top-center {
-              background: #fbc847;
-              content: '';
-              display: block;
-              height: .05cm;
-              opacity: .5;
-              width: 100%;
-            }
-            @top-right {
-              content: string(heading);
-              font-size: 9pt;
-              height: 1cm;
-              vertical-align: middle;
-              width: 100%;
-            }
-
-          }
-
-        /* removing the page number for first page*/
-          @page :first {  
-            background: #EBF0F7;    
-            @top-left {
-                content: '';
-                background: none;
-            }
-        }
-
-
-          html {
-            color: #393939;
-            font-family: Fira Sans;
-            font-size: 11pt;
-            font-weight: 300;
-            line-height: 1.5;
-          }
-
-          h1 {
-            
-            font-size: 38pt;
-            margin: 5cm 2cm 0 2cm;
-            page: no-chapter;
-            width: 100%;
-          }
+       
 
     </style>
   </head>
 
 
   <body>
-    <article id="cover">
-      <h1>{{project.testingtype}} {{project.projecttype}} {{Report_type}} Report Of {{project.name}} For {{project.companyname.name}}</h1>
+
+    <!--  Cover Page  -->
+    {% include "cover-page.html" with project=project settings=settings %}
+
+    <!--  Page 2 - table Of Conent Page  -->
+    {% include 'table-of-content.html' %}
+
+    <!--  Page 3 - Executive Summary Page  -->
+    {% include 'executivesummary.html' with  project=project settings=settings standard=standard totalvulnerability=totalvulnerability totalretest=totalretest projectscope=projectscope internalusers=internalusers %}
+
+    <!--  Page 4 - Vulnerabilities summary Page  -->
+    {% include 'vulnerabilities-summary.html' with vuln=vuln pie_chart=pie_chart %}
+
+    <!--  Page 4 - Vulnerabilities Details Page  -->
+    {% include 'vulnerabilities.html' with vuln=vuln %}
+
    
-    </article>
-
-
-
 
 </body>
+
 </html>

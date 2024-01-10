@@ -1,0 +1,161 @@
+<!--  Page 3 - Executive Summary Page  -->
+
+<article id="executivesummary">
+    <h1 id="executivesummary-title" class="report-title">Executive Summary</h1>
+      
+    <p>
+  The pentest was conducted by {{ settings.ORG }} on {{ project.name }} using the {{ standard|join:", " }} standards to identify vulnerabilities exploitable by attackers.
+  The testing methodology encompassed both manual and automated techniques, evaluating the application's security posture.
+  During the assessment, a total of {{ totalvulnerability }} vulnerabilities were identified, varying in severity from Critical to Informational.
+  Based on the pentest results, it is strongly advised to address these identified vulnerabilities promptly, enhancing the service's overall security posture.
+  Overall, the pentest revealed several vulnerabilities exploitable by attackers, posing risks to the confidentiality, integrity, or availability of the application and underlying systems. Immediate action is recommended by the organization to mitigate these vulnerabilities and diminish the risk of successful attacks.
+  <p>
+  
+    <h2>Project Detail </h2>
+  
+        <p>{{project.description}}  </p>
+  
+  
+  
+    <h2>Document Version </h2>
+                <div id="version-table">
+                <table class="styled-table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Version</th>
+                      <th scope="col">Start Date</th>
+                      <th scope="col">End Date</th>
+                      <th scope="col">Prepared By</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1.0</td>
+                      <td>{{project.startdate|date:"d/m/Y" }}</td>
+                      <td>{{ project.enddate|date:"d/m/Y" }}</td>
+                      <td>{{ project.owner.full_name }}</td>
+                    </tr>
+  
+  
+  
+                    {% if Report_type == 'Re-Audit' %}
+                    {% if totalretest %}
+                    
+  
+  
+                    {% for retest in totalretest %}
+                    <tr>
+                      <td>1.{{forloop.counter}}</td>
+                      <td>{{ retest.startdate|date:"d/m/Y" }}</td>
+                      <td>{{ retest.enddate|date:"d/m/Y" }}</td>
+                      <td>{{ retest.owner.full_name}}</td>
+                    </tr>
+                  {% endfor %}
+  
+                    {% endif %}
+                    {% endif %}
+  
+  
+  
+                  </tbody>
+                </table>
+  
+              </div>
+  
+  
+  
+    <h2 id="scope-table">Project Scope </h2>
+  
+                <div id="version-table">
+                  <table class="styled-table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">SR</th>
+                        <th scope="col">Scope</th>
+                        <th scope="col">Description</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for scope in projectscope %}
+                      <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ scope.scope }} </td>
+                        <td>{{ scope.description }} </td>
+                      </tr>
+                      {% endfor %}  
+                    </tbody>
+                  </table>
+  
+                </div>
+  
+    
+                <h2>{{settings.ORG}} Team </h2>
+  
+                <div id="version-table">
+                  <table class="styled-table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">SR</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Role</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for user in internalusers %}
+                      <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ user.full_name }} </td>
+                        <td>{{ user.email }} </td>
+                        <td>{{ user.number }} </td>
+                        <td>{{ user.position }} </td>
+                      </tr>
+                      {% endfor %}  
+                    </tbody>
+                  </table>
+  
+                </div>
+  
+  <!--
+    <h2>{{project.companyname.name}} Team </h2>
+  
+            <div id="version-table">
+              <table class="styled-table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">SR</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Number</th>
+                    <th scope="col">Role</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in customeruser %}
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{ user.full_name }} </td>
+                    <td>{{ user.email }} </td>
+                    <td>{{ user.number }} </td>
+                    <td>{{ user.position }} </td>
+                  </tr>
+                  {% endfor %}  
+                </tbody>
+              </table>
+  
+            </div>
+        -->
+  
+    {% if project.projectexception %}
+        <h2>Project Exception </h2>
+  
+            <p>{{project.projectexception}}  </p>
+  
+    {% endif %}
+  
+  
+  </article>

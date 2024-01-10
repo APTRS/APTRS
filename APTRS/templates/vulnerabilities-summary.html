@@ -1,0 +1,80 @@
+<!--  Page 4 - Vulnerabilities summary Page  -->
+
+<article id="Vulnerabilities">
+    <h1 id="Vulnerabilities-title"  class="report-title">Vulnerabilities Summary</h1>
+
+
+    
+    <h2>Severity Classification </h2>
+
+    <div id="severity-table">
+      <table class="styled-table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">SR</th>
+    <th scope="col">Vulnerability Name</th>
+    <th scope="col">Severity</th>
+    <th scope="col">Status</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for vulnerabilities in vuln %}
+          <tr>
+            <td>{{ forloop.counter }} </td>
+            <td>{{vulnerabilities.vulnerabilityname}} </td>
+            {% if vulnerabilities.vulnerabilityseverity == "Critical" %}
+            <td style="color:#FF491C;" href="">{{vulnerabilities.vulnerabilityseverity}}</td>
+  
+            {% elif vulnerabilities.vulnerabilityseverity == "High" %}
+            <td style="color:#F66E09;" href="">{{vulnerabilities.vulnerabilityseverity}}</td>
+  
+            {% elif vulnerabilities.vulnerabilityseverity == "Medium" %}
+            <td style="color:#FBBC02;;" href="">{{vulnerabilities.vulnerabilityseverity}}</td>
+  
+            {% elif vulnerabilities.vulnerabilityseverity == "Low" %}
+            <td style="color:#20B803;" href="">{{vulnerabilities.vulnerabilityseverity}}</td>
+  
+            {% elif vulnerabilities.vulnerabilityseverity == "None" %}
+            <td style="color:#3399FF;" href="">Informational</td>
+  
+            {% endif %}
+  
+  
+  
+  
+  
+            {% if vulnerabilities.status == "Vulnerable" %}
+                      <td style="color: #FF0000;">{{vulnerabilities.status}}</td>
+  
+                      {% elif vulnerabilities.status == "Confirm Fixed" %}
+                      <td style="color: #20B803;">{{vulnerabilities.status}}</td>
+  
+                      {% elif vulnerabilities.status == "Accepted Risk" %}
+                      <td style="color: #FFA500;">{{vulnerabilities.status}}</td>
+  
+                      {% endif %}
+  
+  
+          </tr>
+  
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+    <div id=piechart>
+
+    {{pie_chart| safe}}
+    <span class="legend-box Critical">Critical</span> 
+    <span class="legend-box High">High</span> 
+    <span class="legend-box Medium">Medium</span> 
+    <span class="legend-box Low">Low</span> 
+    <span class="legend-box Informational">Informational</span> 
+     
+
+    </div>
+
+    
+</article>

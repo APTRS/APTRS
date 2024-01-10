@@ -78,13 +78,50 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard):
     return merged_pdf_bytes.getvalue()
 
 
+import urllib.request
+from weasyprint import default_url_fetcher, HTML
+
+from urllib.parse import urljoin
+
+def is_whitelisted_PATH(url):
+    for path in settings.WHITE_LISTED_PATH:
+        if url.startswith('file:///' + path):
+            return True
+    print("Blacklisted path")
+    return False
+
+def my_fetcher(url):
+    if url.startswith('file://'):
+        #print("Hello world")
+        #print("Original URL:", url)
+        alloweddir = settings.BASE_DIR
+        #print("Alloweddir:", alloweddir)
+
+
+        # Concatenate the provided URL with settings.BASE_DIR using urljoin
+        url = 'file:///' + url.replace('file:///', str(alloweddir))
+
+    print("Modified URL:", url)
+
+    return default_url_fetcher(url)
+
+
 from django.http import HttpResponse
 from django_weasyprint import WeasyTemplateResponse
 from django.template.loader import render_to_string
 from django.http import HttpResponseServerError
+from accounts.models import CustomUser
+from weasyprint import HTML, CSS
+import logging
+
+import pygal
+
+from pygal.style import Style
 
 def generate_pdf_report2(Report_format,Report_type,pk,url,standard,request):
 
+    logger = logging.getLogger('weasyprint')
+    logger.addHandler(logging.FileHandler('easy.log'))
 
     # Get Project Details 
     project = Project.objects.get(pk=pk)
@@ -96,6 +133,10 @@ def generate_pdf_report2(Report_format,Report_type,pk,url,standard,request):
 
     #### Get ALL Instances for the Projects  (Not using Vulnerability colum)  ### Need to optimize to speed up the HTML generation
     instances = Vulnerableinstance.objects.filter(project=project)
+
+    internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
+    customeruser = CustomUser.objects.filter(is_active=True,company=project.companyname)
+    
 
     ### Get Total Count for each severity
     #ciritcal =  Vulnerability.objects.filter(project=project,vulnerabilityseverity='Critical',status='Vulnerable').count()
@@ -111,6 +152,24 @@ def generate_pdf_report2(Report_format,Report_type,pk,url,standard,request):
     low =  vuln.filter(project=project,vulnerabilityseverity='Low',status='Vulnerable').count()
     info = vuln.filter((Q(status='Vulnerable')) & (Q(vulnerabilityseverity='Informational') | Q(vulnerabilityseverity='None'))).count()
 
+    custom_style = Style(
+    colors=("#FF491C", "#F66E09", "#FBBC02", "#20B803", "#3399FF"),
+    background='transparent',
+    plot_background='transparent',
+    legend_font_size=0,
+    legend_box_size=0,
+    value_font_size=40
+    )
+    pie_chart = pygal.Pie(style=custom_style)
+    pie_chart.legend_box_size = 0
+
+    pie_chart.add('Critical', ciritcal)
+    pie_chart.add('High', high)
+    pie_chart.add('Medium', medium)
+    pie_chart.add('Low', low)
+    pie_chart.add('Informational', info)
+
+
     ### Get Total Vulnerability Count
     totalvulnerability = vuln.filter(project=project).count()
 
@@ -120,17 +179,22 @@ def generate_pdf_report2(Report_format,Report_type,pk,url,standard,request):
     ## Get Retest Details
     lastretest = ProjectRetest.objects.filter(project_id=pk).order_by('-id').first()
     totalretest = ProjectRetest.objects.filter(project_id=pk)
-    data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,'medium':medium,'low':low,'info':info,'instances':instances}
+    data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,
+            'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,
+            'medium':medium,'low':low,'info':info,'instances':instances,'internalusers':internalusers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
 
     try:
         # Render the template to a string
         rendered_content = render_to_string('Reportt/report.html', data, request=request)
+        #print(rendered_content)
 
         # Create a WeasyTemplateResponse using the rendered content
-        pdf_response = WeasyTemplateResponse(template='Reportt/report.html', context=data,request=request)
+        pdf = HTML(string=rendered_content,url_fetcher=my_fetcher,base_url='http://127.0.0.1:8000').write_pdf()
 
         # Return the PDF response
-        return pdf_response
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
     except Exception as e:
         # Return a server error response if there's an issue
         return HttpResponseServerError(f"An error occurred: {e}")

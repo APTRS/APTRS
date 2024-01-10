@@ -1,0 +1,48 @@
+/**  Start of Page 2 **/
+
+  /**  Table of Conent CSS **/
+  #toc {
+    
+    page: no-chapter;
+  }
+
+  
+  /** Table of Conent Page Heading **/
+  #toc h2 {
+    font-size: 20pt;
+    font-weight: 400;
+    margin-bottom: 3cm;
+  }
+
+  /**  Table of conntent list of data **/
+  #toc ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  #toc ul li {
+    border-top: .25pt solid #c1c1c1;
+    margin: .25cm 0;
+    padding-top: .25cm;
+  }
+  #toc ul li::before {
+    color: #fbc847;
+    content: '• ';
+    font-size: 40pt;
+    line-height: 16pt;
+    vertical-align: bottom;
+  }
+  #toc ul li a {
+    color: inherit;
+    text-decoration-line: inherit;
+  }
+
+
+  /**  Auto add text in table of content based on ID with Href link**/
+  #toc ul li a::before {
+    content: target-text(attr(href));
+  }
+  #toc ul li a::after {
+    color: #fbc847;
+    content: target-counter(attr(href), page);
+    float: right;
+  }
