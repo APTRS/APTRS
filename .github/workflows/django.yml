@@ -37,10 +37,11 @@ jobs:
       run: |
         echo "Invoke-WebRequest -Uri 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/download/2022-01-04/gtk3-runtime-3.24.31-2022-01-04-ts-win64.exe' -OutFile 'gtk-installer.exe'" >> script.ps1
         echo "Start-Process -Wait -FilePath '.\gtk-installer.exe' -ArgumentList '/S'" >> script.ps1
-        echo "echo "C:\\Program Files\\GTK3-Runtime Win64\\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append" >> script.ps1
         
-        type script.ps1
+        Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
+        "C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+        Get-Content $env:GITHUB_PATH
         cmd /c "install.bat"
         cd APTRS
         .\venv\Scripts\activate
