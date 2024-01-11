@@ -23,8 +23,6 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard,request):
 
     # Get Project Details 
     project = Project.objects.get(pk=pk)
-    Report_type = Report_type
-    standard = standard
     
     ## Get All Projects Vulnerability filter higher to lower CVSS Score
     vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
