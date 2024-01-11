@@ -18,4 +18,5 @@ django-filter==23.5
 python-dotenv==1.0.0
 PyGObject
 weasyprint==60.2
+python-dotenv
 pygal==3.0.4
