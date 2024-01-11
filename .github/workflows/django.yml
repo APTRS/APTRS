@@ -26,7 +26,13 @@ jobs:
       with:
         msystem: MINGW64
     - name: setup environment
-      run: echo "${{ secrets.ENV_FILE }}" > APTRS/.env
+      run: | 
+        echo "${{ secrets.ENV_FILE }}" > APTRS/.env
+        echo "${GITHUB_WORKSPACE}/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" >> $GITHUB_ENV
+        python -c 'import os;print(os.environ)
+      env:
+          ENV_SECRET: ${{ secrets.WEASYPRINT_DLL_DIRECTORIES }} 
+          
     - name:  Run install.sh and test on Linux
       if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
       run: |

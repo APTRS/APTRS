@@ -15,6 +15,9 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = os.path.join(BASE_DIR, '.env')
@@ -22,7 +25,6 @@ load_dotenv(dotenv_path)
 
 #logging.disable(logging.CRITICAL)
 ADMIN_ENABLED = False
-
 
 '''
 Security settings, Make sure that you change the configuration before deploying the application
