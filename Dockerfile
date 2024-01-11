@@ -8,10 +8,6 @@ LABEL \
     maintainer="Sourav Kalal <kalalsourav20@gmail.com>" \
     description="APTRS (Automated Penetration Testing Reporting System) is an automated reporting tool in Python and Django. The tool allows Penetration testers to create a report directly without using the Traditional Docx file. It also provides an approach to keeping track of the projects and vulnerabilities."
 
-# Environment vars
-ENV DEBIAN_FRONTEND="noninteractive" \
-    WKH_FILE="wkhtmltox_0.12.6-1.focal_amd64.deb" \
-    WKH_FILE_ARM="wkhtmltox_0.12.6-1.focal_arm64.deb" 
 
 
 RUN apt update -y && apt install -y  --no-install-recommends \
@@ -66,10 +62,6 @@ RUN \
     apt autoclean && \
     apt autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* > /dev/null 2>&1
-    
-COPY scripts/wkhtmltopdf.sh .
-RUN chmod +x ./wkhtmltopdf.sh
-RUN ./wkhtmltopdf.sh
 
 
 WORKDIR /home/aptrs
