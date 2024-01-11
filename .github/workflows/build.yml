@@ -21,13 +21,12 @@ jobs:
             python-version: ${{ matrix.python }}
       - name: setup environment
         run: echo "${{ secrets.ENV_FILE }}" > APTRS/.env
-      - name: Install coverage
-        run: pip install coverage
       - name: Run coverage
         run: | 
           bash install.sh
           cd APTRS
           source venv/bin/activate
+          pip install coverage
           coverage run manage.py test
       
       - name: SonarCloud Scan
