@@ -41,6 +41,7 @@ jobs:
         type script.ps1
         ./script.ps1 -RunAsAdmin
         echo "C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        type $env:GITHUB_PATH
         cmd /c "install.bat"
         cd APTRS
         .\venv\Scripts\activate
