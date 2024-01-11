@@ -22,6 +22,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
     - name: setup environment
       run: echo "${{ secrets.ENV_FILE }}" > APTRS/.env
     - name:  Run install.sh and test on Linux
@@ -33,6 +36,7 @@ jobs:
         python3 manage.py test
 
     - name: Run install.bat and test on Windows
+    
       if: matrix.os == 'windows-latest'
       run: |
         echo "Invoke-WebRequest -Uri 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/download/2022-01-04/gtk3-runtime-3.24.31-2022-01-04-ts-win64.exe' -OutFile 'gtk-installer.exe'" >> script.ps1
@@ -40,9 +44,8 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
-        cd "C:\Program Files\GTK3-Runtime Win64\bin"
-        pwd
-        gtk-update-icon-cache.exe --help
+        msys2 -c  "pacman -S mingw-w64-x86_64-gtk3"
+        msys2 -c  "pacman -S mingw-w64-x86_64-python-gobject"
         cmd /c "install.bat"
         cd APTRS
         
