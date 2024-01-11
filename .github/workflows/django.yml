@@ -60,21 +60,6 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
-        #pacman --noconfirm -S mingw-w64-x86_64-gtk3
-        #pacman --noconfirm -S mingw-w64-x86_64-python-gobject
-        #pacman --noconfirm -S mingw-w64-ucrt-x86_64-gtk3
-        #pacman --noconfirm -S mingw-w64-x86_64-python-gobject
-        echo "WEASYPRINT_DLL_DIRECTORIES=C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
-        $repoUrl = 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer'
-        
-        # Clone the repository
-        git clone $repoUrl
-        echo "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" >> $GITHUB_PATH
-        echo "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" | Out-File -FilePath $env:GITHUB_PATH -Append
-        echo "${GITHUB_WORKSPACE}/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-        echo ${GITHUB_WORKSPACE}
-
         cmd /c "install.bat"
         cd APTRS
         
