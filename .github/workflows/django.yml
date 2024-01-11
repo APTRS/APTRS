@@ -60,6 +60,7 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
+        python -m pip install -r ../requirements.txt
         cd APTRS
         del db.sqlite3
         python manage.py makemigrations
