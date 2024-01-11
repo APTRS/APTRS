@@ -43,7 +43,7 @@ jobs:
         "C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
         echo $env:GITHUB_PATH
         echo "PATH: $PATH"
-        C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe --help
+        "C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe" --help
         cmd /c "install.bat"
         cd APTRS
         .\venv\Scripts\activate
