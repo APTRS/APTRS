@@ -40,9 +40,7 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
-        cmd /c "install.bat"
-        cd APTRS
-        $filePath = "project/report.py"
+        $filePath = "APTRS/project/report.py"
         $linesToAdd = @'
         import os
 
@@ -51,6 +49,9 @@ jobs:
         $content = Get-Content -Path $filePath -Raw
         $modifiedContent = $linesToAdd + $content
         $modifiedContent | Out-File -FilePath $filePath -Encoding utf8
+        cmd /c "install.bat"
+        cd APTRS
+        
         .\venv\Scripts\activate
         python manage.py test
    
