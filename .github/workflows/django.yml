@@ -70,7 +70,7 @@ jobs:
         python manage.py migrate
         python manage.py migrate accounts 
         python manage.py FirstSetup
-        
+
         python manage.py test
         
    
