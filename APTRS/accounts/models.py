@@ -46,7 +46,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(default='profile/avatar-1.svg', upload_to='profile')
     number = PhoneNumberField(unique=True, blank=False, null=True, default=None)
     date_joined = models.DateTimeField(auto_now_add=True)
-    #company = models.CharField(max_length=300, default=settings.ORG)
     company = models.ForeignKey(Company, on_delete=models.CASCADE,editable=False,to_field='name',null=True, blank=True)
     position = models.CharField(max_length=100, blank=True, null=True)
     groups = models.ManyToManyField(
@@ -57,8 +56,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             'The groups this user belongs to. A user will get all permissions '
             'granted to each of their groups.'
         ),
-        #related_name="user_set",
-        #related_query_name="user",
     )
 
 
