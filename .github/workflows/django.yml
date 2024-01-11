@@ -36,8 +36,8 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         sc config "GitHubActionsRunner" obj= "NT AUTHORITY\SYSTEM" type= own
-        Invoke-WebRequest -Uri 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/download/2022-01-04/gtk3-runtime-3.24.31-2022-01-04-ts-win64.exe' -OutFile 'gtk-installer.exe'
-        Start-Process -Wait -FilePath '.\gtk-installer.exe' -ArgumentList '/S'
+        powershell Invoke-WebRequest -Uri 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases/download/2022-01-04/gtk3-runtime-3.24.31-2022-01-04-ts-win64.exe' -OutFile 'gtk-installer.exe'
+        powershell Start-Process -Wait -FilePath '.\gtk-installer.exe' -ArgumentList '/S'
         cmd /c "install.bat"
         cd APTRS
         .\venv\Scripts\activate
