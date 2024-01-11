@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from accounts.serializers import GroupSerializer
 from accounts.models import Group
-from rest_framework.permissions import BasePermission
 
 @api_view(['POST'])
 def create_group(request):

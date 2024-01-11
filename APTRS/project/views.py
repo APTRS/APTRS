@@ -47,7 +47,6 @@ def Nessus_CSV(request, pk):
 @api_view(['DELETE'])
 @custom_permission_required(['Delete Images'])
 def delete_images(request):
-    media_path = settings.STATIC_ROOT
 
     image_paths = request.data
 
@@ -170,7 +169,7 @@ def create_vulnerability(request):
         instacesserilization = VulnerableinstanceSerializer(data=request.data.get('instance'), many=True)
         if instacesserilization.is_valid():
             vulnerability = vulnserializer.save()
-            instances = instacesserilization.save(vulnerabilityid=vulnerability, project=Projectobject)
+            instacesserilization.save(vulnerabilityid=vulnerability, project=Projectobject)
             respdata = vulnserializer.data
             respdata.update({'instance': instacesserilization.data})
             return Response(respdata, status=201)
@@ -461,7 +460,7 @@ def projectvulnerabilitystatus(request,pk):
         return Response({"message": f"Invalid status choice: {instancestatus}"}, status=status.HTTP_400_BAD_REQUEST)
     
     vluninstace = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
-    rows_updated = vluninstace.update(status=instancestatus)
+    vluninstace.update(status=instancestatus)
     vuln.status = instancestatus
     vuln.save()
     respdata = {'status': 'Success'}

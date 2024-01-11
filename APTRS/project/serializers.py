@@ -61,7 +61,7 @@ class Projectserializers(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         request = self.context.get('request')
 
-        company_name = validated_data.pop('companyname', None)
+        validated_data.pop('companyname', None)
         if request and request.user:
             if request.user.is_superuser:  # If request user is an admin
                 if 'owner' in validated_data:
