@@ -44,10 +44,10 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
-        msys2 -c  "pacman -S mingw-w64-x86_64-gtk3"
-        msys2 -c  "pacman -S mingw-w64-x86_64-python-gobject"
-        msys2 -c  "pacman -S mingw-w64-ucrt-x86_64-gtk3"
-        msys2 -c  "pacman -S mingw-w64-x86_64-python-gobject"
+        pacman --noconfirm -S mingw-w64-x86_64-gtk3
+        pacman --noconfirm -S mingw-w64-x86_64-python-gobject
+        pacman --noconfirm -S mingw-w64-ucrt-x86_64-gtk3
+        pacman --noconfirm -S mingw-w64-x86_64-python-gobject
         echo "WEASYPRINT_DLL_DIRECTORIES=C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
         $repoUrl = 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer'
         
