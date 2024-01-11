@@ -41,10 +41,10 @@ jobs:
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
         $filePath = "APTRS/project/report.py"
+        python -C "import os; GTK_FOLDER = r'C:\Program Files\GTK3-Runtime Win64\bin';os.environ['PATH'] = GTK_FOLDER + os.pathsep + os.environ.get('PATH', '') "
         $linesToAdd = @'
         import os
-        GTK_FOLDER = r'C:\Program Files\GTK3-Runtime Win64\bin'
-        os.environ['PATH'] = GTK_FOLDER
+        
         os.add_dll_directory(r"C:\Program Files\GTK3-Runtime Win64\bin")
         '@
         $content = Get-Content -Path $filePath -Raw
