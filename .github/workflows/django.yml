@@ -41,6 +41,7 @@ jobs:
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
         cd "C:\Program Files\GTK3-Runtime Win64\bin"
+        pwd
         gtk-update-icon-cache.exe --help
         cmd /c "install.bat"
         cd APTRS
