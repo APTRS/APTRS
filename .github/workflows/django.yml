@@ -60,12 +60,9 @@ jobs:
         
         #Get-Content script.ps1
         #./script.ps1 -RunAsAdmin
-        cmd /c "install.bat"
-        cd APTRS
-        
-        cmd .c .\venv\Scripts\activate
-        python manage.py test
-   
+        cmd /c "python -m pip install -r requirements.txt"
+        cmd /c "cd APTRS"        
+        cmd /c "python manage.py test"   
 
 
 
