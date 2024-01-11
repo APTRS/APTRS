@@ -54,7 +54,8 @@ jobs:
         # Clone the repository
         git clone $repoUrl
         echo "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" >> $GITHUB_PATH
-        "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+        echo "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+        echo $GITHUB_WORKSPACE
 
         cmd /c "install.bat"
         cd APTRS
