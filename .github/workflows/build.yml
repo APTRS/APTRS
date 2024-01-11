@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
             python-version: ${{ matrix.python }}
+      - name: setup environment
+        run: echo "${{ secrets.ENV_FILE }}" > APTRS/.env
       - name: Install coverage
         run: pip install coverage
       - name: Run coverage
