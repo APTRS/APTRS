@@ -41,7 +41,7 @@ jobs:
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
         $filePath = "APTRS/project/report.py"
-        $linesToAdd = @'import os;os.add_dll_directory(r"C:\Program Files\GTK3-Runtime Win64\bin")'@
+        $linesToAdd = @'  import os;os.add_dll_directory(r"C:\Program Files\GTK3-Runtime Win64\bin")'@
         $content = Get-Content -Path $filePath -Raw
         $modifiedContent = $linesToAdd + $content
         $modifiedContent | Out-File -FilePath $filePath -Encoding utf8
