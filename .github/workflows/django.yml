@@ -46,6 +46,8 @@ jobs:
         ./script.ps1 -RunAsAdmin
         msys2 -c  "pacman -S mingw-w64-x86_64-gtk3"
         msys2 -c  "pacman -S mingw-w64-x86_64-python-gobject"
+        msys2 -c  "pacman -S mingw-w64-ucrt-x86_64-gtk3"
+        msys2 -c  "pacman -S mingw-w64-x86_64-python-gobject"
         cmd /c "install.bat"
         cd APTRS
         
