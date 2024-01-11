@@ -60,7 +60,7 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
-        cmd /c "install.bat"
+        install.bat
         .\venv\Scripts\activate
         python manage.py test
    
