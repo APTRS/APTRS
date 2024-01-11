@@ -49,12 +49,8 @@ jobs:
         $modifiedContent = $linesToAdd + $content
         $modifiedContent | Out-File -FilePath $filePath -Encoding utf8
         Get-Content APTRS/project/report.py
-        "C:\Program Files\GTK3-Runtime Win64\bin\" | Out-File -FilePath $env:GITHUB_PATH -Append
-        C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe" --help
-
-
-        Start-Process -FilePath "install.bat" -NoNewWindow -Wait
-
+        "C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe" --help
+        cmd /c "install.bat"
         cd APTRS
         
         .\venv\Scripts\activate
