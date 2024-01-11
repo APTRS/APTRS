@@ -28,7 +28,7 @@ class Command(BaseCommand):
         self.LoadPermissions()
         self.CreateGroup()
         self.CreateSuperUser()
-        self.CheckWKHTMLtoPDF()
+        self.CheckGTK3()
 
         self.stdout.write(self.style.SUCCESS("Django Setup is completed successfully."))
         self.stdout.write(self.style.SUCCESS("USERNAME=%s\nPassword=%s\nEmail=%s" % (USERNAME, PASSWORD, EMAIL)))
@@ -85,18 +85,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.NOTICE("Superuser already exists"))
 
 
-    def CheckWKHTMLtoPDF(self):
+    def CheckGTK3(self):
 
-        expected_version = "wkhtmltopdf 0.12.6 (with patched qt)"
 
 
         try:
-            result = subprocess.run(['wkhtmltopdf', '--version'], capture_output=True, text=True, check=True)
-            output = result.stdout.strip()
-
-            if expected_version in output:
-                self.stdout.write(self.style.SUCCESS(f"wkhtmltopdf version {expected_version} is installed"))
-            else:
-                self.stdout.write(self.style.ERROR(f"Installed wkhtmltopdf version: {output}. Expected: {expected_version}, PDF reports will not be generated"))
+            subprocess.run(['gtk-update-icon-cache', '--help'], capture_output=True, text=True, check=True)
+            self.stdout.write(self.style.SUCCESS("GTK3 Found"))
         except FileNotFoundError:
-            self.stdout.write(self.style.ERROR("wkhtmltopdf is not installed or not in the PATH"))
+            self.stdout.write(self.style.ERROR("GTK3 is not installed or not in the PATH"))
