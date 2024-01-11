@@ -63,7 +63,7 @@ jobs:
         cmd /c "install.bat"
         cd APTRS
         
-        .\venv\Scripts\activate
+        cmd /c ".\venv\Scripts\activate"
         python manage.py test
    
 
