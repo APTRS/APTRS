@@ -12,12 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
-import logging
 from datetime import timedelta
 from dotenv import load_dotenv
-
-
-#BANNER, VERSION , version= current_version()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,10 +30,6 @@ Security settings, Make sure that you change the configuration before deploying 
 '''
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-'''
-Change the security key, The same key is used for JWT Token Signing
-'''
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!

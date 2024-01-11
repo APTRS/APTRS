@@ -129,7 +129,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
 
     def update(self, instance, validated_data):
-        request_user = self.context['request'].user
 
         # Set is_staff to True during update
         validated_data['is_staff'] = True

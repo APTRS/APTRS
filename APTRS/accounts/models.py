@@ -1,74 +1,11 @@
+# Django Imports
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.conf import settings
 from django.contrib.auth.models import Group
-from customers.models import Company
-
-# Create your models here.
-
-defaultcompany = settings.ORG #getattr(settings, "ORG")
-'''
-
-
-class CustomPermission(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
-    
-
-class CustomGroup(Group):
-    name = models.CharField(max_length=100)
-    list_of_permissions = models.ManyToManyField(CustomPermission, blank=True, default=list)
-
-    #def __str__(self):
-    #    return self.name
-
-class CustomUser(AbstractUser):
-
-  # Add any additional user fields here
-    #User = get_user_model()
-    #groups = models.ManyToManyField(to=Group, blank=True, null=True, related_name='users')
-    groups = models.ManyToManyField(
-    CustomGroup,
-    verbose_name=_('groups'),
-    blank=True,
-    help_text=_(
-        'The groups this user belongs to. A user will get all permissions '
-        'granted to each of their groups.'
-    ),
-    related_name="custom_group",
-    related_query_name="user",
-)
-    user_permissions = models.ManyToManyField(
-    CustomPermission,
-    verbose_name=_('user permissions'),
-    blank=True,
-    help_text=_('Specific permissions for this user.'),
-    related_name="user_set",
-    related_query_name="user",
-)
-
-    def __str__(self):
-        return self.username
-    
-    
-
-
-    #models.ManyToManyField(blank=True, help_text='Trmissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')
-
-'''
-
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
-from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 
-
+#local import
 from customers.models import Company
-
-
 
 class CustomPermission(models.Model):
     name = models.CharField(max_length=100)

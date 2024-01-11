@@ -8,8 +8,6 @@ https://docs.djangoproject.com/en/4.1/howto/deployment/wsgi/
 """
 
 import os
-import warnings
-from . import settings
 from django.core.wsgi import get_wsgi_application
 from .init import current_version
 

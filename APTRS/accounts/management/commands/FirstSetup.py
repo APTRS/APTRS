@@ -42,7 +42,7 @@ class Command(BaseCommand):
             data = json.load(file)
 
         for item in data:
-            permission = CustomPermission.objects.create(
+            CustomPermission.objects.create(
             name=item['name'],
             description=item['description']
             )
@@ -54,11 +54,11 @@ class Command(BaseCommand):
 
 
     def CreateGroup(self):
-        admin_group, created = CustomGroup.objects.get_or_create(name='Administrator')
+        admin_group, _ = CustomGroup.objects.get_or_create(name='Administrator')
         all_permissions = CustomPermission.objects.all()
         admin_group.list_of_permissions.set(all_permissions)
 
-        customer_group, created = CustomGroup.objects.get_or_create(name='Customer')
+        CustomGroup.objects.get_or_create(name='Customer')
 
         self.stdout.write(self.style.SUCCESS("Administrator and Customer group created with all permission"))
 

@@ -1,11 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, CustomGroup,CustomPermission
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db import models
 from django.contrib.auth.models import Group
 from django import forms
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.safestring import mark_safe
 
 
@@ -13,7 +11,6 @@ from django.utils.safestring import mark_safe
 class CustomGroupInline(admin.TabularInline):
     model = CustomUser.groups.through
     extra = 1
-
 
 
 class CustomUserAdmin(UserAdmin):
@@ -24,10 +21,6 @@ class CustomUserAdmin(UserAdmin):
         ('Personal Info', {'fields': ('full_name','position')}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser','groups')}),  
     )
-    #filter_horizontal = ('groups',) 
-    #inlines = (CustomGroupInline,)
-
-
 
 class CustomPermissionInline(admin.TabularInline):
     model = CustomGroup.list_of_permissions.through

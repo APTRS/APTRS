@@ -1,28 +1,30 @@
-
-from rest_framework import views
+# Django imports
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
-from rest_framework import viewsets
 from rest_framework import status 
-import logging
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+
+
+# local imports
+from utils.filters import UserFilter, paginate_queryset
+from .models import CustomUser , CustomPermission
 from .models import CustomGroup
 from .serializers import ChangePasswordSerializer, CustomUserSerializer,ProfileUserSerializer, CustomGroupSerializer,CustomPermissionSerializer
 from utils.permissions import custom_permission_required
-from .models import CustomUser , CustomPermission
-from utils.filters import UserFilter, paginate_queryset
 
+
+import logging
 logger = logging.getLogger(__name__)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
-        refresh = self.get_token(self.user)
+        #refresh = self.get_token(self.user)
 
         # Add extra responses here
         data['Status'] = "True"
