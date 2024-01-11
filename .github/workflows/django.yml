@@ -60,19 +60,9 @@ jobs:
         
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
-        
-        cd APTRS
-        python -m pip install -r ../requirements.txt
-        del db.sqlite3
-        python manage.py makemigrations
-        python manage.py makemigrations accounts
-        python manage.py makemigrations project
-        python manage.py migrate
-        python manage.py migrate accounts 
-        python manage.py FirstSetup
-
+        cmd /c "install.bat"
+        .\venv\Scripts\activate
         python manage.py test
-        
    
 
 
