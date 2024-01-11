@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Company
-from django.core.exceptions import ObjectDoesNotExist
 from accounts.models import CustomUser, CustomGroup
 from django.contrib.auth.hashers import make_password
 

@@ -29,6 +29,5 @@ if settings.DEBUG:
     path('ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'), 
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-
     ]
 

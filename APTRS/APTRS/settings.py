@@ -15,7 +15,6 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = os.path.join(BASE_DIR, '.env')
@@ -100,7 +99,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'weasyprint',
-  
 ]
 
 MIDDLEWARE = [
@@ -162,7 +160,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'aptrs',
-        #'CONN_MAX_AGE': 0,   ## Depending on your DB enable this setting if required. 0 will decrease the DB connection but might increase the HTTP Response delay
+        #'CONN_MAX_AGE': 0,   ## Enable this setting if required. 0 will decrease the connection but might increase the HTTP Response delay
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],

@@ -1,16 +1,18 @@
+# Django imprts
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import generics
-from .serializers import CompanySerializer,CustomerSerializer
-from rest_framework import views
 from rest_framework.response import Response
 from rest_framework import status    
 from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import IsAdminUser,IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
+
+#local imports
 from .models import Company
-import logging
+from .serializers import CompanySerializer,CustomerSerializer
 from utils.permissions import custom_permission_required
 from accounts.models import CustomUser
 
+
+import logging
 logger = logging.getLogger(__name__)
 
 
