@@ -49,7 +49,13 @@ jobs:
         msys2 -c  "pacman -S mingw-w64-ucrt-x86_64-gtk3"
         msys2 -c  "pacman -S mingw-w64-x86_64-python-gobject"
         echo "WEASYPRINT_DLL_DIRECTORIES=C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_ENV -Append
-       
+        $repoUrl = 'https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer'
+        
+        # Clone the repository
+        git clone $repoUrl
+        echo "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" >> $GITHUB_PATH
+        "$GITHUB_WORKSPACE/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+
         cmd /c "install.bat"
         cd APTRS
         
