@@ -16,5 +16,6 @@ djangorestframework-simplejwt==5.2.2
 colorlog==6.7.0
 django-filter==23.5
 python-dotenv==1.0.0
-django-weasyprint==2.2.2
+PyGObject
+weasyprint==60.2
 pygal==3.0.4
