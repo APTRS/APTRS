@@ -41,6 +41,8 @@ jobs:
         Get-Content script.ps1
         ./script.ps1 -RunAsAdmin
         "C:\Program Files\GTK3-Runtime Win64\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+        echo "C:\Program Files\GTK3-Runtime Win64\bin" >> $GITHUB_PATH
+
         echo $env:GITHUB_PATH
         echo "PATH: $PATH"
         cmd /c "C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe" --help
