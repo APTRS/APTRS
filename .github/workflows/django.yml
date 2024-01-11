@@ -49,7 +49,7 @@ jobs:
         $modifiedContent = $linesToAdd + $content
         $modifiedContent | Out-File -FilePath $filePath -Encoding utf8
         Get-Content APTRS/project/report.py
-        "C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe" --help
+        cmd /c "C:\Program Files\GTK3-Runtime Win64\bin\gtk-update-icon-cache.exe" "--help"
         cmd /c "install.bat"
         cd APTRS
         
