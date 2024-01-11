@@ -1,14 +1,11 @@
 from .models import Project, Vulnerability, Vulnerableinstance,ProjectRetest,PrjectScope
-from customers.models import Company
 from django.conf import settings
 from rest_framework.decorators import api_view,permission_classes,parser_classes
 from rest_framework.response import Response
 from .serializers import Projectserializers, Retestserializers,Vulnerabilityserializers,Instanceserializers,VulnerableinstanceSerializer, VulnerabilitySerializer2,ImageSerializer,PrjectScopeserializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import views,status
-from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
 from django.db.models.signals import post_save
 import logging
 from rest_framework.views import APIView
@@ -17,7 +14,6 @@ from django.core.files.storage import FileSystemStorage
 from .nessus import is_valid_csv
 from .report import generate_pdf_report
 import os
-from django.utils.decorators import method_decorator
 
 from utils.permissions import custom_permission_required
 
@@ -431,7 +427,7 @@ def projectinstancesstatus(request):
         if instancestatus not in choices:
             logger.error("Instance Status is not valid from %s", choices)
             return Response({"message": f"Invalid status choice: {instancestatus}"}, status=status.HTTP_400_BAD_REQUEST)
-        rows_updated = vluninstace.update(status=instancestatus)
+        vluninstace.update(status=instancestatus)
         respdata = {'status': 'Success'}
         vulnerability_ids = vluninstace.values_list('vulnerabilityid', flat=True).distinct()
         for vulnerability_id in vulnerability_ids:

@@ -1,9 +1,12 @@
+#django import
 from django.db import models
-from customers.models import Company
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils import timezone
-from django.contrib.auth.models import User
-from django.conf import settings
+
+
+from ckeditor_uploader.fields import RichTextUploadingField
+
+# local import
+from customers.models import Company
 from accounts.models import CustomUser
 
 

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Project, ProjectRetest,Vulnerability,Vulnerableinstance,PrjectScope
-from django.contrib.auth.models import User
 from customers.models import Company
 from accounts.models import CustomUser
 

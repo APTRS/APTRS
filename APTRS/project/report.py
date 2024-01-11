@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.http import HttpResponseServerError
 from accounts.models import CustomUser
-from weasyprint import HTML
 import pygal
 from pygal.style import Style
 
@@ -68,7 +67,6 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard,request):
     projectscope = PrjectScope.objects.filter(project=project)
 
     ## Get Retest Details
-    lastretest = ProjectRetest.objects.filter(project_id=pk).order_by('-id').first()
     totalretest = ProjectRetest.objects.filter(project_id=pk)
     data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,
             'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,

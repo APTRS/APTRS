@@ -42,7 +42,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         user.set_password(password)   
         user.save()
 
-        customer_group, created = CustomGroup.objects.get_or_create(name='Customer')
+        customer_group, _ = CustomGroup.objects.get_or_create(name='Customer')
         user.groups.add(customer_group)
 
 
@@ -51,7 +51,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-        company_name = validated_data.pop('company', None)
+        validated_data.pop('company', None)
 
         validated_data['is_staff'] = False
 

@@ -87,7 +87,7 @@ def save_vulnerableinstance(file_data,jsonobject, pk):
    
     instacesserilization = VulnerableinstanceSerializer3(data=vulnerability_dict['Instances'], many=True)
     if instacesserilization.is_valid():
-        instances = instacesserilization.save()
+        instacesserilization.save()
         
     else:
         logger.error("Serializer errors: %s", str(instacesserilization.errors))
