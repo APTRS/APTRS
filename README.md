@@ -8,11 +8,12 @@ APTRS (Automated Penetration Testing Reporting System) is an automated reporting
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
-[![Python Version](https://img.shields.io/badge/Python-3.8-brightgreen)](https://www.python.org/downloads/release/python-3810/)
+[![Python Version](https://img.shields.io/badge/Python-3.8+-brightgreen)](https://www.python.org/downloads/release/python-3810/)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Anof-cyber/aptrs)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
 [![Django Build](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fce97190bae94040823a2994c0722ea8)](https://app.codacy.com/gh/Anof-cyber/APTRS/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
 
 
