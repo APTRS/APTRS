@@ -30,6 +30,8 @@ jobs:
         echo "${{ secrets.ENV_FILE }}" > APTRS/.env
         echo "${GITHUB_WORKSPACE}/GTK-for-Windows-Runtime-Environment-Installer/gtk-nsis-pack/bin" >> $GITHUB_ENV
         python -c "import os;os.environ['WEASYPRINT_DLL_DIRECTORIES'] = r'C:\Program Files\GTK3-Runtime Win64\bin'"
+        msys2_shell.cmd -defterm -no-start -mingw64 -c "pacman --noconfirm -S mingw-w64-x86_64-gtk3"
+        echo "C:\\msys64\\mingw64\\bin" >> $GITHUB_PATH
         python -c 'import os;print(os.environ)'
       env:
           ENV_SECRET: ${{ secrets.WEASYPRINT_DLL_DIRECTORIES }} 
