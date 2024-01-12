@@ -1,19 +1,20 @@
 <html>
   <head>
+    <base href="http://127.0.0.1:8000" >
     <meta charset="utf-8">
-    <link href="file:////static//css//report-page.css" rel="stylesheet">
-    <link href="file:////static//css//report-cover-page.css" rel="stylesheet">
-    <link href="file:////static//css//report-table-of-content.css" rel="stylesheet">
-    <link href="file:////static//css//report-executive-summary.css" rel="stylesheet">
-    <link href="file:////static//css//report-vulnerabilities-summary.css" rel="stylesheet">
-    <link href="file:////static//css//report-vulnerability-details.css" rel="stylesheet">
+    <link href="/static/css/report-page.css" rel="stylesheet">
+    <link href="/static/css/report-cover-page.css" rel="stylesheet">
+    <link href="/static/css/report-table-of-content.css" rel="stylesheet">
+    <link href="/static/css/report-executive-summary.css" rel="stylesheet">
+    <link href="/static/css/report-vulnerabilities-summary.css" rel="stylesheet">
+    <link href="/static/css/report-vulnerability-details.css" rel="stylesheet">
 
    
     <title>Report</title>
     <meta name="description" content="Pentest Report">
 
     <style>
-        /* Font File */
+  
        
 
     </style>
@@ -24,7 +25,7 @@
 
     <!--  Cover Page  -->
     {% include "cover-page.html" with project=project settings=settings %}
-
+    
     <!--  Page 2 - table Of Conent Page  -->
     {% include 'table-of-content.html' %}
 

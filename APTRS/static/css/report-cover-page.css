@@ -1,6 +1,6 @@
 /* removing the page number for first page and add a cover page image as background for whole page*/
 @page :first {  
-    background: url('file:////static//media//report//cover.png') no-repeat center;
+    background: url('/media/report/cover.png') no-repeat center;
     
     
     background-size: cover;
@@ -34,9 +34,3 @@
     font-size: 18.4px;
   }
 
-
-  /** Break the page as soon as cover page ends, page 2 start**/
-  #cover {
-
-    page-break-after: always;
-  }

@@ -18,3 +18,5 @@ django-filter==23.5
 python-dotenv==1.0.0
 weasyprint==60.2
 pygal==3.0.4
+bleach==6.1.0
+XlsxWriter==3.1.9

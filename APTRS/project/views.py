@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser,FormParser
 from django.core.files.storage import FileSystemStorage
 from .nessus import is_valid_csv
-from .report import generate_pdf_report
+from .report import CheckReport
 import os
 
 from utils.permissions import custom_permission_required
@@ -545,11 +545,11 @@ def project_report(request, pk):
                 response_data = {"Status": "Failed", "Message": "Vulnerability %s has no Instance added, Kindly add Instance to generate project" % vulnerability.vulnerabilityname}
                 return Response(response_data)
             
-        if (request.data.get('Format')) == 'pdf':
+        if (request.data.get('Format')) in ['pdf', 'html','excel']:
             Report_format = request.data.get('Format')
         else:
-            logger.error("Report Format is incorrect Only pdf is supported")
-            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf is supported"})
+            logger.error("Report Format is incorrect Only pdf and html is supported")
+            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf and html is supported"})
         
 
 
@@ -567,7 +567,7 @@ def project_report(request, pk):
 
         url = request.build_absolute_uri()
         standard = request.data.get('Standard')
-        output = generate_pdf_report(Report_format,Report_type,pk,url,standard,request)
+        output = CheckReport(Report_format,Report_type,pk,url,standard,request)
         #response = HttpResponse(content_type='application/pdf')
         #response['Content-Disposition'] = "attachment; filename='mypdf.pdf'"
         #response = HttpResponse(output)

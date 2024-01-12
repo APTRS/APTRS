@@ -12,7 +12,7 @@ urlpatterns = [
     path('api/auth/',include('accounts.urls')),
     path('api/customer/',include('customers.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT,}),
-    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT,}),
+    #re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT,}),
     path('', RedirectView.as_view(url='/api/auth/login/', permanent=True)),
     
 
@@ -30,4 +30,6 @@ if settings.DEBUG:
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     ]
+    #from django.conf.urls.static import static
+    #urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 

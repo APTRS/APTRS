@@ -8,20 +8,83 @@ from django.http import HttpResponseServerError
 from accounts.models import CustomUser
 import pygal
 from pygal.style import Style
+import bleach
+from django.db.models import F
+from xlsxwriter.workbook import Workbook
+import io
+
 
 
 def my_fetcher(url):
+    print(url)
     if url.startswith('file://'):
         alloweddir = settings.BASE_DIR
-        url = 'file:///' + url.replace('file:///', str(alloweddir))
-
+        url = 'file:///' + url.replace('file://', str(alloweddir))
+    print(url)
+    
     return default_url_fetcher(url)
 
 
 
-def generate_pdf_report(Report_format,Report_type,pk,url,standard,request):
+def CheckReport(Report_format,Report_type,pk,url,standard,request):
+    if Report_format == "excel":
+        response =  CreateExcel(pk)
+    else:
+        response = GetHTML(Report_format,Report_type,pk,url,standard,request)
+    return response
 
-    # Get Project Details 
+
+def CreateExcel(pk):
+    instances = Vulnerableinstance.objects.filter(project_id=pk).select_related('vulnerabilityid').order_by('-vulnerabilityid__cvssscore')
+
+    output = io.BytesIO()
+    book = Workbook(output)
+    sheet = book.add_worksheet('Vulnerabilities')
+    #wrap_format = book.add_format({'text_wrap': True})
+    wrap_format = book.add_format({'text_wrap': True, 'align': 'center', 'valign': 'vcenter'})
+    sheet.set_column('E:E', 40)
+
+    # Write header
+    header = ['Title', 'Severity', 'Status', 'URL/IP', 'Parameter/Port', 'CVSS Score', 'Description','Recommendation']
+    for col_num, col_value in enumerate(header):
+        sheet.write(0, col_num, col_value,wrap_format)
+
+    # Write data rows
+    for row_num, instance in enumerate(instances, start=1):
+        row_data = [
+            instance.vulnerabilityid.vulnerabilityname,
+            instance.vulnerabilityid.vulnerabilityseverity,
+            instance.status,
+            instance.URL,
+            instance.Paramter,
+            instance.vulnerabilityid.cvssscore,
+            bleach.clean(instance.vulnerabilityid.vulnerabilitydescription, tags=[], strip=True),
+            bleach.clean(instance.vulnerabilityid.vulnerabilitysolution, tags=[], strip=True)
+        ]
+        for col_num, col_value in enumerate(row_data):
+            sheet.write(row_num, col_num, col_value, wrap_format)
+
+
+    # Close the workbook to save changes
+    book.close()
+
+    # Create a response with Excel content type
+    response = HttpResponse(output.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=instances.xlsx'
+
+    return response
+
+# Close the workbook to save changes
+    
+# Save the workbook content to the response
+    #response.write(wb.getvalue())
+
+    return response
+
+
+
+
+def GetHTML(Report_format,Report_type,pk,url,standard,request):
     project = Project.objects.get(pk=pk)
     
     ## Get All Projects Vulnerability filter higher to lower CVSS Score
@@ -69,10 +132,33 @@ def generate_pdf_report(Report_format,Report_type,pk,url,standard,request):
     data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,
             'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,
             'medium':medium,'low':low,'info':info,'instances':instances,'internalusers':internalusers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
-
+    
     try:
         # Render the template to a string
         rendered_content = render_to_string('report.html', data, request=request)
+        if Report_format == "pdf":
+            response = generate_pdf_report(rendered_content)
+        if Report_format == "html":
+
+            response = HttpResponse(rendered_content,content_type='text/html')
+        
+        return response
+
+
+
+    except Exception as e:
+        # Return a server error response if there's an issue
+        return HttpResponseServerError(f"An error occurred: {e}")
+
+
+def generate_pdf_report(rendered_content):
+
+    # Get Project Details 
+    
+
+    try:
+        # Render the template to a string
+        #rendered_content = render_to_string('report.html', data, request=request)
         #print(rendered_content)
 
         # Create a WeasyTemplateResponse using the rendered content
