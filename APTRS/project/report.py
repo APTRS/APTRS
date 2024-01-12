@@ -9,22 +9,40 @@ from accounts.models import CustomUser
 import pygal
 from pygal.style import Style
 import bleach
-from django.db.models import F
 from xlsxwriter.workbook import Workbook
 import io
 import logging
-
+import urllib
 logger = logging.getLogger(__name__)
 
 
 
+
+def is_whitelisted(url):
+    """Checks if the given URL is whitelisted to protect against SSRF to access internal or external network."""
+    parsed_url = urllib.parse.urlparse(url)
+    netloc = parsed_url.netloc.lower()  # Normalize for case-insensitive comparison
+    port = parsed_url.port if parsed_url.port else 80  # Default to port 80 if not specified
+
+    # Construct a normalized representation of the whitelisted entry
+    for whitelisted_entry in settings.WHITELIST_IP:
+        whitelisted_parsed = urllib.parse.urlparse(whitelisted_entry)
+        whitelisted_netloc = whitelisted_parsed.netloc.lower()
+        whitelisted_port = whitelisted_parsed.port if whitelisted_parsed.port else 80
+
+        if netloc == whitelisted_netloc and port == whitelisted_port:
+            return True
+        
+    logger.error("URL is not Whitelisted Check the %s", url)
+    return False
+
+
+
 def my_fetcher(url):
-    
-    if not any(url.startswith(prefix) for prefix in settings.WHITELIST_IP):
-        logger.error("URL is not Whitelisted Check the %s", url)
+    if is_whitelisted(url):
+        return default_url_fetcher(url)
+    else:
         return
-    print("New url" + url)
-    return default_url_fetcher(url)
 
 
 
@@ -42,10 +60,14 @@ def CreateExcel(pk):
     output = io.BytesIO()
     book = Workbook(output)
     sheet = book.add_worksheet('Vulnerabilities')
-    #wrap_format = book.add_format({'text_wrap': True})
     wrap_format = book.add_format({'text_wrap': True, 'align': 'center', 'valign': 'vcenter'})
-    sheet.set_column('E:E', 40)
-
+    sheet.set_column('A:A', 20)
+    sheet.set_column('C:C', 15)
+    sheet.set_column('D:D', 15)
+    sheet.set_column('E:E', 15)
+    sheet.set_column('G:G', 70)
+    sheet.set_column('H:H', 70)
+    
     # Write header
     header = ['Title', 'Severity', 'Status', 'URL/IP', 'Parameter/Port', 'CVSS Score', 'Description','Recommendation']
     for col_num, col_value in enumerate(header):
@@ -67,19 +89,9 @@ def CreateExcel(pk):
             sheet.write(row_num, col_num, col_value, wrap_format)
 
 
-    # Close the workbook to save changes
     book.close()
-
-    # Create a response with Excel content type
     response = HttpResponse(output.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=instances.xlsx'
-
-    return response
-
-# Close the workbook to save changes
-    
-# Save the workbook content to the response
-    #response.write(wb.getvalue())
 
     return response
 
