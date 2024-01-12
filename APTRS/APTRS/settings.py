@@ -36,7 +36,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ####### Make Sure to change this to your desired domain name/hostname ['yourdomain.com','anotherdomaiin.com']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOST')
 
 WHITELIST_IP = loads(os.getenv('WHITELIST_IP', '[]'))
 
@@ -45,7 +45,7 @@ CORS Security settings
 Make sure to only allow the  frontend domain/IP and not all domains Check - https://pypi.org/project/django-cors-headers/ for more examples to configure it
 
 Remove the CORS_ORIGIN_ALLOW_ALL = True and use this instead with appropriate domain/ip:port and protocol
-CORS_ALLOWED_ORIGINS = ["https://example.com","http://127.0.0.1:9000"]  
+CORS_ALLOWED_ORIGINS = ["https://example.com","http://127.0.0.1:9000"]  os.getenv('CORS_ORIGIN')
 '''
 CORS_ORIGIN_ALLOW_ALL = True
 
