@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
-
+from json import loads
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +38,7 @@ DEBUG = True
 ####### Make Sure to change this to your desired domain name/hostname ['yourdomain.com','anotherdomaiin.com']
 ALLOWED_HOSTS = ['*']
 
+WHITELIST_IP = loads(os.getenv('WHITELIST_IP', '[]'))
 
 '''
 CORS Security settings
@@ -390,8 +391,11 @@ SIMPLE_JWT = {
 
 #Your Organization Details
 ORG = os.getenv('YOUR_COMPANY')
-MY_ORG_LOGO = os.path.join(MEDIA_ROOT, 'company','APTRS.png')
-
+LOGO = os.getenv('YOUR_COMPANY_LOGO')
+if LOGO:
+    MY_ORG_LOGO = os.path.join(MEDIA_ROOT, 'company',LOGO)
+else:
+    MY_ORG_LOGO = None
 
 #CVSS 3.1 for Nessus
 CVSS_BASE_SCORE_INFO = 0.0

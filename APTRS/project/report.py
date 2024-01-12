@@ -12,16 +12,18 @@ import bleach
 from django.db.models import F
 from xlsxwriter.workbook import Workbook
 import io
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 
 def my_fetcher(url):
-    print(url)
-    if url.startswith('file://'):
-        alloweddir = settings.BASE_DIR
-        url = 'file:///' + url.replace('file://', str(alloweddir))
-    print(url)
     
+    if not any(url.startswith(prefix) for prefix in settings.WHITELIST_IP):
+        logger.error("URL is not Whitelisted Check the %s", url)
+        return
+    print("New url" + url)
     return default_url_fetcher(url)
 
 
