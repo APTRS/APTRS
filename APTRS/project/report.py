@@ -146,12 +146,12 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
     data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,
             'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,
             'medium':medium,'low':low,'info':info,'instances':instances,'internalusers':internalusers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
-    
+    base_url = f"{request.scheme}://{request.get_host()}"
     try:
         # Render the template to a string
         rendered_content = render_to_string('report.html', data, request=request)
         if Report_format == "pdf":
-            response = generate_pdf_report(rendered_content)
+            response = generate_pdf_report(rendered_content,base_url)
         if Report_format == "html":
 
             response = HttpResponse(rendered_content,content_type='text/html')
@@ -165,19 +165,9 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
         return HttpResponseServerError(f"An error occurred: {e}")
 
 
-def generate_pdf_report(rendered_content):
-
-    # Get Project Details 
-    
-
-    try:
-        # Render the template to a string
-        #rendered_content = render_to_string('report.html', data, request=request)
-        #print(rendered_content)
-
-        # Create a WeasyTemplateResponse using the rendered content
-        pdf = HTML(string=rendered_content,url_fetcher=my_fetcher,base_url='http://127.0.0.1:8000').write_pdf()
-
+def generate_pdf_report(rendered_content,base_url):
+    try:  
+        pdf = HTML(string=rendered_content,url_fetcher=my_fetcher,base_url=base_url).write_pdf()
         # Return the PDF response
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
