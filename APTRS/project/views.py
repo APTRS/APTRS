@@ -15,7 +15,7 @@ from .nessus import is_valid_csv
 from .report import CheckReport
 import os
 from utils.filters import ProjectFilter, VulnerableinstanceFilter, paginate_queryset
-
+import bleach
 from utils.permissions import custom_permission_required
 
 logger = logging.getLogger(__name__)
@@ -248,17 +248,18 @@ def getproject(request,pk):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Change Project Status to Complete'])
 def complete_project_status(request, pk):
+    safe_pk = bleach.clean(pk)
     try:
-        project = Project.objects.get(pk=pk)
+        project = Project.objects.get(pk=safe_pk)
     except ObjectDoesNotExist:
-        logger.error("Project not found for id=%s", pk)
+        logger.error("Project not found for id=%s", safe_pk)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
     
     # Set the project status to 'Completed'
     project.status = 'Completed'
     project.save()
     
-    return Response({'message': f'Status of project {pk} updated to Completed'})
+    return Response({'message': f'Status of project {safe_pk} updated to Completed'})
 
 
 
@@ -461,7 +462,7 @@ def projectinstancesstatus(request):
         choices = dict(Vulnerableinstance.status.field.choices)
         if instancestatus not in choices:
             logger.error("Instance Status is not valid from %s", choices)
-            return Response({"message": f"Invalid status choice: {instancestatus}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid status choice"}, status=status.HTTP_400_BAD_REQUEST)
         vluninstace.update(status=instancestatus)
         respdata = {'status': 'Success'}
         vulnerability_ids = vluninstace.values_list('vulnerabilityid', flat=True).distinct()
@@ -493,7 +494,7 @@ def projectvulnerabilitystatus(request,pk):
     choices = dict(Vulnerability.status.field.choices)
     if instancestatus not in choices:
         logger.error("Instance Status is not valid from %s", choices)
-        return Response({"message": f"Invalid status choice: {instancestatus}"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Invalid status choice"}, status=status.HTTP_400_BAD_REQUEST)
     
     vluninstace = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
     vluninstace.update(status=instancestatus)
