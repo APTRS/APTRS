@@ -25,6 +25,9 @@ jobs:
     - name: setup environment
       run: | 
         echo "${{ secrets.ENV_FILE }}" > APTRS/.env
+        echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000"]' >> APTRS/.env
+        echo 'ALLOWED_HOST = ["127.0.0.1","localhost","aptrsapi.souravkal.tech","*"]'  >> APTRS/.env
+        echo 'CORS_ORIGIN = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]' >> APTRS/.env
           
     - name:  Run install.sh and test on Linux
       if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
