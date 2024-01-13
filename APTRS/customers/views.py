@@ -10,11 +10,25 @@ from .models import Company
 from .serializers import CompanySerializer,CustomerSerializer
 from utils.permissions import custom_permission_required
 from accounts.models import CustomUser
+from utils.filters import CompanyFilter,UserFilter, paginate_queryset
 
 
 import logging
 logger = logging.getLogger(__name__)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View all Client Companies List'])
+def getallcompnay_filter(request):
+    companyname = Company.objects.all()
+
+    companyname_filter = CompanyFilter(request.GET, queryset=companyname)
+    filtered_queryset = companyname_filter.qs
+    paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
+    serializer = CompanySerializer(paginated_queryset, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -26,6 +40,22 @@ def getallcompnay(request):
     companyname = Company.objects.all()
     serializer = CompanySerializer(companyname,many=True)
     return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View all Customers List'])
+def getallcustomer_filter(request):
+    customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
+
+    customername_filter = UserFilter(request.GET, queryset=customername)
+    filtered_queryset = customername_filter.qs
+    paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
+    serializer = CustomerSerializer(paginated_queryset, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
+
 
 
 @api_view(['GET'])

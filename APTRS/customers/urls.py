@@ -6,7 +6,9 @@ from . import views
 
 urlpatterns = [
     path('all-company',views.getallcompnay),
+    path('all-company/filter',views.getallcompnay_filter),
     path('all-customer',views.getallcustomer),
+    path('all-customer/filter',views.getallcustomer_filter),
     path('customer/<str:pk>/',views.getcustomer),
     path('customer/edit/<str:pk>/',views.customeredit),
     path('customer/add',views.customeradd),

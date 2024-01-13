@@ -10,6 +10,11 @@ urlpatterns = [
     path('findings/<str:pk>/',views.projectfindingview),
     path('vulnerability/<str:pk>/',views.projectvulnview),
     path('vulnerability/instances/<str:pk>/',views.projectvulninstances),
+
+    path('vulnerability/instances/filter/<str:pk>/',views.projectvulninstances_filter),
+
+
+
     path('vulnerability/add/instances/<str:pk>/',views.projectaddinstances),
     path('vulnerability/edit/instances/<str:pk>/',views.projecteditinstances),
     path('vulnerability/delete/instances/',views.projectdeleteinstances),
@@ -20,6 +25,7 @@ urlpatterns = [
     path('Retest/add',views.Retestadd),
     path('Retest/delete/<str:pk>/',views.Retestdelete),
     path('get-projects/',views.GetAllProjects.as_view()),
+    path('projects/filter/', views.getallproject_filter, name='Get All Project with Filters and Pagination'),
     path('add-project/',views.newproject,name="Add Project"),
     path('get-project/<str:pk>/',views.getproject),
     path('status/completed/<str:pk>/',views.complete_project_status),

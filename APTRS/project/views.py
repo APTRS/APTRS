@@ -14,6 +14,7 @@ from django.core.files.storage import FileSystemStorage
 from .nessus import is_valid_csv
 from .report import CheckReport
 import os
+from utils.filters import ProjectFilter, VulnerableinstanceFilter, paginate_queryset
 
 from utils.permissions import custom_permission_required
 
@@ -239,6 +240,7 @@ def getproject(request,pk):
     return Response(serializer.data)
 
 
+
 @api_view(['GET']) 
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Change Project Status to Complete'])
@@ -264,6 +266,22 @@ class GetAllProjects(views.APIView):
         projects = Project.objects.all()    
         serializer = Projectserializers(projects, many=True)
         return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View All Projects'])
+def getallproject_filter(request):
+    projects = Project.objects.all()
+
+    project_filter = ProjectFilter(request.GET, queryset=projects)
+    filtered_queryset = project_filter.qs
+    paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
+    serializer = Projectserializers(paginated_queryset, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
+
 
 
 @api_view(['DELETE'])
@@ -332,6 +350,21 @@ def projectvulnview(request,pk):
         return Response({"message": "Vulnerrability not found"}, status=status.HTTP_404_NOT_FOUND)
 
     
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['View All Instances For Vulnerability'])
+def projectvulninstances_filter(request,pk):
+    instancedetails = Vulnerableinstance.objects.filter(vulnerabilityid=pk)
+
+    instance_filter = VulnerableinstanceFilter(request.GET, queryset=instancedetails)
+    filtered_queryset = instance_filter.qs
+    paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
+    serializer = Instanceserializers(paginated_queryset, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
+
 
 
 
