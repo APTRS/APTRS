@@ -38,7 +38,11 @@ jobs:
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
       - name: Snyk Code test
-        run: SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk code test  -d --org=anof-cyber --sarif-file-output=snyk-code.sarif # || true
+        run: |
+              SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk code test  -d --org=anof-cyber --sarif-file-output=snyk-code.sarif # || true
+              if [ $exit_code -eq 1 ]; then
+                echo "Vulnerabilities found"
+              fi
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
