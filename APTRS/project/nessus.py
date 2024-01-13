@@ -61,7 +61,7 @@ def save_vulnerability(data, pk):
 
 
 def save_vulnerableinstance(file_data,jsonobject, pk):
-    reader = csv.DictReader(file_data)
+    csv.DictReader(file_data)
     
     vulnerability_dict =jsonobject
     projectdata = Project.objects.get(pk=pk)

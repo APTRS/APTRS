@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Company
 from accounts.models import CustomUser, CustomGroup
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password, ValidationError 
 
 class CompanySerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False)
@@ -38,6 +39,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         if 'password' not in validated_data:
             raise serializers.ValidationError("Password is required for creating a new user.")
         password = validated_data.pop('password')
+        try:
+                # Validate the password
+            validate_password(password)
+        except ValidationError as e:
+            raise serializers.ValidationError({"password": e.messages})
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)   
         user.save()
@@ -60,8 +66,14 @@ class CustomerSerializer(serializers.ModelSerializer):
                 # If password is empty, remove it from validated_data
                 validated_data.pop('password')
             else:
+                password = validated_data['password']
+                try:
+                # Validate the password
+                    validate_password(password)
+                except ValidationError as e:
+                    raise serializers.ValidationError({"password": e.messages})
                 # Hash the password before saving
-                validated_data['password'] = make_password(validated_data['password'])
+                validated_data['password'] = make_password(password)
 
 
         return super().update(instance, validated_data)
