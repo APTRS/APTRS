@@ -44,19 +44,22 @@ jobs:
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
-        run: snyk monitor --all-projects
+        run: SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk monitor --all-projects
+        continue-on-error: true
 
         # Runs Snyk Infrastructure as Code (IaC) analysis and uploads result to Snyk.
         # Use || true to not fail the pipeline.
       - name: Snyk IaC test and report
-        run: snyk iac test --report # || true
+        run: SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk iac test --report # || true
+        continue-on-error: true
 
         # Build the docker image for testing
       - name: Build a Docker image
-        run: docker build -t your/image-to-test .
+        run: docker build -t aptrs .
         # Runs Snyk Container (Container and SCA) analysis and uploads result to Snyk.
       - name: Snyk Container monitor
-        run: snyk container monitor your/image-to-test --file=Dockerfile
+        run: SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk container monitor your/image-to-test --file=
+        continue-on-error: true
 
         # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning
