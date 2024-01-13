@@ -162,7 +162,7 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
 
     except Exception as e:
         # Return a server error response if there's an issue
-        return HttpResponseServerError(f"An error occurred: {e}")
+        return HttpResponse("Something went wrong")
 
 
 def generate_pdf_report(rendered_content,base_url):
@@ -174,6 +174,6 @@ def generate_pdf_report(rendered_content,base_url):
         return response
     except Exception as e:
         # Return a server error response if there's an issue
-        return HttpResponseServerError(f"An error occurred: {e}")
+        return HttpResponse("Something went wrong")
 
     
