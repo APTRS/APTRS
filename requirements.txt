@@ -3,6 +3,7 @@ backports.zoneinfo==0.2.1;python_version<"3.9"
 Django==4.1.13
 django-ckeditor==6.5.1
 django-phonenumber-field==7.0.0
+django-phonenumbers==1.0.1
 djangorestframework==3.14.0
 gunicorn==20.1.0
 Pillow==10.0.1
