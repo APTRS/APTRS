@@ -36,7 +36,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ####### Make Sure to change this to your desired domain name/hostname ['yourdomain.com','anotherdomaiin.com']
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOST')
+ALLOWED_HOSTS = loads(os.getenv('ALLOWED_HOST', '[]'))
 
 WHITELIST_IP = loads(os.getenv('WHITELIST_IP', '[]'))
 
