@@ -31,15 +31,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-
+        continue-on-error: true
         env:
-          # This is where you will need to introduce the Snyk API token created with your Snyk account
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
       - name: Snyk Code test
-        run: snyk code --sarif -d --org=Anof-cyber> snyk-code.sarif # || true
+        run: snyk code --sarif -d --org=anof-cyber> snyk-code.sarif # || true
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
