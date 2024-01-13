@@ -87,7 +87,7 @@ RUN if [ "$POSTGRES" = "True" ]; then \
   fi
 
 
-RUN python3 /home/aptrs/APTRS/manage.py collectstatic --no-input
+#RUN python3 /home/aptrs/APTRS/manage.py collectstatic --no-input
 
 EXPOSE 8000 8000 
 
