@@ -4,7 +4,6 @@ from django.db.models import Q
 from weasyprint import default_url_fetcher, HTML
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from django.http import HttpResponseServerError
 from accounts.models import CustomUser
 import pygal
 from pygal.style import Style
@@ -13,6 +12,7 @@ from xlsxwriter.workbook import Workbook
 import io
 import logging
 import urllib
+
 logger = logging.getLogger(__name__)
 
 
@@ -160,7 +160,7 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
 
 
 
-    except Exception as e:
+    except Exception:
         # Return a server error response if there's an issue
         return HttpResponse("Something went wrong")
 
@@ -172,7 +172,7 @@ def generate_pdf_report(rendered_content,base_url):
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
-    except Exception as e:
+    except Exception:
         # Return a server error response if there's an issue
         return HttpResponse("Something went wrong")
 

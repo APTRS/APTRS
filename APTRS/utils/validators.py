@@ -1,5 +1,4 @@
 from django.core.exceptions import ValidationError
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from html.parser import HTMLParser
 import re

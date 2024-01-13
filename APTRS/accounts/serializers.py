@@ -90,12 +90,6 @@ class ProfileUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'full_name', 'profilepic', 'number']
         read_only_fields = ['date_joined', 'is_staff', 'email', 'groups', 'position', 'is_active','username']
 
-    #def update(self, instance, validated_data):
-        #instance.profilepic = validated_data.get('profilepic', instance.profilepic)
-     #   instance.save()
-      #  return instance
-
-
 
 class CustomUserSerializer(serializers.ModelSerializer):
     profilepic = serializers.ImageField(required=False)  # Profile pic is optional
@@ -119,17 +113,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)  
         user.save()
-
-        # Assign groups using set method
         user.groups.set(groups_data)
-
         return user
 
-    
-    
-
     def update(self, instance, validated_data):
-
         # Set is_staff to True during update
         validated_data['is_staff'] = True
 
@@ -140,9 +127,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
             else:
                 # Hash the password before saving
                 validated_data['password'] = make_password(validated_data['password'])
-                
-
-
         return super().update(instance, validated_data)
     
     def to_representation(self, instance):
