@@ -52,12 +52,15 @@ def delete_images(request):
     image_paths = request.data
 
     for path in image_paths:
-        path = path.lstrip('/')
-        image_path =  os.path.join(settings.STATIC_ROOT, path)
-        try:
-            os.remove(image_path)
-        except FileNotFoundError:
-            pass 
+        path = os.path.basename(path)
+        image_path =  os.path.normpat(os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, path))
+        if image_path.startswith(settings.CKEDITOR_UPLOAD_LOCATION):
+            try:
+                os.remove(image_path)
+            except FileNotFoundError:
+                pass 
+        else:
+            return Response({'message': 'Error, Invalid Image path provided'})
 
     return Response({'message': 'Images deleted successfully'})
 
