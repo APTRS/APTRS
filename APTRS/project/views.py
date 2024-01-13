@@ -50,19 +50,24 @@ def Nessus_CSV(request, pk):
 def delete_images(request):
 
     image_paths = request.data
-
+    deleted_images = []
+    failed_images = []
     for path in image_paths:
         path = os.path.basename(path)
-        image_path =  os.path.normpat(os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, path))
-        if image_path.startswith(settings.CKEDITOR_UPLOAD_LOCATION):
+        fullimage_path =  os.path.normpat(os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, path))
+        if fullimage_path.startswith(settings.CKEDITOR_UPLOAD_LOCATION):
             try:
-                os.remove(image_path)
+                os.remove(fullimage_path)
+                deleted_images.append(image_paths)
             except FileNotFoundError:
-                pass 
+                failed_images.append(image_paths) 
         else:
             return Response({'message': 'Error, Invalid Image path provided'})
-
-    return Response({'message': 'Images deleted successfully'})
+    response_data = {
+        'deleted_images': deleted_images,
+        'failed_images': failed_images
+    }
+    return Response(response_data)
 
 
 
@@ -324,8 +329,10 @@ def projectvulnedit(request,pk):
         serializer.save()
         respdata={'Status':"Success"}
         respdata.update(serializer.data)
-
         return Response(respdata)
+    else:
+        logger.error("Serializer errors: %s", str(serializer.errors))
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

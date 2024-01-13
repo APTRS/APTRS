@@ -42,7 +42,7 @@ def my_fetcher(url):
     if is_whitelisted(url):
         return default_url_fetcher(url)
     else:
-        return
+        raise ValueError('URL is Not WhiteListe for: %r' % url)
 
 
 
@@ -154,12 +154,8 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
             response = generate_pdf_report(rendered_content,base_url)
         if Report_format == "html":
 
-            response = HttpResponse(rendered_content,content_type='text/html')
-        
+            response = HttpResponse(rendered_content,content_type='text/html')   
         return response
-
-
-
     except Exception:
         # Return a server error response if there's an issue
         return HttpResponse("Something went wrong")
