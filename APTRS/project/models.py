@@ -8,7 +8,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # local import
 from customers.models import Company
 from accounts.models import CustomUser
-
+from utils.validators import xss_validator
 
 VULNERABLE = 'Vulnerable'
 CONFIRMED = 'Confirm Fixed'
@@ -76,11 +76,11 @@ class Vulnerability(models.Model):
     cvssscore = models.FloatField(blank=True,null=True)
     cvssvector = models.CharField(max_length=300,default=None,null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=VULNERABLE)
-    vulnerabilitydescription = RichTextUploadingField(blank=True,null=True)
-    POC = RichTextUploadingField(default=None,blank=True,null=True)
+    vulnerabilitydescription = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
+    POC = RichTextUploadingField(default=None,blank=True,null=True,validators=[xss_validator])
     created = models.DateTimeField(auto_now_add=True,editable=False,null=True)
-    vulnerabilitysolution = RichTextUploadingField(blank=True,null=True)
-    vulnerabilityreferlnk = RichTextUploadingField(blank=True,null=True)
+    vulnerabilitysolution = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
+    vulnerabilityreferlnk = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
    
     class Meta:
         unique_together = (("project", "vulnerabilityname"),)
