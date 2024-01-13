@@ -40,9 +40,7 @@ jobs:
       - name: Snyk Code test
         run: |
               SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk code test  -d --org=anof-cyber --sarif-file-output=snyk-code.sarif # || true
-              if [ $exit_code -eq 1 ]; then
-                echo "Vulnerabilities found"
-              fi
+        continue-on-error: true
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
