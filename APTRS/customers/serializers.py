@@ -71,7 +71,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             else:
                 password = validated_data['password']
                 try:
-                # Validate the password
+                    # Validate the password
                     validate_password(password)
                 except ValidationError as e:
                     raise serializers.ValidationError({"password": e.messages})
