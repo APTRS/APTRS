@@ -554,6 +554,9 @@ def Retestadd(request):
         serializer.save()
         logger.info("Project retest added by %s for Project id=%s", request.user, request.data.get('project'))
         return Response(serializer.data)
+    
+    logger.error("Something went wrong %s", serializer.errors)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
