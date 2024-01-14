@@ -33,9 +33,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Django Setup is completed successfully."))
         self.stdout.write(self.style.SUCCESS("USERNAME=%s\nPassword=%s\nEmail=%s" % (USERNAME, PASSWORD, EMAIL)))
 
-        
-
-
     def LoadPermissions(self):
         Permission_path = '../Dummy-Data/Permission.json'
         with open(Permission_path, 'r') as file:

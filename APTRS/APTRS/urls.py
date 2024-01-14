@@ -12,7 +12,7 @@ urlpatterns = [
     path('api/auth/',include('accounts.urls')),
     path('api/customer/',include('customers.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT,}),
-    path('', RedirectView.as_view(url='/api/auth/login/', permanent=True)),   
+    path('', RedirectView.as_view(url='/api/auth/login/', permanent=True)),
 ]
 
 if settings.DEBUG:

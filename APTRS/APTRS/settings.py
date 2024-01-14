@@ -114,7 +114,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-REST_FRAMEWORK = {    
+REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -225,7 +225,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [    os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -316,7 +316,6 @@ LOGGING = {
             'propagate': True,
         },
     },
-    
 }
 
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
