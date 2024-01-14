@@ -1,3 +1,4 @@
+{% load content_sanitization %}
 <article id="Vulnerabilities-details">
     <h1 id="Vulnerabilities-details-title"  class="report-title">Vulnerability Details</h1>
 
@@ -44,18 +45,18 @@
     
              <h3 class="vulnerabilities-details-title">Description</h3>
                 <span class=vulnerabilities-details-details>
-                    {{vulnerabilities.vulnerabilitydescription|safe}}
+                    {{vulnerabilities.vulnerabilitydescription| clean_html }}
                 <span>
 
             <h3 class="vulnerabilities-details-title">Steps To Reproduce</h3>
                 <span class=vulnerabilities-details-details>
-                    {{vulnerabilities.POC|safe}}
+                    {{vulnerabilities.POC|clean_html}}
                 <span>
 
 
             <h3 class="vulnerabilities-details-title">Recommendations</h3>
                 <span class=vulnerabilities-details-details>
-                    {{vulnerabilities.vulnerabilitysolution|safe}}
+                    {{vulnerabilities.vulnerabilitysolution|clean_html}}
                 <span>
 
 
@@ -90,7 +91,7 @@
             {% if vulnerabilities.vulnerabilityreferlnk %}
                 <h3 class="vulnerabilities-details-title">Reference</h3>
                     <span class=vulnerabilities-details-details>
-                        {{vulnerabilities.vulnerabilityreferlnk|safe}}
+                        {{vulnerabilities.vulnerabilityreferlnk|clean_html}}
                     <span>
             {% endif %}
 

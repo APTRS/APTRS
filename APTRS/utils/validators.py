@@ -1,12 +1,10 @@
 import re
 from html.parser import HTMLParser
-
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li', 'img', 'a', 'span',
-                'code', 'blockquote', 'div', 'font', 'table', 'tr', 'td', 'th','pre'
-                ]
+ALLOWED_TAGS = settings.ALLOWED_TAGS
 
 class TagValidator(HTMLParser):
     def __init__(self, allowed_path='/media/'):

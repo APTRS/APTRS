@@ -245,7 +245,9 @@ Company_LOGO = os.path.join(MEDIA_URL, 'company')
 CKEDITOR_UPLOAD_LOCATION = os.path.join(MEDIA_ROOT, 'uploads')
 CKEDITOR_UPLOAD_URL = os.path.join(MEDIA_URL, 'uploads')
 CKEDITOR_UPLOAD_PATH = "uploads/"
-
+ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li', 'img', 'a', 'span',
+                'code', 'blockquote', 'div', 'font', 'table', 'tr', 'td', 'th','pre'
+                ]
 
 LOGGING = {
     'version': 1,
