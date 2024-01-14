@@ -6,7 +6,6 @@ from django.urls import reverse
 class AuthAPITest(APITestCase):
     def setUp(self):
         User = get_user_model()
-        
         # Create a superuser
         self.user_data = {
             "full_name": "admin User",

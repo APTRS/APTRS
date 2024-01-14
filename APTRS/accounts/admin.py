@@ -19,7 +19,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password','username')}),
         ('Personal Info', {'fields': ('full_name','position')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser','groups')}),  
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser','groups')}),
     )
 
 class CustomPermissionInline(admin.TabularInline):
@@ -44,7 +44,9 @@ class CustomGroupAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': CheckboxSelectMultiple},
     }
-    # Register the CustomUser model with the CustomUserAdmin
+
+
+# Register the CustomUser model with the CustomUserAdmin
 admin.site.register(CustomUser, CustomUserAdmin)
 
 # Register CustomGroup with its inline admin

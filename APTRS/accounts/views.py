@@ -6,15 +6,12 @@ from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-
-
 # local imports
 from utils.filters import UserFilter, paginate_queryset
+from utils.permissions import custom_permission_required
 from .models import CustomUser , CustomPermission
 from .models import CustomGroup
 from .serializers import ChangePasswordSerializer, CustomUserSerializer,ProfileUserSerializer, CustomGroupSerializer,CustomPermissionSerializer
-from utils.permissions import custom_permission_required
-
 
 import logging
 logger = logging.getLogger(__name__)
@@ -23,16 +20,13 @@ logger = logging.getLogger(__name__)
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
-        #refresh = self.get_token(self.user)
 
         # Add extra responses here
         data['Status'] = "True"
         data['username'] = self.user.username
         data['Pic'] = self.user.profilepic.url
         data['isAdmin'] = self.user.is_superuser
-        #data['company'] = self.user.company
         data['isStaff'] = self.user.is_staff
-        
         permissions = set()  # Use set to avoid duplicate permissions
 
         # Fetching permissions associated with user's groups
