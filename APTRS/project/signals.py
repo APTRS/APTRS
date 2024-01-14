@@ -1,10 +1,8 @@
-
-
+from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Vulnerability, Vulnerableinstance,Project
-from django.db import models
 
+from .models import Project, Vulnerability, Vulnerableinstance
 
 VULNERABLE = 'Vulnerable'
 CONFIRMED = 'Confirm Fixed'
@@ -32,13 +30,13 @@ def update_vulnerability(sender, instance, created, **kwargs):
         # Update the status of the Vulnerability based on the related instances
         if has_vulnerable:
             instance.status = VULNERABLE
-           
+
         elif has_accepted_risk:
             instance.status = ACCEPTED_RISK
-          
+
         elif has_confirm_fix:
             instance.status = CONFIRMED
-            
+
         Vulnerability.objects.filter(pk=instance.pk).update(status=instance.status)
 
 
@@ -63,7 +61,7 @@ def update_vulnerableinstance(sender, instance, created, **kwargs):
             #instance.save()
         elif has_confirm_fix:
             vulnerability.status = CONFIRMED
-            
+
         vulnerability.save()
 
 
@@ -79,4 +77,4 @@ def update_project_status(sender, instance, **kwargs):
                     previous_instance.enddate != instance.enddate):
                 instance.status = instance.status  # Recalculate status if start/end date changes
         except sender.DoesNotExist:
-            pass  # Ignore if the previous instance doesn't exist (happens during loaddata)
+            pass  # Ignore if the previous instance doesn't exist ( during loaddata)

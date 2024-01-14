@@ -1,10 +1,10 @@
+import re
+from html.parser import HTMLParser
+
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from html.parser import HTMLParser
-import re
 
-
-ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li', 'img', 'a', 'span', 
+ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li', 'img', 'a', 'span',
                 'code', 'blockquote', 'div', 'font', 'table', 'tr', 'td', 'th','pre'
                 ]
 
@@ -20,12 +20,12 @@ class TagValidator(HTMLParser):
 def xss_validator(value):
     validator = TagValidator()
     validator.feed(value)
-    
+
     if validator.disallowed_tags:
         raise ValidationError("Only whitelisted tags are allowed")
 
 
-    return value  
+    return value
 
 
 
@@ -62,7 +62,7 @@ class SpecialCharValidator(object):
             "Your password must contain at least 1 special character: " +
             "@#$%!^&*"
         )
-    
+
 
 class MinimumLengthValidator:
     def __init__(self, min_length=8):
@@ -78,6 +78,5 @@ class MinimumLengthValidator:
 
     def get_help_text(self):
         return _(
-            "Your password must contain at least %(min_length)d characters."
-            % {'min_length': self.min_length}
+            f"Your password must contain at least {self.min_length} characters."
         )

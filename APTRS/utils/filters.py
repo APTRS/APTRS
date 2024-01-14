@@ -1,10 +1,11 @@
-from django_filters import rest_framework as filters
-from accounts.models import CustomUser
 from rest_framework.pagination import LimitOffsetPagination
+
+from django_filters import rest_framework as filters
+
+from accounts.models import CustomUser
 from project.models import Project,Vulnerableinstance
 from vulnerability.models import VulnerabilityDB
 from customers.models import Company
-
 
 
 class CompanyFilter(filters.FilterSet):
@@ -27,7 +28,7 @@ class ProjectFilter(filters.FilterSet):
     def filter_date(self, queryset, name, value):
         # Convert the start date to a string and perform a case-insensitive contains match
         return queryset.filter(**{f'{name}__contains': value.lower()})
-    
+
     class Meta:
         model = Project
         fields = ('name','companyname','projecttype','testingtype','owner','status','startdate','enddate')
@@ -54,7 +55,7 @@ class VulnerableDBFilter(filters.FilterSet):
 
 def paginate_queryset(queryset, request):
     paginator = LimitOffsetPagination()
-    paginator.default_limit = 20  
+    paginator.default_limit = 20
     paginator.max_limit = 50
     paginated_queryset = paginator.paginate_queryset(queryset, request)
     return paginator, paginated_queryset

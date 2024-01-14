@@ -3,18 +3,13 @@ from . import views
 from .views import ImageUploadView
 
 
-
 urlpatterns = [
     path('edit-project/<str:pk>/',views.project_edit),
     path('Retest/<str:pk>/',views.RetestList),
     path('findings/<str:pk>/',views.projectfindingview),
     path('vulnerability/<str:pk>/',views.projectvulnview),
     path('vulnerability/instances/<str:pk>/',views.projectvulninstances),
-
     path('vulnerability/instances/filter/<str:pk>/',views.projectvulninstances_filter),
-
-
-
     path('vulnerability/add/instances/<str:pk>/',views.projectaddinstances),
     path('vulnerability/edit/instances/<str:pk>/',views.projecteditinstances),
     path('vulnerability/delete/instances/',views.projectdeleteinstances),
@@ -39,5 +34,4 @@ urlpatterns = [
     path('scope/<str:pk>/', views.getprojectscopes),
     path('report/<str:pk>/', views.project_report),
     path('ckeditor/delete-images/', views.delete_images, name='delete_images'),
-                                    
 ]
