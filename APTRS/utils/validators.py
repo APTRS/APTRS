@@ -9,21 +9,36 @@ ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6
                 ]
 
 class TagValidator(HTMLParser):
-    def __init__(self):
+    def __init__(self, allowed_path='/media/'):
         super().__init__()
+        self.allowed_path = allowed_path
         self.disallowed_tags = set()
+        self.disallowed_imgs = []
 
     def handle_starttag(self, tag, attrs):
-        if tag not in ALLOWED_TAGS:
+        if tag == 'img':
+            self.validate_img_src(attrs)
+        elif tag not in ALLOWED_TAGS:
             self.disallowed_tags.add(tag)
+
+    def validate_img_src(self, attrs):
+        for attr, value in attrs:
+            if attr.lower() == 'src':
+                if value is None:
+                    raise ValidationError(_("Image source cannot be None"))
+                elif not value.startswith(self.allowed_path):
+                    self.disallowed_imgs.append(value)
+
 
 def xss_validator(value):
     validator = TagValidator()
     validator.feed(value)
 
     if validator.disallowed_tags:
-        raise ValidationError("Only whitelisted tags are allowed")
+        raise ValidationError(_("Only whitelisted tags are allowed"))
 
+    if validator.disallowed_imgs:
+        raise ValidationError(_("Only images from the whitelisted paths are allowed"))
 
     return value
 
