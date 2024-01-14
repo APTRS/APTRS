@@ -33,8 +33,8 @@ class CustomerSerializer(serializers.ModelSerializer):
             try:
                 company = Company.objects.get(name=company_name)
                 validated_data['company'] = company
-            except Company.DoesNotExist:
-                raise serializers.ValidationError("Company with provided name does not exist")
+            except Company.DoesNotExist as exc:
+                raise serializers.ValidationError("Company with provided name does not exist") from exc
 
         # Set is_staff to True by default for new user
         validated_data['is_staff'] = False

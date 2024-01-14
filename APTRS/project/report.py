@@ -1,17 +1,21 @@
-from django.conf import settings
-from .models import Project,Vulnerability,PrjectScope,Vulnerableinstance,ProjectRetest
-from django.db.models import Q
-from weasyprint import default_url_fetcher, HTML
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from accounts.models import CustomUser
-import pygal
-from pygal.style import Style
-import bleach
-from xlsxwriter.workbook import Workbook
 import io
 import logging
 import urllib
+
+import bleach
+import pygal
+from django.conf import settings
+from django.db.models import Q
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.template import TemplateDoesNotExist
+from pygal.style import Style
+from weasyprint import HTML, default_url_fetcher
+from xlsxwriter.workbook import Workbook
+
+from accounts.models import CustomUser
+from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
+                     Vulnerableinstance)
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +36,7 @@ def is_whitelisted(url):
 
         if netloc == whitelisted_netloc and port == whitelisted_port:
             return True
-        
+
     logger.error("URL is not Whitelisted Check the %s", url)
     return False
 
@@ -42,7 +46,7 @@ def my_fetcher(url):
     if is_whitelisted(url):
         return default_url_fetcher(url)
     else:
-        raise ValueError('URL is Not WhiteListe for: %r' % url)
+        raise ValueError(f'URL is Not WhiteListed for: {url!r}')
 
 
 
@@ -67,7 +71,7 @@ def CreateExcel(pk):
     sheet.set_column('E:E', 15)
     sheet.set_column('G:G', 70)
     sheet.set_column('H:H', 70)
-    
+
     # Write header
     header = ['Title', 'Severity', 'Status', 'URL/IP', 'Parameter/Port', 'CVSS Score', 'Description','Recommendation']
     for col_num, col_value in enumerate(header):
@@ -100,7 +104,7 @@ def CreateExcel(pk):
 
 def GetHTML(Report_format,Report_type,pk,url,standard,request):
     project = Project.objects.get(pk=pk)
-    
+
     ## Get All Projects Vulnerability filter higher to lower CVSS Score
     vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
 
@@ -154,22 +158,22 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
             response = generate_pdf_report(rendered_content,base_url)
         if Report_format == "html":
 
-            response = HttpResponse(rendered_content,content_type='text/html')   
+            response = HttpResponse(rendered_content,content_type='text/html')
         return response
-    except Exception:
-        # Return a server error response if there's an issue
-        return HttpResponse("Something went wrong")
+    except (TemplateDoesNotExist, IOError) as e:
+        # Handle template not found error
+        logger.error("Something Went Wrong: %s", e)
+        return HttpResponse("Something Went Wrong", status=500)
 
 
 def generate_pdf_report(rendered_content,base_url):
-    try:  
+    try:
         pdf = HTML(string=rendered_content,url_fetcher=my_fetcher,base_url=base_url).write_pdf()
         # Return the PDF response
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         return response
-    except Exception:
+    except Exception as e:
         # Return a server error response if there's an issue
-        return HttpResponse("Something went wrong")
-
-    
+        logger.error("Something Went Wrong: %s", e)
+        return HttpResponse("Something went wrong", status=500)

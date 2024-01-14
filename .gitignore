@@ -198,3 +198,4 @@ APTRS/static/ckeditor/**
 APTRS/static/rest_framework/**
 
 .vscode/*
+APTRS.code-workspace

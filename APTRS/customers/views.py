@@ -1,19 +1,19 @@
 # Django imprts
+import logging
+
+from accounts.models import CustomUser
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from utils.filters import CompanyFilter, UserFilter, paginate_queryset
+from utils.permissions import custom_permission_required
 
 #local imports
 from .models import Company
-from .serializers import CompanySerializer,CustomerSerializer
-from utils.permissions import custom_permission_required
-from accounts.models import CustomUser
-from utils.filters import CompanyFilter,UserFilter, paginate_queryset
+from .serializers import CompanySerializer, CustomerSerializer
 
-
-import logging
 logger = logging.getLogger(__name__)
 
 
