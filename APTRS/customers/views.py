@@ -1,7 +1,7 @@
 # Django imprts
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
-from rest_framework import status    
+from rest_framework import status
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 
@@ -90,7 +90,7 @@ def getcustomer(request,pk):
     except ObjectDoesNotExist:
         logger.error("Customer not found with pk=%s", pk)
         return Response({"message": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = CustomerSerializer(customer,many=False)
     return Response(serializer.data)
 
@@ -111,14 +111,14 @@ def customerdelete(request):
 def customeredit(request,pk):
     try:
         customer = CustomUser.objects.get(pk=pk,is_staff=False)
-        
+
     except ObjectDoesNotExist:
         logger.error("Customer not found with pk=%s", pk)
         return Response({"message": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = CustomerSerializer(instance=customer, data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
-        
+
         serializer.save()
         respdata={'Status':"Success"}
         respdata.update(serializer.data)
@@ -139,7 +139,7 @@ def getcompany(request,pk):
     except ObjectDoesNotExist:
         logger.error("Company not found with pk=%s", pk)
         return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = CompanySerializer(company,many=False)
     return Response(serializer.data)
 
@@ -158,7 +158,6 @@ def add_company(request):
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-       
 
 
 @api_view(['POST'])
@@ -170,9 +169,9 @@ def edit_company(request,pk):
     except ObjectDoesNotExist:
         logger.error("Company not found with pk=%s", pk)
         return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = CompanySerializer(instance=company,data=request.data, partial=True)
-    if serializer.is_valid(raise_exception=True): 
+    if serializer.is_valid(raise_exception=True):
         serializer.save()
         respdata={'Status':"Success"}
         respdata.update(serializer.data)

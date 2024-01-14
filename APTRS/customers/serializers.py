@@ -1,8 +1,11 @@
-from rest_framework import serializers
-from .models import Company
-from accounts.models import CustomUser, CustomGroup
+from accounts.models import CustomGroup, CustomUser
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.password_validation import validate_password, ValidationError
+from django.contrib.auth.password_validation import (ValidationError,
+                                                     validate_password)
+from rest_framework import serializers
+
+from .models import Company
+
 
 class CompanySerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False)
@@ -22,10 +25,10 @@ class CustomerSerializer(serializers.ModelSerializer):
         rep = super(CustomerSerializer, self).to_representation(instance)
         rep['company'] = instance.company.name
         return rep
-    
+
     def create(self, validated_data):
 
-        company_name = validated_data.pop('company', None) 
+        company_name = validated_data.pop('company', None)
         if company_name:
             try:
                 company = Company.objects.get(name=company_name)
@@ -35,17 +38,17 @@ class CustomerSerializer(serializers.ModelSerializer):
 
         # Set is_staff to True by default for new user
         validated_data['is_staff'] = False
-        
+
         if 'password' not in validated_data:
             raise serializers.ValidationError("Password is required for creating a new user.")
         password = validated_data.pop('password')
         try:
-                # Validate the password
+            # Validate the password
             validate_password(password)
         except ValidationError as e:
             raise serializers.ValidationError({"password": e.messages})
         user = CustomUser.objects.create(**validated_data)
-        user.set_password(password)   
+        user.set_password(password)
         user.save()
 
         customer_group, _ = CustomGroup.objects.get_or_create(name='Customer')
@@ -53,7 +56,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
         return user
-    
+
 
     def update(self, instance, validated_data):
 
@@ -77,6 +80,3 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
         return super().update(instance, validated_data)
-
-
-  

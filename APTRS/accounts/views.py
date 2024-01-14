@@ -233,6 +233,17 @@ def add_user(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Edit User'])
 def edit_user(request,pk):
+    """
+    API endpoint for adding a new user.
+
+    This endpoint requires the user to be authenticated and have the 'Add User' custom permission.
+    It allows creating a new user by providing the required information in the request body.
+
+    Response:
+    - If the user has the required permissions and the request data is valid,
+      the endpoint creates a new user and returns a JSON object containing
+      the serialized details of the newly created user.
+    """
     try:
         user = CustomUser.objects.get(pk=pk)
     except CustomUser.DoesNotExist:
