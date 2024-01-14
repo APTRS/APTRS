@@ -1,3 +1,9 @@
+"""
+Import required Django classes and methods.
+CKEditor image upload has custom REST API to upload images
+Default ckeditor image handler only requires for Django Admin
+"""
+
 from django.urls import path, include,re_path
 from django.conf import settings
 from django.conf.urls.static import serve

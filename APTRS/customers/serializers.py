@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Company
 from accounts.models import CustomUser, CustomGroup
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.password_validation import validate_password, ValidationError 
+from django.contrib.auth.password_validation import validate_password, ValidationError
 
 class CompanySerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False)
@@ -16,7 +16,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'full_name', 'email', 'is_active', 'number', 'position','password','company']
-        read_only_fields = ['date_joined','is_staff']  
+        read_only_fields = ['date_joined','is_staff']
 
     def to_representation(self, instance):
         rep = super(CustomerSerializer, self).to_representation(instance)

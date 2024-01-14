@@ -1,12 +1,11 @@
-from django.core.management.base import BaseCommand
-from accounts.models import CustomUser , CustomGroup, CustomPermission
-import subprocess
 import json
 import os
-from dotenv import load_dotenv
+import subprocess
+
+from accounts.models import CustomGroup, CustomPermission, CustomUser
 from django.conf import settings
-
-
+from django.core.management.base import BaseCommand
+from dotenv import load_dotenv
 
 dotenv_path = os.path.join(settings.BASE_DIR, '.env')
 load_dotenv(dotenv_path)
@@ -21,21 +20,32 @@ PASSWORD = os.getenv('PASSWORD')
 Group = os.getenv('Group')
 
 
+
 class Command(BaseCommand):
+    """
+    Custom manage.py command to setup user details for first time installation users
+    """
     help = 'Performs first-time setup tasks'
 
     def handle(self, *args, **options):
-        self.LoadPermissions()
-        self.CreateGroup()
-        self.CreateSuperUser()
-        self.CheckGTK3()
+        self.load_permissions()
+        self.create_group()
+        self.create_super_user()
+        self.check_gtk3()
 
         self.stdout.write(self.style.SUCCESS("Django Setup is completed successfully."))
-        self.stdout.write(self.style.SUCCESS("USERNAME=%s\nPassword=%s\nEmail=%s" % (USERNAME, PASSWORD, EMAIL)))
+        self.stdout.write(self.style.SUCCESS(
+            f"USERNAME={USERNAME}\n"
+            f"Password={PASSWORD}\n"
+            f"Email={EMAIL}"
+        ))
 
-    def LoadPermissions(self):
-        Permission_path = '../Dummy-Data/Permission.json'
-        with open(Permission_path, 'r') as file:
+
+    def load_permissions(self):
+        """Load the default permissions, Permissions are used for Each APIs access control.
+        """
+        permission_path = '../Dummy-Data/Permission.json'
+        with open(permission_path, 'r',encoding='utf-8') as file:
             data = json.load(file)
 
         for item in data:
@@ -43,24 +53,30 @@ class Command(BaseCommand):
             name=item['name'],
             description=item['description']
             )
-            
-        #call_command('loaddata', Permission_path)
-
         self.stdout.write(self.style.SUCCESS("All permissions were successfully loaded"))
 
 
 
-    def CreateGroup(self):
+    def create_group(self):
+        """
+        Create a Default Administrator Group and assign all permissions to it.
+        Remember Admin user does not requires any group or permissions.
+        All admin users can access any API irrespective of the permissions.
+        """
         admin_group, _ = CustomGroup.objects.get_or_create(name='Administrator')
         all_permissions = CustomPermission.objects.all()
         admin_group.list_of_permissions.set(all_permissions)
-
         CustomGroup.objects.get_or_create(name='Customer')
+        self.stdout.write(
+            self.style.SUCCESS("Administrator and Customer group created with all permission")
+        )
 
-        self.stdout.write(self.style.SUCCESS("Administrator and Customer group created with all permission"))
 
 
-    def CreateSuperUser(self):
+    def create_super_user(self):
+        """
+        Create a new super admin user and add user to Administrator Group
+        """
         admin_group = CustomGroup.objects.get(name=Group)
         if not CustomUser.objects.filter(username=USERNAME).exists():
             user = CustomUser.objects.create(
@@ -82,12 +98,17 @@ class Command(BaseCommand):
             self.stdout.write(self.style.NOTICE("Superuser already exists"))
 
 
-    def CheckGTK3(self):
-
-
-
+    def check_gtk3(self):
+        """
+        Check if GTK3 is available or not, pdf generation library weasyprint requires GTK3.
+        """
         try:
-            subprocess.run(['gtk-update-icon-cache', '--help'], capture_output=True, text=True, check=True)
+            subprocess.run(
+                ['gtk-update-icon-cache', '--help'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
             self.stdout.write(self.style.SUCCESS("GTK3 Found"))
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR("GTK3 is not installed or not in the PATH"))

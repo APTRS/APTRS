@@ -1,12 +1,15 @@
-# Django Imports
+from customers.models import Company
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
+                                        Group, PermissionsMixin)
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
 
-#local import
-from customers.models import Company
 
 class CustomPermission(models.Model):
+    """
+    Custom permission model, Which will be used to manage access control.
+    Defaults Django permissions will be replaced with custom permissions
+    """
     name = models.CharField(max_length=100)
     description = models.TextField()
 
@@ -14,15 +17,24 @@ class CustomPermission(models.Model):
         return self.name
 
 class CustomGroup(Group):
+    """
+    Extends Django Group with custom group
+    """
     list_of_permissions = models.ManyToManyField(CustomPermission, blank=True)
-    description = models.CharField(max_length=150, null=True, blank=True, verbose_name="Group description")
+    description = models.CharField(max_length=150, null=True,
+                                   blank=True, verbose_name="Group description"
+                                   )
 
     def __str__(self):
         return self.name or self.description
 
 class CustomUserManager(BaseUserManager):
+    """
+    Basse user manager overwrite for custom user model
+    """
     use_in_migration = True
     def create_user(self, email, password=None, **extra_fields):
+        """Manage Normal user creation"""
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
@@ -32,12 +44,14 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        """Manage the superuser admin user creation"""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    """Create a Custom User model from AbstractBaseUser"""
     username = models.CharField(max_length=150, unique=True,null=True, blank=True)
     full_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField(unique=True)
@@ -46,7 +60,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(default='profile/avatar-1.svg', upload_to='profile')
     number = PhoneNumberField(unique=True, blank=False, null=True, default=None)
     date_joined = models.DateTimeField(auto_now_add=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE,editable=False,to_field='name',null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,editable=False,
+                                to_field='name',null=True, blank=True)
     position = models.CharField(max_length=100, blank=True, null=True)
     groups = models.ManyToManyField(
         CustomGroup,

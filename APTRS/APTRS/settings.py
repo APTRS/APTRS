@@ -10,11 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from json import loads
 from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
-from json import loads
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,16 +35,19 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-####### Make Sure to change this to your desired domain name/hostname ['yourdomain.com','anotherdomaiin.com']
 ALLOWED_HOSTS = loads(os.getenv('ALLOWED_HOST', '[]'))
 
 WHITELIST_IP = loads(os.getenv('WHITELIST_IP', '[]'))
 
 '''
 CORS Security settings
-Make sure to only allow the  frontend domain/IP and not all domains Check - https://pypi.org/project/django-cors-headers/ for more examples to configure it
+Make sure to only allow the  frontend domain/IP and not all domains Check:
 
-Remove the CORS_ORIGIN_ALLOW_ALL = True and use this instead with appropriate domain/ip:port and protocol
+https://pypi.org/project/django-cors-headers/ for more examples to configure it
+
+Remove the CORS_ORIGIN_ALLOW_ALL = True
+
+Use this instead with appropriate domain/ip:port and protocol
 CORS_ALLOWED_ORIGINS = ["https://example.com","http://127.0.0.1:9000"]  os.getenv('CORS_ORIGIN')
 '''
 CORS_ORIGIN_ALLOW_ALL = True
@@ -164,7 +167,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'aptrs',
-        #'CONN_MAX_AGE': 0,   ## Enable this setting if required. 0 will decrease the connection but might increase the HTTP Response delay
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],

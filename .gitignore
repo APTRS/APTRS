@@ -196,3 +196,5 @@ APTRS/project/migrations/0001_initial.py
 APTRS/static/admin/**
 APTRS/static/ckeditor/**
 APTRS/static/rest_framework/**
+
+.vscode/*

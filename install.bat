@@ -72,7 +72,7 @@ IF %minor% GEQ 8 (
 
   
   echo Setting up the Django Project
-  %venv% manage.py FirstSetup
+  %venv% manage.py first_setup
 
   exit /b 0
  || (

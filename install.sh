@@ -59,5 +59,5 @@ python3 manage.py migrate accounts
 
 
 echo "Setting up the Django Project"
-python3 manage.py FirstSetup
+python3 manage.py first_setup
 
