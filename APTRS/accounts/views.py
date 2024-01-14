@@ -1,23 +1,43 @@
 # Django imports
-from rest_framework.response import Response
-from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import IsAdminUser,IsAuthenticated
+import logging
+
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 # local imports
 from utils.filters import UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
-from .models import CustomUser , CustomPermission
-from .models import CustomGroup
-from .serializers import ChangePasswordSerializer, CustomUserSerializer,ProfileUserSerializer, CustomGroupSerializer,CustomPermissionSerializer
 
-import logging
+from .models import CustomGroup, CustomPermission, CustomUser
+from .serializers import (ChangePasswordSerializer, CustomGroupSerializer,
+                          CustomPermissionSerializer, CustomUserSerializer,
+                          ProfileUserSerializer)
+
 logger = logging.getLogger(__name__)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Token serializer for obtaining JWT tokens with additional user information.
+
+    This serializer extends the functionality of TokenObtainPairSerializer to include
+    extra user information such as status, username, profile picture URL, isAdmin, isStaff,
+    and a list of permissions associated with the user's groups.
+
+    Attributes:
+    - Status (str): Indicates the status of the token generation process (True/False).
+    - username (str): The username of the authenticated user.
+    - Pic (str): The URL of the user's profile picture.
+    - isAdmin (bool): Indicates whether the user has superuser privileges.
+    - isStaff (bool): Indicates whether the user has staff privileges.
+    - permissions (list): A list of permissions associated with the user's groups.
+
+    Note:
+    - The associated groups and permissions are fetched based on the user's groups.
+    """
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -39,6 +59,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
+    """
+    API view for obtaining JWT tokens.
+
+    This view extends the functionality of TokenObtainPairView and uses the
+    MyTokenObtainPairSerializer to include extra user information in the response.
+    """
     serializer_class = MyTokenObtainPairSerializer
 
 
@@ -46,18 +72,50 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Change Password'])
 def change_password(request):
+    """
+    API endpoint for changing the user's password.
+
+    This endpoint requires the user to be authenticated and have the 'Change Password'
+    custom permission. The user provides the old and new passwords through a POST request.
+
+    Example Usage:
+    - Ensure the user is authenticated and has the 'Change Password' permission.
+    - Send a POST request to this endpoint with the following data:
+      {
+          "oldpassword": "current_password",
+          "newpassword": "new_password"
+      }
+
+    Response:
+    - If the password change is successful, the endpoint returns a success message.
+    - If there are validation errors, the endpoint returns a JSON object with detailed error messages.
+    """
     serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
         return Response({'message': 'Password updated.'})
 
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Users'])
 def getallusers(request):
+    """
+    API endpoint for retrieving details of all staff/Internal users.
+
+    This endpoint requires the user to be authenticated and have the 'View All Users'
+    custom permission. It returns details of all users who have the 'is_staff' flag set to True.
+
+    Example Usage:
+    - Ensure the user is authenticated and has the 'View All Users' permission.
+    - Send a GET request to this endpoint.
+
+    Response:
+    - If the user has the required permissions, the endpoint returns a JSON object
+      containing details of all staff users.
+    """
     userdetails = CustomUser.objects.filter(is_staff=True)
     serializer = CustomUserSerializer(userdetails, many=True)
     return Response(serializer.data)
@@ -67,6 +125,16 @@ def getallusers(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Users'])
 def getallusers_filter(request):
+    """
+    API endpoint for retrieving and filtering details of all staff users.
+
+    This endpoint requires the user to be authenticated and have the 'View All Users'
+    custom permission. It returns details of all users who have the 'is_staff' flag set to True.
+
+    Response:
+    - If the user has the required permissions, the endpoint returns a JSON object
+      containing details of staff users, optionally filtered based on query parameters.
+    """
     userdetails = CustomUser.objects.filter(is_staff=True)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)
@@ -83,6 +151,17 @@ def getallusers_filter(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Users'])
 def ActiveUserList(request):
+    """
+    API endpoint for retrieving a list of active staff user usernames.
+    This API was created to list active usernames to select project owner at frontend.
+
+    This endpoint requires the user to be authenticated and have the 'View All Users'
+    custom permission. It returns a list of usernames for users who are both active and staff.
+
+    Response:
+    - If the user has the required permissions, the endpoint returns a JSON array
+      containing the usernames of active staff users.
+    """
     usernames = CustomUser.objects.filter(is_active=True,is_staff=True).values_list('username', flat=True)
     return Response(usernames)
 
@@ -91,6 +170,17 @@ def ActiveUserList(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View Profile'])
 def myprofile(request):
+    """
+    API endpoint for retrieving the profile information of the authenticated user.
+
+    This endpoint requires the user to be authenticated and have the 'View Profile'
+    custom permission. It returns a JSON object containing the serialized profile
+    information of the authenticated user.
+
+    Response:
+    - If the user has the required permissions, the endpoint returns a JSON object
+      containing the profile details of the authenticated user.
+    """
     serializer = CustomUserSerializer(request.user)
     return Response(serializer.data)
 
@@ -98,11 +188,24 @@ def myprofile(request):
 @permission_classes([IsAuthenticated,IsAdminUser ])  ## IsAdminUser is allow only staff internal users not for is_superuser(admin)
 @custom_permission_required(['Edit Profile'])
 def edit_profile(request):
+    """
+    API endpoint for editing the profile information of the authenticated user.
+
+    This endpoint requires the user to be authenticated, have the 'staff' permission,
+    and the 'Edit Profile' custom permission. It allows updating the profile details of the user.
+
+    Method: POST
+
+    Response:
+    - If the user has the required permissions and the request data is valid,
+      the endpoint updates the profile information and returns a JSON object
+      containing the serialized updated user profile.
+    """
     user = request.user
 
     user_serializer = ProfileUserSerializer(user, data=request.data, partial=True, context={'request': request})
-    
-    
+
+
     if user_serializer.is_valid(raise_exception=True):
         user_serializer.save()
         return Response(user_serializer.data)
@@ -110,7 +213,7 @@ def edit_profile(request):
     else:
         logger.error("Serializer errors: %s", str(user_serializer.errors))
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -123,7 +226,7 @@ def add_user(request):
     else:
         logger.error("Serializer errors: %s", str(user_serializer.errors))
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 
 @api_view(['POST'])

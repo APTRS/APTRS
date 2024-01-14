@@ -27,4 +27,3 @@ urlpatterns = [
     path('groups/update/<int:pk>/', views.edit_group, name='update_group'),
     path('groups/list/', views.list_custom_groups, name='List All Groups'),
 ]
-

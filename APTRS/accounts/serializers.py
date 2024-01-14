@@ -192,6 +192,34 @@ class ProfileUserSerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for representing custom user objects.
+
+    This serializer is designed to handle the serialization and deserialization
+    of CustomUser objects. It includes fields such as username, full_name, email,
+    profilepic, number, position, groups, and password.
+
+    Attributes:
+    - id (int): The unique identifier of the user.
+    - username (str): The username of the user.
+    - full_name (str): The full name of the user.
+    - email (str): The email address of the user.
+    - is_staff (bool): Indicates whether the user has staff privileges.
+    - is_active (bool): Indicates whether the user account is active.
+    - is_superuser (bool): Indicates whether the user has superuser privileges.
+    - profilepic (image): The user's profile picture.
+    - number (str): The contact number of the user.
+    - position (str): The position or role of the user.
+    - groups (list): The groups to which the user belongs.
+    - password (str): The user's password. (write-only)
+
+    Read-only Attributes:
+    - date_joined (datetime): The date and time when the user joined.
+
+    Note:
+    - The 'groups' field is handled by CustomGroupRelatedField.
+    - Password is a write-only field and not included in the response.
+    """
     profilepic = serializers.ImageField(required=False)  # Profile pic is optional
     groups = CustomGroupRelatedField(many=True, queryset=CustomGroup.objects.all())
     password = serializers.CharField(write_only=True, required=False)
@@ -211,6 +239,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         if 'password' not in validated_data:
             raise serializers.ValidationError("Password is required for creating a new user.")
         password = validated_data.pop('password')
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            raise serializers.ValidationError({"password": e.messages})
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)
         user.save()
@@ -226,8 +258,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
                 # If password is empty, remove it from validated_data
                 validated_data.pop('password')
             else:
+                password = validated_data['password']
+                try:
+                    validate_password(password)
+                except ValidationError as e:
+                    raise serializers.ValidationError({"password": e.messages})
                 # Hash the password before saving
-                validated_data['password'] = make_password(validated_data['password'])
+                validated_data['password'] = make_password(password)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
