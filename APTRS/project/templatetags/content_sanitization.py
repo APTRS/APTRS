@@ -10,4 +10,5 @@ register = template.Library()
 @register.filter(name='clean_html')
 def clean_html(value):
     cleaned_html = bleach.clean(value, tags=ALLOWED_TAGS, attributes={})
-    return SafeString(cleaned_html)
+    #return SafeString(cleaned_html)
+    return SafeString(value)
