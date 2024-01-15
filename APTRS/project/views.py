@@ -561,6 +561,24 @@ def Retestadd(request):
 
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@custom_permission_required(['Change Retest Status'])
+def complete_retest_status(request, pk):
+    safe_pk = bleach.clean(pk)
+    try:
+        projectretest = ProjectRetest.objects.get(pk=safe_pk)
+    except ObjectDoesNotExist:
+        logger.error("Retest not found for id=%s", safe_pk)
+        return Response({"message": "Retest not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Set the retest status to 'Completed'
+    projectretest.status = 'Completed'
+    projectretest.save()
+
+    return Response({'message': f'Status of Retest {safe_pk} updated to Completed'})
+
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

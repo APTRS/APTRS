@@ -1,7 +1,7 @@
 #django import
 from django.db import models
 from django.utils import timezone
-
+from django.core.exceptions import ValidationError
 
 from ckeditor_uploader.fields import RichTextUploadingField
 
@@ -109,3 +109,25 @@ class ProjectRetest(models.Model):
     startdate = models.DateField()
     enddate = models.DateField()
     owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
+    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
+
+    @property
+    def calculate_status(self):
+        current_date = timezone.now().date()
+        if current_date < self.startdate:
+            return 'Upcoming'
+        elif self.startdate <= current_date <= self.enddate:
+            return 'In Progress'
+        elif current_date > self.enddate:
+            return 'Delay'
+
+    def save(self, *args, **kwargs):
+        # Check if there's an existing ProjectRetest with a non-completed status for the same project
+        existing_retests = ProjectRetest.objects.filter(project=self.project, status__in=['Upcoming', 'In Progress', 'Delay']).exclude(id=self.id)
+
+        if existing_retests.exists():
+            raise ValidationError("Cannot create a new Project Retest. There is an existing retest task that hasn't been completed.")
+
+        self.status = self.calculate_status
+        super(ProjectRetest, self).save(*args, **kwargs)
+

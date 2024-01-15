@@ -24,6 +24,7 @@ urlpatterns = [
     path('add-project/',views.newproject,name="Add Project"),
     path('get-project/<str:pk>/',views.getproject),
     path('status/completed/<str:pk>/',views.complete_project_status),
+    path('retest/status/completed/<str:pk>/',views.complete_retest_status),
     path('delete-project/',views.deleteproject),
     path('vulnerability/add/vulnerability/',views.create_vulnerability),
     path('ckeditor/imageupload/', ImageUploadView.as_view(),),
