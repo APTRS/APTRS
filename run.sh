@@ -1,14 +1,4 @@
 #!/bin/bash
-echo -e "\n"
-echo    "     █████  ██████  ████████ ██████  ███████" 
-echo    "    ██   ██ ██   ██    ██    ██   ██ ██     "
-echo    "    ███████ ██████     ██    ██████  ███████" 
-echo    "    ██   ██ ██         ██    ██   ██      ██" 
-echo    "    ██   ██ ██         ██    ██   ██ ███████" 
-printf "\n\t\e[1;33m      Version 0.1\n\n  \e[0m\n"
-   
-                                        
-
 
 var="$1"
 
@@ -56,4 +46,4 @@ if [ ! -z "$var" ]; then
     IP='0.0.0.0'
     PORT='8000'
 fi	
-source venv/bin/activate && cd APTRS && python3 -m gunicorn -b ${IP}:${PORT} APTRS.wsgi:application --workers=1 --threads=10 --timeout=5600
+cd APTRS && source venv/bin/activate && python3 -m gunicorn -b ${IP}:${PORT} APTRS.wsgi:application --workers=1 --threads=10 --timeout=5600

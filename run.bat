@@ -1,16 +1,4 @@
 @echo off
-echo: 
-
-echo        #    ######  ####### ######   #####  
-echo       # #   #     #    #    #     # #     # 
-echo      #   #  #     #    #    #     # #       
-echo     #     # ######     #    ######   #####  
-echo     ####### #          #    #   #         # 
-echo     #     # #          #    #    #  #     # 
-echo     #     # #          #    #     #  #####  
-echo: 
-echo [1;33m          Version 0.1[0m
-
 
 if [%1]==[] goto usage
 SET conf=%1
@@ -18,8 +6,8 @@ goto :run
 :usage
 SET conf=0.0.0.0:8000
 :run
-set venv=.\venv\Scripts\activate
-set server=.\venv\Scripts\waitress-serve.exe
+set venv=.\APTRS\venv\Scripts\activate
+set server=.\APTRS\venv\Scripts\waitress-serve.exe
 if exist %server% (
   echo Running APTRS on %conf%
   %venv%

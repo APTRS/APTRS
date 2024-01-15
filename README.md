@@ -43,7 +43,6 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 
 - Try APTRS Live - [aptrs.souravkalal.tech](https://aptrs.souravkalal.tech)
-- Try APTRS APIs - [aptrsapi.souravkalal.tech](aptrsapi.souravkalal.tech)
 
 > [!NOTE]  
 > Default creds are admin@aptrs.com & iamweakpassword
