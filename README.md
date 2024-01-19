@@ -6,7 +6,6 @@
 APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS.
 <br/><br/>
 
-[![GPLv3 License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/)
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
 [![Python Version](https://img.shields.io/badge/Python-3.8+-brightgreen)](https://www.python.org/downloads/release/python-3810/)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
@@ -17,6 +16,7 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=security_rating&branch=main)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS&branch=API)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS)
+[![CodeQL](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml)
 [![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
 
 
@@ -46,6 +46,13 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 > [!NOTE]  
 > Default creds are admin@aptrs.com & iamweakpassword
+
+> [!CAUTION]  
+> APTRS is free for individuals (students, non-profit projects, contributors, and security testers and individuals), but organizations require a separate license. For detailed licensing terms, view the [full license](license.md). Check [price page](https://aptrs.com) for commercial licenses.
+
+
+
+
 
 
 ## Deployment
