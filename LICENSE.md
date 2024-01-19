@@ -5,7 +5,7 @@
 
 ## About this Agreement
 
-While APTRS source code is publicly available, APTRS is not free for organizational or any commercial purposes, including individual commercial use. To use APTRS in any capacity for organizational or commercial purposes, including deployment in production environments, you must [purchase a valid commercial license](http://aptrs.com/) from the project maintainers.
+While APTRS source code is publicly available, APTRS is not free for organizational or any commercial purposes, including individual commercial use. To use APTRS in any capacity for organizational or commercial purposes, including deployment in production environments, you must [purchase a valid commercial license](https://aptrs.com/) from the project maintainers.
 
 This End User License Agreement (the "Agreement") is fundamental to the relationship between you and us. Therefore, we recommend reading this Agreement carefully before you download, install, or use APTRS.
 
