@@ -16,6 +16,10 @@ class CompanyFilter(filters.FilterSet):
 
 
 class UserFilter(filters.FilterSet):
+    username = filters.CharFilter(field_name='username', lookup_expr='icontains')
+    full_name = filters.CharFilter(field_name='full_name', lookup_expr='icontains')
+    email = filters.CharFilter(field_name='email', lookup_expr='icontains')
+    position = filters.CharFilter(field_name='position', lookup_expr='icontains')
     class Meta:
         model = CustomUser
         fields = ('username', 'full_name','email','is_active','position')
@@ -24,6 +28,12 @@ class UserFilter(filters.FilterSet):
 class ProjectFilter(filters.FilterSet):
     startdate = filters.CharFilter(method='filter_date')
     enddate = filters.CharFilter(method='filter_date')
+    name = filters.CharFilter(field_name='name', lookup_expr='icontains')
+    companyname = filters.CharFilter(field_name='companyname', lookup_expr='icontains')
+    projecttype = filters.CharFilter(field_name='projecttype', lookup_expr='icontains')
+    #owner = filters.CharFilter(field_name='owner', lookup_expr='icontains')
+    owner = filters.CharFilter(field_name='owner__username', lookup_expr='icontains')
+    status = filters.CharFilter(field_name='status', lookup_expr='icontains')
 
     def filter_date(self, queryset, name, value):
         # Convert the start date to a string and perform a case-insensitive contains match

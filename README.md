@@ -42,13 +42,13 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 
 
-- Try APTRS Live - [aptrs.souravkalal.tech](https://aptrs.souravkalal.tech)
+- Try APTRS Live - [aptrs.souravkalal.tech](https://live.aptrs.com)
 
 > [!NOTE]  
 > Default creds are admin@aptrs.com & iamweakpassword
 
 > [!CAUTION]  
-> APTRS is free for individuals (students, non-profit projects, contributors, and security testers and individuals), but organizations require a separate license. For detailed licensing terms, view the [full license](license.md). Check [price page](https://aptrs.com) for commercial licenses.
+> APTRS is free for individuals (students, non-profit projects, contributors, and security testers and individuals), but organizations require a separate license. For detailed licensing terms, view the [full license](LICENSE.md). Check [price page](https://aptrs.com) for commercial licenses.
 
 
 
