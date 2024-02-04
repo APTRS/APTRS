@@ -20,6 +20,7 @@ urlpatterns = [
     path('Retest/add',views.Retestadd),
     path('Retest/delete/<str:pk>/',views.Retestdelete),
     path('get-projects/',views.GetAllProjects.as_view()),
+    path('my-projects/',views.GetMyProjects.as_view()),
     path('projects/filter/', views.getallproject_filter, name='Get All Project with Filters and Pagination'),
     path('add-project/',views.newproject,name="Add Project"),
     path('get-project/<str:pk>/',views.getproject),

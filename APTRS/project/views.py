@@ -278,6 +278,15 @@ class GetAllProjects(views.APIView):
         serializer = Projectserializers(projects, many=True)
         return Response(serializer.data)
 
+class GetMyProjects(views.APIView):
+    permission_classes = [IsAuthenticated]
+    @custom_permission_required(['View All Projects'])
+    def get(self, request):
+        user = request.user  # Get the requesting user
+        projects = Project.objects.filter(owner=user, status__in=['Upcoming', 'In Progress', 'Delay'])
+        serializer = Projectserializers(projects, many=True)
+        return Response(serializer.data)
+
 
 
 @api_view(['GET'])
