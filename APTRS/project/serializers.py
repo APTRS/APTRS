@@ -106,11 +106,6 @@ class PrjectScopeserializers(serializers.ModelSerializer):
         fields = ('id','scope', 'description')
 
 
-class Vulnerabilityserializers(serializers.ModelSerializer):
-    class Meta:
-        model = Vulnerability
-        fields = '__all__'
-        read_only_fields = ['status']
 
 
 class Instanceserializers(serializers.ModelSerializer):
@@ -119,6 +114,27 @@ class Instanceserializers(serializers.ModelSerializer):
         model = Vulnerableinstance
         #fields = '__all__'
         fields = ('id','URL', 'Paramter', 'status')
+
+class Vulnerabilityserializers(serializers.ModelSerializer):
+    instances = Instanceserializers(many=True, read_only=True)
+    class Meta:
+        model = Vulnerability
+        fields = [
+            'id',
+            'vulnerabilityname',
+            'vulnerabilityseverity',
+            'cvssscore',
+            'cvssvector',
+            'status',
+            'vulnerabilitydescription',
+            'POC',
+            'created',
+            'vulnerabilitysolution',
+            'vulnerabilityreferlnk',
+            'project',
+            'instances',  # Move 'instances' to the end
+        ]
+        read_only_fields = ['status']
 
 
 class VulnerableinstanceSerializer3(serializers.ModelSerializer):

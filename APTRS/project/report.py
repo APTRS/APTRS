@@ -12,7 +12,6 @@ from django.template import TemplateDoesNotExist
 from pygal.style import Style
 from weasyprint import HTML, default_url_fetcher
 from xlsxwriter.workbook import Workbook
-import json
 import io
 from docx import Document
 from docxtpl import DocxTemplate,RichText
@@ -20,15 +19,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from htmldocx import HtmlToDocx
 from datetime import datetime
-from io import BytesIO
-from docx.shared import Inches
-from docxtpl import DocxTemplate
-from docx import Document
-from docx.shared import Inches, Cm, Pt
-from docx.shared import Pt
-from docx.shared import RGBColor
-from docx.enum.style import WD_STYLE_TYPE
-from docx.enum.style import WD_STYLE
+from docx.shared import Inches, Pt
 
 
 from accounts.models import CustomUser
@@ -61,29 +52,20 @@ def resize_inline_images(temp_doc, fixed_width):
         image.height = new_height
        
 def get_subdoc(doc, raw_html):
-    # Convert image src paths
-    raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
-    #raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
 
+    # Convert image src paths - doctpl does not support loading img over url, adding image full path
+    raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
     # Wrap the HTML in a div with styling for margins
     styled_html = f'<div style="margin-left: 20pt; margin-right: 20pt;">{raw_html}</div>'
 
-    #print(styled_html)
     # Convert HTML to temporary DOCX
     temp_doc = Document()
     temp_parser = HtmlToDocx()
    
     temp_parser.add_html_to_document(styled_html, temp_doc)
-    #print(temp_parser)
 
     # Resize images in the temporary DOCX
     ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
-    
-    #text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
-
-    #resize_inline_images(temp_doc, fixed_width=text_width)
-
-
     text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
 
     resize_inline_images(temp_doc, fixed_width=text_width)
@@ -107,9 +89,6 @@ def get_subdoc(doc, raw_html):
             font.name = 'Calibri'
             font.size = Pt(16)
     
-    styles = temp_doc.styles
-
-    style = styles["Body Text"]
 
     font = temp_doc.styles['Normal'].font
     font.name = 'Calibri'
@@ -117,16 +96,8 @@ def get_subdoc(doc, raw_html):
     font = temp_doc.styles['List Bullet'].font
     font.name = 'Calibri'
     font.size = Pt(16)
-    
 
-
-
-
-    
-
-    
-
-    # Save temporary DOCX in memory 
+    # Save temporary DOCX in memory
     subdoc_tmp = io.BytesIO()
     temp_doc.save(subdoc_tmp)
     
