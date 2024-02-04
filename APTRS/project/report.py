@@ -25,6 +25,11 @@ from docx.shared import Inches
 from docxtpl import DocxTemplate
 from docx import Document
 from docx.shared import Inches, Cm, Pt
+from docx.shared import Pt
+from docx.shared import RGBColor
+from docx.enum.style import WD_STYLE_TYPE
+from docx.enum.style import WD_STYLE
+
 
 from accounts.models import CustomUser
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
@@ -32,7 +37,17 @@ from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
 
 logger = logging.getLogger(__name__)
 
+def apply_font_style(element, font_name, font_size):
+    if hasattr(element, 'font'):
+        element.font.name = font_name
+        element.font.size = Pt(font_size)
 
+def apply_font_to_elements(elements, font_name, font_size):
+    for element in elements:
+        apply_font_style(element, font_name, font_size)
+        if hasattr(element, 'runs'):
+            for run in element.runs:
+                apply_font_style(run, font_name, font_size)
 
 def resize_inline_images(temp_doc, fixed_width):
     for i, image in enumerate(temp_doc.inline_shapes):
@@ -44,7 +59,7 @@ def resize_inline_images(temp_doc, fixed_width):
         # Set the fixed width and calculated height
         image.width = fixed_width
         image.height = new_height
-
+       
 def get_subdoc(doc, raw_html):
     # Convert image src paths
     raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
@@ -53,12 +68,13 @@ def get_subdoc(doc, raw_html):
     # Wrap the HTML in a div with styling for margins
     styled_html = f'<div style="margin-left: 20pt; margin-right: 20pt;">{raw_html}</div>'
 
-    print(styled_html)
+    #print(styled_html)
     # Convert HTML to temporary DOCX
     temp_doc = Document()
     temp_parser = HtmlToDocx()
+   
     temp_parser.add_html_to_document(styled_html, temp_doc)
-    print(temp_parser)
+    #print(temp_parser)
 
     # Resize images in the temporary DOCX
     ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
@@ -71,17 +87,49 @@ def get_subdoc(doc, raw_html):
     text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
 
     resize_inline_images(temp_doc, fixed_width=text_width)
+    apply_font_to_elements(temp_doc.element.body, 'Calibri', 16)
 
     for paragraph in temp_doc.paragraphs:
         paragraph.paragraph_format.space_before = Pt(5)
         paragraph.paragraph_format.space_after = Pt(5)
-        paragraph.paragraph_format.left_indent = Inches(5)
+        paragraph.paragraph_format.left_indent = Inches(1)
+        paragraph.paragraph_format.right_indent = Inches(1)
+        paragraph.paragraph_format.top_indent = Inches(1)
+        #paragraph.style.font.name = 'Calibri'
+        #paragraph.style.font.size = Pt(16) 
+
+    
+    obj_styles = temp_doc.styles
+    for current_style in obj_styles:
+        element = current_style
+        if hasattr(element, 'font'):
+            font = element.font
+            font.name = 'Calibri'
+            font.size = Pt(16)
+    
+    styles = temp_doc.styles
+
+    style = styles["Body Text"]
+
+    font = temp_doc.styles['Normal'].font
+    font.name = 'Calibri'
+    font.size = Pt(16)
+    font = temp_doc.styles['List Bullet'].font
+    font.name = 'Calibri'
+    font.size = Pt(16)
+    
+
+
+
+
+    
+
     
 
     # Save temporary DOCX in memory 
     subdoc_tmp = io.BytesIO()
     temp_doc.save(subdoc_tmp)
-    temp_doc.save('helloword.docx')
+    
 
     # Create docxtpl subdoc object
     subdoc = doc.new_subdoc(subdoc_tmp)
@@ -123,13 +171,16 @@ def generate_vulnerability_document(pk,Report_type,standard):
     context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,
                "settings":settings,"currentdate":currentdate,'value2':'10',
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
-               'internalusers':internalusers}#,'page_break': RichText('\f')
-               #}
+               'internalusers':internalusers,'page_break': RichText('\f')
+               }
     doc.render(context)
+    font = doc.styles['List Bullet'].font
+    font.name = 'Calibri'
+    font.size = Pt(16)
     
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     response['Content-Disposition'] = f'attachment; filename=vulnerability_report_{project_id}.docx'
-    doc.save('report-tester.docx')
+    
     doc.save(response)
 
     return response
