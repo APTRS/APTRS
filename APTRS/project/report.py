@@ -1,7 +1,7 @@
 import io
 import logging
 import urllib
-
+import os
 import bleach
 import pygal
 from django.conf import settings
@@ -12,7 +12,6 @@ from django.template import TemplateDoesNotExist
 from pygal.style import Style
 from weasyprint import HTML, default_url_fetcher
 from xlsxwriter.workbook import Workbook
-import io
 from docx import Document
 from docxtpl import DocxTemplate,RichText
 from django.http import HttpResponse
@@ -117,8 +116,8 @@ def generate_vulnerability_document(pk,Report_type,standard):
     projectscope = PrjectScope.objects.filter(project=project)
     internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
     customeruser = CustomUser.objects.filter(is_active=True,company=project.companyname)
-
-    doc = DocxTemplate("D:\\Github\\APTRS\\API Branch\\APTRS\\APTRS\\project\\report2.docx")
+    template_path = os.path.join(settings.BASE_DIR, 'template', 'report.docx')
+    doc = DocxTemplate(template_path)
 
     for vulnerability in vuln:
         # Convert CKEditor fields from HTML to DOCX format
