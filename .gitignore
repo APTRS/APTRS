@@ -232,3 +232,6 @@ yarn-error.log*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+APTRS/helloword.docx
+APTRS/report-tester.docx
+APTRS/project/report.docx

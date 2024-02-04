@@ -12,6 +12,19 @@ from django.template import TemplateDoesNotExist
 from pygal.style import Style
 from weasyprint import HTML, default_url_fetcher
 from xlsxwriter.workbook import Workbook
+import json
+import io
+from docx import Document
+from docxtpl import DocxTemplate,RichText
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from htmldocx import HtmlToDocx
+from datetime import datetime
+from io import BytesIO
+from docx.shared import Inches
+from docxtpl import DocxTemplate
+from docx import Document
+from docx.shared import Inches, Cm, Pt
 
 from accounts.models import CustomUser
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
@@ -20,6 +33,107 @@ from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
 logger = logging.getLogger(__name__)
 
 
+
+def resize_inline_images(temp_doc, fixed_width):
+    for i, image in enumerate(temp_doc.inline_shapes):
+        original_width, original_height = image.width, image.height
+
+        # Calculate new height to maintain the aspect ratio
+        new_height = int(original_height * fixed_width / original_width)
+
+        # Set the fixed width and calculated height
+        image.width = fixed_width
+        image.height = new_height
+
+def get_subdoc(doc, raw_html):
+    # Convert image src paths
+    raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
+    #raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
+
+    # Wrap the HTML in a div with styling for margins
+    styled_html = f'<div style="margin-left: 20pt; margin-right: 20pt;">{raw_html}</div>'
+
+    print(styled_html)
+    # Convert HTML to temporary DOCX
+    temp_doc = Document()
+    temp_parser = HtmlToDocx()
+    temp_parser.add_html_to_document(styled_html, temp_doc)
+    print(temp_parser)
+
+    # Resize images in the temporary DOCX
+    ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
+    
+    #text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
+
+    #resize_inline_images(temp_doc, fixed_width=text_width)
+
+
+    text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
+
+    resize_inline_images(temp_doc, fixed_width=text_width)
+
+    for paragraph in temp_doc.paragraphs:
+        paragraph.paragraph_format.space_before = Pt(5)
+        paragraph.paragraph_format.space_after = Pt(5)
+        paragraph.paragraph_format.left_indent = Inches(5)
+    
+
+    # Save temporary DOCX in memory 
+    subdoc_tmp = io.BytesIO()
+    temp_doc.save(subdoc_tmp)
+    temp_doc.save('helloword.docx')
+
+    # Create docxtpl subdoc object
+    subdoc = doc.new_subdoc(subdoc_tmp)
+    return subdoc
+
+
+def generate_vulnerability_document(pk,Report_type,standard):
+    project_id = pk
+    #vulnerabilities_for_project_10 = Vulnerability.objects.filter(project__id=project_id)
+    project = get_object_or_404(Project, id=project_id)
+    vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
+    totalvulnerability = vuln.filter(project=project).count()
+    totalretest = ProjectRetest.objects.filter(project_id=pk)
+    projectscope = PrjectScope.objects.filter(project=project)
+    internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
+    customeruser = CustomUser.objects.filter(is_active=True,company=project.companyname)
+
+    doc = DocxTemplate("D:\\Github\\APTRS\\API Branch\\APTRS\\APTRS\\project\\report2.docx")
+
+    for vulnerability in vuln:
+        # Convert CKEditor fields from HTML to DOCX format
+        vulnerability.vulnerabilitydescription = get_subdoc(doc, vulnerability.vulnerabilitydescription)
+        vulnerability.POC = get_subdoc(doc, vulnerability.POC)
+        vulnerability.vulnerabilitysolution = get_subdoc(doc, vulnerability.vulnerabilitysolution)
+        vulnerability.vulnerabilityreferlnk = get_subdoc(doc, vulnerability.vulnerabilityreferlnk)
+        #print(vulnerability.POC)
+
+        vulnerability.instances_data = [
+            {
+                'URL': instance.URL,
+                'Parameter': instance.Paramter if instance.Paramter is not None else '',  # Set empty string for None
+                'Status': instance.status
+            }
+            for instance in Vulnerableinstance.objects.filter(vulnerabilityid=vulnerability, project=project)
+            if instance.URL  # Exclude instances with empty URL
+        ]
+        currentdate=datetime.now()
+        #print(vulnerability.instances_data)
+    context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,
+               "settings":settings,"currentdate":currentdate,'value2':'10',
+               'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
+               'internalusers':internalusers}#,'page_break': RichText('\f')
+               #}
+    doc.render(context)
+    
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename=vulnerability_report_{project_id}.docx'
+    doc.save('report-tester.docx')
+    doc.save(response)
+
+    return response
+    
 
 
 def is_whitelisted(url):
@@ -53,6 +167,8 @@ def my_fetcher(url):
 def CheckReport(Report_format,Report_type,pk,url,standard,request):
     if Report_format == "excel":
         response =  CreateExcel(pk)
+    elif Report_format == "docx":
+        response = generate_vulnerability_document(pk,Report_type,standard)
     else:
         response = GetHTML(Report_format,Report_type,pk,url,standard,request)
     return response

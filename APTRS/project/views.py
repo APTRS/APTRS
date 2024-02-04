@@ -604,7 +604,7 @@ def project_report(request, pk):
                 response_data = {"Status": "Failed", "Message": f"Vulnerability {vulnerability.vulnerabilityname} has no Instance added, Kindly add Instance to generate project"}
                 return Response(response_data)
 
-        if request.data.get('Format') in ['pdf', 'html', 'excel']:
+        if request.data.get('Format') in ['pdf', 'html', 'excel','docx']:
             Report_format = request.data.get('Format')
         else:
             logger.error("Report Format is incorrect Only pdf and html is supported")
