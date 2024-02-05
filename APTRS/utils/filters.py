@@ -50,7 +50,7 @@ class VulnerableinstanceFilter(filters.FilterSet):
 
     class Meta:
         model = Vulnerableinstance
-        fields = ('URL','Paramter','status')
+        fields = ('URL','Parameter','status')
 
 class VulnerableDBFilter(filters.FilterSet):
     vulnerabilityname = filters.CharFilter(field_name='vulnerabilityname', lookup_expr='icontains')

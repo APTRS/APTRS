@@ -130,7 +130,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
         vulnerability.instances_data = [
             {
                 'URL': instance.URL,
-                'Parameter': instance.Paramter if instance.Paramter is not None else '',  # Set empty string for None
+                'Parameter': instance.Parameter if instance.Parameter is not None else '',  # Set empty string for None
                 'Status': instance.status
             }
             for instance in Vulnerableinstance.objects.filter(vulnerabilityid=vulnerability, project=project)
@@ -221,7 +221,7 @@ def CreateExcel(pk):
             instance.vulnerabilityid.vulnerabilityseverity,
             instance.status,
             instance.URL,
-            instance.Paramter,
+            instance.Parameter,
             instance.vulnerabilityid.cvssscore,
             bleach.clean(instance.vulnerabilityid.vulnerabilitydescription, tags=[], strip=True),
             bleach.clean(instance.vulnerabilityid.vulnerabilitysolution, tags=[], strip=True)

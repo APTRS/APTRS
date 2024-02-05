@@ -113,7 +113,7 @@ class Instanceserializers(serializers.ModelSerializer):
     class Meta:
         model = Vulnerableinstance
         #fields = '__all__'
-        fields = ('id','URL', 'Paramter', 'status')
+        fields = ('id','URL', 'Parameter', 'status')
 
 class Vulnerabilityserializers(serializers.ModelSerializer):
     instance = Instanceserializers(many=True, read_only=True)
@@ -149,7 +149,7 @@ class VulnerableinstanceSerializer3(serializers.ModelSerializer):
 class VulnerableinstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vulnerableinstance
-        fields = ('id','URL', 'Paramter','status')
+        fields = ('id','URL', 'Parameter','status')
 
 
 class VulnerabilitySerializer2(serializers.ModelSerializer):

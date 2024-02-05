@@ -92,12 +92,12 @@ class Vulnerableinstance(models.Model):
     vulnerabilityid = models.ForeignKey(Vulnerability, on_delete=models.CASCADE,related_name='instances')
     project = models.ForeignKey(Project, on_delete=models.CASCADE,blank=True,null=True)
     URL = models.CharField(max_length=1000,default=None,blank=True,null=True)
-    Paramter = models.CharField(max_length=1000,default=None,blank=True,null=True)
+    Parameter = models.CharField(max_length=1000,default=None,blank=True,null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=VULNERABLE)
 
 
     def save(self, *args, **kwargs):
-        existing_instances = Vulnerableinstance.objects.filter(vulnerabilityid=self.vulnerabilityid, URL=self.URL,Paramter=self.Paramter).exists()
+        existing_instances = Vulnerableinstance.objects.filter(vulnerabilityid=self.vulnerabilityid, URL=self.URL,Parameter=self.Parameter).exists()
         if existing_instances:
             return
         else:

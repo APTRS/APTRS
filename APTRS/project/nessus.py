@@ -74,7 +74,7 @@ def save_vulnerableinstance(file_data,jsonobject, pk):
         reader = csv.DictReader(file_data)
         for row in reader:
             if row['Name'] == vulnerability_name:
-                affected_hosts.append({'URL': row['Host'],'Paramter': row['Port'],'vulnerabilityid':vuln.id,'project':projectdata.id})
+                affected_hosts.append({'URL': row['Host'],'Parameter': row['Port'],'vulnerabilityid':vuln.id,'project':projectdata.id})
 
 
     vulnerability_dict = {'Instances': affected_hosts}
