@@ -116,7 +116,7 @@ class Instanceserializers(serializers.ModelSerializer):
         fields = ('id','URL', 'Paramter', 'status')
 
 class Vulnerabilityserializers(serializers.ModelSerializer):
-    instances = Instanceserializers(many=True, read_only=True)
+    instance = Instanceserializers(many=True, read_only=True)
     class Meta:
         model = Vulnerability
         fields = [
@@ -132,7 +132,7 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
             'vulnerabilitysolution',
             'vulnerabilityreferlnk',
             'project',
-            'instances',  # Move 'instances' to the end
+            'instance',  # Move 'instances' to the end
         ]
         read_only_fields = ['status']
 
