@@ -92,6 +92,9 @@ def change_password(request):
     """
     serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
+        user = request.user
+        user.set_password(serializer.validated_data['newpassword'])
+        user.save()
         return Response({'message': 'Password updated.'})
 
     else:

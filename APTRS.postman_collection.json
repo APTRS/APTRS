@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "131e5e02-32e5-45be-9c15-02c91fe9230a",
 		"name": "APTRS",
+		"description": "APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24236036",
 		"_collection_link": "https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&source=collection_link&creator=24236036"
@@ -14,13 +15,33 @@
 					"name": "Admin",
 					"item": [
 						{
+							"name": "Get User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/auth/user/1",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"user",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Add User",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"full_name\": \"Sourav Kalal\", \r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@anof.com\",\r\n    \"is_active\":true,\r\n    \"number\":\"+911122445522\",\r\n    \"is_superuser\": false,\r\n    \"position\":\"Security Engineer\", // text field\r\n    \"password\": \"admin\",\r\n    \"groups\":[\r\n            \"User Level Group\"   // Multiple Groups can be selected\r\n        ]\r\n}",
+									"raw": "{\r\n    \"full_name\": \"Sourav1 Kalal\", \r\n    \"username\": \"anotheradmin\",\r\n    \"email\": \"anotheradmin@anof.com\",\r\n    \"is_active\":true,\r\n    \"number\":\"+911622445522\",\r\n    \"is_superuser\": false,\r\n    \"position\":\"Security Engineer\", // text field\r\n    \"password\": \"admin\",\r\n    \"groups\":[\r\n            \"User Permission Group\"   // Multiple Groups can be selected\r\n        ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -202,7 +223,8 @@
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Admin APIs of APTRS"
 				},
 				{
 					"name": "Login",
@@ -221,6 +243,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -244,7 +269,7 @@
 								""
 							]
 						},
-						"description": "### Endpoint Description: User Authentication\n\n#### Endpoint\n\nThis API endpoint is used to authenticate a user and obtain access and refresh tokens for further API calls. Send a POST request to `{{domainname}}/api/auth/login/` with the required credentials.\n\n#### Request Method\n\n- **Method:** POST\n- **Endpoint:** `{{domainname}}/api/auth/login/`\n    \n\n#### Request Body\n\n``` json\n{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}\n\n ```\n\n### Response\n\nThe response will include the following information:\n\n``` json\n\n{\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzQzMzQ3MywiaWF0IjoxNzAyMTM3NDczLCJqdGkiOiJiN2YwNjliNDMyYTc0OWU4OWIwNzNmZTEzZWIzM2M0YiIsInVzZXJfaWQiOjF9.J_TGKeQlbPFfpU_PLMPuQwDD2F8QOlGpxroHUslLlRw\",\n    \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA0NzI5NDczLCJpYXQiOjE3MDIxMzc0NzMsImp0aSI6IjMwMTk5Y2EyNzQwZTQxZDViZWZhNDc1YTA4MTQxYTBhIiwidXNlcl9pZCI6MX0.rrmMbsxkcpG8hWKvvUElOY4sUjjsWmQHcridGcE4LuA\",\n    \"Status\": \"True\",\n    \"username\": \"admin\",\n    \"Pic\": \"/media/profile/avatar-1.svg\",\n    \"isAdmin\": true\n}\n\n```\n\n- `refresh`: A refresh token that can be used to obtain a new access token when it expires.\n- `access`: An access token that should be included in the headers of subsequent requests to authorize the user.\n- `Status`: The status of the authentication process.\n- `username`: The username of the authenticated user.\n- `Pic`: The profile picture of the authenticated user.\n- `isAdmin`: A boolean value indicating whether the authenticated user has admin privileges.  \n    Please note that the values for `refresh`, `access`, `Status`, `username`, `Pic`, and `isAdmin` will be specific to the authenticated user and should not be shared with others.  \n    To use the access token for authorization, include it in the `Authorization` header of subsequent requests using the Bearer token scheme.  \n    Example:\n    \n    ``` json\n          Authorization: Bearer {access_token}\n    \n     ```\n    \n\nMake sure to handle token expiration by using the refresh token to obtain a new access token when necessary."
+						"description": "### Endpoint Description: User Authentication\n\n#### Endpoint\n\nThis API endpoint is used to authenticate a user and obtain access and refresh tokens for further API calls. Send a POST request to `{{domainname}}/api/auth/login/` with the required credentials.\n\n#### Request Method\n\n- **Method:** POST\n- **Endpoint:** `{{domainname}}/api/auth/login/`\n    \n\n#### Request Body\n\n``` json\n{\n\"email\": \"admin@anof.com\",\n\"password\": \"admin\"\n}\n\n ```\n\n### Response\n\nThe response will include the following information:\n\n``` json\n{\n\"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzg2Mzc5NSwiaWF0IjoxNzAyNTY3Nzk1LCJqdGkiOiJhOGE0Y2I5MTZjMTk0ZmUyYmY3NWUxN2I5MDQxZmQ4NSIsInVzZXJfaWQiOjd9.elLzk-U5A_xqte3V2HfrzPkExeJaUX1Xj5WdVJWb_24\",\n\"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA1MTU5Nzk1LCJpYXQiOjE3MDI1Njc3OTUsImp0aSI6IjJkYTgyMTdhODc1YjQ0M2U4NjE2ZWI2NjY3ZWY5MWMzIiwidXNlcl9pZCI6N30.C4kOCx0B4FDrVAEvHreAnv9R7nQ5gSH33FLeWpUKSsU\",\n\"Status\": \"True\",\n\"username\": \"admin\",\n\"Pic\": \"/media/profile/avatar-1.svg\",\n\"isAdmin\": true,\n\"permissions\": [\n\"Create Project\",\n\"Delete Images\",\n\"Add Retest for Projects\",\n\"Change Password\",\n....\n]\n}\n\n ```\n\n- `refresh`: A refresh token that can be used to obtain a new access token when it expires.\n- `access`: An access token that should be included in the headers of subsequent requests to authorize the user.\n- `Status`: The status of the authentication process.\n- `username`: The username of the authenticated user.\n- `Pic`: The profile picture of the authenticated user.\n- `isAdmin`: A boolean value indicating whether the authenticated user has admin privileges.\n- permissions - List of permissions users have. Each user could have different sets of permissions.\n    \n\n> _**NOTE:**_ Admin user is not restricted with permission. The admin user is not part of the permission group and has all access irrespective of what permissions are assigned."
 					},
 					"response": []
 				},
@@ -274,7 +299,8 @@
 								"refresh",
 								""
 							]
-						}
+						},
+						"description": "### Endpoint Description: User Refresh Token\n\n#### Endpoint\n\nThis endpoint allows the user to refresh the access token. Send a POST request to `{{domainname}}/api/auth/token/refresh/` with the required credentials.\n\n\n\n#### Request Method\n\n- **Method:** POST\n- **Endpoint:** `{{domainname}}/api/auth/token/refresh/`\n\n\n#### Request Body\n\n``` json\n{\n\"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzQxMjYxNCwiaWF0IjoxNzAyMTE2NjE0LCJqdGkiOiJlNzQyZDFjMTQxZWI0OGQwYjlkOTg5NzViZWE1OGM3ZCIsInVzZXJfaWQiOjF9.MKSr0X-x2m6HZoZUQ4qBhOZVPUiBoC9vP8z9c4-91zw\"\n}\n\n```\n\n### Response\n\nThe response will include the following information:\n\n``` json\n{\n\"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA1MTYwMjgyLCJpYXQiOjE3MDIxMTY2MTQsImp0aSI6IjZjY2I4YTY1MmYzNjRkN2Q4NzIxOWVmZGE2NTdiYzUwIiwidXNlcl9pZCI6MX0.UI-4vmDQYIPs1YObzxmeXh-QgqqFSkxGkRDAAwZWbwE\",\n\"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzg2NDI4MiwiaWF0IjoxNzAyNTY4MjgyLCJqdGkiOiIyOGViZWQ2OGZlYmE0YjZmYjg5ODM5ZjVhMmFkZDczYiIsInVzZXJfaWQiOjF9.LrYKjte1KUszcEq7Bd5742BUzP3ECT7S659GEqn-uzE\"\n}\n\n```\n\n- `refresh`: An updated refresh token that can be used to obtain a new access token when it expires.\n- `access`: An updated access token that should be included in the headers of subsequent requests to authorize the user.\n"
 					},
 					"response": []
 				},
@@ -294,7 +320,58 @@
 								"users"
 							]
 						},
-						"description": "This API endpoint allows you to retrieve a list of users from the server. The HTTP GET request should be sent to `{{domainname}}/api/auth/users`.\n\n### Request Parameters\n\nThis endpoint does not require any request parameters.\n\n### Response\n\nThe last execution of this request returned a response with a status code of 200. The response body was an array of user objects, each containing the following properties:\n\n- `id` (integer): The unique identifier of the user.\n- `username` (string): The username of the user.\n- `email` (string): The email address of the user.\n- `first_name` (string): The first name of the user.\n- `last_name` (string): The last name of the user.\n- `is_superuser` (boolean): Indicates whether the user has superuser privileges.\n- `profile` (object): An object containing additional profile information for the user, with the following properties:\n    - `id` (integer): The unique identifier of the profile.\n    - `profilepic` (string): The URL of the user's profile picture.\n    - `number` (string): The contact number of the user.\n    - `company` (string): The company name associated with the user.\n    - `user` (integer): The ID of the user associated with this profile.\n\nPlease note that the actual values of the properties may vary in different responses."
+						"description": "### Endpoint Description: Retrieve All Users\n\n#### Endpoint\n\nThis API endpoint allows you to retrieve a list of users from the server. Send a POST request to `{{domainname}}/api/auth/users` with the required credentials.\n\n\n\n#### Request Method\n\n- **Method:** GET\n- **Endpoint:** `{{domainname}}/api/auth/users`\n\n\n\n### Response\n\nThe response will include the following information:\n\n``` json\n[\n{\n\"id\": 1,\n\"username\": \"sourav\",\n\"full_name\": \"Sourav Kalal\",\n\"email\": \"admin2@anof.com\",\n\"is_staff\": true,\n\"is_active\": true,\n\"is_superuser\": true,\n\"profilepic\": \"/media/profile/avatar-1.svg\",\n\"number\": \"+911122345522\",\n\"company\": \"AnoF PVT LTD\",\n\"position\": \"Security Engineer\",\n\"groups\": [\n\"User Permission Group\",\n\"Manager Permission Group\"\n]\n},\n{\n\"id\": 7,\n\"username\": \"admin\",\n\"full_name\": \"Sourav Kalal\",\n\"email\": \"admin@anof.com\",\n\"is_staff\": true,\n\"is_active\": true,\n\"is_superuser\": true,\n\"profilepic\": \"/media/profile/avatar-1.svg\",\n\"number\": \"+911122445522\",\n\"company\": \"AnoF PVT LTD\",\n\"position\": \"Security Engineer\",\n\"groups\": [\n\"User Permission Group\"\n]\n}\n]\n\n```\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All User Filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/auth/users/filter?username=&full_name=&email=&position=&is_active=&limit=1&offset=0",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": ""
+								},
+								{
+									"key": "full_name",
+									"value": ""
+								},
+								{
+									"key": "email",
+									"value": ""
+								},
+								{
+									"key": "position",
+									"value": ""
+								},
+								{
+									"key": "is_active",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"description": "upto 50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
 					},
 					"response": []
 				},
@@ -334,18 +411,21 @@
 								{
 									"key": "email",
 									"value": "admin@aptrs.com",
-									"type": "text"
+									"description": "// read only cannot be edited",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "full_name",
-									"value": "AnoF Cyber",
+									"value": "user person",
 									"type": "text"
 								},
 								{
 									"key": "profilepic",
 									"description": "Optional",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/AnoF/Downloads/doc.png",
+									"disabled": true
 								},
 								{
 									"key": "number",
@@ -429,8 +509,28 @@
 						"description": "### Endpoint Description: Change Password\n\nThis API endpoint is used to change the password of a user. It is an HTTP POST request that should be sent to `{{domainname}}/api/auth/changepassword`.\n\n#### Request Method\n\n- **Method:** POST\n- **Endpoint:** `{{domainname}}/api/auth/changepassword`\n    \n\n#### Request Parameters\n\n- `old_password` (string): The current password of the user.\n- `new_password` (string): The new password to be set.\n    \n\n``` json\n{\n    \"newpassword\": \"admin\",\n    \"oldpassword\": \"admin\"\n}\n\n ```\n\n### Response\n\nIn case of a successful password change, the API will return a response with a status code of `200` and a message in the following format:\n\n``` json\n{\n    \"message\": \"Password updated.\"\n}\n\n ```\n\nIf there is an error in the request, the API will respond with a status code of `400` and an error message in the following format:\n\n``` json\n{\n  \"non_field_errors\": [\"\"]\n}\n\n ```\n\nPlease note that the error message may contain additional information if there are specific errors related to the request parameters."
 					},
 					"response": []
+				},
+				{
+					"name": "Get All Active User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/auth/users-active",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users-active"
+							]
+						}
+					},
+					"response": []
 				}
-			]
+			],
+			"description": "**Account APIs Overview**\n\nThe Account APIs in APTRS facilitate the seamless management of internal company user accounts. These APIs empower administrators to add, update, and edit user profiles for internal company users. Additionally, individual users have the ability to modify their own profiles, change passwords, and manage user permissions and permission groups.\n\n**Key Features of Account APIs:**\n\n1. **User Management:**\n    \n    - Add, update, and edit user profiles for internal company users using the Account APIs.\n        \n    - Ensure accurate and up-to-date information for all users within the APTRS system.\n        \n2. **Self-Service Profile Modification:**\n    \n    - Empower individual users to edit their own profiles, providing a self-service option for maintaining personal information.\n        \n3. **Password Management:**\n    \n    - Allow users to change their passwords through dedicated API endpoints, enhancing security and user control.\n        \n4. **User Permission Control:**\n    \n    - Manage user permissions for each API of APTRS, controlling access for individual users.\n        \n    - Utilize permission groups to efficiently assign and manage access control based on specific user roles.\n        \n5. **Granular Access Control:**\n    \n    - Implement granular access control for each user, ensuring precise control over the functionalities and features accessible to different users.\n        \n\nThese APIs offer a comprehensive solution for internal company user account management, providing administrators and individual users with the tools needed to maintain accurate profiles, enhance security through password management, and control access to APTRS functionalities based on specific user roles and permissions."
 		},
 		{
 			"name": "Project",
@@ -470,12 +570,96 @@
 							"response": []
 						},
 						{
+							"name": "Get Project with Filters and Pagination",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/projects/filter?name=j&companyname=&projecttype&testingtype=&owner=u&status=del&startdate=&enddate_before=&limit=10&offset=0",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"projects",
+										"filter"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "j"
+										},
+										{
+											"key": "companyname",
+											"value": ""
+										},
+										{
+											"key": "projecttype",
+											"value": null
+										},
+										{
+											"key": "testingtype",
+											"value": ""
+										},
+										{
+											"key": "owner",
+											"value": "u"
+										},
+										{
+											"key": "status",
+											"value": "del"
+										},
+										{
+											"key": "startdate",
+											"value": "",
+											"description": "full date or any number "
+										},
+										{
+											"key": "enddate_before",
+											"value": "",
+											"description": "full date or any number "
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "My Projects",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/my-projects/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"my-projects",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Get Project",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{domainname}}/api/project/get-project/1/",
+									"raw": "{{domainname}}/api/project/get-project/3/",
 									"host": [
 										"{{domainname}}"
 									],
@@ -483,7 +667,7 @@
 										"api",
 										"project",
 										"get-project",
-										"1",
+										"3",
 										""
 									]
 								}
@@ -497,7 +681,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Juice Shop2\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2021-10-26\",\r\n    \"enddate\": \"2021-10-31\",\r\n    \"companyname\": \"OWASP\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"owner_id\": \"user\" // only admin user can select owner\r\n}",
+									"raw": "{\r\n    \"name\": \"Juice Shop2\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2024-10-26\",\r\n    \"enddate\": \"2024-10-31\",\r\n    \"companyname\": \"OWASP\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"owner\": \"user\" // only admin user can select owner\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -526,15 +710,18 @@
 								"header": [
 									{
 										"key": "Host",
-										"value": "127.0.0.1:8000"
+										"value": "127.0.0.1:8000",
+										"disabled": true
 									},
 									{
 										"key": "Content-Length",
-										"value": "355"
+										"value": "355",
+										"disabled": true
 									},
 									{
 										"key": "X-CSRFToken",
-										"value": "t5s177WKrB9G67Z5piltnC7zceuVkVh69wGRAyTnbYo6FwJ9J3KJCadckaZKyGBH"
+										"value": "t5s177WKrB9G67Z5piltnC7zceuVkVh69wGRAyTnbYo6FwJ9J3KJCadckaZKyGBH",
+										"disabled": true
 									},
 									{
 										"key": "Content-Type",
@@ -542,16 +729,18 @@
 									},
 									{
 										"key": "Origin",
-										"value": "ggg"
+										"value": "ggg",
+										"disabled": true
 									},
 									{
 										"key": "Connection",
-										"value": "close"
+										"value": "close",
+										"disabled": true
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Juice Shop\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2022-10-26\",\r\n    \"enddate\": \"2022-10-31\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"companyname\": \"OWASP\",\r\n    \"owner\": \"admin\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Juice Shop\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2022-10-26\",\r\n    \"enddate\": \"2024-10-31\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"companyname\": \"OWASP\",\r\n    \"owner\": \"admin\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -559,7 +748,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{domainname}}/api/project/edit-project/42/",
+									"raw": "{{domainname}}/api/project/edit-project/7/",
 									"host": [
 										"{{domainname}}"
 									],
@@ -567,7 +756,7 @@
 										"api",
 										"project",
 										"edit-project",
-										"42",
+										"7",
 										""
 									]
 								}
@@ -717,6 +906,616 @@
 							"response": []
 						},
 						{
+							"name": "Mark Project as Completed",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/status/completed/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"status",
+										"completed",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Project APIs of APTRS"
+				},
+				{
+					"name": "Vulnerability",
+					"item": [
+						{
+							"name": "Get Project Findings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/findings/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"findings",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Vulnerability with Instance",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/add/vulnerability/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"add",
+										"vulnerability",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Project Edit Vulnerability",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Host",
+										"value": "127.0.0.1:8000",
+										"disabled": true
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=UTF-8"
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"disabled": true
+									},
+									{
+										"key": "Content-Length",
+										"value": "1626",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"vulnerabilityname\": \"Sensitive Data Exposure\",\r\n    \"vulnerabilityseverity\": \"High\",\r\n    \"cvssscore\": 8.2,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N\",\r\n    \"status\": \"Vulnerable\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\r\\n\\r\\n<ul>\\r\\n\\t<li>Data about other users, such as usernames or financial information</li>\\r\\n\\t<li>Sensitive commercial or business data</li>\\r\\n\\t<li>Technical details about the website and its infrastructure</li>\\r\\n</ul>\\r\\n\\r\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you are able to gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"<ul>\\r\\n\\t<li>As can be seen, the application discloses the internal data.</li>\\r\\n</ul>\\r\\n\\r\\n<p><img alt=\\\"\\\" height=\\\"500\\\" src=\\\"/media/uploads//ftp.png\\\" width=\\\"500\\\" /></p>\",\r\n    \"created\": \"2024-01-09T13:44:28.406759Z\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of these kinds of vulnerability creeping into your own websites.</p>\\r\\n\\r\\n<ul>\\r\\n\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\r\\n\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\r\\n\\t<li>Use generic error messages as much as possible.</li>\\r\\n</ul>\",\r\n    \"vulnerabilityreferlnk\": \"<ul>\\r\\n\\t<li><a href=\\\"https://portswigger.net/web-security/information-disclosure\\\">PortSwigger</a></li>\\r\\n</ul>\",\r\n    \"project\": 1\r\n    }"
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/edit/3/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"edit",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Vulnerable Instances",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Host",
+										"value": "127.0.0.1:8000"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=UTF-8"
+									},
+									{
+										"key": "Connection",
+										"value": "close"
+									},
+									{
+										"key": "Content-Length",
+										"value": "165"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"URL\": \"https://google.com\",\r\n        \"Parameter\": \"username\",\r\n        \"status\": \"Vulnerable\"\r\n    },\r\n    {\r\n        \"URL\": \"google.com\",\r\n        \"Parameter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/add/instances/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"add",
+										"instances",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Vulnerable Instances",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"URL\": \"googl.com\",\r\n        \"Parameter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/edit/instances/41/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"edit",
+										"instances",
+										"41",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vulnerability Instance Status Update",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    16,\r\n    17,\r\n    35,\r\n    36,\r\n    37,\r\n    38,\r\n    39,\r\n    40,\r\n    41\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/status/instances/?status=Confirm Fixed",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"status",
+										"instances",
+										""
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "Confirm Fixed"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vulnerability Status Update",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/html",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/status/vulnerability/88?status=Vulnerable",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"status",
+										"vulnerability",
+										"88"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "Vulnerable"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Instances",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=UTF-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\"72\",\"34\"]"
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/delete/instances/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"delete",
+										"instances",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Vulnerability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/3/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Vulnerability Instances Filter and Pagination",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/instances/filter/1/?URL=&Parameter=&status=&limit=1&offset=0",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"instances",
+										"filter",
+										"1",
+										""
+									],
+									"query": [
+										{
+											"key": "URL",
+											"value": ""
+										},
+										{
+											"key": "Parameter",
+											"value": ""
+										},
+										{
+											"key": "status",
+											"value": ""
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Vulnerability Instances",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Host",
+										"value": "127.0.0.1:8000",
+										"disabled": true
+									},
+									{
+										"key": "Connection",
+										"value": "close",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/instances/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"instances",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Vulnerability",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\"64\",\"73\"]"
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/delete/vulnerability/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"delete",
+										"vulnerability",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Nessus CSV",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/AnoF/Downloads/exiftool-12.58/My Basic Network Scan_a9b0sh.csv"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/Nessus/csv/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"Nessus",
+										"csv",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ckeditor Image Upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": "/C:/Users/AnoF/Downloads/APTRS.png"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/ckeditor/imageupload/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"ckeditor",
+										"imageupload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Report - PDF",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Format\": \"docx\", //html,pdf,excel,docx\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/report/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"report",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Images",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    \"/media/uploads/ParaForge.png\",\r\n    \"/media/uploads/ParaForge_kJvGvXr.png\"\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/ckeditor/delete-images/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"ckeditor",
+										"delete-images",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Project Vulnerability APIs of APTRS"
+				},
+				{
+					"name": "Retest",
+					"item": [
+						{
+							"name": "Project Retest",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Host",
+										"value": "127.0.0.1:8000"
+									}
+								],
+								"url": {
+									"raw": "{{domainname}}/api/project/Retest/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"Retest",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Add Retest",
 							"request": {
 								"method": "POST",
@@ -809,44 +1608,19 @@
 							"response": []
 						},
 						{
-							"name": "Project Retest",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Host",
-										"value": "127.0.0.1:8000"
-									}
-								],
-								"url": {
-									"raw": "{{domainname}}/api/project/Retest/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"Retest",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Mark Project as Completed",
+							"name": "Mark Retest as Completed",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{domainname}}/api/project/status/completed/1/",
+									"raw": "{{domainname}}/api/project/retest/status/completed/1/",
 									"host": [
 										"{{domainname}}"
 									],
 									"path": [
 										"api",
 										"project",
+										"retest",
 										"status",
 										"completed",
 										"1",
@@ -856,554 +1630,37 @@
 							},
 							"response": []
 						}
-					]
-				},
-				{
-					"name": "Vulnerability",
-					"item": [
-						{
-							"name": "Get Project Findings",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{domainname}}/api/project/findings/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"findings",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Add Vulnerability with Instance",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/add/vulnerability/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"add",
-										"vulnerability",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Project Edit Vulnerability",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Host",
-										"value": "127.0.0.1:8000"
-									},
-									{
-										"key": "X-CSRFToken",
-										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept-Encoding",
-										"value": "gzip, deflate"
-									},
-									{
-										"key": "Content-Length",
-										"value": "1626"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"vulnerabilityname\": \"Cross Origin Resource Sharing (CORS)\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Confirm Fixed\",\r\n    \"vulnerabilitydescription\": \"<p>Cross-origin resource sharing (CORS) is a browser mechanism which enables controlled access to resources located outside of a given domain. It extends and adds flexibility to the same-origin policy (SOP). However, it also provides potential for cross-domain attacks, if a website\",\r\n    \"POC\": \"<ul>\\n\\t<li>The application use wild card for CORS</li>\\n</ul>\\n\\n<p><img alt=\\\"\\\" height=\\\"500\\\" src=\\\"/media/uploads/2022/10/27/cors.png\\\" width=\\\"500\\\" /></p>\",\r\n    \"vulnerabilitysolution\": \"<ul>\\n\\t<li>\\n\\t<p>If a web resource contains sensitive information, the origin should be properly specified in the Access-Control-Allow-Origin header.</p>\\n\\t</li>\\n\\t<li>\\n\\t<p>It may seem obvious but origins specified in the Access-Control-Allow-Origin header should only be sites that are trusted. In particular, dynamically reflecting origins from cross-origin requests without validation is readily exploitable and should be avoided.</p>\\n\\t</li>\\n\\t<li>\\n\\t<p>Avoid using the header Access-Control-Allow-Origin: null. Cross-origin resource calls from internal documents and sandboxed requests can specify the null origin. CORS headers should be properly defined in respect of trusted origins for private and public servers.</p>\\n\\t</li>\\n</ul>\",\r\n    \"vulnerabilityreferlnk\": \"<ul>\\n\\t<li><a href=\\\"https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny\\\">OWASP</a></li>\\n</ul>\",\r\n    \"project\": 42\r\n}"
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/edit/88/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"edit",
-										"88",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Add Vulnerable Instances",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Host",
-										"value": "127.0.0.1:8000"
-									},
-									{
-										"key": "X-CSRFToken",
-										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Connection",
-										"value": "close"
-									},
-									{
-										"key": "Content-Length",
-										"value": "165"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    {\r\n        \"URL\": \"https://google.com\",\r\n        \"Paramter\": \"username\",\r\n        \"status\": \"Vulnerable\"\r\n    },\r\n    {\r\n        \"URL\": \"google.com\",\r\n        \"Paramter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }\r\n]"
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/add/instances/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"add",
-										"instances",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Edit Vulnerable Instances",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n        \"URL\": \"googl.com\",\r\n        \"Paramter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/edit/instances/41/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"edit",
-										"instances",
-										"41",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Vulnerability Instance Status Update",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    16,\r\n    17,\r\n    35,\r\n    36,\r\n    37,\r\n    38,\r\n    39,\r\n    40,\r\n    41\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/status/instances/?status=Confirm Fixed",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"status",
-										"instances",
-										""
-									],
-									"query": [
-										{
-											"key": "status",
-											"value": "Confirm Fixed"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Vulnerability Status Update",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/status/vulnerability/88?status=Vulnerable",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"status",
-										"vulnerability",
-										"88"
-									],
-									"query": [
-										{
-											"key": "status",
-											"value": "Vulnerable"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Instances",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Host",
-										"value": "127.0.0.1:8000"
-									},
-									{
-										"key": "X-CSRFToken",
-										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept-Encoding",
-										"value": "gzip, deflate"
-									},
-									{
-										"key": "Content-Length",
-										"value": "11"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\"72\",\"34\"]"
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/delete/instances/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"delete",
-										"instances",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Vulnerability",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Vulnerability Instances",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Host",
-										"value": "127.0.0.1:8000"
-									},
-									{
-										"key": "Connection",
-										"value": "close"
-									}
-								],
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/instances/88/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"instances",
-										"88",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Vulnerability",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Host",
-										"value": "127.0.0.1:8000"
-									},
-									{
-										"key": "X-CSRFToken",
-										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept-Encoding",
-										"value": "gzip, deflate"
-									},
-									{
-										"key": "Content-Length",
-										"value": "11"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\"64\",\"73\"]"
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/delete/vulnerability/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"delete",
-										"vulnerability",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Nessus CSV",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file",
-											"type": "file",
-											"src": "/C:/Users/AnoF/Downloads/exiftool-12.58/My Basic Network Scan_a9b0sh.csv"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/Nessus/csv/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"Nessus",
-										"csv",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Ckeditor Image Upload",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "images",
-											"type": "file",
-											"src": "/C:/Users/AnoF/Downloads/xss_comment_exif_metadata_double_quote.png"
-										},
-										{
-											"key": "images",
-											"type": "file",
-											"src": [],
-											"disabled": true
-										}
-									]
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/ckeditor/imageupload/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"ckeditor",
-										"imageupload",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Report - PDF",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"Format\": \"pdf\",\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 Web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/report/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"report",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Images",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    \"/media/uploads/ParaForge.png\",\r\n    \"/media/uploads/ParaForge_kJvGvXr.png\"\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/ckeditor/delete-images/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"ckeditor",
-										"delete-images",
-										""
-									]
-								}
-							},
-							"response": []
-						}
-					]
+					],
+					"description": "Project Retest APIs of APTRS"
 				}
-			]
+			],
+			"description": "The Project APIs within APTRS provide a versatile platform for creating and managing projects associated with client companies. These APIs empower users to create projects with customizable details such as project name and type (e.g., white box, black box).\n\n**Key Features of Project APIs:**\n\n1. **Project Creation:**\n   - Easily create projects for client companies using the Project APIs.\n   - Specify project details, including the project name and type (e.g., white box, black box).\n\n2. **Project Scope Management:**\n   - Within each project, add project scope details such as URLs or IP addresses.\n   - APTRS supports multiple scopes within a single project, offering flexibility in project configuration.\n\n3. **Vulnerability Management:**\n   - Create vulnerabilities within a project, providing a detailed overview of potential security risks.\n   - Upload Nessus CSV reports directly to APTRS to seamlessly add vulnerabilities from Nessus scans.\n\n4. **Project Reporting:**\n   - Generate comprehensive reports in various formats, including Excel, PDF, and HTML.\n   - Enhance project communication and documentation through easily accessible and shareable reports.\n\n5. **Project Retesting and Ownership:**\n   - Manage project retesting, allowing for the reassessment of vulnerabilities over time.\n   - Assign project ownership for effective project management and accountability.\n\nThese APIs offer a robust set of tools for creating, configuring, and managing projects, providing a centralized hub for vulnerability management, report generation, and ongoing project evaluation.\n\n"
 		},
 		{
 			"name": "Vulnerability Database",
 			"item": [
 				{
 					"name": "Search Database",
+					"protocolProfileBehavior": {
+						"disableUrlEncoding": true,
+						"tlsPreferServerCiphers": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Host",
-								"value": "127.0.0.1:8000"
+								"value": "127.0.0.1:8000",
+								"disabled": true
 							},
 							{
 								"key": "Connection",
-								"value": "close"
+								"value": "close",
+								"disabled": true
 							}
 						],
 						"url": {
-							"raw": "{{domainname}}/api/vulndb/filter/?search=s",
+							"raw": "{{domainname}}/api/vulndb/filter/?search=",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1416,10 +1673,11 @@
 							"query": [
 								{
 									"key": "search",
-									"value": "s"
+									"value": ""
 								}
 							]
-						}
+						},
+						"description": "# API Documentation - Search Vulnerabilities\n\n## Endpoint\n\n`GET /api/vulndb/filter/?search={query}`\n\n## Description\n\nThis API endpoint allows you to search for vulnerabilities in the vulnerability database.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameter\n\n- `{query}`: The search query to filter vulnerabilities with vulnerability title.\n\n## Example\n\n```http\nGET /api/vulndb/filter/?search=s\n```\n\n\n## Response\n\nThe API response will include a list of vulnerabilities that match the search query.\n\n### Sample Response\n```json\n[\n  {\n    \"vulnerabilityname\": \"Possible XSS\"\n  },\n  {\n    \"vulnerabilityname\": \"Stored XSS\"\n  }\n]\n```\n\n## Error Handling\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are issues with the search process, a 500 Internal Server Error response may be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned.\n"
 					},
 					"response": []
 				},
@@ -1430,15 +1688,17 @@
 						"header": [
 							{
 								"key": "Host",
-								"value": "127.0.0.1:8000"
+								"value": "127.0.0.1:8000",
+								"disabled": true
 							},
 							{
 								"key": "Connection",
-								"value": "close"
+								"value": "close",
+								"disabled": true
 							}
 						],
 						"url": {
-							"raw": "{{domainname}}/api/vulndb/database/?title=Insecure%20Direct%20Object%20Reference%20(IDOR)",
+							"raw": "{{domainname}}/api/vulndb/database/?title=Possible XSS",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1451,7 +1711,49 @@
 							"query": [
 								{
 									"key": "title",
-									"value": "Insecure%20Direct%20Object%20Reference%20(IDOR)"
+									"value": "Possible XSS"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Vulnerability with Filters and pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=0",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"vulndb",
+								"all-vulndb",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "vulnerabilityname",
+									"value": ""
+								},
+								{
+									"key": "vulnerabilityseverity",
+									"value": ""
+								},
+								{
+									"key": "cvssscore",
+									"value": null
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "0"
 								}
 							]
 						}
@@ -1582,11 +1884,47 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "The Vulnerability Database APIs in APTRS offer a robust solution for maintaining a comprehensive list of vulnerabilities. These APIs empower users to manage vulnerability details, including descriptions, recommendations, and reference links.\n\n**Key Features of Vulnerability Database APIs:**\n\n1. **Vulnerability Details Management:**\n   - Maintain a centralized repository of vulnerabilities, including crucial details such as description, recommendations, and reference links.\n   - Effectively organize and categorize vulnerabilities for easy retrieval and reference.\n\n2. **Integration with Project Vulnerabilities:**\n   - Streamline the process of populating project vulnerabilities by utilizing the Vulnerability Database APIs.\n   - Avoid redundant data entry by leveraging the stored details of vulnerabilities from the database.\n\n3. **Vulnerability Database Search and Filter API:**\n   - Facilitate efficient search and filtering of vulnerabilities within the database.\n   - Automate the addition of vulnerability details, including description, title, recommendation, and reference links, during the creation or update of vulnerabilities within a project.\n\n4. **Enhanced Project Vulnerability Management:**\n   - By integrating with the Vulnerability Database, project vulnerability management becomes more efficient and accurate.\n   - Ensure consistency and accuracy in vulnerability details across projects.\n\nThese APIs offer a powerful toolset for maintaining a centralized repository of vulnerabilities, enhancing project vulnerability management, and minimizing redundant data entry efforts. The ability to automatically populate project vulnerabilities with details from the Vulnerability Database streamlines the workflow and ensures data consistency.\n"
 		},
 		{
-			"name": "Conpany",
+			"name": "Company",
 			"item": [
+				{
+					"name": "All Company Filter and Pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/customer/all-company/filter?name=&limit=1&offset=0",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"all-company",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "# API Documentation - Get Companies with Filters and Pagination\n\n## Endpoint\n\n`GET /api/customer/all-company/filter`\n\n## Description\n\nThis API endpoint retrieves a list of companies with the option to apply filters and implement pagination.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameters\n\n- `name`: Filter by company name.\n- `limit`: Number of results to return (default is 1).\n- `offset`: Offset for pagination (default is 0).\n    \n\n## Example\n\n``` http\nGET /api/customer/all-company/filter?name=&limit=1&offset=0\n\n ```\n\n## Response\n\nThe API response will include a list of companies based on the applied filters and pagination settings.\n\n### Sample Response\n\n```json\n{\n    \"count\": 2,\n    \"next\": \"http://aptrsapi.souravkalal.tech/api/customer/all-company/filter?limit=1&name=&offset=1\",\n    \"previous\": null,\n    \"results\": [\n        {\n            \"id\": 1,\n            \"img\": \"/media/company/OWASP_ZfWNj2c.png\",\n            \"name\": \"OWASP\",\n            \"address\": \"USA\"\n        }\n    ]\n}\n```\n\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned.\n"
+					},
+					"response": []
+				},
 				{
 					"name": "All Company",
 					"request": {
@@ -1602,7 +1940,8 @@
 								"customer",
 								"all-company"
 							]
-						}
+						},
+						"description": "# API Documentation - Get All Companies\n\n## Endpoint\n\n`GET /api/customer/all-company`\n\n## Description\n\nThis API endpoint retrieves a list of all companies.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Example\n\n``` http\nGET /api/customer/all-company\n\n ```\n\n## Response\n\nThe API response will include a list of all companies.\n\n### Sample Response\n\n``` json\n[\n    {\n        \"id\": 1,\n        \"img\": \"/media/company/OWASP_ZfWNj2c.png\",\n        \"name\": \"OWASP\",\n        \"address\": \"USA\"\n    },\n    {\n        \"id\": 2,\n        \"img\": null,\n        \"name\": \"AnoF PVT LTD\",\n        \"address\": \"\"\n    }\n]\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1623,7 +1962,8 @@
 								"1",
 								""
 							]
-						}
+						},
+						"description": "# API Documentation - Get Company Details by ID\n\n## Endpoint\n\n`GET /api/customer/company/{id}`\n\n## Description\n\nThis API endpoint retrieves details for a specific company based on its ID.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Path Parameters\n\n- `{id}`: The unique identifier of the company.\n    \n\n## Example\n\n``` http\nGET /api/customer/company/1\n\n```\n\n## Response\nThe API response will include details for the specified company.\n### Sample Response\n```json \n{\n    \"id\": 1,\n    \"img\": \"/media/company/OWASP_ZfWNj2c.png\",\n    \"name\": \"OWASP\",\n    \"address\": \"USA\"\n}\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.  \n- If the specified company ID is not found, a 404 Not Found response will be returned.  \n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1637,12 +1977,13 @@
 							"formdata": [
 								{
 									"key": "img",
+									"description": "Optional ",
 									"type": "file",
 									"src": "/C:/Users/AnoF/Downloads/OWASP.png"
 								},
 								{
 									"key": "name",
-									"value": "OWASP",
+									"value": "FaceBook",
 									"type": "text"
 								},
 								{
@@ -1663,7 +2004,8 @@
 								"company",
 								"add"
 							]
-						}
+						},
+						"description": "# API Documentation - Add New Company\n\n## Endpoint\n\n`POST /api/customer/company/add`\n\n## Description\n\nThis API endpoint allows you to add a new company.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Request\n\n- Method: POST\n- Content-Type: application/json or multipart/form-data (for image upload)\n    \n\n### JSON Body (if not using form-data)\n\n``` json\n{\n    \"name\": \"New Company\",\n    \"address\": \"City, Country\"\n}\n\n ```\n\n### Form Data (for image upload)\n\n- img: (file) Logo image for the company\n- name: (text) Name of the company\n- address: (text) Address of the company\n    \n\n## Example\n\n### Using JSON Body\n\n``` http\nPOST /api/customer/company/add\nContent-Type: application/json\n{\n    \"name\": \"New Company\",\n    \"address\": \"City, Country\"\n}\n\n ```\n\n### Using Form Data (with Image Upload)\n\n``` http\nPOST /api/customer/company/add\nContent-Type: multipart/form-data\n--boundary\nContent-Disposition: form-data; name=\"img\"; filename=\"company_logo.png\"\nContent-Type: image/png\n... (binary data for the image)\n--boundary\nContent-Disposition: form-data; name=\"name\"\nNew Company\n--boundary\nContent-Disposition: form-data; name=\"address\"\nCity, Country\n--boundary--\n\n ```\n\n## Response\n\nThe API response will include details for the newly added company.\n\n### Sample Response\n\n``` json\n{\n    \"Status\": \"Success\",\n    \"id\": 3,\n    \"img\": \"/media/company/facebook.png\",\n    \"name\": \"FaceBook\",\n    \"address\": \"USA\"\n}\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1693,7 +2035,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{domainname}}/api/customer/company/edit/2/",
+							"raw": "{{domainname}}/api/customer/company/edit/1/",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1702,10 +2044,11 @@
 								"customer",
 								"company",
 								"edit",
-								"2",
+								"1",
 								""
 							]
-						}
+						},
+						"description": "# API Documentation - Edit Company\n\n## Endpoint\n\n`POST /api/customer/company/edit/{id}`\n\n## Description\n\nThis API endpoint allows you to edit an existing company based on its ID.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Path Parameters\n\n- `{id}`: The unique identifier of the company to be edited.\n\n## Request\n\n- Method: POST\n- Content-Type: application/json or multipart/form-data (for image upload)\n\n\n### JSON Body (if not using form-data)\n\n```json\n{\n    \"name\": \"New Name\",\n    \"address\": \"City, Country\"\n}\n```\n\n### Form Data (for image upload)\n\n- img: (file) Logo image for the company\n- name: (text) Name of the company\n- address: (text) Address of the company\n\n\n## Example\n\n### Using JSON Body\n\n```http\nPOST /api/customer/company/edit/2/\nContent-Type: application/json\n\n{\n    \"name\": \"New name\",\n    \"address\": \"City, Country\"\n}\n```\n\n### Using Form Data (with Image Upload)\n\n```http\nPOST /api/customer/company/edit/2/\nContent-Type: multipart/form-data\n\n--boundary\nContent-Disposition: form-data; name=\"img\"; filename=\"company_logo.png\"\nContent-Type: image/png\n\n... (binary data for the image)\n--boundary\nContent-Disposition: form-data; name=\"name\"\n\n Company\n--boundary\nContent-Disposition: form-data; name=\"address\"\n\nCity, Country\n--boundary--\n```\n\n## Response\nThe API response will include details for the newly added company.\n\n### Sample Response\n\n```json\n{\n    \"Status\": \"Success\",\n    \"id\": 3,\n    \"img\": \"/media/company/facebook.png\",\n    \"name\": \"FaceBook\",\n    \"address\": \"USA\"\n}\n```\n\n## Error Handling\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1734,15 +2077,68 @@
 								"company",
 								"delete"
 							]
-						}
+						},
+						"description": "# API Documentation - Delete Companies\n\n## Endpoint\n\n`DELETE /api/customer/company/delete`\n\n## Description\n\nThis API endpoint allows you to delete multiple companies.\n\n> WARNING\n> Deleting a company will also delete all associated projects.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Request\n\n- Method: DELETE\n- Content-Type: application/json\n\n### Request Body\n\nAn array of company IDs to be deleted.\n\n```json\n[\n    1,\n    13\n]\n```\n\n## Example\n\n```http\nDELETE /api/customer/company/delete\nContent-Type: application/json\n\n[\n    1,\n    13\n]\n```\n\n## Response\nThe API response will confirm the deletion of the specified companies.\n\n###Sample Response\n\n```json\n{\n    \"Status\": \"Success\"\n}\n```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are issues with the deletion process, a 500 Internal Server Error response may be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned.- \n"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "In the context of APTRS, \"Company\" refers to the client companies associated with your organization. If your organization provides servers or services to external entities, these client companies can be seamlessly integrated into the system. Subsequently, you have the capability to create and manage projects specific to each client company.\n\n### Key Features of Company APIs:\n\n1. **Create, Update, Retrieve, and Delete Operations:**\n    \n    - Create: Easily add new client companies to your system using the dedicated API endpoint.\n    - Update: Modify and enhance company profiles as needed through the update functionality.\n    - Retrieve: Retrieve detailed information about a specific company, facilitating seamless access to pertinent data.\n    - Delete: Remove outdated or unnecessary company profiles from the system as required.\n2. **Project Creation:**\n    - A pivotal aspect of the Company APIs is the requirement for companies to initiate project creation for their associated profiles.\n    - This ensures a structured and organized approach, allowing for efficient project management within the APTRS ecosystem.\n\nThese APIs empower your organization to efficiently handle and optimize interactions with client companies, providing a robust foundation for project management and customization based on the unique needs of each company."
 		},
 		{
 			"name": "Customer",
 			"item": [
+				{
+					"name": "Get All Customer Filter and Pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/customer/all-customer/filter?username=&full_name=&email=&position=&is_active=&limit=1&offset=0",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"all-customer",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": ""
+								},
+								{
+									"key": "full_name",
+									"value": ""
+								},
+								{
+									"key": "email",
+									"value": ""
+								},
+								{
+									"key": "position",
+									"value": ""
+								},
+								{
+									"key": "is_active",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "# API Documentation - All Customers with Filters and Pagination\n\n## Endpoint\n\n`GET /api/customer/all-customer/filter`\n\n## Description\n\nThis API endpoint retrieves a list of customers with the option to apply filters and implement pagination.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameters\n\n- `username`: Filter by username.\n- `full_name`: Filter by full name.\n- `email`: Filter by email.\n- `position`: Filter by position.\n- `is_active`: Filter by active status.\n- `limit`: Number of results to return (default is 10).\n- `offset`: Offset for pagination (default is 0).\n    \n\n## Example\n\n``` javascript\nGET /api/customer/all-customer/filter?username=&full_name=&email=&position=&is_active=&limit=1&offset=0\n\n ```\n\n## Sample Response\n\n``` json\n{\n    \"count\": 1,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"id\": 13,\n            \"full_name\": \"Jame Lee\",\n            \"email\": \"jaes@owasp-test.com\",\n            \"is_active\": true,\n            \"number\": \"+911734566991\",\n            \"position\": \"CISO\",\n            \"company\": \"OWASP\"\n        }\n    ]\n}\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
+					},
+					"response": []
+				},
 				{
 					"name": "Get All Customers",
 					"request": {
@@ -1758,7 +2154,8 @@
 								"customer",
 								"all-customer"
 							]
-						}
+						},
+						"description": "# API Documentation - Fetch All Customers\n\n## Endpoint\n\n`GET /api/customer/all-customer`\n\n## Description\n\nThis API endpoint retrieves all customer records without pagination or filters.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Example\n\n```http\nGET /api/customer/all-customer\n\n```\n\n## Response\n\nThe API response will include a list of all customer records.\n\n```json\n[\n    {\n        \"id\": 13,\n        \"full_name\": \"Jame Lee\",\n        \"email\": \"jaes@owasp-test.com\",\n        \"is_active\": true,\n        \"number\": \"+911734566991\",\n        \"position\": \"CISO\",\n        \"company\": \"OWASP\"\n    }\n]\n```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned.\n"
 					},
 					"response": []
 				},
@@ -1768,7 +2165,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{domainname}}/api/customer/customer/14/",
+							"raw": "{{domainname}}/api/customer/customer/13/",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1776,10 +2173,11 @@
 								"api",
 								"customer",
 								"customer",
-								"14",
+								"13",
 								""
 							]
-						}
+						},
+						"description": "# API Documentation - Fetch Specific Customer\n\n## Endpoint\n\n`GET /api/customer/customer/{customer_id}/`\n\n## Description\n\nThis API endpoint retrieves details for a specific customer based on the provided customer ID.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Path Parameters\n\n- `customer_id`: The unique identifier for the customer.\n\n## Example\n\n```http\nGET /api/customer/customer/13/\n```\n\n## Response\n\nThe API response will include the details of the specified customer.\n\nSample Response\n\n```json\n{\n    \"id\": 13,\n    \"full_name\": \"Jame Lee\",\n    \"email\": \"jaes@owasp-test.com\",\n    \"is_active\": true,\n    \"number\": \"+911734566991\",\n    \"position\": \"CISO\",\n    \"company\": \"OWASP\"\n}\n```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If the specified customer ID is not found, a 404 Not Found response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1790,7 +2188,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"name\": \"Tes\",\r\n        \"email\": \"test@owasp.org\",\r\n        \"phoneNumber\": \"+911234567890\",\r\n        \"company\": \"OWASP\",\r\n        \"position\":\"Project Manager\" // optional Field\r\n    }",
+							"raw": "{\r\n    \"full_name\": \"Jame Lee\",\r\n    \"email\": \"jaes@owasp-test.com\",\r\n    \"number\": \"+911734566991\", // optional\r\n    \"is_active\": true,\r\n    \"position\": \"CISO\", // Optional text field\r\n    \"password\": \"Password@123\", // Optional \r\n    \"company\": \"OWASP\"   /// Not Editable\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1798,7 +2196,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{domainname}}/api/customer/customer/edit/14/",
+							"raw": "{{domainname}}/api/customer/customer/edit/13/",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1807,10 +2205,11 @@
 								"customer",
 								"customer",
 								"edit",
-								"14",
+								"13",
 								""
 							]
-						}
+						},
+						"description": "# API Documentation - Edit Customer Profile\n\n## Endpoint\n\n`POST /api/customer/customer/edit/{customer_id}/`\n\n## Description\n\nThis API endpoint allows editing the profile of a specific customer with the provided customer ID.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Path Parameters\n\n- `customer_id`: The unique identifier for the customer to be edited.\n    \n\n## Request Body\n\n- `full_name` (required): Updated full name of the customer.\n- `email` (required): Updated email address of the customer.\n- `number` (optional): Updated contact number of the customer.\n    \n- `is_active` (required): Updated active status of the customer.\n- `position` (optional): Updated position of the customer (text field).\n- `password` (optional): Updated password for the customer.\n- `company` (not editable): Company assigned during creation (cannot be changed).\n    \n\n### Sample Request Body\n\n``` json\n{\n  \"full_name\": \"Jame Lee\",\n  \"email\": \"james@owasp-test.com\",\n  \"number\": \"+911734566991\",\n  \"is_active\": true,\n  \"position\": \"CISO\",\n  \"password\": \"admin\"\n}\n\n ```\n\n## Example\n\n``` http\nPOST /api/customer/customer/edit/12/\nContent-Type: application/json\nAuthorization: Bearer YOUR_AUTH_TOKEN\n{\n  \"full_name\": \"Jame Lee\",\n  \"email\": \"james@owasp-test.com\",\n  \"number\": \"+911734566991\",\n  \"is_active\": true,\n  \"position\": \"CISO\",\n  \"password\": \"admin\"\n}\n\n ```\n\n## Response\n\nThe API response will confirm the successful editing of the customer's profile.\n\nSample Response\n\n``` json\n{\n    \"Status\": \"Success\",\n    \"id\": 13,\n    \"full_name\": \"Jame Lee\",\n    \"email\": \"jaes@owasp-test.com\",\n    \"is_active\": true,\n    \"number\": \"+911734566991\",\n    \"position\": \"CISO\",\n    \"company\": \"OWASP\"\n}\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If the specified customer ID is not found, a 404 Not Found response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1821,7 +2220,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"name\": \"James Lee\",\r\n        \"email\": \"james@owasp-test.com\",\r\n        \"phoneNumber\": \"+911234566991\",\r\n        \"company\": \"OWASP\",\r\n        \"position\":\"Project Manager\" // optional field\r\n    }",
+							"raw": "{\r\n    \"full_name\": \"odison leo\",\r\n    \"email\": \"odison@owasp-test.com\",\r\n    \"number\": \"+911734566990\", // Optional\r\n    \"is_active\": true,\r\n    \"position\": \"CISO\", // Optional text field\r\n    \"password\": \"Password@1234\",\r\n    \"company\": \"OWASP\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1839,7 +2238,8 @@
 								"customer",
 								"add"
 							]
-						}
+						},
+						"description": "# API Documentation - Add Customer\n\n## Endpoint\n\n`POST /api/customer/customer/add`\n\n## Description\n\nThis API endpoint allows creating a new customer profile.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Request Body\n\n- `full_name` (required): Full name of the new customer.\n- `email` (required): Email address of the new customer.\n- `number` (required): Contact number of the new customer.\n- `is_active` (required): Active status of the new customer.\n- `position` (optional): Position of the new customer (text field).\n- `password` (required): Password for the new customer.\n- `company` (required): Company associated with the new customer.\n    \n\n> NOTE  \nThe company should already exist; Company APIs are available for managing companies. \n  \n\n### Sample Request Body\n\n``` json\n{\n    \"full_name\": \"odison leo\",\n    \"email\": \"odison@owasp-test.com\",\n    \"number\": \"+911734566990\",\n    \"is_active\": true,\n    \"position\": \"CISO\", // Optional text field\n    \"password\": \"Password@1234\",\n    \"company\": \"OWASP\"\n}\n\n ```\n\n## Example\n\n``` http\nPOST /api/customer/customer/add\nContent-Type: application/json\nAuthorization: Bearer YOUR_AUTH_TOKEN\n{\n    \"full_name\": \"odison leo\",\n    \"email\": \"odison@owasp-test.com\",\n    \"number\": \"+911734566990\",\n    \"is_active\": true,\n    \"position\": \"CISO\", // Optional text field\n    \"password\": \"Password@1234\",\n    \"company\": \"OWASP\"\n}\n\n ```\n\n## Response\n\nThe API response will confirm the successful creation of the new customer.\n\nSample Response\n\n``` json\n {\n    \"id\": 16,\n    \"full_name\": \"odison leo\",\n    \"email\": \"odison@owasp-test.com\",\n    \"is_active\": true,\n    \"number\": \"+911734566990\",\n    \"position\": \"CISO\",\n    \"company\": \"OWASP\"\n}\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1868,11 +2268,13 @@
 								"customer",
 								"delete"
 							]
-						}
+						},
+						"description": "# API Documentation - Delete Customers\n\n## Endpoint\n\n`DELETE /api/customer/customer/delete`\n\n## Description\n\nThis API endpoint allows deleting multiple customers by providing a list of customer IDs.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Request Body\n\n- List of customer IDs to delete.\n    \n\n### Sample Request Body\n\n``` json\n[\n  15,\n  10,\n  20\n]\n```\n### Example\n\n```http\nDELETE /api/customer/customer/delete\nContent-Type: application/json\nAuthorization: Bearer YOUR_AUTH_TOKEN\n[\n  15,\n  10,\n  20\n]\n\n ```\n\n## Response\n\nThe API response will confirm the successful deletion of the specified customers.\n\n### Sample Response\n\n``` json\n{\n    \"Status\": \"Success\"\n}\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "The Customer APIs within APTRS provide functionality to manage customer users associated with client companies. When your organization extends services to a client company using the Company APIs, you can leverage the Customer APIs to seamlessly onboard and manage customer users.\n\n### Key Features of Customer APIs:\n\n1. **Add, Edit, and Delete Operations:**\n    - Add User: Utilize the API endpoints to add customer users to the system, associating them with their respective client companies.\n    - Edit User Profiles: Modify and update customer user profiles, ensuring accurate and up-to-date information.\n    - Delete User: Remove customer users from the system when necessary, maintaining data integrity.\n2. **Client Company User Onboarding:**\n    - The Customer APIs facilitate the onboarding of client company users, streamlining the process of integrating them into the APTRS ecosystem.\n3. **Future Updates:**\n    - The current version of APTRS does not support client login for the management of projects, vulnerabilities, or real-time updates. However, upcoming updates are planned to address this, providing enhanced functionality for client interaction.\n\nThese APIs empower your organization to efficiently handle customer user management, offering a comprehensive solution for onboarding, editing, and removing client company users associated with your services."
 		}
 	],
 	"auth": {

@@ -124,17 +124,6 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
         return data
 
-    def update(self, instance, validated_data):
-        # Update the user's password
-        password = validated_data['newpassword']
-        try:
-            validate_password(password)
-        except ValidationError as e:
-            raise serializers.ValidationError({"password": e.messages})
-        instance.set_password(password)
-        instance.save()
-        return instance
-
 
 class CustomGroupRelatedField(serializers.RelatedField):
     """

@@ -1,11 +1,22 @@
 openapi: 3.0.0
 info:
   title: APTRS
+  description: >-
+    APTRS (Automated Penetration Testing Reporting System) is a Python and
+    Django-based automated reporting tool designed for penetration testers and
+    security organizations. This tool streamlines the report generation process
+    by enabling users to create PDF and Excel reports directly, eliminating the
+    need for manual approaches. Additionally, APTRS offers a systematic way to
+    monitor and manage vulnerabilities within various projects. Keep your
+    penetration testing projects organized and efficient with APTRS.
   version: 1.0.0
 servers:
   - url: http://{{domainname}}
 components:
   securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
     bearerAuth:
       type: http
       scheme: bearer
@@ -13,14 +24,185 @@ security:
   - bearerAuth: []
 tags:
   - name: Account
+    description: >-
+      **Account APIs Overview**
+
+
+      The Account APIs in APTRS facilitate the seamless management of internal
+      company user accounts. These APIs empower administrators to add, update,
+      and edit user profiles for internal company users. Additionally,
+      individual users have the ability to modify their own profiles, change
+      passwords, and manage user permissions and permission groups.
+
+
+      **Key Features of Account APIs:**
+
+
+      1. **User Management:**
+          
+          - Add, update, and edit user profiles for internal company users using the Account APIs.
+              
+          - Ensure accurate and up-to-date information for all users within the APTRS system.
+              
+      2. **Self-Service Profile Modification:**
+          
+          - Empower individual users to edit their own profiles, providing a self-service option for maintaining personal information.
+              
+      3. **Password Management:**
+          
+          - Allow users to change their passwords through dedicated API endpoints, enhancing security and user control.
+              
+      4. **User Permission Control:**
+          
+          - Manage user permissions for each API of APTRS, controlling access for individual users.
+              
+          - Utilize permission groups to efficiently assign and manage access control based on specific user roles.
+              
+      5. **Granular Access Control:**
+          
+          - Implement granular access control for each user, ensuring precise control over the functionalities and features accessible to different users.
+              
+
+      These APIs offer a comprehensive solution for internal company user
+      account management, providing administrators and individual users with the
+      tools needed to maintain accurate profiles, enhance security through
+      password management, and control access to APTRS functionalities based on
+      specific user roles and permissions.
   - name: Account > Admin
+    description: Admin APIs of APTRS
   - name: Project
+    description: >+
+      The Project APIs within APTRS provide a versatile platform for creating
+      and managing projects associated with client companies. These APIs empower
+      users to create projects with customizable details such as project name
+      and type (e.g., white box, black box).
+
+
+      **Key Features of Project APIs:**
+
+
+      1. **Project Creation:**
+         - Easily create projects for client companies using the Project APIs.
+         - Specify project details, including the project name and type (e.g., white box, black box).
+
+      2. **Project Scope Management:**
+         - Within each project, add project scope details such as URLs or IP addresses.
+         - APTRS supports multiple scopes within a single project, offering flexibility in project configuration.
+
+      3. **Vulnerability Management:**
+         - Create vulnerabilities within a project, providing a detailed overview of potential security risks.
+         - Upload Nessus CSV reports directly to APTRS to seamlessly add vulnerabilities from Nessus scans.
+
+      4. **Project Reporting:**
+         - Generate comprehensive reports in various formats, including Excel, PDF, and HTML.
+         - Enhance project communication and documentation through easily accessible and shareable reports.
+
+      5. **Project Retesting and Ownership:**
+         - Manage project retesting, allowing for the reassessment of vulnerabilities over time.
+         - Assign project ownership for effective project management and accountability.
+
+      These APIs offer a robust set of tools for creating, configuring, and
+      managing projects, providing a centralized hub for vulnerability
+      management, report generation, and ongoing project evaluation.
+
   - name: Project > Project
+    description: Project APIs of APTRS
   - name: Project > Vulnerability
+    description: Project Vulnerability APIs of APTRS
+  - name: Project > Retest
+    description: Project Retest APIs of APTRS
   - name: Vulnerability Database
-  - name: Conpany
+    description: >
+      The Vulnerability Database APIs in APTRS offer a robust solution for
+      maintaining a comprehensive list of vulnerabilities. These APIs empower
+      users to manage vulnerability details, including descriptions,
+      recommendations, and reference links.
+
+
+      **Key Features of Vulnerability Database APIs:**
+
+
+      1. **Vulnerability Details Management:**
+         - Maintain a centralized repository of vulnerabilities, including crucial details such as description, recommendations, and reference links.
+         - Effectively organize and categorize vulnerabilities for easy retrieval and reference.
+
+      2. **Integration with Project Vulnerabilities:**
+         - Streamline the process of populating project vulnerabilities by utilizing the Vulnerability Database APIs.
+         - Avoid redundant data entry by leveraging the stored details of vulnerabilities from the database.
+
+      3. **Vulnerability Database Search and Filter API:**
+         - Facilitate efficient search and filtering of vulnerabilities within the database.
+         - Automate the addition of vulnerability details, including description, title, recommendation, and reference links, during the creation or update of vulnerabilities within a project.
+
+      4. **Enhanced Project Vulnerability Management:**
+         - By integrating with the Vulnerability Database, project vulnerability management becomes more efficient and accurate.
+         - Ensure consistency and accuracy in vulnerability details across projects.
+
+      These APIs offer a powerful toolset for maintaining a centralized
+      repository of vulnerabilities, enhancing project vulnerability management,
+      and minimizing redundant data entry efforts. The ability to automatically
+      populate project vulnerabilities with details from the Vulnerability
+      Database streamlines the workflow and ensures data consistency.
+  - name: Company
+    description: >-
+      In the context of APTRS, "Company" refers to the client companies
+      associated with your organization. If your organization provides servers
+      or services to external entities, these client companies can be seamlessly
+      integrated into the system. Subsequently, you have the capability to
+      create and manage projects specific to each client company.
+
+
+      ### Key Features of Company APIs:
+
+
+      1. **Create, Update, Retrieve, and Delete Operations:**
+          
+          - Create: Easily add new client companies to your system using the dedicated API endpoint.
+          - Update: Modify and enhance company profiles as needed through the update functionality.
+          - Retrieve: Retrieve detailed information about a specific company, facilitating seamless access to pertinent data.
+          - Delete: Remove outdated or unnecessary company profiles from the system as required.
+      2. **Project Creation:**
+          - A pivotal aspect of the Company APIs is the requirement for companies to initiate project creation for their associated profiles.
+          - This ensures a structured and organized approach, allowing for efficient project management within the APTRS ecosystem.
+
+      These APIs empower your organization to efficiently handle and optimize
+      interactions with client companies, providing a robust foundation for
+      project management and customization based on the unique needs of each
+      company.
   - name: Customer
+    description: >-
+      The Customer APIs within APTRS provide functionality to manage customer
+      users associated with client companies. When your organization extends
+      services to a client company using the Company APIs, you can leverage the
+      Customer APIs to seamlessly onboard and manage customer users.
+
+
+      ### Key Features of Customer APIs:
+
+
+      1. **Add, Edit, and Delete Operations:**
+          - Add User: Utilize the API endpoints to add customer users to the system, associating them with their respective client companies.
+          - Edit User Profiles: Modify and update customer user profiles, ensuring accurate and up-to-date information.
+          - Delete User: Remove customer users from the system when necessary, maintaining data integrity.
+      2. **Client Company User Onboarding:**
+          - The Customer APIs facilitate the onboarding of client company users, streamlining the process of integrating them into the APTRS ecosystem.
+      3. **Future Updates:**
+          - The current version of APTRS does not support client login for the management of projects, vulnerabilities, or real-time updates. However, upcoming updates are planned to address this, providing enhanced functionality for client interaction.
+
+      These APIs empower your organization to efficiently handle customer user
+      management, offering a comprehensive solution for onboarding, editing, and
+      removing client company users associated with your services.
 paths:
+  /api/auth/user/1:
+    get:
+      tags:
+        - Account > Admin
+      summary: Get User
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/auth/adduser:
     post:
       tags:
@@ -173,7 +355,7 @@ paths:
           application/json:
             schema:
               type: object
-              example: "{\r\n    \"full_name\": \"Sourav Kalal\", \r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@anof.com\",\r\n    \"is_active\":true,\r\n    \"number\":\"+911122445522\",\r\n    \"is_superuser\": false,\r\n    \"position\":\"Security Engineer\", // text field\r\n    \"password\": \"admin\",\r\n    \"groups\":[\r\n            \"User Level Group\"   // Multiple Groups can be selected\r\n        ]\r\n}"
+              example: "{\r\n    \"full_name\": \"Sourav1 Kalal\", \r\n    \"username\": \"anotheradmin\",\r\n    \"email\": \"anotheradmin@anof.com\",\r\n    \"is_active\":true,\r\n    \"number\":\"+911622445522\",\r\n    \"is_superuser\": false,\r\n    \"position\":\"Security Engineer\", // text field\r\n    \"password\": \"admin\",\r\n    \"groups\":[\r\n            \"User Permission Group\"   // Multiple Groups can be selected\r\n        ]\r\n}"
       responses:
         '200':
           description: Successful response
@@ -293,8 +475,11 @@ paths:
         ``` json
 
         {
-            "username": "admin",
-            "password": "admin"
+
+        "email": "admin@anof.com",
+
+        "password": "admin"
+
         }
 
          ```
@@ -307,19 +492,39 @@ paths:
 
         ``` json
 
-
         {
-            "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzQzMzQ3MywiaWF0IjoxNzAyMTM3NDczLCJqdGkiOiJiN2YwNjliNDMyYTc0OWU4OWIwNzNmZTEzZWIzM2M0YiIsInVzZXJfaWQiOjF9.J_TGKeQlbPFfpU_PLMPuQwDD2F8QOlGpxroHUslLlRw",
-            "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA0NzI5NDczLCJpYXQiOjE3MDIxMzc0NzMsImp0aSI6IjMwMTk5Y2EyNzQwZTQxZDViZWZhNDc1YTA4MTQxYTBhIiwidXNlcl9pZCI6MX0.rrmMbsxkcpG8hWKvvUElOY4sUjjsWmQHcridGcE4LuA",
-            "Status": "True",
-            "username": "admin",
-            "Pic": "/media/profile/avatar-1.svg",
-            "isAdmin": true
+
+        "refresh":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzg2Mzc5NSwiaWF0IjoxNzAyNTY3Nzk1LCJqdGkiOiJhOGE0Y2I5MTZjMTk0ZmUyYmY3NWUxN2I5MDQxZmQ4NSIsInVzZXJfaWQiOjd9.elLzk-U5A_xqte3V2HfrzPkExeJaUX1Xj5WdVJWb_24",
+
+        "access":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA1MTU5Nzk1LCJpYXQiOjE3MDI1Njc3OTUsImp0aSI6IjJkYTgyMTdhODc1YjQ0M2U4NjE2ZWI2NjY3ZWY5MWMzIiwidXNlcl9pZCI6N30.C4kOCx0B4FDrVAEvHreAnv9R7nQ5gSH33FLeWpUKSsU",
+
+        "Status": "True",
+
+        "username": "admin",
+
+        "Pic": "/media/profile/avatar-1.svg",
+
+        "isAdmin": true,
+
+        "permissions": [
+
+        "Create Project",
+
+        "Delete Images",
+
+        "Add Retest for Projects",
+
+        "Change Password",
+
+        ....
+
+        ]
+
         }
 
-
-        ```
-
+         ```
 
         - `refresh`: A refresh token that can be used to obtain a new access
         token when it expires.
@@ -334,25 +539,23 @@ paths:
         - `Pic`: The profile picture of the authenticated user.
 
         - `isAdmin`: A boolean value indicating whether the authenticated user
-        has admin privileges.  
-            Please note that the values for `refresh`, `access`, `Status`, `username`, `Pic`, and `isAdmin` will be specific to the authenticated user and should not be shared with others.  
-            To use the access token for authorization, include it in the `Authorization` header of subsequent requests using the Bearer token scheme.  
-            Example:
-            
-            ``` json
-                  Authorization: Bearer {access_token}
-            
-             ```
+        has admin privileges.
+
+        - permissions - List of permissions users have. Each user could have
+        different sets of permissions.
             
 
-        Make sure to handle token expiration by using the refresh token to
-        obtain a new access token when necessary.
+        > _**NOTE:**_ Admin user is not restricted with permission. The admin
+        user is not part of the permission group and has all access irrespective
+        of what permissions are assigned.
       requestBody:
         content:
           application/json:
             schema:
               type: object
               example: "{\"email\":\"admin@anof.com\",\"password\":\"admin\"}\r\n\r\n\r\n//{\"email\":\"manager@manager.com\",\"password\":\"manager\"}\r\n//{\"email\":\"user@user.com\",\"password\":\"user\"}"
+      security:
+        - noauthAuth: []
       responses:
         '200':
           description: Successful response
@@ -363,6 +566,72 @@ paths:
       tags:
         - Account
       summary: Refresh Token
+      description: >
+        ### Endpoint Description: User Refresh Token
+
+
+        #### Endpoint
+
+
+        This endpoint allows the user to refresh the access token. Send a POST
+        request to `{{domainname}}/api/auth/token/refresh/` with the required
+        credentials.
+
+
+
+
+        #### Request Method
+
+
+        - **Method:** POST
+
+        - **Endpoint:** `{{domainname}}/api/auth/token/refresh/`
+
+
+
+        #### Request Body
+
+
+        ``` json
+
+        {
+
+        "refresh":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzQxMjYxNCwiaWF0IjoxNzAyMTE2NjE0LCJqdGkiOiJlNzQyZDFjMTQxZWI0OGQwYjlkOTg5NzViZWE1OGM3ZCIsInVzZXJfaWQiOjF9.MKSr0X-x2m6HZoZUQ4qBhOZVPUiBoC9vP8z9c4-91zw"
+
+        }
+
+
+        ```
+
+
+        ### Response
+
+
+        The response will include the following information:
+
+
+        ``` json
+
+        {
+
+        "access":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA1MTYwMjgyLCJpYXQiOjE3MDIxMTY2MTQsImp0aSI6IjZjY2I4YTY1MmYzNjRkN2Q4NzIxOWVmZGE2NTdiYzUwIiwidXNlcl9pZCI6MX0.UI-4vmDQYIPs1YObzxmeXh-QgqqFSkxGkRDAAwZWbwE",
+
+        "refresh":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwMzg2NDI4MiwiaWF0IjoxNzAyNTY4MjgyLCJqdGkiOiIyOGViZWQ2OGZlYmE0YjZmYjg5ODM5ZjVhMmFkZDczYiIsInVzZXJfaWQiOjF9.LrYKjte1KUszcEq7Bd5742BUzP3ECT7S659GEqn-uzE"
+
+        }
+
+
+        ```
+
+
+        - `refresh`: An updated refresh token that can be used to obtain a new
+        access token when it expires.
+
+        - `access`: An updated access token that should be included in the
+        headers of subsequent requests to authorize the user.
       requestBody:
         content:
           application/json:
@@ -381,49 +650,153 @@ paths:
       tags:
         - Account
       summary: Get All User
-      description: >-
+      description: >+
+        ### Endpoint Description: Retrieve All Users
+
+
+        #### Endpoint
+
+
         This API endpoint allows you to retrieve a list of users from the
-        server. The HTTP GET request should be sent to
-        `{{domainname}}/api/auth/users`.
+        server. Send a POST request to `{{domainname}}/api/auth/users` with the
+        required credentials.
 
 
-        ### Request Parameters
 
 
-        This endpoint does not require any request parameters.
+        #### Request Method
+
+
+        - **Method:** GET
+
+        - **Endpoint:** `{{domainname}}/api/auth/users`
+
+
 
 
         ### Response
 
 
-        The last execution of this request returned a response with a status
-        code of 200. The response body was an array of user objects, each
-        containing the following properties:
+        The response will include the following information:
 
 
-        - `id` (integer): The unique identifier of the user.
+        ``` json
 
-        - `username` (string): The username of the user.
+        [
 
-        - `email` (string): The email address of the user.
+        {
 
-        - `first_name` (string): The first name of the user.
+        "id": 1,
 
-        - `last_name` (string): The last name of the user.
+        "username": "sourav",
 
-        - `is_superuser` (boolean): Indicates whether the user has superuser
-        privileges.
+        "full_name": "Sourav Kalal",
 
-        - `profile` (object): An object containing additional profile
-        information for the user, with the following properties:
-            - `id` (integer): The unique identifier of the profile.
-            - `profilepic` (string): The URL of the user's profile picture.
-            - `number` (string): The contact number of the user.
-            - `company` (string): The company name associated with the user.
-            - `user` (integer): The ID of the user associated with this profile.
+        "email": "admin2@anof.com",
 
-        Please note that the actual values of the properties may vary in
-        different responses.
+        "is_staff": true,
+
+        "is_active": true,
+
+        "is_superuser": true,
+
+        "profilepic": "/media/profile/avatar-1.svg",
+
+        "number": "+911122345522",
+
+        "company": "AnoF PVT LTD",
+
+        "position": "Security Engineer",
+
+        "groups": [
+
+        "User Permission Group",
+
+        "Manager Permission Group"
+
+        ]
+
+        },
+
+        {
+
+        "id": 7,
+
+        "username": "admin",
+
+        "full_name": "Sourav Kalal",
+
+        "email": "admin@anof.com",
+
+        "is_staff": true,
+
+        "is_active": true,
+
+        "is_superuser": true,
+
+        "profilepic": "/media/profile/avatar-1.svg",
+
+        "number": "+911122445522",
+
+        "company": "AnoF PVT LTD",
+
+        "position": "Security Engineer",
+
+        "groups": [
+
+        "User Permission Group"
+
+        ]
+
+        }
+
+        ]
+
+
+        ```
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/users/filter:
+    get:
+      tags:
+        - Account
+      summary: Get All User Filter
+      parameters:
+        - name: username
+          in: query
+          schema:
+            type: string
+        - name: full_name
+          in: query
+          schema:
+            type: string
+        - name: email
+          in: query
+          schema:
+            type: string
+        - name: position
+          in: query
+          schema:
+            type: string
+        - name: is_active
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: upto 50
+          example: '1'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
       responses:
         '200':
           description: Successful response
@@ -600,10 +973,11 @@ paths:
                   example: admin
                 email:
                   type: string
+                  description: // read only cannot be edited
                   example: admin@aptrs.com
                 full_name:
                   type: string
-                  example: AnoF Cyber
+                  example: user person
                 profilepic:
                   type: string
                   description: Optional
@@ -703,6 +1077,16 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/auth/users-active:
+    get:
+      tags:
+        - Account
+      summary: Get All Active User
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/project/get-projects/:
     get:
       tags:
@@ -713,7 +1097,75 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/get-project/1/:
+  /api/project/projects/filter:
+    get:
+      tags:
+        - Project > Project
+      summary: Get Project with Filters and Pagination
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          example: j
+        - name: companyname
+          in: query
+          schema:
+            type: string
+        - name: projecttype
+          in: query
+          schema:
+            type: string
+        - name: testingtype
+          in: query
+          schema:
+            type: string
+        - name: owner
+          in: query
+          schema:
+            type: string
+          example: u
+        - name: status
+          in: query
+          schema:
+            type: string
+          example: del
+        - name: startdate
+          in: query
+          schema:
+            type: string
+          description: 'full date or any number '
+        - name: enddate_before
+          in: query
+          schema:
+            type: string
+          description: 'full date or any number '
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '10'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/my-projects/:
+    get:
+      tags:
+        - Project > Project
+      summary: My Projects
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/get-project/3/:
     get:
       tags:
         - Project > Project
@@ -733,13 +1185,13 @@ paths:
           application/json:
             schema:
               type: object
-              example: "{\r\n    \"name\": \"Juice Shop2\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2021-10-26\",\r\n    \"enddate\": \"2021-10-31\",\r\n    \"companyname\": \"OWASP\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"owner_id\": \"user\" // only admin user can select owner\r\n}"
+              example: "{\r\n    \"name\": \"Juice Shop2\",\r\n    \"description\": \"The project is about Juice Shop application security assessment. The project involves finding security vulnerabilities in the application\",\r\n    \"projecttype\": \"Web Application Penetration Testing\",\r\n    \"startdate\": \"2024-10-26\",\r\n    \"enddate\": \"2024-10-31\",\r\n    \"companyname\": \"OWASP\",\r\n    \"testingtype\": \"Black Box\",\r\n    \"projectexception\": \"\",\r\n    \"owner\": \"user\" // only admin user can select owner\r\n}"
       responses:
         '200':
           description: Successful response
           content:
             application/json: {}
-  /api/project/edit-project/42/:
+  /api/project/edit-project/7/:
     post:
       tags:
         - Project > Project
@@ -757,7 +1209,7 @@ paths:
                   vulnerabilities in the application
                 projecttype: Web Application Penetration Testing
                 startdate: '2022-10-26'
-                enddate: '2022-10-31'
+                enddate: '2024-10-31'
                 testingtype: Black Box
                 projectexception: ''
                 companyname: OWASP
@@ -866,109 +1318,6 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/Retest/add:
-    post:
-      tags:
-        - Project > Project
-      summary: Add Retest
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                startdate: '2023-03-03'
-                enddate: '2023-03-25'
-                project: 1
-                owner: user
-      parameters:
-        - name: Host
-          in: header
-          schema:
-            type: number
-          example: 127.0.0.1:8000
-        - name: X-CSRFToken
-          in: header
-          schema:
-            type: string
-          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
-        - name: Content-Type
-          in: header
-          schema:
-            type: string
-          example: application/json;charset=UTF-8
-        - name: Accept-Encoding
-          in: header
-          schema:
-            type: string
-          example: gzip, deflate
-        - name: Content-Length
-          in: header
-          schema:
-            type: integer
-          example: '101'
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/Retest/delete/14/:
-    delete:
-      tags:
-        - Project > Project
-      summary: Delete Retest
-      parameters:
-        - name: Host
-          in: header
-          schema:
-            type: number
-          example: 127.0.0.1:8000
-        - name: User-Agent
-          in: header
-          schema:
-            type: number
-          example: PostmanRuntime/7.29.2
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          example: '*/*'
-        - name: Postman-Token
-          in: header
-          schema:
-            type: string
-          example: 388999ac-bae0-4258-a085-30c06b1c4c54
-        - name: Accept-Encoding
-          in: header
-          schema:
-            type: string
-          example: gzip, deflate
-        - name: Connection
-          in: header
-          schema:
-            type: string
-          example: close
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/Retest/1/:
-    get:
-      tags:
-        - Project > Project
-      summary: Project Retest
-      parameters:
-        - name: Host
-          in: header
-          schema:
-            type: number
-          example: 127.0.0.1:8000
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /api/project/status/completed/1/:
     get:
       tags:
@@ -999,13 +1348,13 @@ paths:
           application/json:
             schema:
               type: object
-              example: "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Paramter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}"
+              example: "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}"
       responses:
         '200':
           description: Successful response
           content:
             application/json: {}
-  /api/project/vulnerability/edit/88/:
+  /api/project/vulnerability/edit/3/:
     post:
       tags:
         - Project > Vulnerability
@@ -1016,21 +1365,17 @@ paths:
             schema:
               type: object
               example:
-                vulnerabilityname: Cross Origin Resource Sharing (CORS)
-                vulnerabilityseverity: None
-                cvssscore: 0
-                cvssvector: CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N
-                status: Confirm Fixed
-                vulnerabilitydescription: >-
-                  <p>Cross-origin resource sharing (CORS) is a browser mechanism
-                  which enables controlled access to resources located outside
-                  of a given domain. It extends and adds flexibility to the
-                  same-origin policy (SOP). However, it also provides potential
-                  for cross-domain attacks, if a website
-                POC: "<ul>\n\t<li>The application use wild card for CORS</li>\n</ul>\n\n<p><img alt=\"\" height=\"500\" src=\"/media/uploads/2022/10/27/cors.png\" width=\"500\" /></p>"
-                vulnerabilitysolution: "<ul>\n\t<li>\n\t<p>If a web resource contains sensitive information, the origin should be properly specified in the Access-Control-Allow-Origin header.</p>\n\t</li>\n\t<li>\n\t<p>It may seem obvious but origins specified in the Access-Control-Allow-Origin header should only be sites that are trusted. In particular, dynamically reflecting origins from cross-origin requests without validation is readily exploitable and should be avoided.</p>\n\t</li>\n\t<li>\n\t<p>Avoid using the header Access-Control-Allow-Origin: null. Cross-origin resource calls from internal documents and sandboxed requests can specify the null origin. CORS headers should be properly defined in respect of trusted origins for private and public servers.</p>\n\t</li>\n</ul>"
-                vulnerabilityreferlnk: "<ul>\n\t<li><a href=\"https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny\">OWASP</a></li>\n</ul>"
-                project: 42
+                vulnerabilityname: Sensitive Data Exposure
+                vulnerabilityseverity: High
+                cvssscore: 8.2
+                cvssvector: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N
+                status: Vulnerable
+                vulnerabilitydescription: "<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\r\n\r\n<ul>\r\n\t<li>Data about other users, such as usernames or financial information</li>\r\n\t<li>Sensitive commercial or business data</li>\r\n\t<li>Technical details about the website and its infrastructure</li>\r\n</ul>\r\n\r\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you are able to gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>"
+                POC: "<ul>\r\n\t<li>As can be seen, the application discloses the internal data.</li>\r\n</ul>\r\n\r\n<p><img alt=\"\" height=\"500\" src=\"/media/uploads//ftp.png\" width=\"500\" /></p>"
+                created: '2024-01-09T13:44:28.406759Z'
+                vulnerabilitysolution: "<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of these kinds of vulnerability creeping into your own websites.</p>\r\n\r\n<ul>\r\n\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\r\n\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\r\n\t<li>Use generic error messages as much as possible.</li>\r\n</ul>"
+                vulnerabilityreferlnk: "<ul>\r\n\t<li><a href=\"https://portswigger.net/web-security/information-disclosure\">PortSwigger</a></li>\r\n</ul>"
+                project: 1
       parameters:
         - name: Host
           in: header
@@ -1074,10 +1419,10 @@ paths:
               type: object
               example:
                 - URL: https://google.com
-                  Paramter: username
+                  Parameter: username
                   status: Vulnerable
                 - URL: google.com
-                  Paramter: hellworld
+                  Parameter: hellworld
                   status: Vulnerable
       parameters:
         - name: Host
@@ -1122,7 +1467,7 @@ paths:
               type: object
               example:
                 URL: googl.com
-                Paramter: hellworld
+                Parameter: hellworld
                 status: Vulnerable
       responses:
         '200':
@@ -1166,6 +1511,11 @@ paths:
         - Project > Vulnerability
       summary: Vulnerability Status Update
       parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: text/html
         - name: status
           in: query
           schema:
@@ -1182,37 +1532,17 @@ paths:
         - Project > Vulnerability
       summary: Delete Instances
       parameters:
-        - name: Host
-          in: header
-          schema:
-            type: number
-          example: 127.0.0.1:8000
-        - name: X-CSRFToken
-          in: header
-          schema:
-            type: string
-          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
         - name: Content-Type
           in: header
           schema:
             type: string
           example: application/json;charset=UTF-8
-        - name: Accept-Encoding
-          in: header
-          schema:
-            type: string
-          example: gzip, deflate
-        - name: Content-Length
-          in: header
-          schema:
-            type: integer
-          example: '11'
       responses:
         '200':
           description: Successful response
           content:
             application/json: {}
-  /api/project/vulnerability/1/:
+  /api/project/vulnerability/3/:
     get:
       tags:
         - Project > Vulnerability
@@ -1222,7 +1552,40 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/vulnerability/instances/88/:
+  /api/project/vulnerability/instances/filter/1/:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Get Vulnerability Instances Filter and Pagination
+      parameters:
+        - name: URL
+          in: query
+          schema:
+            type: string
+        - name: Parameter
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/instances/1/:
     get:
       tags:
         - Project > Vulnerability
@@ -1249,31 +1612,11 @@ paths:
         - Project > Vulnerability
       summary: Delete Vulnerability
       parameters:
-        - name: Host
-          in: header
-          schema:
-            type: number
-          example: 127.0.0.1:8000
-        - name: X-CSRFToken
-          in: header
-          schema:
-            type: string
-          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
         - name: Content-Type
           in: header
           schema:
             type: string
-          example: application/json;charset=UTF-8
-        - name: Accept-Encoding
-          in: header
-          schema:
-            type: string
-          example: gzip, deflate
-        - name: Content-Length
-          in: header
-          schema:
-            type: integer
-          example: '11'
+          example: application/json
       responses:
         '200':
           description: Successful response
@@ -1327,13 +1670,7 @@ paths:
           application/json:
             schema:
               type: object
-              example:
-                Format: pdf
-                Type: Re-Audit
-                Standard:
-                  - OWASP Top 10 Web
-                  - OWASP Top 10 API
-                  - NIST
+              example: "{\r\n    \"Format\": \"docx\", //html,pdf,excel,docx\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}"
       responses:
         '200':
           description: Successful response
@@ -1349,11 +1686,198 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/project/Retest/1/:
+    get:
+      tags:
+        - Project > Retest
+      summary: Project Retest
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/Retest/add:
+    post:
+      tags:
+        - Project > Retest
+      summary: Add Retest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                startdate: '2023-03-03'
+                enddate: '2023-03-25'
+                project: 1
+                owner: user
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: X-CSRFToken
+          in: header
+          schema:
+            type: string
+          example: HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json;charset=UTF-8
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Content-Length
+          in: header
+          schema:
+            type: integer
+          example: '101'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/Retest/delete/14/:
+    delete:
+      tags:
+        - Project > Retest
+      summary: Delete Retest
+      parameters:
+        - name: Host
+          in: header
+          schema:
+            type: number
+          example: 127.0.0.1:8000
+        - name: User-Agent
+          in: header
+          schema:
+            type: number
+          example: PostmanRuntime/7.29.2
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: '*/*'
+        - name: Postman-Token
+          in: header
+          schema:
+            type: string
+          example: 388999ac-bae0-4258-a085-30c06b1c4c54
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: close
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/retest/status/completed/1/:
+    get:
+      tags:
+        - Project > Retest
+      summary: Mark Retest as Completed
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/vulndb/filter/:
     get:
       tags:
         - Vulnerability Database
       summary: Search Database
+      description: >
+        # API Documentation - Search Vulnerabilities
+
+
+        ## Endpoint
+
+
+        `GET /api/vulndb/filter/?search={query}`
+
+
+        ## Description
+
+
+        This API endpoint allows you to search for vulnerabilities in the
+        vulnerability database.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Query Parameter
+
+
+        - `{query}`: The search query to filter vulnerabilities with
+        vulnerability title.
+
+
+        ## Example
+
+
+        ```http
+
+        GET /api/vulndb/filter/?search=s
+
+        ```
+
+
+
+        ## Response
+
+
+        The API response will include a list of vulnerabilities that match the
+        search query.
+
+
+        ### Sample Response
+
+        ```json
+
+        [
+          {
+            "vulnerabilityname": "Possible XSS"
+          },
+          {
+            "vulnerabilityname": "Stored XSS"
+          }
+        ]
+
+        ```
+
+
+        ## Error Handling
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are issues with the search process, a 500 Internal Server
+        Error response may be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       parameters:
         - name: Host
           in: header
@@ -1369,7 +1893,6 @@ paths:
           in: query
           schema:
             type: string
-          example: s
       responses:
         '200':
           description: Successful response
@@ -1395,7 +1918,40 @@ paths:
           in: query
           schema:
             type: string
-          example: Insecure Direct Object Reference (IDOR)
+          example: Possible XSS
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/vulndb/all-vulndb/filter:
+    get:
+      tags:
+        - Vulnerability Database
+      summary: Get All Vulnerability with Filters and pagination
+      parameters:
+        - name: vulnerabilityname
+          in: query
+          schema:
+            type: string
+        - name: vulnerabilityseverity
+          in: query
+          schema:
+            type: string
+        - name: cvssscore
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
       responses:
         '200':
           description: Successful response
@@ -1484,11 +2040,183 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/customer/all-company/filter:
+    get:
+      tags:
+        - Company
+      summary: All Company Filter and Pagination
+      description: >
+        # API Documentation - Get Companies with Filters and Pagination
+
+
+        ## Endpoint
+
+
+        `GET /api/customer/all-company/filter`
+
+
+        ## Description
+
+
+        This API endpoint retrieves a list of companies with the option to apply
+        filters and implement pagination.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Query Parameters
+
+
+        - `name`: Filter by company name.
+
+        - `limit`: Number of results to return (default is 1).
+
+        - `offset`: Offset for pagination (default is 0).
+            
+
+        ## Example
+
+
+        ``` http
+
+        GET /api/customer/all-company/filter?name=&limit=1&offset=0
+
+         ```
+
+        ## Response
+
+
+        The API response will include a list of companies based on the applied
+        filters and pagination settings.
+
+
+        ### Sample Response
+
+
+        ```json
+
+        {
+            "count": 2,
+            "next": "http://aptrsapi.souravkalal.tech/api/customer/all-company/filter?limit=1&name=&offset=1",
+            "previous": null,
+            "results": [
+                {
+                    "id": 1,
+                    "img": "/media/company/OWASP_ZfWNj2c.png",
+                    "name": "OWASP",
+                    "address": "USA"
+                }
+            ]
+        }
+
+        ```
+
+
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/customer/all-company:
     get:
       tags:
-        - Conpany
+        - Company
       summary: All Company
+      description: >-
+        # API Documentation - Get All Companies
+
+
+        ## Endpoint
+
+
+        `GET /api/customer/all-company`
+
+
+        ## Description
+
+
+        This API endpoint retrieves a list of all companies.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Example
+
+
+        ``` http
+
+        GET /api/customer/all-company
+
+         ```
+
+        ## Response
+
+
+        The API response will include a list of all companies.
+
+
+        ### Sample Response
+
+
+        ``` json
+
+        [
+            {
+                "id": 1,
+                "img": "/media/company/OWASP_ZfWNj2c.png",
+                "name": "OWASP",
+                "address": "USA"
+            },
+            {
+                "id": 2,
+                "img": null,
+                "name": "AnoF PVT LTD",
+                "address": ""
+            }
+        ]
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       responses:
         '200':
           description: Successful response
@@ -1497,8 +2225,76 @@ paths:
   /api/customer/company/1/:
     get:
       tags:
-        - Conpany
+        - Company
       summary: Get Company
+      description: >-
+        # API Documentation - Get Company Details by ID
+
+
+        ## Endpoint
+
+
+        `GET /api/customer/company/{id}`
+
+
+        ## Description
+
+
+        This API endpoint retrieves details for a specific company based on its
+        ID.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Path Parameters
+
+
+        - `{id}`: The unique identifier of the company.
+            
+
+        ## Example
+
+
+        ``` http
+
+        GET /api/customer/company/1
+
+
+        ```
+
+
+        ## Response
+
+        The API response will include details for the specified company.
+
+        ### Sample Response
+
+        ```json 
+
+        {
+            "id": 1,
+            "img": "/media/company/OWASP_ZfWNj2c.png",
+            "name": "OWASP",
+            "address": "USA"
+        }
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.  
+
+        - If the specified company ID is not found, a 404 Not Found response
+        will be returned.  
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       responses:
         '200':
           description: Successful response
@@ -1507,8 +2303,142 @@ paths:
   /api/customer/company/add:
     post:
       tags:
-        - Conpany
+        - Company
       summary: Add Company
+      description: >-
+        # API Documentation - Add New Company
+
+
+        ## Endpoint
+
+
+        `POST /api/customer/company/add`
+
+
+        ## Description
+
+
+        This API endpoint allows you to add a new company.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Request
+
+
+        - Method: POST
+
+        - Content-Type: application/json or multipart/form-data (for image
+        upload)
+            
+
+        ### JSON Body (if not using form-data)
+
+
+        ``` json
+
+        {
+            "name": "New Company",
+            "address": "City, Country"
+        }
+
+         ```
+
+        ### Form Data (for image upload)
+
+
+        - img: (file) Logo image for the company
+
+        - name: (text) Name of the company
+
+        - address: (text) Address of the company
+            
+
+        ## Example
+
+
+        ### Using JSON Body
+
+
+        ``` http
+
+        POST /api/customer/company/add
+
+        Content-Type: application/json
+
+        {
+            "name": "New Company",
+            "address": "City, Country"
+        }
+
+         ```
+
+        ### Using Form Data (with Image Upload)
+
+
+        ``` http
+
+        POST /api/customer/company/add
+
+        Content-Type: multipart/form-data
+
+        --boundary
+
+        Content-Disposition: form-data; name="img"; filename="company_logo.png"
+
+        Content-Type: image/png
+
+        ... (binary data for the image)
+
+        --boundary
+
+        Content-Disposition: form-data; name="name"
+
+        New Company
+
+        --boundary
+
+        Content-Disposition: form-data; name="address"
+
+        City, Country
+
+        --boundary--
+
+         ```
+
+        ## Response
+
+
+        The API response will include details for the newly added company.
+
+
+        ### Sample Response
+
+
+        ``` json
+
+        {
+            "Status": "Success",
+            "id": 3,
+            "img": "/media/company/facebook.png",
+            "name": "FaceBook",
+            "address": "USA"
+        }
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       requestBody:
         content:
           multipart/form-data:
@@ -1517,10 +2447,11 @@ paths:
               properties:
                 img:
                   type: string
+                  description: 'Optional '
                   format: binary
                 name:
                   type: string
-                  example: OWASP
+                  example: FaceBook
                 address:
                   type: string
                   example: USA
@@ -1529,11 +2460,159 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/customer/company/edit/2/:
+  /api/customer/company/edit/1/:
     post:
       tags:
-        - Conpany
+        - Company
       summary: Edit Company
+      description: >-
+        # API Documentation - Edit Company
+
+
+        ## Endpoint
+
+
+        `POST /api/customer/company/edit/{id}`
+
+
+        ## Description
+
+
+        This API endpoint allows you to edit an existing company based on its
+        ID.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Path Parameters
+
+
+        - `{id}`: The unique identifier of the company to be edited.
+
+
+        ## Request
+
+
+        - Method: POST
+
+        - Content-Type: application/json or multipart/form-data (for image
+        upload)
+
+
+
+        ### JSON Body (if not using form-data)
+
+
+        ```json
+
+        {
+            "name": "New Name",
+            "address": "City, Country"
+        }
+
+        ```
+
+
+        ### Form Data (for image upload)
+
+
+        - img: (file) Logo image for the company
+
+        - name: (text) Name of the company
+
+        - address: (text) Address of the company
+
+
+
+        ## Example
+
+
+        ### Using JSON Body
+
+
+        ```http
+
+        POST /api/customer/company/edit/2/
+
+        Content-Type: application/json
+
+
+        {
+            "name": "New name",
+            "address": "City, Country"
+        }
+
+        ```
+
+
+        ### Using Form Data (with Image Upload)
+
+
+        ```http
+
+        POST /api/customer/company/edit/2/
+
+        Content-Type: multipart/form-data
+
+
+        --boundary
+
+        Content-Disposition: form-data; name="img"; filename="company_logo.png"
+
+        Content-Type: image/png
+
+
+        ... (binary data for the image)
+
+        --boundary
+
+        Content-Disposition: form-data; name="name"
+
+         Company
+        --boundary
+
+        Content-Disposition: form-data; name="address"
+
+
+        City, Country
+
+        --boundary--
+
+        ```
+
+
+        ## Response
+
+        The API response will include details for the newly added company.
+
+
+        ### Sample Response
+
+
+        ```json
+
+        {
+            "Status": "Success",
+            "id": 3,
+            "img": "/media/company/facebook.png",
+            "name": "FaceBook",
+            "address": "USA"
+        }
+
+        ```
+
+
+        ## Error Handling
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       requestBody:
         content:
           multipart/form-data:
@@ -1557,8 +2636,229 @@ paths:
   /api/customer/company/delete:
     delete:
       tags:
-        - Conpany
+        - Company
       summary: Delete Company
+      description: >
+        # API Documentation - Delete Companies
+
+
+        ## Endpoint
+
+
+        `DELETE /api/customer/company/delete`
+
+
+        ## Description
+
+
+        This API endpoint allows you to delete multiple companies.
+
+
+        > WARNING
+
+        > Deleting a company will also delete all associated projects.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Request
+
+
+        - Method: DELETE
+
+        - Content-Type: application/json
+
+
+        ### Request Body
+
+
+        An array of company IDs to be deleted.
+
+
+        ```json
+
+        [
+            1,
+            13
+        ]
+
+        ```
+
+
+        ## Example
+
+
+        ```http
+
+        DELETE /api/customer/company/delete
+
+        Content-Type: application/json
+
+
+        [
+            1,
+            13
+        ]
+
+        ```
+
+
+        ## Response
+
+        The API response will confirm the deletion of the specified companies.
+
+
+        ###Sample Response
+
+
+        ```json
+
+        {
+            "Status": "Success"
+        }
+
+        ```
+
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are issues with the deletion process, a 500 Internal Server
+        Error response may be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.- 
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/customer/all-customer/filter:
+    get:
+      tags:
+        - Customer
+      summary: Get All Customer Filter and Pagination
+      description: >-
+        # API Documentation - All Customers with Filters and Pagination
+
+
+        ## Endpoint
+
+
+        `GET /api/customer/all-customer/filter`
+
+
+        ## Description
+
+
+        This API endpoint retrieves a list of customers with the option to apply
+        filters and implement pagination.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Query Parameters
+
+
+        - `username`: Filter by username.
+
+        - `full_name`: Filter by full name.
+
+        - `email`: Filter by email.
+
+        - `position`: Filter by position.
+
+        - `is_active`: Filter by active status.
+
+        - `limit`: Number of results to return (default is 10).
+
+        - `offset`: Offset for pagination (default is 0).
+            
+
+        ## Example
+
+
+        ``` javascript
+
+        GET
+        /api/customer/all-customer/filter?username=&full_name=&email=&position=&is_active=&limit=1&offset=0
+
+         ```
+
+        ## Sample Response
+
+
+        ``` json
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "id": 13,
+                    "full_name": "Jame Lee",
+                    "email": "jaes@owasp-test.com",
+                    "is_active": true,
+                    "number": "+911734566991",
+                    "position": "CISO",
+                    "company": "OWASP"
+                }
+            ]
+        }
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
+      parameters:
+        - name: username
+          in: query
+          schema:
+            type: string
+        - name: full_name
+          in: query
+          schema:
+            type: string
+        - name: email
+          in: query
+          schema:
+            type: string
+        - name: position
+          in: query
+          schema:
+            type: string
+        - name: is_active
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
       responses:
         '200':
           description: Successful response
@@ -1569,32 +2869,293 @@ paths:
       tags:
         - Customer
       summary: Get All Customers
+      description: >
+        # API Documentation - Fetch All Customers
+
+
+        ## Endpoint
+
+
+        `GET /api/customer/all-customer`
+
+
+        ## Description
+
+
+        This API endpoint retrieves all customer records without pagination or
+        filters.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Example
+
+
+        ```http
+
+        GET /api/customer/all-customer
+
+
+        ```
+
+
+        ## Response
+
+
+        The API response will include a list of all customer records.
+
+
+        ```json
+
+        [
+            {
+                "id": 13,
+                "full_name": "Jame Lee",
+                "email": "jaes@owasp-test.com",
+                "is_active": true,
+                "number": "+911734566991",
+                "position": "CISO",
+                "company": "OWASP"
+            }
+        ]
+
+        ```
+
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       responses:
         '200':
           description: Successful response
           content:
             application/json: {}
-  /api/customer/customer/14/:
+  /api/customer/customer/13/:
     get:
       tags:
         - Customer
       summary: Get Customer
+      description: >-
+        # API Documentation - Fetch Specific Customer
+
+
+        ## Endpoint
+
+
+        `GET /api/customer/customer/{customer_id}/`
+
+
+        ## Description
+
+
+        This API endpoint retrieves details for a specific customer based on the
+        provided customer ID.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Path Parameters
+
+
+        - `customer_id`: The unique identifier for the customer.
+
+
+        ## Example
+
+
+        ```http
+
+        GET /api/customer/customer/13/
+
+        ```
+
+
+        ## Response
+
+
+        The API response will include the details of the specified customer.
+
+
+        Sample Response
+
+
+        ```json
+
+        {
+            "id": 13,
+            "full_name": "Jame Lee",
+            "email": "jaes@owasp-test.com",
+            "is_active": true,
+            "number": "+911734566991",
+            "position": "CISO",
+            "company": "OWASP"
+        }
+
+        ```
+
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If the specified customer ID is not found, a 404 Not Found response
+        will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       responses:
         '200':
           description: Successful response
           content:
             application/json: {}
-  /api/customer/customer/edit/14/:
+  /api/customer/customer/edit/13/:
     post:
       tags:
         - Customer
       summary: Edit Customer
+      description: >-
+        # API Documentation - Edit Customer Profile
+
+
+        ## Endpoint
+
+
+        `POST /api/customer/customer/edit/{customer_id}/`
+
+
+        ## Description
+
+
+        This API endpoint allows editing the profile of a specific customer with
+        the provided customer ID.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Path Parameters
+
+
+        - `customer_id`: The unique identifier for the customer to be edited.
+            
+
+        ## Request Body
+
+
+        - `full_name` (required): Updated full name of the customer.
+
+        - `email` (required): Updated email address of the customer.
+
+        - `number` (optional): Updated contact number of the customer.
+            
+        - `is_active` (required): Updated active status of the customer.
+
+        - `position` (optional): Updated position of the customer (text field).
+
+        - `password` (optional): Updated password for the customer.
+
+        - `company` (not editable): Company assigned during creation (cannot be
+        changed).
+            
+
+        ### Sample Request Body
+
+
+        ``` json
+
+        {
+          "full_name": "Jame Lee",
+          "email": "james@owasp-test.com",
+          "number": "+911734566991",
+          "is_active": true,
+          "position": "CISO",
+          "password": "admin"
+        }
+
+         ```
+
+        ## Example
+
+
+        ``` http
+
+        POST /api/customer/customer/edit/12/
+
+        Content-Type: application/json
+
+        Authorization: Bearer YOUR_AUTH_TOKEN
+
+        {
+          "full_name": "Jame Lee",
+          "email": "james@owasp-test.com",
+          "number": "+911734566991",
+          "is_active": true,
+          "position": "CISO",
+          "password": "admin"
+        }
+
+         ```
+
+        ## Response
+
+
+        The API response will confirm the successful editing of the customer's
+        profile.
+
+
+        Sample Response
+
+
+        ``` json
+
+        {
+            "Status": "Success",
+            "id": 13,
+            "full_name": "Jame Lee",
+            "email": "jaes@owasp-test.com",
+            "is_active": true,
+            "number": "+911734566991",
+            "position": "CISO",
+            "company": "OWASP"
+        }
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If the specified customer ID is not found, a 404 Not Found response
+        will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example: "{\r\n        \"name\": \"Tes\",\r\n        \"email\": \"test@owasp.org\",\r\n        \"phoneNumber\": \"+911234567890\",\r\n        \"company\": \"OWASP\",\r\n        \"position\":\"Project Manager\" // optional Field\r\n    }"
+              example: "{\r\n    \"full_name\": \"Jame Lee\",\r\n    \"email\": \"jaes@owasp-test.com\",\r\n    \"number\": \"+911734566991\", // optional\r\n    \"is_active\": true,\r\n    \"position\": \"CISO\", // Optional text field\r\n    \"password\": \"Password@123\", // Optional \r\n    \"company\": \"OWASP\"   /// Not Editable\r\n}"
       responses:
         '200':
           description: Successful response
@@ -1605,12 +3166,129 @@ paths:
       tags:
         - Customer
       summary: Add Customer
+      description: >-
+        # API Documentation - Add Customer
+
+
+        ## Endpoint
+
+
+        `POST /api/customer/customer/add`
+
+
+        ## Description
+
+
+        This API endpoint allows creating a new customer profile.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Request Body
+
+
+        - `full_name` (required): Full name of the new customer.
+
+        - `email` (required): Email address of the new customer.
+
+        - `number` (required): Contact number of the new customer.
+
+        - `is_active` (required): Active status of the new customer.
+
+        - `position` (optional): Position of the new customer (text field).
+
+        - `password` (required): Password for the new customer.
+
+        - `company` (required): Company associated with the new customer.
+            
+
+        > NOTE  
+
+        The company should already exist; Company APIs are available for
+        managing companies. 
+          
+
+        ### Sample Request Body
+
+
+        ``` json
+
+        {
+            "full_name": "odison leo",
+            "email": "odison@owasp-test.com",
+            "number": "+911734566990",
+            "is_active": true,
+            "position": "CISO", // Optional text field
+            "password": "Password@1234",
+            "company": "OWASP"
+        }
+
+         ```
+
+        ## Example
+
+
+        ``` http
+
+        POST /api/customer/customer/add
+
+        Content-Type: application/json
+
+        Authorization: Bearer YOUR_AUTH_TOKEN
+
+        {
+            "full_name": "odison leo",
+            "email": "odison@owasp-test.com",
+            "number": "+911734566990",
+            "is_active": true,
+            "position": "CISO", // Optional text field
+            "password": "Password@1234",
+            "company": "OWASP"
+        }
+
+         ```
+
+        ## Response
+
+
+        The API response will confirm the successful creation of the new
+        customer.
+
+
+        Sample Response
+
+
+        ``` json
+         {
+            "id": 16,
+            "full_name": "odison leo",
+            "email": "odison@owasp-test.com",
+            "is_active": true,
+            "number": "+911734566990",
+            "position": "CISO",
+            "company": "OWASP"
+        }
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example: "{\r\n        \"name\": \"James Lee\",\r\n        \"email\": \"james@owasp-test.com\",\r\n        \"phoneNumber\": \"+911234566991\",\r\n        \"company\": \"OWASP\",\r\n        \"position\":\"Project Manager\" // optional field\r\n    }"
+              example: "{\r\n    \"full_name\": \"odison leo\",\r\n    \"email\": \"odison@owasp-test.com\",\r\n    \"number\": \"+911734566990\", // Optional\r\n    \"is_active\": true,\r\n    \"position\": \"CISO\", // Optional text field\r\n    \"password\": \"Password@1234\",\r\n    \"company\": \"OWASP\"\r\n}"
       responses:
         '200':
           description: Successful response
@@ -1621,6 +3299,93 @@ paths:
       tags:
         - Customer
       summary: Delete Customers
+      description: >-
+        # API Documentation - Delete Customers
+
+
+        ## Endpoint
+
+
+        `DELETE /api/customer/customer/delete`
+
+
+        ## Description
+
+
+        This API endpoint allows deleting multiple customers by providing a list
+        of customer IDs.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Request Body
+
+
+        - List of customer IDs to delete.
+            
+
+        ### Sample Request Body
+
+
+        ``` json
+
+        [
+          15,
+          10,
+          20
+        ]
+
+        ```
+
+        ### Example
+
+
+        ```http
+
+        DELETE /api/customer/customer/delete
+
+        Content-Type: application/json
+
+        Authorization: Bearer YOUR_AUTH_TOKEN
+
+        [
+          15,
+          10,
+          20
+        ]
+
+         ```
+
+        ## Response
+
+
+        The API response will confirm the successful deletion of the specified
+        customers.
+
+
+        ### Sample Response
+
+
+        ``` json
+
+        {
+            "Status": "Success"
+        }
+
+         ```
+
+        ## Error Handling
+
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are validation errors or other issues with the request, a 400
+        Bad Request response will be returned.
       responses:
         '200':
           description: Successful response
