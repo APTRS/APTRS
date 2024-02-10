@@ -47,7 +47,7 @@ python3 -m pip install -r ../requirements.txt
 
 echo 'Creating a New Secret Key'
 
-NEW_SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(24))")
+NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
 sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" .env
 
 echo 'Migrating Database'

@@ -335,7 +335,7 @@ def projectfindingview(request, pk):
 @custom_permission_required(['Edit Vulnerability'])
 def projectvulnedit(request,pk):
     vulnerability = Vulnerability.objects.get(pk=pk)
-    serializer = Vulnerabilityserializers(instance=vulnerability,data=request.data)
+    serializer = Vulnerabilityserializers(instance=vulnerability,data=request.data,context={'request': request})
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         respdata={'Status':"Success"}

@@ -6,7 +6,7 @@ django-phonenumber-field==7.0.0
 django-phonenumbers==1.0.1
 djangorestframework==3.14.0
 gunicorn==20.1.0
-Pillow==10.0.1
+Pillow==10.2.0
 pytz==2022.6
 sqlparse==0.4.4
 typing_extensions==4.4.0

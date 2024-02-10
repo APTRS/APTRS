@@ -56,7 +56,7 @@ IF %minor% GEQ 8 (
   %venv% -m pip install -r ../requirements.txt
 
   echo Creating a New Secret Key
-  for /f %%i in ('%venv% -c "import secrets; print(secrets.token_hex(24))"') do set "NEW_SECRET_KEY=%%i"
+  for /f %%i in ('%venv% -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))"') do set "NEW_SECRET_KEY=%%i"
   set "PYTHON_CODE=import os; import dotenv; dotenv_file = dotenv.find_dotenv(); dotenv.load_dotenv(dotenv_file); os.environ['SECRET_KEY'] = '%NEW_SECRET_KEY%'; dotenv.set_key(dotenv_file, 'SECRET_KEY', os.environ['SECRET_KEY'])"
   %venv% -c "%PYTHON_CODE%"
 

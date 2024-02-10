@@ -89,7 +89,7 @@ RUN if [ "$POSTGRES" = "True" ]; then \
 
 #RUN python3 /home/aptrs/APTRS/manage.py collectstatic --no-input
 
-RUN NEW_SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(24))")
+RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
 RUN sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" /home/aptrs/APTRS/.env
 
 EXPOSE 8000 8000 
