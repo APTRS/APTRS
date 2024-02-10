@@ -1,4 +1,4 @@
-name: Build
+name: SonarCloud-Build
 on:
   push:
     branches:
@@ -14,6 +14,7 @@ jobs:
       WHITELIST_IP: '["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech", "http://127.0.0.1:8000"]'
       ALLOWED_HOST: '["127.0.0.1","localhost","aptrsapi.souravkal.tech","*"]'
       CORS_ORIGIN: '["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]'
+      
 
     steps:
       - uses: actions/checkout@v3
@@ -27,17 +28,33 @@ jobs:
       - name: setup environment
         run: |
             echo "${{ secrets.ENV_FILE }}" >> APTRS/.env
+            
             echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000"]' >> APTRS/.env
             echo 'ALLOWED_HOST = ["127.0.0.1","localhost","aptrsapi.souravkal.tech","*"]'  >> APTRS/.env
             echo 'CORS_ORIGIN = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]' >> APTRS/.env
 
-      - name: Run coverage
+
+      - name: Setup Poetry
+        run: |
+            python -m pip install poetry==1.7.1
+      
+      - name: Install Dependency Ubutnu
+        run: |
+            sudo apt install python3-pip python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0
+        
+      - name: Install Python dependencies
+        run: |
+            poetry install --only main --no-root --no-interaction --no-ansi
+
+
+      - name: Migrate Database
+        run: |
+            poetry run python APTRS/manage.py makemigrations
+            poetry run python APTRS/manage.py migrate
+
+      - name: Run test
         run: | 
-          bash install.sh
-          cd APTRS
-          source venv/bin/activate
-          pip install coverage
-          coverage run manage.py test
+          poetry run python APTRS/manage.py test project
       
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
