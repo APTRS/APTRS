@@ -116,7 +116,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     projectscope = PrjectScope.objects.filter(project=project)
     internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
     customeruser = CustomUser.objects.filter(is_active=True,company=project.companyname)
-    template_path = os.path.join(settings.BASE_DIR, 'template', 'report.docx')
+    template_path = os.path.join(settings.BASE_DIR, 'templates', 'report.docx')
     doc = DocxTemplate(template_path)
 
     for vulnerability in vuln:
