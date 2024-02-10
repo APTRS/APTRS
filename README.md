@@ -1,7 +1,7 @@
 
 # APTRS
 <p align="center">
-  <img src="https://repository-images.githubusercontent.com/558932728/e8ff2c72-3797-41ab-9505-90c9008cc472" />
+  <img src="https://repository-images.githubusercontent.com/558932728/6a0fb8ea-a539-4ba6-8ef8-2ee7fb0b3f17" width="500" height="300"/>
 </p>
 APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS.
 <br/><br/>
@@ -9,7 +9,7 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
 [![Python Version](https://img.shields.io/badge/Python-3.8+-brightgreen)](https://www.python.org/downloads/release/python-3810/)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Anof-cyber/aptrs)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/APTRS/aptrs)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
 [![Django Build](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/fce97190bae94040823a2994c0722ea8)](https://app.codacy.com/gh/Anof-cyber/APTRS/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
@@ -65,10 +65,11 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 ## Features
 - Manage Vulnerabilities
+- Custom Report Template in Docx or HTML/CSS
 - Manage All Projects in one place
 - Maintain the Vulnerability Database
-- Easily Generate PDF Report
-- Dynamically add POC, Description and Recommendations 
+- Easily Generate PDF, DOCX and Excel Report
+- Dynamically add POC, Description and Recommendations
 - Manage Customers and Companies
 - Manage Project Status, Schedules and Retest
 
@@ -101,6 +102,6 @@ If you discover any security vulnerabilities in this open-source project, please
 
 We are in search of a volunteer developer who has experience in Django Backend or React FrontEnd to help us enhance our project by adding more security and features. If you are interested, please get in touch with us at kalalsourav20@gmail.com.
 
-<a href = "https://github.com/Anof-cyber/APTRS/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo=Anof-cyber/APTRS"/>
+<a href = "https://github.com/APTRS/APTRS/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo=APTRS/APTRS"/>
 </a>

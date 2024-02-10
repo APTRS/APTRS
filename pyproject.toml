@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "aptrs"
+version = "1.0"
+description = "APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS."
+authors = ["Sourav Kalal <kalalsourav20@gmail.com>"]
+license = "APTRS Licence"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "4.1.13"
+django-ckeditor = "6.5.1"
+django-phonenumber-field = "7.0.0"
+django-phonenumbers = "1.0.1"
+djangorestframework = "3.14.0"
+gunicorn = "20.1.0"
+pillow = "10.2.0"
+pytz = "2022.6"
+sqlparse = "0.4.4"
+typing-extensions = "4.4.0"
+tzdata = "2022.5"
+waitress = "2.1.2"
+django-cors-headers = "3.13.0"
+djangorestframework-simplejwt = "5.2.2"
+colorlog = "6.7.0"
+django-filter = "23.5"
+python-dotenv = "1.0.0"
+weasyprint = "60.2"
+pygal = "3.0.4"
+bleach = "6.1.0"
+xlsxwriter = "3.1.9"
+whitenoise = "6.6.0"
+htmldocx = "0.0.6"
+docxtpl = "0.16.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
