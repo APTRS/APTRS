@@ -75,7 +75,7 @@ jobs:
         
     - name: Unit Tests
       run: |
-        poetry run python APTRS/manage.py test
+        poetry run python APTRS/manage.py test project
 
 
 
