@@ -3,6 +3,6 @@ spec:
   services:
     - name: aptrs
       git:
-        branch: main
+        branch: API
         repo_clone_url: https://github.com/APTRS/APTRS.git
    
