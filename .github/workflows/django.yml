@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
+        os: [ubuntu-22.04, macos-latest, windows-latest]
         python-version: [3.8, 3.9, 3.11,3.12]
 
     steps:
@@ -25,17 +25,57 @@ jobs:
     - name: setup environment
       run: | 
         echo "${{ secrets.ENV_FILE }}" > APTRS/.env
-        echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000"]' >> APTRS/.env
-        echo 'ALLOWED_HOST = ["127.0.0.1","localhost","aptrsapi.souravkal.tech","*"]'  >> APTRS/.env
-        echo 'CORS_ORIGIN = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]' >> APTRS/.env
-          
-    - name:  Run install.sh and test on Linux
-      if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+        echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "http://127.0.0.1:8000"]' >> APTRS/.env
+        echo 'ALLOWED_HOST = ["127.0.0.1","localhost","*"]'  >> APTRS/.env
+        echo 'CORS_ORIGIN = ["http://127.0.0.1:8080","http://127.0.0.1:5000"]' >> APTRS/.env
+      
+        
+
+    - name: Setup Poetry
       run: |
-        bash install.sh
-        cd APTRS
-        source venv/bin/activate
-        python3 manage.py test
+        python -m pip install poetry==1.7.1
+
+    - name: Install Dependency Ubutnu
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+        sudo apt install python3-pip python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0
+    
+    - name: Install Dependency macOS
+      if: startsWith(matrix.os, 'macOS')
+      run: |
+        brew install weasyprint
+
+    - name: Install Dependency Windows
+      uses: actions/checkout@v4
+      if: startsWith(matrix.os, 'windows')
+      with:
+          repository: tschoonj/GTK-for-Windows-Runtime-Environment-Installer
+          ref: '2022-01-04'
+          path: _tempGTK
+          sparse-checkout: gtk-nsis-pack
+          sparse-checkout-cone-mode: false
+          clean: false
+
+    - name: 'Installing GTK for Windows'
+      if: startsWith(matrix.os, 'windows')
+      shell: powershell
+      run: |
+        $Env:PATH += "$PWD\_tempGTK\gtk-nsis-pack\bin"
+        echo "$PWD\_tempGTK\gtk-nsis-pack\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      
+
+    - name: Install Python dependencies
+      run: |
+        poetry install --only main --no-root --no-interaction --no-ansi
+
+    - name: Migrate Database
+      run: |
+        poetry run python APTRS/manage.py makemigrations
+        poetry run python APTRS/manage.py migrate
+        
+    - name: Unit Tests
+      run: |
+        poetry run python APTRS/manage.py test
 
 
 
