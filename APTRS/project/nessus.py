@@ -4,7 +4,7 @@ import json
 import io
 from django.conf import settings
 from .models import Vulnerability, Project
-from .serializers import VulnerableinstanceSerializer3
+from .serializers import VulnerableinstanceSerializerNessus
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +80,7 @@ def save_vulnerableinstance(file_data,jsonobject, pk):
     vulnerability_dict = {'Instances': affected_hosts}
 
 
-    instacesserilization = VulnerableinstanceSerializer3(data=vulnerability_dict['Instances'], many=True)
+    instacesserilization = VulnerableinstanceSerializerNessus(data=vulnerability_dict['Instances'], many=True)
     if instacesserilization.is_valid():
         instacesserilization.save()
 

@@ -1,39 +1,49 @@
 from django.urls import path
-from . import views
-from .views import ImageUploadView
+from .views import project, retest, vulnerability,image_upload, scope
 
 
 urlpatterns = [
-    path('edit-project/<str:pk>/',views.project_edit),
-    path('Retest/<str:pk>/',views.RetestList),
-    path('findings/<str:pk>/',views.projectfindingview),
-    path('vulnerability/<str:pk>/',views.projectvulnview),
-    path('vulnerability/instances/<str:pk>/',views.projectvulninstances),
-    path('vulnerability/instances/filter/<str:pk>/',views.projectvulninstances_filter),
-    path('vulnerability/add/instances/<str:pk>/',views.projectaddinstances),
-    path('vulnerability/edit/instances/<str:pk>/',views.projecteditinstances),
-    path('vulnerability/delete/instances/',views.projectdeleteinstances),
-    path('vulnerability/status/instances/',views.projectinstancesstatus),
-    path('vulnerability/status/vulnerability/<str:pk>/',views.projectvulnerabilitystatus),
-    path('vulnerability/edit/<str:pk>/',views.projectvulnedit),
-    path('vulnerability/delete/vulnerability/',views.projectvulndelete),
-    path('Retest/add',views.Retestadd),
-    path('Retest/delete/<str:pk>/',views.Retestdelete),
-    path('get-projects/',views.GetAllProjects.as_view()),
-    path('my-projects/',views.GetMyProjects.as_view()),
-    path('projects/filter/', views.getallproject_filter, name='Get All Project with Filters and Pagination'),
-    path('add-project/',views.newproject,name="Add Project"),
-    path('get-project/<str:pk>/',views.getproject),
-    path('status/completed/<str:pk>/',views.complete_project_status),
-    path('retest/status/completed/<str:pk>/',views.complete_retest_status),
-    path('delete-project/',views.deleteproject),
-    path('vulnerability/add/vulnerability/',views.create_vulnerability,name="Add vulnerability"),
-    path('ckeditor/imageupload/', ImageUploadView.as_view(),),
-    path('vulnerability/Nessus/csv/<str:pk>/', views.Nessus_CSV),
-    path('scope/add/<str:pk>/', views.projectaddscope,name="Add Project Scope"),
-    path('scope/delete/', views.deleteprojectscope),
-    path('scope/edit/<str:pk>/', views.projectscopedit),
-    path('scope/<str:pk>/', views.getprojectscopes),
-    path('report/<str:pk>/', views.project_report,name="generate report"),
-    path('ckeditor/delete-images/', views.delete_images, name='delete_images'),
+    ## Project
+    path('edit-project/<str:pk>/',project.project_edit),
+    path('get-projects/',project.GetAllProjects.as_view()),
+    path('my-projects/',project.GetMyProjects.as_view()),
+    path('projects/filter/', project.getallproject_filter, name='Get All Project with Filters and Pagination'),
+    path('add-project/',project.newproject,name="Add Project"),
+    path('get-project/<str:pk>/',project.getproject),
+    path('delete-project/',project.deleteproject),
+    path('status/completed/<str:pk>/',project.complete_project_status),
+    path('report/<str:pk>/', project.project_report,name="generate report"),
+
+    # Scope
+    path('scope/add/<str:pk>/', scope.projectaddscope,name="Add Project Scope"),
+    path('scope/delete/', scope.deleteprojectscope),
+    path('scope/edit/<str:pk>/', scope.projectscopedit),
+    path('scope/<str:pk>/', scope.getprojectscopes),
+
+    ## Retest
+    path('Retest/<str:pk>/',retest.RetestList),
+    path('Retest/add',retest.Retestadd),
+    path('Retest/delete/<str:pk>/',retest.Retestdelete),
+    path('retest/status/completed/<str:pk>/',retest.complete_retest_status),
+
+    # Project Vulnerability
+    path('findings/<str:pk>/',vulnerability.projectfindingview),
+    path('vulnerability/<str:pk>/',vulnerability.projectvulnview),
+    path('vulnerability/status/vulnerability/<str:pk>/',vulnerability.projectvulnerabilitystatus),
+    path('vulnerability/edit/<str:pk>/',vulnerability.projectvulnedit),
+    path('vulnerability/delete/vulnerability/',vulnerability.projectvulndelete),
+    path('vulnerability/add/vulnerability/',vulnerability.create_vulnerability,name="Add vulnerability"),
+    path('vulnerability/Nessus/csv/<str:pk>/', vulnerability.Nessus_CSV),
+
+    # Vulnerability Instances
+    path('vulnerability/instances/<str:pk>/',vulnerability.projectvulninstances),
+    path('vulnerability/instances/filter/<str:pk>/',vulnerability.projectvulninstances_filter),
+    path('vulnerability/add/instances/<str:pk>/',vulnerability.projectaddinstances),
+    path('vulnerability/edit/instances/<str:pk>/',vulnerability.projecteditinstances),
+    path('vulnerability/delete/instances/',vulnerability.projectdeleteinstances),
+    path('vulnerability/status/instances/',vulnerability.projectinstancesstatus),
+
+    # images
+    path('ckeditor/imageupload/', image_upload.ImageUploadView.as_view(),),
+    path('ckeditor/delete-images/', image_upload.delete_images, name='delete_images'),
 ]

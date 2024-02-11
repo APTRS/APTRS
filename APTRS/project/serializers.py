@@ -116,7 +116,7 @@ class Instanceserializers(serializers.ModelSerializer):
         fields = ('id','URL', 'Parameter', 'status')
 
 class Vulnerabilityserializers(serializers.ModelSerializer):
-    instance = Instanceserializers(many=True, read_only=True)
+
     class Meta:
         model = Vulnerability
         fields = [
@@ -132,9 +132,9 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
             'vulnerabilitysolution',
             'vulnerabilityreferlnk',
             'project',
-            'instance',  # Move 'instances' to the end
+            
         ]
-        read_only_fields = ['status','created_by','last_updated_by']
+        read_only_fields = ['status', 'created_by', 'last_updated_by']
 
     def create(self, validated_data):
         request = self.context.get("request")
@@ -148,24 +148,13 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
         validated_data['last_updated_by'] = request.user
         return super().update(instance, validated_data)
 
+    
 
-class VulnerableinstanceSerializer3(serializers.ModelSerializer):
+
+class VulnerableinstanceSerializerNessus(serializers.ModelSerializer):
     vulnerabilityid = serializers.PrimaryKeyRelatedField(queryset=Vulnerability.objects.all())
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
 
     class Meta:
         model = Vulnerableinstance
         fields = '__all__'
-
-
-class VulnerableinstanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vulnerableinstance
-        fields = ('id','URL', 'Parameter','status')
-
-
-class VulnerabilitySerializer2(serializers.ModelSerializer):
-
-    class Meta:
-        model = Vulnerability
-        fields = ('id','project', 'vulnerabilityname', 'vulnerabilityseverity', 'cvssscore', 'cvssvector', 'status', 'vulnerabilitydescription', 'POC', 'vulnerabilitysolution', 'vulnerabilityreferlnk')#, 'instance')
