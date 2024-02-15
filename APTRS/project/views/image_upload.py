@@ -45,7 +45,7 @@ class ImageUploadView(APIView):
     def post(self, request):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
-            images = serializer.validated_data['images']
+            images = serializer.validated_data['upload']
             paths = []
             for image in images:
 
