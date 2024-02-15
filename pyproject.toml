@@ -30,7 +30,8 @@ xlsxwriter = "3.1.9"
 whitenoise = "6.6.0"
 htmldocx = "0.0.6"
 docxtpl = "0.16.7"
-
+django-storages = "1.14.2"
+boto3 = "1.34.42"
 
 [build-system]
 requires = ["poetry-core"]
