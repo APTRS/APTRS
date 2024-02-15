@@ -51,7 +51,8 @@ class ImageUploadView(APIView):
 
                 fss = FileSystemStorage(location=settings.CKEDITOR_UPLOAD_LOCATION, base_url=settings.CKEDITOR_UPLOAD_URL)
                 file = fss.save(image.name, image)
-                file_url = fss.url(file)
+                #file_url = fss.url(file)
+                file_url = request.build_absolute_uri(fss.url(file))
                 paths.append(file_url)
 
             return Response({'paths': paths})
