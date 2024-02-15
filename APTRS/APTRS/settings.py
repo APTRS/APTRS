@@ -246,18 +246,37 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+uses3 = os.getenv('USES3_Storage')
+if uses3 == "True":
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_CUSTOM_DOMAIN = 'aptrs.nyc3.digitaloceanspaces.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_LOCATION = 'static'
+    MEDIA_ROOT = os.path.join('media')
+    MEDIA_URL = '/media/'
+    CKEDITOR_UPLOAD_LOCATION = os.path.join('uploads')
+    CKEDITOR_UPLOAD_URL = os.path.join(MEDIA_URL, 'uploads')
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
 
-MEDIA_URL = '/media/'
-#MEDIA_URL2 = '/media/'
-MEDIA_PATH = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(MEDIA_PATH, 'media')
-Company_LOGO = os.path.join(MEDIA_URL, 'company')
-CKEDITOR_UPLOAD_LOCATION = os.path.join(MEDIA_ROOT, 'uploads')
-CKEDITOR_UPLOAD_URL = os.path.join(MEDIA_URL, 'uploads')
-CKEDITOR_UPLOAD_PATH = "uploads/"
+    
+else:
+
+    MEDIA_URL = '/media/'
+    #MEDIA_URL2 = '/media/'
+    MEDIA_PATH = os.path.join(BASE_DIR, 'static')
+    MEDIA_ROOT = os.path.join(MEDIA_PATH, 'media')
+    Company_LOGO = os.path.join(MEDIA_URL, 'company')
+    CKEDITOR_UPLOAD_LOCATION = os.path.join(MEDIA_ROOT, 'uploads')
+    CKEDITOR_UPLOAD_URL = os.path.join(MEDIA_URL, 'uploads')
+    CKEDITOR_UPLOAD_PATH = "uploads/"
 
 ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li', 'img', 'a', 'span',
-                'code', 'blockquote', 'div', 'font', 'table', 'tr', 'td', 'th','pre'
+                'code', 'blockquote', 'div', 'font', 'table', 'tr', 'td', 'th','pre','figure'
                 ]
 
 LOGGING = {

@@ -235,3 +235,5 @@ yarn-error.log*
 APTRS/helloword.docx
 APTRS/report-tester.docx
 APTRS/project/report.docx
+APTRS/.env
+APTRS/.env
