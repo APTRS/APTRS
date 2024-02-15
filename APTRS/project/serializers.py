@@ -132,6 +132,8 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
             'vulnerabilitysolution',
             'vulnerabilityreferlnk',
             'project',
+            'created_by',
+            'last_updated_by'
             
         ]
         read_only_fields = ['status', 'created_by', 'last_updated_by']

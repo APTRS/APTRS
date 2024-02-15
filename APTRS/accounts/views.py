@@ -2,6 +2,7 @@
 import logging
 
 from rest_framework import status
+from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -40,6 +41,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
     def validate(self, attrs):
         data = super().validate(attrs)
+
+        if not self.user.is_staff:
+            raise serializers.ValidationError("Only staff users are allowed to login.")
 
         # Add extra responses here
         data['Status'] = "True"
