@@ -5,7 +5,7 @@ install_requirements() {
 sudo apt update
 
 ## Using Python 3.10
-sudo apt install -y python3.10
+sudo apt install -y python3.10 python-is-python3 python3-pip
 
 ## Redis
 sudo apt install -y redis-server
