@@ -46,15 +46,11 @@ class ImageUploadView(APIView):
     def post(self, request):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
-            images = serializer.validated_data['upload']
-            urls = {}
-            for index, image in enumerate(images, start=1):
-                file = default_storage.save(image.name, image)
-                file_url = default_storage.url(file)
-                key = f"image_{index}"
-                urls[key] = file_url
-
-            response_data = {"urls": urls}
+            image = serializer.validated_data['upload']
+            file = default_storage.save(image.name, image)
+            file_url = default_storage.url(file)
+            response_data = {"url": file_url}
             return Response(response_data)
         else:
             return Response(serializer.errors, status=400)
+

@@ -16,6 +16,8 @@ sudo apt install -y python3-pip python3-cffi python3-brotli libpango-1.0-0 libha
 ## Require for random and SSL TLS
 sudo apt install -y openssl
 
+sudo apt install -y nginx
+
 }
 
 

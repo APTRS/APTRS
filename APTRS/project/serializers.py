@@ -7,7 +7,8 @@ from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
 
 
 class ImageSerializer(serializers.Serializer):
-    upload = serializers.ListField(child=serializers.ImageField(allow_empty_file=False),allow_empty=False)
+    #upload = serializers.ListField(child=serializers.ImageField(allow_empty_file=False),allow_empty=False)
+    upload = serializers.ImageField(allow_empty_file=False)
 
 class Projectserializers(serializers.ModelSerializer):
     status = serializers.CharField(read_only=True)
