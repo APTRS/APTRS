@@ -49,7 +49,8 @@ class ImageUploadView(APIView):
             image = serializer.validated_data['upload']
             file = default_storage.save(image.name, image)
             file_url = default_storage.url(file)
-            response_data = {"url": file_url}
+            full_url = request.build_absolute_uri(file_url)
+            response_data = {"url": full_url}
             return Response(response_data)
         else:
             return Response(serializer.errors, status=400)
