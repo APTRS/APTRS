@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from utils.permissions import custom_permission_required
 from ..serializers import (ImageSerializer)
+from django.core.files.storage import default_storage
 
 logger = logging.getLogger(__name__)
 
@@ -46,15 +47,14 @@ class ImageUploadView(APIView):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
             images = serializer.validated_data['upload']
-            paths = []
-            for image in images:
+            urls = {}
+            for index, image in enumerate(images, start=1):
+                file = default_storage.save(image.name, image)
+                file_url = default_storage.url(file)
+                key = f"image_{index}"
+                urls[key] = file_url
 
-                fss = FileSystemStorage(location=settings.CKEDITOR_UPLOAD_LOCATION, base_url=settings.CKEDITOR_UPLOAD_URL)
-                file = fss.save(image.name, image)
-                #file_url = fss.url(file)
-                file_url = request.build_absolute_uri(fss.url(file))
-                paths.append(file_url)
-
-            return Response({'paths': paths})
+            response_data = {"urls": urls}
+            return Response(response_data)
         else:
             return Response(serializer.errors, status=400)

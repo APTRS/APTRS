@@ -15,7 +15,7 @@ RESET = '\033[0m'
 GREEN = '\033[92m'
 # Apply colors to the banner text
 BANNER = f"{RED}{BANNER}{RESET}"
-COPYRIGHT = "\tv" +VERSION+" © Sourav Kalal Aka AnoF-Cyber"+"\n\t"+"https://github.com/Anof-cyber/APTRS"
+COPYRIGHT = "\tv" +VERSION+" © Sourav Kalal"+"\n\t"+"https://github.com/APTRS/APTRS"
 COPYRIGHT = f"{GREEN}{COPYRIGHT}{RESET}"
 
 def current_version():
