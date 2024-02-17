@@ -47,7 +47,8 @@ class ImageUploadView(APIView):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
             image = serializer.validated_data['upload']
-            file = default_storage.save(image.name, image)
+            file_path = os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, image.name)
+            file = default_storage.save(file_path, image)
             file_url = default_storage.url(file)
             full_url = request.build_absolute_uri(file_url)
             response_data = {"url": full_url}
