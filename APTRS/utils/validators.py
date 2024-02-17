@@ -33,10 +33,12 @@ def xss_validator(value):
     validator.feed(value)
 
     if validator.disallowed_tags:
-        raise ValidationError(_("Only whitelisted tags are allowed"+validator.disallowed_tags))
+        disallowed_tags_str = ", ".join(validator.disallowed_tags)
+        raise ValidationError(_("Only whitelisted tags are allowed"+disallowed_tags_str))
 
     if validator.disallowed_imgs:
-        raise ValidationError(_("Only images from the whitelisted paths are allowed"))
+        disallowed_img_str = ", ".join(validator.disallowed_imgs)
+        raise ValidationError(_("Only images from the whitelisted paths are allowed"+disallowed_img_str))
 
     return value
 
