@@ -23,7 +23,7 @@ jobs:
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ env.POSTGRES_DB }}
-          POSTGRES_Name: ${{ env.POSTGRES_DB }}
+          
         ports:
           - 5432:5432
         options: >-
@@ -47,7 +47,7 @@ jobs:
       env:
         POSTGRES_USER: ${{ env.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
-        POSTGRES_Name: ${{ env.POSTGRES_DB }}
+        POSTGRES_DB: ${{ env.POSTGRES_DB }}
         POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
         POSTGRES_PORT: ${{ env.POSTGRES_PORT }}
       run: | 
