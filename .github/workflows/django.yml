@@ -44,11 +44,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: setup environment
       env:
-        DB_USERNAME: ${{ env.POSTGRES_USER }}
-        DB_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
-        DB_HOST: ${{ env.POSTGRES_HOST }}
-        DB_DATABASE: ${{ env.POSTGRES_Name }}
-        DB_PORT: ${{ env.POSTGRES_PORT }}
+        POSTGRES_USER: ${{ env.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        POSTGRES_Name: ${{ env.POSTGRES_Name }}
+        POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
+        POSTGRES_PORT: ${{ env.POSTGRES_PORT }}
       run: | 
         echo "${{ secrets.ENV_FILE }}" > APTRS/.env
         echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "http://127.0.0.1:8000"]' >> APTRS/.env
