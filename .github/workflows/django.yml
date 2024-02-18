@@ -10,10 +10,30 @@ jobs:
   build:
     name: Setup ${{ matrix.python-version }} ${{ matrix.os }}
     runs-on:  ${{ matrix.os }}
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost # default host value for the database
+      POSTGRES_Name: aptrs
+      POSTGRES_PORT: 5432
+    services:
+      postgres_main:
+        image: postgres:12
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_Name: ${{ env.POSTGRES_Name }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
     strategy:
       max-parallel: 4
       matrix:
-        os: [ubuntu-22.04, macos-latest, windows-latest]
+        os: [ubuntu-22.04]
         python-version: [3.8, 3.9, 3.11,3.12]
 
     steps:
@@ -23,6 +43,12 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: setup environment
+      env:
+        DB_USERNAME: ${{ env.POSTGRES_USER }}
+        DB_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        DB_HOST: ${{ env.POSTGRES_HOST }}
+        DB_DATABASE: ${{ env.POSTGRES_Name }}
+        DB_PORT: ${{ env.POSTGRES_PORT }}
       run: | 
         echo "${{ secrets.ENV_FILE }}" > APTRS/.env
         echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "http://127.0.0.1:8000"]' >> APTRS/.env
@@ -40,29 +66,7 @@ jobs:
       run: |
         sudo apt install python3-pip python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0
     
-    - name: Install Dependency macOS
-      if: startsWith(matrix.os, 'macOS')
-      run: |
-        brew install weasyprint
-
-    - name: Install Dependency Windows
-      uses: actions/checkout@v4
-      if: startsWith(matrix.os, 'windows')
-      with:
-          repository: tschoonj/GTK-for-Windows-Runtime-Environment-Installer
-          ref: '2022-01-04'
-          path: _tempGTK
-          sparse-checkout: gtk-nsis-pack
-          sparse-checkout-cone-mode: false
-          clean: false
-
-    - name: 'Installing GTK for Windows'
-      if: startsWith(matrix.os, 'windows')
-      shell: powershell
-      run: |
-        $Env:PATH += "$PWD\_tempGTK\gtk-nsis-pack\bin"
-        echo "$PWD\_tempGTK\gtk-nsis-pack\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-      
+   
 
     - name: Install Python dependencies
       run: |
