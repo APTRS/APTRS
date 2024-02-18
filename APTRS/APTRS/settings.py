@@ -156,7 +156,7 @@ WSGI_APPLICATION = 'APTRS.wsgi.application'
 
 
 # Sqlite3 support
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -164,21 +164,21 @@ DATABASES = {
     },
 }
 # End Sqlite3 support
-
+'''
 # Postgres DB - Install psycopg2
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'aptrs',
+        'NAME': os.environ['POSTGRES_Name'],
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],
-        'PORT': 5432,
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 # End Postgres support
-"""
+
 
 
 CACHES = {
