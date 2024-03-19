@@ -18,8 +18,8 @@ urlpatterns = [
     path('api/auth/',include('accounts.urls')),
     path('api/customer/',include('customers.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT,}),
-    re_path(r'^static-report/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0],}),
-    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[1]}),
+    #re_path(r'^static-report/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0],}),
+    #re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[1]}),
     path('', TemplateView.as_view(template_name='index.html')),
 ]
 
@@ -29,4 +29,5 @@ if settings.DEBUG:
     path('ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
     ]

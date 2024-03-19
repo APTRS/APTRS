@@ -22,7 +22,7 @@ services:
     image: "postgres:latest"
     restart: always
     volumes:
-      - $HOME/APTRS/postgresql_data:/var/lib/postgresql
+      - $USERPROFILE/APTRS/postgresql_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=aptrsdbuser
       - POSTGRES_PASSWORD=aptrsdbpassword
@@ -31,6 +31,24 @@ services:
      - "5432:5432"
     networks:
        - aptrs
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    environment:  
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - REDIS_URL=redis://cache:6379/ 
+    volumes: 
+      - cache:/data
         
       
   aptrs:
@@ -38,27 +56,33 @@ services:
       - POSTGRES_USER=aptrsdbuser
       - POSTGRES_PASSWORD=aptrsdbpassword
       - POSTGRES_DB=aptrs
+    depends_on:
+      - postgres
+      - cache
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-       - POSTGRES=True
     volumes:
-      - $HOME/aptrs:/home/aptrs/.aptrs
+      - $USERPROFILE/aptrs:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/static/
     ports:
      - "8000:8000"
     networks:
       - aptrs
-
-    depends_on:
-      - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5432 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     links:
       - "postgres"
+      
 networks:
   aptrs:
 
 
 volumes:
   static_volume: 
+  cache:
+  
   

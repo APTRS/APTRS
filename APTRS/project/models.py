@@ -52,6 +52,9 @@ class Project(models.Model):
         self.status = self.calculate_status
         super(Project, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-id'] 
+
 
 
 class PrjectScope(models.Model):

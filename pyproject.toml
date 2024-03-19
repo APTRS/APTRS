@@ -31,8 +31,13 @@ whitenoise = "6.6.0"
 htmldocx = "0.0.6"
 docxtpl = "0.16.7"
 redis = "5.0.1"
-psycopg2 = "2.9.9"
+psycopg2-binary = "^2.9.9"
+
+[tool.poetry.group.dev.dependencies]
+django-debug-toolbar = "^4.3.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+

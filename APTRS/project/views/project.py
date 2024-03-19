@@ -80,7 +80,8 @@ class GetAllProjects(views.APIView):
     permission_classes = [IsAuthenticated]
     @custom_permission_required(['View All Projects'])
     def get(self, request):
-        projects = Project.objects.all()
+        #projects = Project.objects.all()
+        projects = Project.objects.select_related('companyname','owner').all()
         serializer = Projectserializers(projects, many=True)
         return Response(serializer.data)
 

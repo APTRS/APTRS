@@ -1,5 +1,5 @@
 # Base image
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Labels and Credits
 LABEL \
@@ -26,22 +26,19 @@ RUN apt update -y && apt install -y  --no-install-recommends \
     fontconfig \
     xfonts-75dpi \
     xfonts-base \
-    python3.9 \
+    python3 \
     python3-dev \
     python3-pip \
     wget \
     curl \
     git \
     nginx \
-    python3-cffi \
-    python3-brotli \
     libpango-1.0-0 \
     libharfbuzz0b \
-    libpangoft2-1.0-0
-
-
-ARG TARGETPLATFORM
-
+    libpangoft2-1.0-0 \
+    postgresql \
+    postgresql-contrib \
+    libpq-dev
 
 
 
@@ -49,9 +46,36 @@ RUN groupadd -g 9901 aptrs
 RUN adduser aptrs --shell /bin/false -u 9901 --ingroup aptrs --gecos "" --disabled-password
 
 
-COPY requirements.txt .
-RUN pip3 install --upgrade --no-cache-dir setuptools pip && \
-    pip3 install --quiet --no-cache-dir -r requirements.txt
+#COPY requirements.txt .
+
+WORKDIR /home/aptrs
+# Copy source code
+COPY . .
+
+ENV POSTGRES_USER=aptrsdbuser \
+    POSTGRES_PASSWORD=aptrsdbpassword \
+    POSTGRES_DB=aptrs \
+    POSTGRES_HOST=postgres
+
+ENV YOUR_COMPANY='AnoF PVT LTD'
+ENV WHITELIST_IP='["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000","http://testserver"]'
+ENV ALLOWED_HOST='["127.0.0.1","localhost","aptrsapi.souravkalal.tech","*"]'
+ENV CORS_ORIGIN='["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]'
+ENV YOUR_COMPANY_LOGO='APTRS.png'
+
+
+RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
+ENV SECRET_KEY=NEW_SECRET_KEY
+#RUN sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" /home/aptrs/APTRS/.env
+
+RUN python3 -m pip install --upgrade --no-cache-dir pip poetry==1.8.2 && \
+    pip install setuptools
+
+    
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-root --no-interaction --no-ansi
+#--no-dev --only main
+
 
 # Cleanup
 RUN \
@@ -68,30 +92,6 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/* > /dev/null 2>&1
 
 
-WORKDIR /home/aptrs
-# Copy source code
-COPY . .
-
-ARG POSTGRES=False
-ENV POSTGRES_USER=aptrsdbuser \
-    POSTGRES_PASSWORD=aptrsdbpassword \
-    POSTGRES_DB=aptrs \
-    POSTGRES_HOST=postgres
-
-
-RUN if [ "$POSTGRES" = "True" ]; then \
-    pip3 install psycopg2-binary && \
-    sed -i '/# Sqlite3 support/,/# End Sqlite3 support/d' /home/aptrs/APTRS/APTRS/settings.py && \
-    sed -i '/# Postgres DB - Install psycopg2/,/"""/d' /home/aptrs/APTRS/APTRS/settings.py && \
-    sed -i '/# End Postgres support/,/"""/d' /home/aptrs/APTRS/APTRS/settings.py; \
-  fi
-
-
-
-RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
-ENV SECRET_KEY=NEW_SECRET_KEY
-RUN sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" /home/aptrs/APTRS/.env
-
 EXPOSE 8000 8000 
 
 
@@ -99,6 +99,8 @@ EXPOSE 8000 8000
 RUN chown -R aptrs:aptrs /home/aptrs/
 
 USER aptrs
+
+
 
 RUN ["chmod", "+x", "/home/aptrs/scripts/entrypoint.sh"]
 
