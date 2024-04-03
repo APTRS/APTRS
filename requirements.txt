@@ -9,7 +9,7 @@ django-phonenumbers==1.0.1
 gunicorn==20.1.0
 pdfkit==0.6.0
 phonenumbers==8.12.57
-Pillow==9.2.0
+Pillow==10.3.0
 PyPDF2==2.11.1
 sqlparse==0.4.3
 typing-extensions==4.4.0
