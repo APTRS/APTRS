@@ -185,7 +185,7 @@ def edit_company(request,pk):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Delete Company'])
 def companydelete(request):
-    company = Company.objects.filter(id__in=request.data)
+    company = Company.objects.filter(id__in=request.data,internal=False)
     company.delete()
     respdata={'Status':"Success"}
     return Response(respdata)
