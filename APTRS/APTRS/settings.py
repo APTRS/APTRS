@@ -189,15 +189,18 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": os.getenv("REDIS_URL", "redis://localhost:6379/"),
         "KEY_PREFIX": "aptrs",
         "TIMEOUT": 60 * 15,  # in seconds: 60 * 15 (15 minutes)
         "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
              "PASSWORD": os.getenv("REDIS_PASSWORD")
         },
     }
 }
+
+
 
 
 

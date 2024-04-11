@@ -32,6 +32,7 @@ htmldocx = "0.0.6"
 docxtpl = "0.16.7"
 redis = "5.0.1"
 psycopg2-binary = "^2.9.9"
+django-redis = "^5.4.0"
 
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^4.3.0"
