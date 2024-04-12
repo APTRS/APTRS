@@ -29,7 +29,7 @@ class ProjectFilter(filters.FilterSet):
     startdate = filters.CharFilter(method='filter_date')
     enddate = filters.CharFilter(method='filter_date')
     name = filters.CharFilter(field_name='name', lookup_expr='icontains')
-    companyname = filters.CharFilter(field_name='companyname', lookup_expr='icontains')
+    companyname = filters.CharFilter(field_name='companyname__name', lookup_expr='icontains')
     projecttype = filters.CharFilter(field_name='projecttype', lookup_expr='icontains')
     #owner = filters.CharFilter(field_name='owner', lookup_expr='icontains')
     owner = filters.CharFilter(field_name='owner__username', lookup_expr='icontains')
