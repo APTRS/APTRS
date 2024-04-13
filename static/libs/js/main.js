@@ -1,15 +1,15 @@
 function editvulnerability(){
 var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 var project = document.getElementsByName('project')[0].value;
-var vulnerabilityname = encodeURI(document.getElementById("editable-select").value);
+var vulnerabilityname = encodeURIComponent(document.getElementById("editable-select").value);
 var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, ''); 
 var cvssscore = document.getElementById('baseMetricScore').innerHTML;
 var cvssvector = document.getElementById('vectorString').value;
 var status = document.getElementById('input-select').value;
-var vulnerabilitydescription = encodeURI(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
-var POC = encodeURI(CKEDITOR.instances['id_POC'].getData());
-var vulnerabilitysolution = encodeURI(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
-var vulnerabilityreferlnk = encodeURI(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
+var vulnerabilitydescription = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
+var POC = encodeURIComponent(CKEDITOR.instances['id_POC'].getData());
+var vulnerabilitysolution = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
+var vulnerabilityreferlnk = encodeURIComponent(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
 var table = $('#editvulninstace').DataTable();
 if (vulnerabilityseverity == "None") {
     var vulnerabilityseverity = "Informational";
@@ -62,14 +62,14 @@ xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&project='+project+'&vulner
 	var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, ''); 
 var cvssscore = document.getElementById('baseMetricScore').innerHTML;
 var cvssvector = document.getElementById('vectorString').value;
-var vulnerabilityname = encodeURI(document.getElementById("editable-select").value);
+var vulnerabilityname = encodeURIComponent(document.getElementById("editable-select").value);
 //var vulnerabilityname = encodeURI(document.getElementById('select2-siteID-container').innerHTML)
 var status = document.getElementById('input-select').value;
 //var status = document.getElementById('select2-input-select-container').innerHTML
-var vulnerabilitydescription = encodeURI(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
-var POC = encodeURI(CKEDITOR.instances['id_POC'].getData());
-var vulnerabilitysolution = encodeURI(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
-var vulnerabilityreferlnk = encodeURI(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
+var vulnerabilitydescription = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
+var POC = encodeURIComponent(CKEDITOR.instances['id_POC'].getData());
+var vulnerabilitysolution = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
+var vulnerabilityreferlnk = encodeURIComponent(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
 var project = document.getElementsByName('project')[0].value;	 
 var table = $('#addinstancetable').DataTable();
 if (vulnerabilityseverity == "None") {
@@ -209,10 +209,10 @@ function editvulnerabilitydb(oFormElement){
 	var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, ''); 
   var cvssscore = document.getElementById('baseMetricScore').innerHTML;
   var cvssvector = document.getElementById('vectorString').value;
-  var vulnerabilityname = encodeURI(document.getElementById('id_vulnerabilityname').value);
-  var vulnerabilitydescription = encodeURI(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
-  var vulnerabilitysolution = encodeURI(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
-  var vulnerabilityreferlnk = encodeURI(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
+  var vulnerabilityname = encodeURIComponent(document.getElementById('id_vulnerabilityname').value);
+  var vulnerabilitydescription = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
+  var vulnerabilitysolution = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
+  var vulnerabilityreferlnk = encodeURIComponent(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
   if (vulnerabilityseverity == "None") {
     var vulnerabilityseverity = "Informational";
   } 
