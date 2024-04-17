@@ -114,18 +114,22 @@ class GetMyProjects(views.APIView):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View All Projects'])
 def getallproject_filter(request):
-
+    '''
     cache_key = 'all_projects_data'
     queryset = cache.get(cache_key)
 
     if not queryset:
-        projects = Project.objects.all().select_related('companyname', 'owner')
+        projects = Project.objects.all()#.select_related('companyname', 'owner')
         project_filter = ProjectFilter(request.GET, queryset=projects)
         filtered_queryset = project_filter.qs
         cache.set(cache_key, filtered_queryset)
     else:
         filtered_queryset = queryset
-    
+    '''
+    projects = Project.objects.all()
+
+    project_filter = ProjectFilter(request.GET, queryset=projects)
+    filtered_queryset = project_filter.qs
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
     serializer = Projectserializers(paginated_queryset, many=True)
 
