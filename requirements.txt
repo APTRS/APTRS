@@ -25,3 +25,4 @@ htmldocx==0.0.6
 docxtpl==0.16.7
 redis ==5.0.1
 django-debug-toolbar==4.3.0
+django-redis==5.4.0
