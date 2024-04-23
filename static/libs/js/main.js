@@ -1,155 +1,189 @@
-function editvulnerability(){
-var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-var project = document.getElementsByName('project')[0].value;
-var vulnerabilityname = encodeURI(document.getElementById("editable-select").value);
-var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, ''); 
-var cvssscore = document.getElementById('baseMetricScore').innerHTML;
-var cvssvector = document.getElementById('vectorString').value;
-var status = document.getElementById('input-select').value;
-var vulnerabilitydescription = encodeURI(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
-var POC = encodeURI(CKEDITOR.instances['id_POC'].getData());
-var vulnerabilitysolution = encodeURI(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
-var vulnerabilityreferlnk = encodeURI(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
-var table = $('#editvulninstace').DataTable();
-if (vulnerabilityseverity == "None") {
-    var vulnerabilityseverity = "Informational";
-  } 
-  if (vulnerabilityname == "") {
-    swal("Missing", "Vulnerability Title is Missing", "error");
-    return false
-  } 
-  else if (cvssscore == "") {
-    swal("Missing", "CVSS Score is Missing", "error");
-    return false
-  }
-  else if (status == "") {
-    swal("Missing", " VulnerabilityStatus is Missing", "error");
-    return false
-  }
-  else if (vulnerabilitydescription == "") {
-    swal("Missing", "Vulnerability Description is Missing", "error");
-    return false
-  }
-  else if (vulnerabilitysolution == "") {
-    swal("Missing", "Vulnerability Solution is Missing", "error");
-    return false
-  }
-  else if ( ! table.data().any() ) {
-    swal("Missing", "No Vulnerable URL added", "error");
-    return false
-  }
-  else{
-var xhr = new XMLHttpRequest();
-xhr.open('POST','', true);
-xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-xhr.onload = function () {
-	
-	if (xhr.status === 200) {
-        
-        window.location.href = '/project/'+project+'/';
+function editvulnerability() {
+  try {
+    // Show loading indicator
+    showLoadingIndicator();
 
-      } 
-
-}
-xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&project='+project+'&vulnerabilityname='+vulnerabilityname+'&vulnerabilityseverity='+vulnerabilityseverity+'&cvssscore='+cvssscore+'&cvssvector='+cvssvector+'&status='+status+'&vulnerabilitydescription='+vulnerabilitydescription+'&POC='+POC+'&vulnerabilitysolution='+vulnerabilitysolution+'&vulnerabilityreferlnk='+vulnerabilityreferlnk);
-}
-}
-
-
-
- function addnewvulnerability(oFormElement) {
     var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-	var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, ''); 
-var cvssscore = document.getElementById('baseMetricScore').innerHTML;
-var cvssvector = document.getElementById('vectorString').value;
-var vulnerabilityname = encodeURI(document.getElementById("editable-select").value);
-//var vulnerabilityname = encodeURI(document.getElementById('select2-siteID-container').innerHTML)
-var status = document.getElementById('input-select').value;
-//var status = document.getElementById('select2-input-select-container').innerHTML
-var vulnerabilitydescription = encodeURI(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
-var POC = encodeURI(CKEDITOR.instances['id_POC'].getData());
-var vulnerabilitysolution = encodeURI(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
-var vulnerabilityreferlnk = encodeURI(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
-var project = document.getElementsByName('project')[0].value;	 
-var table = $('#addinstancetable').DataTable();
-if (vulnerabilityseverity == "None") {
-    var vulnerabilityseverity = "Informational";
-  } 
-	 
-  
-  if (vulnerabilityname == "") {
-    swal("Missing", "Vulnerability Title is Missing", "error");
-    return false
-  } 
-  else if (cvssscore == "") {
-    swal("Missing", "CVSS Score is Missing", "error");
-    return false
-  }
-  else if (status == "") {
-    swal("Missing", " VulnerabilityStatus is Missing", "error");
-    return false
-  }
-  else if (vulnerabilitydescription == "") {
-    swal("Missing", "Vulnerability Description is Missing", "error");
-    return false
-  }
-  else if (vulnerabilitysolution == "") {
-    swal("Missing", "Vulnerability Solution is Missing", "error");
-    return false
-  }
-  else if ( ! table.data().any() ) {
-    swal("Missing", "No Vulnerable URL added", "error");
-    return false
-  }
-else {
-        var xhr = new XMLHttpRequest();
-        //xhr.responseType = 'json';
-        xhr.onload = function() {
-            
-            var jsonResponse = JSON.parse(xhr.responseText);
-            //var jsonResponse = JSON.parse(result);
-            //alert(xhr.responseText);
-            //var jsonResponse = xhr.responseText;
-            //console.log(jsonResponse);
-            if (jsonResponse.Status == "Success") {
-                var id = jsonResponse.Vulnerability
-                var table = $('#addinstancetable').DataTable();
+    var project = document.getElementsByName('project')[0].value;
+    var vulnerabilityname = encodeURIComponent(document.getElementById("editable-select").value);
+    var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, '');
+    var cvssscore = document.getElementById('baseMetricScore').innerHTML;
+    var cvssvector = document.getElementById('vectorString').value;
+    var status = document.getElementById('input-select').value;
+    var vulnerabilitydescription = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
+    var POC = encodeURIComponent(CKEDITOR.instances['id_POC'].getData());
+    var vulnerabilitysolution = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
+    var vulnerabilityreferlnk = encodeURIComponent(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
 
-                if ( ! table.data().any() ) {
-                    //history.back()
-					window.location.href = '/project/'+jsonResponse.Project+'/';
-                    
-                }
-                else {
-                    var table = $('#addinstancetable').tableToJSON({
-                        ignoreColumns: [0,3]
-                  });
-                    
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", "/project/report/addurl/"+id+"/");
-                xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                xmlhttp.onload  = function(){
-                    //var location = xmlhttp.getResponseHeader("Location")
-                    var jsonResponse = JSON.parse(xmlhttp.responseText);
-                    window.location = jsonResponse.redirect
-                }
-                xmlhttp.send(JSON.stringify(table));
-                }
-    
-    
-            } else {
-                // Invalid username/ password
-                alert("Fail to Save");
-            }
-        }
-        //xhr.open(oFormElement.method, oFormElement.action, true);
-        xhr.open('POST','', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        //xhr.send(new FormData(oFormElement));
-		xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&project='+project+'&vulnerabilityname='+vulnerabilityname+'&vulnerabilityseverity='+vulnerabilityseverity+'&cvssscore='+cvssscore+'&cvssvector='+cvssvector+'&status='+status+'&vulnerabilitydescription='+vulnerabilitydescription+'&POC='+POC+'&vulnerabilitysolution='+vulnerabilitysolution+'&vulnerabilityreferlnk='+vulnerabilityreferlnk);
-
-        return false;
+    if (vulnerabilityseverity == "None") {
+      vulnerabilityseverity = "Informational";
     }
+
+    // Perform validation
+    if (vulnerabilityname.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Title is required.");
+      return;
+    }
+
+    if (cvssscore.trim() === "") {
+      hideLoadingIndicator();
+      alert("CVSS Score is required.");
+      return;
+    }
+
+    if (status.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Status is required.");
+      return;
+    }
+
+    if (vulnerabilitydescription.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Description is required.");
+      return;
+    }
+
+    if (vulnerabilitysolution.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Solution is required.");
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+      hideLoadingIndicator();
+
+      if (xhr.status === 200) {
+        alert("Vulnerability edited successfully.");
+        window.location.href = '/project/' + project + '/';
+      } else {
+        alert("An error occurred while editing the vulnerability.");
+      }
+    };
+    xhr.send(
+      'csrfmiddlewaretoken=' + csrfmiddlewaretoken +
+      '&project=' + project +
+      '&vulnerabilityname=' + vulnerabilityname +
+      '&vulnerabilityseverity=' + vulnerabilityseverity +
+      '&cvssscore=' + cvssscore +
+      '&cvssvector=' + cvssvector +
+      '&status=' + status +
+      '&vulnerabilitydescription=' + vulnerabilitydescription +
+      '&POC=' + POC +
+      '&vulnerabilitysolution=' + vulnerabilitysolution +
+      '&vulnerabilityreferlnk=' + vulnerabilityreferlnk
+    );
+
+  } catch (error) {
+    console.error('An error occurred while editing the vulnerability:', error);
+    hideLoadingIndicator();
+    alert("An error occurred while editing the vulnerability. Please try again.");
+  }
+}
+
+function addnewvulnerability(oFormElement) {
+  try {
+    // Show loading indicator
+    showLoadingIndicator();
+
+    var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    var vulnerabilityseverity = document.getElementById('baseSeverity').innerHTML.replace(/[()]/g, '');
+    var cvssscore = document.getElementById('baseMetricScore').innerHTML;
+    var cvssvector = document.getElementById('vectorString').value;
+    var vulnerabilityname = encodeURIComponent(document.getElementById("editable-select").value);
+    var status = document.getElementById('input-select').value;
+    var vulnerabilitydescription = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitydescription'].getData());
+    var POC = encodeURIComponent(CKEDITOR.instances['id_POC'].getData());
+    var vulnerabilitysolution = encodeURIComponent(CKEDITOR.instances['id_vulnerabilitysolution'].getData());
+    var vulnerabilityreferlnk = encodeURIComponent(CKEDITOR.instances['id_vulnerabilityreferlnk'].getData());
+    var project = document.getElementsByName('project')[0].value;
+
+    if (vulnerabilityseverity == "None") {
+      vulnerabilityseverity = "Informational";
+    }
+
+    // Perform validation
+    if (vulnerabilityname.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Title is required.");
+      return;
+    }
+
+    if (cvssscore.trim() === "") {
+      hideLoadingIndicator();
+      alert("CVSS Score is required.");
+      return;
+    }
+
+    if (status.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Status is required.");
+      return;
+    }
+
+    if (vulnerabilitydescription.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Description is required.");
+      return;
+    }
+
+    if (vulnerabilitysolution.trim() === "") {
+      hideLoadingIndicator();
+      alert("Vulnerability Solution is required.");
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      hideLoadingIndicator();
+
+      var jsonResponse = JSON.parse(xhr.responseText);
+      if (jsonResponse.Status == "Success") {
+        var id = jsonResponse.Vulnerability;
+        alert("Vulnerability added successfully.");
+        window.location.href = '/project/' + jsonResponse.Project + '/';
+      } else {
+        alert("Failed to save the vulnerability.");
+      }
+    };
+    xhr.open('POST', '', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send(
+      'csrfmiddlewaretoken=' + csrfmiddlewaretoken +
+      '&project=' + project +
+      '&vulnerabilityname=' + vulnerabilityname +
+      '&vulnerabilityseverity=' + vulnerabilityseverity +
+      '&cvssscore=' + cvssscore +
+      '&cvssvector=' + cvssvector +
+      '&status=' + status +
+      '&vulnerabilitydescription=' + vulnerabilitydescription +
+      '&POC=' + POC +
+      '&vulnerabilitysolution=' + vulnerabilitysolution +
+      '&vulnerabilityreferlnk=' + vulnerabilityreferlnk
+    );
+    return false;
+  } catch (error) {
+    console.error('An error occurred while adding the vulnerability:', error);
+    hideLoadingIndicator();
+    alert("An error occurred while adding the vulnerability. Please try again.");
+  }
+}
+
+// Function to show loading indicator
+function showLoadingIndicator() {
+  // Implement your loading indicator logic here
+  // Example: Display a loading spinner or overlay
+  document.getElementById('loading').style.display = 'block';
+}
+
+// Function to hide loading indicator
+function hideLoadingIndicator() {
+  // Implement your loading indicator logic here
+  // Example: Hide the loading spinner or overlay
+  document.getElementById('loading').style.display = 'none';
 }
 
 
@@ -581,3 +615,10 @@ function editvulnerabilitydb(oFormElement){
       return false;
     }
   
+
+    module.exports = {
+      editvulnerability,
+      addnewvulnerability,
+      showLoadingIndicator,
+      hideLoadingIndicator
+    };
