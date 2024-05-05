@@ -182,7 +182,7 @@ def project_report(request, pk):
             return Response({"Status": "Failed", "Message": "Project has no vulnerabilities, Kindly add vulnerabilities to generate project"})
 
         #has_scope = PrjectScope.objects.filter(project=project).exists()
-        if not project.projectscope_set.exists():
+        if not project.prjectscope_set.exists():
             logger.error("Project has no Sccope added, Project: %s is Empty", pk)
             return Response({"Status": "Failed", "Message": "Project has no Sccope added, Kindly add Scope to generate project"})
 
@@ -201,7 +201,7 @@ def project_report(request, pk):
 
 
         # Validating report type
-        report_type = request.data.get('Type', '').capitalize()
+        report_type = request.data.get('Type', '')
         if report_type not in ['Audit', 'Re-Audit']:
             logger.error("Report type is incorrect. Only Audit or Re-Audit are supported")
             return Response({"Status": "Failed", "Message": "Report type is incorrect. Only Audit or Re-Audit are supported"}, status=status.HTTP_400_BAD_REQUEST)
