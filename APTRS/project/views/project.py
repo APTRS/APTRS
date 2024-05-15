@@ -165,12 +165,13 @@ def complete_project_status(request, pk):
 
 
 
-@api_view(['POST'])
+@api_view(['POST','GET'])
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['Report Access'])
 def project_report(request, pk):
     try:
         #project = Project.objects.get(pk=pk)
+        report_format = request.query_params.get('Format')
         project = Project.objects.select_related('companyname', 'owner').get(pk=pk)
 
 
@@ -192,16 +193,13 @@ def project_report(request, pk):
                 logger.error("Vulnerability %s has no Instance added", vulnerability.vulnerabilityname)
                 response_data = {"Status": "Failed", "Message": f"Vulnerability {vulnerability.vulnerabilityname} has no Instance added, Kindly add Instance to generate project"}
                 return Response(response_data)
-
-        if request.data.get('Format') in ['pdf', 'html', 'excel','docx']:
-            Report_format = request.data.get('Format')
-        else:
-            logger.error("Report Format is incorrect Only pdf and html is supported")
-            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf and html is supported"})
+        if not report_format in ['pdf', 'excel','docx']:
+            logger.error("Report Format is incorrect Only pdf, docx and excel is supported")
+            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf, docx and excel is supported"})
 
 
         # Validating report type
-        report_type = request.data.get('Type', '')
+        report_type = request.query_params.get('Type')
         if report_type not in ['Audit', 'Re-Audit']:
             logger.error("Report type is incorrect. Only Audit or Re-Audit are supported")
             return Response({"Status": "Failed", "Message": "Report type is incorrect. Only Audit or Re-Audit are supported"}, status=status.HTTP_400_BAD_REQUEST)
@@ -212,8 +210,8 @@ def project_report(request, pk):
             return Response({"Status": "Failed", "Message": "Project has no retests. Generate Re-Audit report"}, status=status.HTTP_400_BAD_REQUEST)
 
         url = request.build_absolute_uri()
-        standard = request.data.get('Standard')
-        output = CheckReport(Report_format,report_type,pk,url,standard,request)
+        standard = request.query_params.getlist('Standard')
+        output = CheckReport(report_format,report_type,pk,url,standard,request)
         return output
 
     except ObjectDoesNotExist:
