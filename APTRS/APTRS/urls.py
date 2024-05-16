@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/vulndb/',include('vulnerability.urls')),
     path('api/auth/',include('accounts.urls')),
     path('api/customer/',include('customers.urls')),
+    path('api/config/', include('configapi.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT,}),
     #re_path(r'^static-report/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0],}),
     #re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[1]}),

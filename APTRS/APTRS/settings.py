@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'customers',
     'phonenumber_field',
     'vulnerability',
+    'configapi',
     'ckeditor',
     'ckeditor_uploader',
     'project',
