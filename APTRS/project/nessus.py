@@ -53,6 +53,7 @@ def save_vulnerability(data, pk):
             vulnerabilitydescription=vulnerability_data['vulnerabilitydescription'],
             vulnerabilitysolution=vulnerability_data['vulnerabilitysolution']
         )
+        
         vulnerability.save()
 
 
@@ -97,7 +98,7 @@ def parse_nessus_csv(reader):
 
         if row['Name'] not in unique_vulnerabilities:
             # If not, add the vulnerability name and description to the dictionary
-            if row['Risk'] == "None":
+            if row['Risk'] in ["None", "Info"]:
                 Base = settings.CVSS_BASE_INFO
                 score = settings.CVSS_BASE_SCORE_INFO
             elif row['Risk'] == "Low":
@@ -110,12 +111,13 @@ def parse_nessus_csv(reader):
                 Base = settings.CVSS_BASE_HIGH
                 score = settings.CVSS_BASE_SCORE_HIGH
             elif row['Risk'] == "Critical":
-                Base = settings.CVSS_BASE_SCORE_CRITICAL
-                score = settings.CVSS_BASE_CRITICAL
+                Base = settings.CVSS_BASE_CRITICAL
+                score = settings.CVSS_BASE_SCORE_CRITICAL
             else:
                 Base = settings.CVSS_BASE_INFO
                 score = settings.CVSS_BASE_SCORE_INFO
 
             unique_vulnerabilities[row['Name']] = {'vulnerabilityname': row['Name'], 'vulnerabilitydescription': row['Description'], 'vulnerabilitysolution': row['Solution'], 'vulnerabilityseverity': row['Risk'], 'cvssscore': score, 'cvssvector': Base}
     vulnerability_dict = {'vulnerability': list(unique_vulnerabilities.values())}
+    
     return vulnerability_dict
