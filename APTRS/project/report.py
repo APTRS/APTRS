@@ -52,49 +52,53 @@ def resize_inline_images(temp_doc, fixed_width):
        
 def get_subdoc(doc, raw_html):
 
-    # Convert image src paths - doctpl does not support loading img over url, adding image full path
-    raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
-    # Wrap the HTML in a div with styling for margins
-    styled_html = f'<div style="margin-left: 20pt; margin-right: 20pt;">{raw_html}</div>'
-
-    # Convert HTML to temporary DOCX
     temp_doc = Document()
     temp_parser = HtmlToDocx()
-   
-    temp_parser.add_html_to_document(styled_html, temp_doc)
 
-    # Resize images in the temporary DOCX
-    ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
-    text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
+    if raw_html is not None:
 
-    resize_inline_images(temp_doc, fixed_width=text_width)
-    apply_font_to_elements(temp_doc.element.body, 'Calibri', 16)
+        # Convert image src paths - doctpl does not support loading img over url, adding image full path
+        raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
+        # Wrap the HTML in a div with styling for margins
+        styled_html = f'<div style="margin-left: 20pt; margin-right: 20pt;">{raw_html}</div>'
 
-    for paragraph in temp_doc.paragraphs:
-        paragraph.paragraph_format.space_before = Pt(5)
-        paragraph.paragraph_format.space_after = Pt(5)
-        paragraph.paragraph_format.left_indent = Inches(1)
-        paragraph.paragraph_format.right_indent = Inches(1)
-        paragraph.paragraph_format.top_indent = Inches(1)
-        #paragraph.style.font.name = 'Calibri'
-        #paragraph.style.font.size = Pt(16) 
+        # Convert HTML to temporary DOCX
 
     
-    obj_styles = temp_doc.styles
-    for current_style in obj_styles:
-        element = current_style
-        if hasattr(element, 'font'):
-            font = element.font
-            font.name = 'Calibri'
-            font.size = Pt(16)
-    
+        temp_parser.add_html_to_document(styled_html, temp_doc)
 
-    font = temp_doc.styles['Normal'].font
-    font.name = 'Calibri'
-    font.size = Pt(16)
-    font = temp_doc.styles['List Bullet'].font
-    font.name = 'Calibri'
-    font.size = Pt(16)
+        # Resize images in the temporary DOCX
+        ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
+        text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
+
+        resize_inline_images(temp_doc, fixed_width=text_width)
+        apply_font_to_elements(temp_doc.element.body, 'Calibri', 16)
+
+        for paragraph in temp_doc.paragraphs:
+            paragraph.paragraph_format.space_before = Pt(5)
+            paragraph.paragraph_format.space_after = Pt(5)
+            paragraph.paragraph_format.left_indent = Inches(1)
+            paragraph.paragraph_format.right_indent = Inches(1)
+            paragraph.paragraph_format.top_indent = Inches(1)
+            #paragraph.style.font.name = 'Calibri'
+            #paragraph.style.font.size = Pt(16) 
+
+        
+        obj_styles = temp_doc.styles
+        for current_style in obj_styles:
+            element = current_style
+            if hasattr(element, 'font'):
+                font = element.font
+                font.name = 'Calibri'
+                font.size = Pt(16)
+        
+
+        font = temp_doc.styles['Normal'].font
+        font.name = 'Calibri'
+        font.size = Pt(16)
+        font = temp_doc.styles['List Bullet'].font
+        font.name = 'Calibri'
+        font.size = Pt(16)
 
     # Save temporary DOCX in memory
     subdoc_tmp = io.BytesIO()
