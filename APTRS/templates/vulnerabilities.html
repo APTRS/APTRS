@@ -49,9 +49,11 @@
                 <span>
 
             <h3 class="vulnerabilities-details-title">Steps To Reproduce</h3>
+            {% if vulnerabilities.POC is not None %}
                 <span class=vulnerabilities-details-details>
                     {{vulnerabilities.POC|clean_html}}
                 <span>
+            {% endif %}
 
 
             <h3 class="vulnerabilities-details-title">Recommendations</h3>
