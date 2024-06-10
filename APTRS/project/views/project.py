@@ -103,7 +103,7 @@ class GetMyProjects(views.APIView):
         projects = Project.objects.filter(
             Q(owner=request.user) & 
             Q(status__in=['Upcoming', 'In Progress', 'Delay'])
-        ).select_related('companyname', 'owner').prefetch_related('related_model1', 'related_model2')
+        ).select_related('companyname', 'owner')#.prefetch_related('related_model1', 'related_model2')
         
         serializer = Projectserializers(projects, many=True)
         return Response(serializer.data)

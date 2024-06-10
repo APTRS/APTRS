@@ -142,10 +142,16 @@ def getallusers_filter(request):
     - If the user has the required permissions, the endpoint returns a JSON object
       containing details of staff users, optionally filtered based on query parameters.
     """
+    sort_order = request.GET.get('order_by', 'desc')
+    sort_field = request.GET.get('sort', 'id')
     userdetails = CustomUser.objects.filter(is_staff=True)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)
     filtered_queryset = user_filter.qs
+    if sort_order == 'asc':
+        filtered_queryset = filtered_queryset.order_by(sort_field)
+    else:
+        filtered_queryset = filtered_queryset.order_by('-'+sort_field)
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
     serializer = CustomUserSerializer(paginated_queryset, many=True)
 
