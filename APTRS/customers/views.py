@@ -21,10 +21,17 @@ logger = logging.getLogger(__name__)
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View all Client Companies List'])
 def getallcompnay_filter(request):
+    sort_order = request.GET.get('order_by', 'desc')
+    sort_field = request.GET.get('sort', 'id')
     companyname = Company.objects.all()
 
     companyname_filter = CompanyFilter(request.GET, queryset=companyname)
     filtered_queryset = companyname_filter.qs
+    if sort_order == 'asc':
+        filtered_queryset = filtered_queryset.order_by(sort_field)
+    else:
+        filtered_queryset = filtered_queryset.order_by('-'+sort_field)
+    #filtered_queryset = companyname_filter.qs
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
     serializer = CompanySerializer(paginated_queryset, many=True)
 
@@ -47,10 +54,16 @@ def getallcompnay(request):
 @permission_classes([IsAuthenticated])
 @custom_permission_required(['View all Customers List'])
 def getallcustomer_filter(request):
+    sort_order = request.GET.get('order_by', 'desc')
+    sort_field = request.GET.get('sort', 'id')
     customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
 
     customername_filter = UserFilter(request.GET, queryset=customername)
     filtered_queryset = customername_filter.qs
+    if sort_order == 'asc':
+        filtered_queryset = filtered_queryset.order_by(sort_field)
+    else:
+        filtered_queryset = filtered_queryset.order_by('-'+sort_field)
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
     serializer = CustomerSerializer(paginated_queryset, many=True)
 

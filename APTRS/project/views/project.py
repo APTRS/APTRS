@@ -126,10 +126,20 @@ def getallproject_filter(request):
     else:
         filtered_queryset = queryset
     '''
-    projects = Project.objects.all()
+    
 
+    sort_order = request.GET.get('order_by', 'desc')
+    sort_field = request.GET.get('sort', 'id')
+    projects = Project.objects.all()
     project_filter = ProjectFilter(request.GET, queryset=projects)
+
     filtered_queryset = project_filter.qs
+    if sort_order == 'asc':
+        filtered_queryset = filtered_queryset.order_by(sort_field)
+    else:
+        filtered_queryset = filtered_queryset.order_by('-'+sort_field)
+
+    #filtered_queryset = project_filter.qs
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
     serializer = Projectserializers(paginated_queryset, many=True)
 
