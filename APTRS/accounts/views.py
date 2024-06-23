@@ -1,6 +1,7 @@
 # Django imports
 import logging
-
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from rest_framework import status
 from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
@@ -106,6 +107,7 @@ def change_password(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
+@cache_page(3600) 
 def getallusers(request):
     """
     API endpoint for retrieving details of all staff/Internal users.
@@ -141,7 +143,16 @@ def getallusers_filter(request):
     """
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id') or 'id'
+
+
     userdetails = CustomUser.objects.filter(is_staff=True)
+
+    cache_key = 'all_staff_users_data' 
+    userdetails = cache.get(cache_key)
+
+    if not userdetails:
+        userdetails = CustomUser.objects.filter(is_staff=True)
+        cache.set(cache_key, userdetails, timeout=3600)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)
     filtered_queryset = user_filter.qs
@@ -159,6 +170,7 @@ def getallusers_filter(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
+@cache_page(3600) 
 def ActiveUserList(request):
     """
     API endpoint for retrieving a list of active staff user usernames.
@@ -290,6 +302,7 @@ def create_group(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
 @custom_permission_required(['Manage Users'])
+@cache_page(3600) 
 def list_permissions(request):
     permissions = CustomPermission.objects.all()
     serializer = CustomPermissionSerializer(permissions, many=True)
@@ -314,6 +327,7 @@ def edit_group(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
 @custom_permission_required(['Manage Users'])
+@cache_page(3600) 
 def list_custom_groups(request):
     groups = CustomGroup.objects.all()
     serializer = CustomGroupSerializer(groups, many=True)
