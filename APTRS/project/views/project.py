@@ -125,7 +125,7 @@ def getallproject_filter(request):
     
 
     sort_order = request.GET.get('order_by', 'desc')
-    sort_field = request.GET.get('sort', 'id')
+    sort_field = request.GET.get('sort', 'id') or 'id'
     projects = Project.objects.all()
     project_filter = ProjectFilter(request.GET, queryset=projects)
 

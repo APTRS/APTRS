@@ -140,7 +140,7 @@ def getallusers_filter(request):
       containing details of staff users, optionally filtered based on query parameters.
     """
     sort_order = request.GET.get('order_by', 'desc')
-    sort_field = request.GET.get('sort', 'id')
+    sort_field = request.GET.get('sort', 'id') or 'id'
     userdetails = CustomUser.objects.filter(is_staff=True)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)

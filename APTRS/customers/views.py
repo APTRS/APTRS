@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @permission_classes([IsAuthenticated,IsAdminUser])
 def getallcompnay_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
-    sort_field = request.GET.get('sort', 'id')
+    sort_field = request.GET.get('sort', 'id') or 'id'
     companyname = Company.objects.all()
 
     companyname_filter = CompanyFilter(request.GET, queryset=companyname)
@@ -52,7 +52,7 @@ def getallcompnay(request):
 @permission_classes([IsAuthenticated,IsAdminUser])
 def getallcustomer_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
-    sort_field = request.GET.get('sort', 'id')
+    sort_field = request.GET.get('sort', 'id') or 'id'
     customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
 
     customername_filter = UserFilter(request.GET, queryset=customername)
