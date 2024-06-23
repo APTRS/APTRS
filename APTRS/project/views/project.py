@@ -110,23 +110,19 @@ class GetMyProjects(views.APIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def getallproject_filter(request):
-    '''
-    cache_key = 'all_projects_data'
-    queryset = cache.get(cache_key)
-
-    if not queryset:
-        projects = Project.objects.all()#.select_related('companyname', 'owner')
-        project_filter = ProjectFilter(request.GET, queryset=projects)
-        filtered_queryset = project_filter.qs
-        cache.set(cache_key, filtered_queryset)
-    else:
-        filtered_queryset = queryset
-    '''
+    
     
 
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id') or 'id'
-    projects = Project.objects.all()
+
+    cache_key = 'all_project_data'
+    projects = cache.get(cache_key)
+
+    if not projects:
+        projects = Project.objects.all()
+        cache.set(cache_key, projects, timeout=3600) 
+    
     project_filter = ProjectFilter(request.GET, queryset=projects)
 
     filtered_queryset = project_filter.qs
