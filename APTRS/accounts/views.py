@@ -74,7 +74,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@custom_permission_required(['Change Password'])
 def change_password(request):
     """
     API endpoint for changing the user's password.
@@ -106,8 +105,7 @@ def change_password(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View All Users'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def getallusers(request):
     """
     API endpoint for retrieving details of all staff/Internal users.
@@ -129,8 +127,7 @@ def getallusers(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View All Users'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getallusers_filter(request):
     """
     API endpoint for retrieving and filtering details of all staff users.
@@ -161,8 +158,7 @@ def getallusers_filter(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View All Users'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def ActiveUserList(request):
     """
     API endpoint for retrieving a list of active staff user usernames.
@@ -180,8 +176,7 @@ def ActiveUserList(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View Profile'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def myprofile(request):
     """
     API endpoint for retrieving the profile information of the authenticated user.
@@ -199,7 +194,6 @@ def myprofile(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated,IsAdminUser ])  ## IsAdminUser is allow only staff internal users not for is_superuser(admin)
-@custom_permission_required(['Edit Profile'])
 def edit_profile(request):
     """
     API endpoint for editing the profile information of the authenticated user.
@@ -229,8 +223,8 @@ def edit_profile(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Add User'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def add_user(request):
     user_serializer = CustomUserSerializer(data=request.data, context={'request': request})
     if user_serializer.is_valid(raise_exception=True):
@@ -243,8 +237,8 @@ def add_user(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit User'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def edit_user(request,pk):
     """
     API endpoint for adding a new user.
@@ -272,8 +266,8 @@ def edit_user(request,pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Delete User'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def delete_user(request):
     user = CustomUser.objects.filter(id__in=request.data)
     user.delete()
@@ -283,8 +277,8 @@ def delete_user(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Create Group'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def create_group(request):
     serializer = CustomGroupSerializer(data=request.data)
     if serializer.is_valid():
@@ -294,8 +288,8 @@ def create_group(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View Permissions'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def list_permissions(request):
     permissions = CustomPermission.objects.all()
     serializer = CustomPermissionSerializer(permissions, many=True)
@@ -303,8 +297,8 @@ def list_permissions(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit Group'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def edit_group(request, pk):
     try :
         group = CustomGroup.objects.get(pk=pk)
@@ -318,7 +312,8 @@ def edit_group(request, pk):
 
 
 @api_view(['GET'])
-@custom_permission_required(['View Group'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def list_custom_groups(request):
     groups = CustomGroup.objects.all()
     serializer = CustomGroupSerializer(groups, many=True)
@@ -326,6 +321,8 @@ def list_custom_groups(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
 def user_detail(request, pk):
     try:
         user = CustomUser.objects.get(pk=pk)

@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 
 from rest_framework import status, views
 from rest_framework.decorators import (api_view, permission_classes)
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.response import Response
 from django.db.models import Q
 from utils.filters import (ProjectFilter,
@@ -24,8 +24,8 @@ logger = logging.getLogger(__name__)
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Create new Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def newproject(request):
     serializer = Projectserializers(data=request.data, context={'request': request})
 
@@ -40,8 +40,8 @@ def newproject(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def project_edit(request, pk):
     try:
         #project = Project.objects.get(pk=pk)
@@ -65,8 +65,7 @@ def project_edit(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View Specific Project'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getproject(request,pk):
     try:
         #project = Project.objects.get(pk=pk)
@@ -85,8 +84,7 @@ def getproject(request,pk):
 
 
 class GetAllProjects(views.APIView):
-    permission_classes = [IsAuthenticated]
-    @custom_permission_required(['View All Projects'])
+    permission_classes = [IsAuthenticated, IsAdminUser]
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request):
         #projects = Project.objects.all()
@@ -97,8 +95,7 @@ class GetAllProjects(views.APIView):
 
 
 class GetMyProjects(views.APIView):
-    permission_classes = [IsAuthenticated]
-    @custom_permission_required(['View All Projects'])
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def get(self, request):
         projects = Project.objects.filter(
             Q(owner=request.user) & 
@@ -111,8 +108,7 @@ class GetMyProjects(views.APIView):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View All Projects'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def getallproject_filter(request):
     '''
     cache_key = 'all_projects_data'
@@ -147,8 +143,8 @@ def getallproject_filter(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Delete Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def deleteproject(request):
     projects = Project.objects.filter(id__in=request.data)
     projects.delete()
@@ -157,8 +153,8 @@ def deleteproject(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Change Project Status to Complete'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def complete_project_status(request, pk):
     safe_pk = bleach.clean(pk)
     try:
@@ -176,8 +172,8 @@ def complete_project_status(request, pk):
 
 
 @api_view(['POST','GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Report Access'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def project_report(request, pk):
     try:
         #project = Project.objects.get(pk=pk)

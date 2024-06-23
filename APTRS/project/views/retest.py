@@ -4,7 +4,7 @@ import bleach
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import (api_view,
                                        permission_classes)
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from utils.permissions import custom_permission_required
@@ -15,8 +15,8 @@ from ..serializers import (Retestserializers)
 logger = logging.getLogger(__name__)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Delete Retest Task'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def Retestdelete(request,pk):
     try:
         retest = ProjectRetest.objects.get(pk=pk)
@@ -31,8 +31,7 @@ def Retestdelete(request,pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View Retest for Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def RetestList(request,pk):
     retest = ProjectRetest.objects.filter(project=pk)
 
@@ -47,8 +46,8 @@ def RetestList(request,pk):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Add Retest for Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def Retestadd(request):
     serializer_context = {'request': request}
     serializer = Retestserializers(data=request.data,many=False,context=serializer_context)
@@ -64,8 +63,8 @@ def Retestadd(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Change Retest Status'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def complete_retest_status(request, pk):
     safe_pk = bleach.clean(pk)
     try:

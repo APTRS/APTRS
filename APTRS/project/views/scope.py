@@ -3,7 +3,7 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import (api_view, permission_classes)
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from utils.permissions import custom_permission_required
 
@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Add Scope to Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def projectaddscope(request,pk):
     try:
         project = Project.objects.get(pk=pk)
@@ -33,8 +33,8 @@ def projectaddscope(request,pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Delete Scope from Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def deleteprojectscope(request):
     projects = PrjectScope.objects.filter(id__in=request.data)
     projects.delete()
@@ -43,8 +43,8 @@ def deleteprojectscope(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit Scope from Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
 def projectscopedit(request,pk):
     try:
         projectscope = PrjectScope.objects.get(pk=pk)
@@ -64,8 +64,7 @@ def projectscopedit(request,pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View Scope from Projects'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getprojectscopes(request,pk):
     try:
         project = Project.objects.get(pk=pk)

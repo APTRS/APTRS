@@ -2,9 +2,9 @@ import logging
 import os
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from rest_framework.decorators import (api_view)
+from rest_framework.decorators import (api_view, permission_classes)
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from utils.permissions import custom_permission_required
@@ -14,7 +14,7 @@ from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 
 @api_view(['DELETE'])
-@custom_permission_required(['Delete Images'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def delete_images(request):
 
     image_paths = request.data
@@ -39,7 +39,7 @@ def delete_images(request):
 
 
 class ImageUploadView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdminUser]
     parser_classes = [MultiPartParser]
 
     @custom_permission_required(['Upload Images for Vulnerability'])

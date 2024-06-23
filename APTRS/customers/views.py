@@ -5,7 +5,7 @@ from accounts.models import CustomUser
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from utils.filters import CompanyFilter, UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
@@ -18,8 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View all Client Companies List'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getallcompnay_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id')
@@ -41,8 +40,7 @@ def getallcompnay_filter(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View all Client Companies List'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getallcompnay(request):
     companyname = Company.objects.all()
     serializer = CompanySerializer(companyname,many=True)
@@ -51,8 +49,7 @@ def getallcompnay(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View all Customers List'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getallcustomer_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id')
@@ -72,8 +69,7 @@ def getallcustomer_filter(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View all Customers List'])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def getallcustomer(request):
     customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
     serializer = CustomerSerializer(customername,many=True)
@@ -81,8 +77,8 @@ def getallcustomer(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Add customer'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Customer'])
 def customeradd(request):
     serializer = CustomerSerializer(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
@@ -95,8 +91,8 @@ def customeradd(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['View specific customer'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Customer'])
 def getcustomer(request,pk):
     try:
         customer = CustomUser.objects.get(pk=pk, is_staff=False)
@@ -108,8 +104,8 @@ def getcustomer(request,pk):
     return Response(serializer.data)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Delete customer'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Customer'])
 def customerdelete(request):
     customers = CustomUser.objects.filter(id__in=request.data,is_staff=False)
     customers.delete()
@@ -119,8 +115,8 @@ def customerdelete(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit customer'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Customer'])
 def customeredit(request,pk):
     try:
         customer = CustomUser.objects.get(pk=pk,is_staff=False)
@@ -144,8 +140,8 @@ def customeredit(request,pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Get specific Client Company'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Company'])
 def getcompany(request,pk):
     try:
         company = Company.objects.get(pk=pk)
@@ -159,8 +155,8 @@ def getcompany(request,pk):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Add Company'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Company'])
 def add_company(request):
     serializer = CompanySerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -174,8 +170,8 @@ def add_company(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Edit Company'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Company'])
 def edit_company(request,pk):
     try:
         company = Company.objects.get(pk=pk)
@@ -195,8 +191,8 @@ def edit_company(request,pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-@custom_permission_required(['Delete Company'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Company'])
 def companydelete(request):
     company = Company.objects.filter(id__in=request.data,internal=False)
     company.delete()
