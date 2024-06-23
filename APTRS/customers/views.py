@@ -3,7 +3,9 @@ import logging
 
 from accounts.models import CustomUser
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.cache import cache_page
 from rest_framework import status
+from django.core.cache import cache
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -22,8 +24,14 @@ logger = logging.getLogger(__name__)
 def getallcompnay_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id') or 'id'
-    companyname = Company.objects.all()
 
+    cache_key = 'all_company_data'
+    companyname = cache.get(cache_key)
+
+    if not companyname:
+        companyname = Company.objects.all()
+        cache.set(cache_key, companyname, timeout=3600) 
+    
     companyname_filter = CompanyFilter(request.GET, queryset=companyname)
     filtered_queryset = companyname_filter.qs
     if sort_order == 'asc':
@@ -41,6 +49,7 @@ def getallcompnay_filter(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
+@cache_page(3600)
 def getallcompnay(request):
     companyname = Company.objects.all()
     serializer = CompanySerializer(companyname,many=True)
@@ -53,7 +62,12 @@ def getallcompnay(request):
 def getallcustomer_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id') or 'id'
-    customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
+    cache_key = 'all_customer_data'
+    customername = cache.get(cache_key)
+
+    if not customername:
+        customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
+        cache.set(cache_key, customername, timeout=3600) 
 
     customername_filter = UserFilter(request.GET, queryset=customername)
     filtered_queryset = customername_filter.qs
@@ -70,6 +84,7 @@ def getallcustomer_filter(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
+@cache_page(3600)
 def getallcustomer(request):
     customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
     serializer = CustomerSerializer(customername,many=True)

@@ -1,4 +1,6 @@
 from rest_framework.views import APIView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -20,6 +22,7 @@ class ReportStandardCreateView(APIView):
 class ReportStandardListView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
+    @method_decorator(cache_page(3600))
     def get(self, request):
         queryset = ReportStandard.objects.all()
         serializer = ReportStandardSerializer(queryset, many=True)
@@ -39,6 +42,7 @@ class ProjectTypeCreateView(APIView):
 class ProjectTypeListView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
+    @method_decorator(cache_page(3600))
     def get(self, request):
         queryset = ProjectType.objects.all()
         serializer = ProjectTypeSerializer(queryset, many=True)
