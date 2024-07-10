@@ -3,6 +3,8 @@ import logging
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from rest_framework import status
+from django.db.models import Prefetch
+
 from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -40,6 +42,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     Note:
     - The associated groups and permissions are fetched based on the user's groups.
     """
+
+    
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -53,7 +57,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['isAdmin'] = self.user.is_superuser
         data['isStaff'] = self.user.is_staff
         permissions = set()  # Use set to avoid duplicate permissions
-
+        
         # Fetching permissions associated with user's groups
         user_groups = CustomGroup.objects.filter(customuser=self.user)
         for group in user_groups:
@@ -70,7 +74,33 @@ class MyTokenObtainPairView(TokenObtainPairView):
     This view extends the functionality of TokenObtainPairView and uses the
     MyTokenObtainPairSerializer to include extra user information in the response.
     """
+    #serializer_class = MyTokenObtainPairSerializer
     serializer_class = MyTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Get the token data
+        token_data = serializer.validated_data
+
+        # Create a response object
+        response = Response(token_data, status=status.HTTP_200_OK)
+
+        # Set the JWT token in the cookie
+        response.set_cookie(
+            key='access_token',
+            value=token_data['access'],
+            httponly=False,
+            secure=True,  # Ensure to use this in production
+            samesite='Lax',  # Adjust this as needed
+        )
+
+        return response
 
 
 @api_view(['POST'])
@@ -151,7 +181,10 @@ def getallusers_filter(request):
     userdetails = cache.get(cache_key)
 
     if not userdetails:
-        userdetails = CustomUser.objects.filter(is_staff=True)
+        #userdetails = CustomUser.objects.filter(is_staff=True)
+        userdetails = CustomUser.objects.filter(is_staff=True).select_related('company').prefetch_related('groups')
+
+       
         cache.set(cache_key, userdetails, timeout=3600)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)
@@ -201,6 +234,7 @@ def myprofile(request):
     - If the user has the required permissions, the endpoint returns a JSON object
       containing the profile details of the authenticated user.
     """
+    
     serializer = CustomUserSerializer(request.user)
     return Response(serializer.data)
 
