@@ -62,12 +62,8 @@ class PrjectScope(models.Model):
     scope = models.CharField(max_length=500, unique = False, null = False, blank = False)
     description = models.CharField(max_length=100, unique = False, null = True, blank = True, default=None)
 
-    def save(self, *args, **kwargs):
-        existing_scope = PrjectScope.objects.filter(project=self.project, scope=self.scope).exists()
-        if existing_scope:
-            return
-        else:
-            super(PrjectScope, self).save(*args, **kwargs)
+    class Meta:
+        unique_together = ['project', 'scope']
 
 
 
