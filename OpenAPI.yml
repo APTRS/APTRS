@@ -111,6 +111,8 @@ tags:
     description: Project Vulnerability APIs of APTRS
   - name: Project > Retest
     description: Project Retest APIs of APTRS
+  - name: Project > Project Scope
+  - name: Project > Report
   - name: Vulnerability Database
     description: >
       The Vulnerability Database APIs in APTRS offer a robust solution for
@@ -192,6 +194,7 @@ tags:
       These APIs empower your organization to efficiently handle customer user
       management, offering a comprehensive solution for onboarding, editing, and
       removing client company users associated with your services.
+  - name: Config APIs
 paths:
   /api/auth/user/1:
     get:
@@ -553,7 +556,7 @@ paths:
           application/json:
             schema:
               type: object
-              example: "{\"email\":\"admin@anof.com\",\"password\":\"admin\"}\r\n\r\n\r\n//{\"email\":\"manager@manager.com\",\"password\":\"manager\"}\r\n//{\"email\":\"user@user.com\",\"password\":\"user\"}"
+              example: "{\"email\":\"admin@anof.com\",\"password\":\"PE#5GZ29PTZMSE\"}\r\n\r\n\r\n//{\"email\":\"manager@manager.com\",\"password\":\"manager\"}\r\n//{\"email\":\"user@user.com\",\"password\":\"user\"}"
       security:
         - noauthAuth: []
       responses:
@@ -791,12 +794,22 @@ paths:
           schema:
             type: integer
           description: upto 50
-          example: '1'
+          example: '5'
         - name: offset
           in: query
           schema:
             type: integer
           example: '0'
+        - name: sort
+          in: query
+          schema:
+            type: string
+          example: full_name
+        - name: order_by
+          in: query
+          schema:
+            type: string
+          example: desc
       responses:
         '200':
           description: Successful response
@@ -1070,8 +1083,8 @@ paths:
             schema:
               type: object
               example:
-                newpassword: admin
-                oldpassword: admin
+                newpassword: PE#5GZ29PTZMSE
+                oldpassword: PE#5GZ29PTZMSE
       responses:
         '200':
           description: Successful response
@@ -1107,7 +1120,6 @@ paths:
           in: query
           schema:
             type: string
-          example: j
         - name: companyname
           in: query
           schema:
@@ -1124,12 +1136,10 @@ paths:
           in: query
           schema:
             type: string
-          example: u
         - name: status
           in: query
           schema:
             type: string
-          example: del
         - name: startdate
           in: query
           schema:
@@ -1144,12 +1154,23 @@ paths:
           in: query
           schema:
             type: integer
-          example: '10'
+          example: '7'
         - name: offset
           in: query
           schema:
             type: integer
           example: '0'
+        - name: order_by
+          in: query
+          schema:
+            type: string
+          description: desc/asc
+          example: asc
+        - name: sort
+          in: query
+          schema:
+            type: string
+          example: owner
       responses:
         '200':
           description: Successful response
@@ -1165,7 +1186,7 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/get-project/3/:
+  /api/project/get-project/1/:
     get:
       tags:
         - Project > Project
@@ -1250,64 +1271,6 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/scope/1/:
-    get:
-      tags:
-        - Project > Project
-      summary: All Project Scope
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/scope/add/1/:
-    post:
-      tags:
-        - Project > Project
-      summary: Add Project Scope
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                - scope: https://map.google.com
-                  description: Google MAp
-                - scope: google.com
-                  description: Google App
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/scope/edit/5/:
-    post:
-      tags:
-        - Project > Project
-      summary: Edit Project Scope
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                scope: https://map.google.com
-                description: Google Aps
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/scope/delete/:
-    delete:
-      tags:
-        - Project > Project
-      summary: Delete Project Scope
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /api/project/delete-project/:
     delete:
       tags:
@@ -1338,6 +1301,60 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/project/vulnerability/3/:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Get Vulnerability
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/vulnerability/instances/filter/1/:
+    get:
+      tags:
+        - Project > Vulnerability
+      summary: Get Vulnerability Instances Filter and Pagination
+      parameters:
+        - name: URL
+          in: query
+          schema:
+            type: string
+        - name: Parameter
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: '20'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          example: '0'
+        - name: order_by
+          in: query
+          schema:
+            type: string
+          description: asc/desc
+          example: asc
+        - name: sort
+          in: query
+          schema:
+            type: string
+          example: id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/project/vulnerability/add/vulnerability/:
     post:
       tags:
@@ -1348,7 +1365,7 @@ paths:
           application/json:
             schema:
               type: object
-              example: "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}"
+              example: "{\r\n    \"vulnerabilityname\": \"XXE\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://xss.com/#/search\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}"
       responses:
         '200':
           description: Successful response
@@ -1407,7 +1424,7 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/vulnerability/add/instances/1/:
+  /api/project/vulnerability/add/instances/3/:
     post:
       tags:
         - Project > Vulnerability
@@ -1542,49 +1559,6 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/project/vulnerability/3/:
-    get:
-      tags:
-        - Project > Vulnerability
-      summary: Get Vulnerability
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/vulnerability/instances/filter/1/:
-    get:
-      tags:
-        - Project > Vulnerability
-      summary: Get Vulnerability Instances Filter and Pagination
-      parameters:
-        - name: URL
-          in: query
-          schema:
-            type: string
-        - name: Parameter
-          in: query
-          schema:
-            type: string
-        - name: status
-          in: query
-          schema:
-            type: string
-        - name: limit
-          in: query
-          schema:
-            type: integer
-          example: '1'
-        - name: offset
-          in: query
-          schema:
-            type: integer
-          example: '0'
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /api/project/vulnerability/instances/1/:
     get:
       tags:
@@ -1652,25 +1626,12 @@ paths:
             schema:
               type: object
               properties:
+                upload:
+                  type: string
+                  format: binary
                 images:
                   type: string
                   format: binary
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/project/report/1/:
-    post:
-      tags:
-        - Project > Vulnerability
-      summary: Report - PDF
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              example: "{\r\n    \"Format\": \"docx\", //html,pdf,excel,docx\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}"
       responses:
         '200':
           description: Successful response
@@ -1799,12 +1760,111 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/project/scope/1/:
+    get:
+      tags:
+        - Project > Project Scope
+      summary: All Project Scope
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/edit/3/:
+    post:
+      tags:
+        - Project > Project Scope
+      summary: Edit Project Scope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                scope: https://map.google.com
+                description: localnet test1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/add/1/:
+    post:
+      tags:
+        - Project > Project Scope
+      summary: Add Project Scope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - scope: https://map.google.com
+                  description: Google MAp
+                - scope: google.com
+                  description: Google App
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/scope/delete/:
+    delete:
+      tags:
+        - Project > Project Scope
+      summary: Delete Project Scope
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/project/report/1/:
+    post:
+      tags:
+        - Project > Report
+      summary: Report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"Format\": \"docx\", //pdf,excel,docx\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - Project > Report
+      summary: GET Report API
+      parameters:
+        - name: Format
+          in: query
+          schema:
+            type: string
+          example: pdf
+        - name: Type
+          in: query
+          schema:
+            type: string
+          example: Re-Audit
+        - name: Standard
+          in: query
+          schema:
+            type: string
+          example: OWASP Top 10 web,OWASP Top 10 API,NIST
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/vulndb/filter/:
     get:
       tags:
         - Vulnerability Database
       summary: Search Database
-      description: >
+      description: >-
         # API Documentation - Search Vulnerabilities
 
 
@@ -1832,18 +1892,16 @@ paths:
 
         - `{query}`: The search query to filter vulnerabilities with
         vulnerability title.
-
+            
 
         ## Example
 
 
-        ```http
+        ``` http
 
         GET /api/vulndb/filter/?search=s
 
-        ```
-
-
+         ```
 
         ## Response
 
@@ -1854,7 +1912,8 @@ paths:
 
         ### Sample Response
 
-        ```json
+
+        ``` json
 
         [
           {
@@ -1865,10 +1924,10 @@ paths:
           }
         ]
 
-        ```
-
+         ```
 
         ## Error Handling
+
 
         - If the authentication token is missing or invalid, a 401 Unauthorized
         response will be returned.
@@ -1893,6 +1952,7 @@ paths:
           in: query
           schema:
             type: string
+          example: o
       responses:
         '200':
           description: Successful response
@@ -1903,6 +1963,86 @@ paths:
       tags:
         - Vulnerability Database
       summary: Get Vulnerability Details - Title
+      description: >-
+        # API Documentation - Fetch Vulnerability Details
+
+
+        ## Endpoint
+
+
+        `GET /api/vulndb/database/?title={title}`
+
+
+        ## Description
+
+
+        This API endpoint allows you to fetch details of a vulnerability from
+        the vulnerability database based on its title.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Query Parameter
+
+
+        - `{title}`: The title of the vulnerability to fetch details for.
+
+
+        ## Example
+
+
+        ```http
+
+        GET /api/vulndb/database/?title=Possible%20XSS
+
+        ```
+
+
+        ## Response
+
+        The API response will include details of the vulnerability if it exists
+        in the database.
+
+
+        ### Successful Response
+
+        ```json
+
+        {
+          "id": 1,
+          "vulnerabilityname": "Possible XSS",
+          "vulnerabilityseverity": "None",
+          "vulnerabilitydescription": "<p>IDOR.</p>",
+          "vulnerabilitysolution": "<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\n\n<ul>\n\t<li>Never rely on obfuscation alone for access control.</li>\n\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\n\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\n\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\n\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\n</ul>",
+          "vulnerabilityreferlnk": "<ul>\n\t<li><a href=\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\">OWASP</a></li>\n</ul>",
+          "cvssscore": 0.0,
+          "cvssvector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        }
+
+        ```
+
+
+        ## Error Response
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If the vulnerability title does not match or does not exist in the
+        database, a 200 OK response will be returned with an empty array in the
+        body.
+
+        ```json
+
+        [ ]
+
+        ```
+
+        - If there are issues with the request or the server encounters an
+        internal error, a 500 Internal Server Error response will be returned.
       parameters:
         - name: Host
           in: header
@@ -1929,6 +2069,102 @@ paths:
       tags:
         - Vulnerability Database
       summary: Get All Vulnerability with Filters and pagination
+      description: >-
+        # API Documentation - Fetch All Vulnerabilities with Pagination and
+        Filtering
+
+
+        ## Endpoint
+
+
+        `GET
+        /api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=1`
+
+
+        ## Description
+
+
+        This API endpoint allows you to fetch all vulnerabilities from the
+        vulnerability database with pagination and filtering options.
+
+
+        ## Authentication
+
+
+        Include the authentication token in the request headers.
+
+
+        ## Query Parameters
+
+
+        - `vulnerabilityname`: Filter vulnerabilities by name.
+
+        - `vulnerabilityseverity`: Filter vulnerabilities by severity.
+
+        - `cvssscore`: Filter vulnerabilities by CVSS score.
+
+        - `limit`: Number of vulnerabilities to fetch per page (default is 1).
+
+        - `offset`: Offset for pagination (default is 1).
+
+
+        ## Example
+
+
+        ```http
+
+        GET
+        /api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=1
+
+        ```
+
+
+        ## Response
+
+        The API response will include a paginated list of vulnerabilities based
+        on the provided filters.
+
+
+        ```json
+
+        {
+            "count": 3,
+            "next": "http://aptrsapi.souravkalal.tech/api/vulndb/all-vulndb/filter?cvssscore=&limit=1&offset=2&vulnerabilityname=&vulnerabilityseverity=",
+            "previous": "http://aptrsapi.souravkalal.tech/api/vulndb/all-vulndb/filter?cvssscore=&limit=1&vulnerabilityname=&vulnerabilityseverity=",
+            "results": [
+                {
+                    "id": 2,
+                    "vulnerabilityname": "Stored XSS",
+                    "vulnerabilityseverity": "None",
+                    "vulnerabilitydescription": "<p>IDOR.</p>",
+                    "vulnerabilitysolution": "<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\n\n<ul>\n\t<li>Never rely on obfuscation alone for access control.</li>\n\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\n\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\n\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\n\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\n</ul>",
+                    "vulnerabilityreferlnk": "<ul>\n\t<li><a href=\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\">OWASP</a></li>\n</ul>",
+                    "cvssscore": 0.0,
+                    "cvssvector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+                }
+            ]
+        }
+
+        ```
+
+        - count: Total number of vulnerabilities matching the query.
+
+        - next: Link to the next page of results if available.
+
+        - previous: Link to the previous page of results if available.
+
+        - results: Array containing the vulnerabilities matching the query
+        parameters.
+
+
+
+        ## Error Response
+
+        - If the authentication token is missing or invalid, a 401 Unauthorized
+        response will be returned.
+
+        - If there are issues with the request or the server encounters an
+        internal error, a 500 Internal Server Error response will be returned.
       parameters:
         - name: vulnerabilityname
           in: query
@@ -1951,7 +2187,7 @@ paths:
           in: query
           schema:
             type: integer
-          example: '0'
+          example: '1'
       responses:
         '200':
           description: Successful response
@@ -2134,12 +2370,23 @@ paths:
           in: query
           schema:
             type: integer
-          example: '1'
+          example: '19'
         - name: offset
           in: query
           schema:
             type: integer
           example: '0'
+        - name: order_by
+          in: query
+          schema:
+            type: string
+          description: asc/desc
+          example: desc
+        - name: sort
+          in: query
+          schema:
+            type: string
+          example: id
       responses:
         '200':
           description: Successful response
@@ -2837,6 +3084,10 @@ paths:
           in: query
           schema:
             type: string
+        - name: company
+          in: query
+          schema:
+            type: string
         - name: email
           in: query
           schema:
@@ -2859,6 +3110,17 @@ paths:
           schema:
             type: integer
           example: '0'
+        - name: order_by
+          in: query
+          schema:
+            type: string
+          description: asc/desc
+          example: asc
+        - name: sort
+          in: query
+          schema:
+            type: string
+          example: id
       responses:
         '200':
           description: Successful response
@@ -3386,6 +3648,60 @@ paths:
 
         - If there are validation errors or other issues with the request, a 400
         Bad Request response will be returned.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/config/standards/:
+    get:
+      tags:
+        - Config APIs
+      summary: Fetch Report Standards
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/config/standards/create/:
+    post:
+      tags:
+        - Config APIs
+      summary: Add Report Standard - Admin Only
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: OWASP Mobile TOP 10 2024
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/config/project-type/create/:
+    post:
+      tags:
+        - Config APIs
+      summary: Add Project Type - Admin Only
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Web Application Penetration Testing
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/config/project-type/:
+    get:
+      tags:
+        - Config APIs
+      summary: Fetch Project Type
       responses:
         '200':
           description: Successful response

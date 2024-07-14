@@ -5,7 +5,7 @@
 		"description": "APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24236036",
-		"_collection_link": "https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&source=collection_link&creator=24236036"
+		"_collection_link": "https://aptrs-api.postman.co/workspace/APTRS-Workspace~046de2a8-e4dc-4177-835c-9705f86086c7/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&source=collection_link&creator=24236036"
 	},
 	"item": [
 		{
@@ -250,7 +250,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"email\":\"admin@anof.com\",\"password\":\"admin\"}\r\n\r\n\r\n//{\"email\":\"manager@manager.com\",\"password\":\"manager\"}\r\n//{\"email\":\"user@user.com\",\"password\":\"user\"}",
+							"raw": "{\"email\":\"admin@anof.com\",\"password\":\"PE#5GZ29PTZMSE\"}\r\n\r\n\r\n//{\"email\":\"manager@manager.com\",\"password\":\"manager\"}\r\n//{\"email\":\"user@user.com\",\"password\":\"user\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -330,7 +330,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{domainname}}/api/auth/users/filter?username=&full_name=&email=&position=&is_active=&limit=1&offset=0",
+							"raw": "{{domainname}}/api/auth/users/filter?username=&full_name=&email=&position=&is_active=&limit=5&offset=0&sort=full_name&order_by=desc",
 							"host": [
 								"{{domainname}}"
 							],
@@ -363,12 +363,20 @@
 								},
 								{
 									"key": "limit",
-									"value": "1",
+									"value": "5",
 									"description": "upto 50"
 								},
 								{
 									"key": "offset",
 									"value": "0"
+								},
+								{
+									"key": "sort",
+									"value": "full_name"
+								},
+								{
+									"key": "order_by",
+									"value": "desc"
 								}
 							]
 						}
@@ -488,7 +496,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"newpassword\": \"admin\",\r\n    \"oldpassword\": \"admin\"\r\n}",
+							"raw": "{\r\n    \"newpassword\": \"PE#5GZ29PTZMSE\",\r\n    \"oldpassword\": \"PE#5GZ29PTZMSE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -575,7 +583,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{domainname}}/api/project/projects/filter?name=j&companyname=&projecttype&testingtype=&owner=u&status=del&startdate=&enddate_before=&limit=10&offset=0",
+									"raw": "{{domainname}}/api/project/projects/filter?name=&companyname=&projecttype=&testingtype=&owner=&status=&startdate=&enddate_before=&limit=7&offset=0&order_by=asc&sort=owner",
 									"host": [
 										"{{domainname}}"
 									],
@@ -588,7 +596,7 @@
 									"query": [
 										{
 											"key": "name",
-											"value": "j"
+											"value": ""
 										},
 										{
 											"key": "companyname",
@@ -596,7 +604,7 @@
 										},
 										{
 											"key": "projecttype",
-											"value": null
+											"value": ""
 										},
 										{
 											"key": "testingtype",
@@ -604,11 +612,11 @@
 										},
 										{
 											"key": "owner",
-											"value": "u"
+											"value": ""
 										},
 										{
 											"key": "status",
-											"value": "del"
+											"value": ""
 										},
 										{
 											"key": "startdate",
@@ -622,11 +630,20 @@
 										},
 										{
 											"key": "limit",
-											"value": "10"
+											"value": "7"
 										},
 										{
 											"key": "offset",
 											"value": "0"
+										},
+										{
+											"key": "order_by",
+											"value": "asc",
+											"description": "desc/asc"
+										},
+										{
+											"key": "sort",
+											"value": "owner"
 										}
 									]
 								}
@@ -659,7 +676,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{domainname}}/api/project/get-project/3/",
+									"raw": "{{domainname}}/api/project/get-project/1/",
 									"host": [
 										"{{domainname}}"
 									],
@@ -667,7 +684,7 @@
 										"api",
 										"project",
 										"get-project",
-										"3",
+										"1",
 										""
 									]
 								}
@@ -764,119 +781,6 @@
 							"response": []
 						},
 						{
-							"name": "All Project Scope",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{domainname}}/api/project/scope/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"scope",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Add Project Scope",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    {\r\n        \"scope\": \"https://map.google.com\",\r\n        \"description\": \"Google MAp\"\r\n    },\r\n    {\r\n        \"scope\": \"google.com\",\r\n        \"description\": \"Google App\"\r\n    }\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/scope/add/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"scope",
-										"add",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Edit Project Scope",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"scope\": \"https://map.google.com\",\r\n    \"description\": \"Google Aps\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/scope/edit/5/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"scope",
-										"edit",
-										"5",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Project Scope",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    \"1\",\r\n    \"2\",\r\n    \"3\",\r\n    \"4\"\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/scope/delete/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"scope",
-										"delete",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Delete Projects",
 							"request": {
 								"method": "DELETE",
@@ -955,13 +859,88 @@
 							"response": []
 						},
 						{
+							"name": "Get Vulnerability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/3/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Vulnerability Instances Filter and Pagination",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/vulnerability/instances/filter/1/?URL=&Parameter=&status=&limit=20&offset=0&order_by=asc&sort=id",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"vulnerability",
+										"instances",
+										"filter",
+										"1",
+										""
+									],
+									"query": [
+										{
+											"key": "URL",
+											"value": ""
+										},
+										{
+											"key": "Parameter",
+											"value": ""
+										},
+										{
+											"key": "status",
+											"value": ""
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "order_by",
+											"value": "asc",
+											"description": "asc/desc"
+										},
+										{
+											"key": "sort",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Add Vulnerability with Instance",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"vulnerabilityname\": \"XSS\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://10.10.165.234/#/search\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"vulnerabilityname\": \"XXE\",\r\n    \"vulnerabilityseverity\": \"None\",\r\n    \"cvssscore\": 0.0,\r\n    \"cvssvector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N\",\r\n    \"status\": \"Accepted Risk\",\r\n    \"vulnerabilitydescription\": \"<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users. Depending on the context, websites may leak all kinds of information to a potential attacker, including:</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Data about other users, such as usernames or financial information</li>\\\\n\\\\t<li>Sensitive commercial or business data</li>\\\\n\\\\t<li>Technical details about the website and its infrastructure</li>\\\\n</ul>\\\\n\\\\n<p>The dangers of leaking sensitive user or business data are fairly obvious, but disclosing technical information can sometimes be just as serious. Although some of this information will be of limited use, it can potentially be a starting point for exposing an additional attack surface, which may contain other interesting vulnerabilities. The knowledge that you can gather could even provide the missing piece of the puzzle when trying to construct complex, high-severity attacks.</p>\",\r\n    \"POC\": \"test\",\r\n    \"vulnerabilitysolution\": \"<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur. However, there are some general best practices that you can follow to minimize the risk of athese kinds of vulnerability creeping into your own websites.</p>\\\\n\\\\n<ul>\\\\n\\\\t<li>Make sure that everyone involved in producing the website is fully aware of what information is considered sensitive. Sometimes seemingly harmless information can be much more useful to an attacker than people realize. Highlighting these dangers can help make sure that sensitive information is handled more securely in general by your organization.</li>\\\\n\\\\t<li>Audit any code for potential information disclosure as part of your QA or build processes. It should be relatively easy to automate some of the associated tasks, such as stripping developer comments.</li>\\\\n\\\\t<li>Use generic error messages as much as possible.</li>\",\r\n    \"vulnerabilityreferlnk\":\"Another Ckedior\",\r\n    \"project\": 1,\r\n    \"instance\": [\r\n        {\r\n            \"URL\": \"http://xss.com/#/search\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Confirm Fixed\" //STATUS_CHOICES = [Vulnerable,Confirm Fixed, Accepted Risk]\r\n        },\r\n        {\r\n            \"URL\": \"http://10.10.14.68/ftp/coupons_2013.md.bak\",\r\n            \"Parameter\": \"\",\r\n            \"status\": \"Accepted Risk\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1043,11 +1022,13 @@
 								"header": [
 									{
 										"key": "Host",
-										"value": "127.0.0.1:8000"
+										"value": "127.0.0.1:8000",
+										"disabled": true
 									},
 									{
 										"key": "X-CSRFToken",
-										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi"
+										"value": "HzsA4lG3P8q6q8Le3sS76eKYWacuJzAHn0GqxMDGzvFwZxvindhnlMQB46HjXkUi",
+										"disabled": true
 									},
 									{
 										"key": "Content-Type",
@@ -1055,11 +1036,13 @@
 									},
 									{
 										"key": "Connection",
-										"value": "close"
+										"value": "close",
+										"disabled": true
 									},
 									{
 										"key": "Content-Length",
-										"value": "165"
+										"value": "165",
+										"disabled": true
 									}
 								],
 								"body": {
@@ -1067,7 +1050,7 @@
 									"raw": "[\r\n    {\r\n        \"URL\": \"https://google.com\",\r\n        \"Parameter\": \"username\",\r\n        \"status\": \"Vulnerable\"\r\n    },\r\n    {\r\n        \"URL\": \"google.com\",\r\n        \"Parameter\": \"hellworld\",\r\n        \"status\": \"Vulnerable\"\r\n    }\r\n]"
 								},
 								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/add/instances/1/",
+									"raw": "{{domainname}}/api/project/vulnerability/add/instances/3/",
 									"host": [
 										"{{domainname}}"
 									],
@@ -1077,7 +1060,7 @@
 										"vulnerability",
 										"add",
 										"instances",
-										"1",
+										"3",
 										""
 									]
 								}
@@ -1223,72 +1206,6 @@
 							"response": []
 						},
 						{
-							"name": "Get Vulnerability",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/3/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"3",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Vulnerability Instances Filter and Pagination",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{domainname}}/api/project/vulnerability/instances/filter/1/?URL=&Parameter=&status=&limit=1&offset=0",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"vulnerability",
-										"instances",
-										"filter",
-										"1",
-										""
-									],
-									"query": [
-										{
-											"key": "URL",
-											"value": ""
-										},
-										{
-											"key": "Parameter",
-											"value": ""
-										},
-										{
-											"key": "status",
-											"value": ""
-										},
-										{
-											"key": "limit",
-											"value": "1"
-										},
-										{
-											"key": "offset",
-											"value": "0"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get Vulnerability Instances",
 							"request": {
 								"method": "GET",
@@ -1328,13 +1245,12 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
+										"value": "application/json"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\"64\",\"73\"]"
+									"raw": "[\"11\",\"73\"]"
 								},
 								"url": {
 									"raw": "{{domainname}}/api/project/vulnerability/delete/vulnerability/",
@@ -1364,7 +1280,7 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/C:/Users/AnoF/Downloads/exiftool-12.58/My Basic Network Scan_a9b0sh.csv"
+											"src": "/C:/Users/AnoF/Documents/Nessus Report.csv"
 										}
 									]
 								},
@@ -1395,9 +1311,9 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "images",
+											"key": "upload",
 											"type": "file",
-											"src": "/C:/Users/AnoF/Downloads/APTRS.png"
+											"src": "/C:/Users/AnoF/Pictures/APTRS/Ne Blue loo/icon.png"
 										},
 										{
 											"key": "images",
@@ -1417,36 +1333,6 @@
 										"project",
 										"ckeditor",
 										"imageupload",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Report - PDF",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"Format\": \"docx\", //html,pdf,excel,docx\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{domainname}}/api/project/report/1/",
-									"host": [
-										"{{domainname}}"
-									],
-									"path": [
-										"api",
-										"project",
-										"report",
-										"1",
 										""
 									]
 								}
@@ -1632,6 +1518,194 @@
 						}
 					],
 					"description": "Project Retest APIs of APTRS"
+				},
+				{
+					"name": "Project Scope",
+					"item": [
+						{
+							"name": "All Project Scope",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/scope/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"scope",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Project Scope",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"scope\": \"https://map.google.com\",\r\n    \"description\": \"localnet test1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/scope/edit/3/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"scope",
+										"edit",
+										"3",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Project Scope",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"scope\": \"https://map.google.com\",\r\n        \"description\": \"Google MAp\"\r\n    },\r\n    {\r\n        \"scope\": \"google.com\",\r\n        \"description\": \"Google App\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/scope/add/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"scope",
+										"add",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Project Scope",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    \"1\",\r\n    \"2\",\r\n    \"3\",\r\n    \"4\"\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/scope/delete/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"scope",
+										"delete",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Report",
+					"item": [
+						{
+							"name": "Report",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Format\": \"docx\", //pdf,excel,docx\r\n    \"Type\": \"Re-Audit\",\r\n    \"Standard\": [\r\n        \"OWASP Top 10 web\",\r\n        \"OWASP Top 10 API\",\r\n        \"NIST\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domainname}}/api/project/report/1/",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"report",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Report API",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domainname}}/api/project/report/1/?Format=pdf&Type=Re-Audit&Standard=OWASP%20Top%2010%20web,OWASP%20Top%2010%20API,NIST",
+									"host": [
+										"{{domainname}}"
+									],
+									"path": [
+										"api",
+										"project",
+										"report",
+										"1",
+										""
+									],
+									"query": [
+										{
+											"key": "Format",
+											"value": "pdf"
+										},
+										{
+											"key": "Type",
+											"value": "Re-Audit"
+										},
+										{
+											"key": "Standard",
+											"value": "OWASP%20Top%2010%20web,OWASP%20Top%2010%20API,NIST"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			],
 			"description": "The Project APIs within APTRS provide a versatile platform for creating and managing projects associated with client companies. These APIs empower users to create projects with customizable details such as project name and type (e.g., white box, black box).\n\n**Key Features of Project APIs:**\n\n1. **Project Creation:**\n   - Easily create projects for client companies using the Project APIs.\n   - Specify project details, including the project name and type (e.g., white box, black box).\n\n2. **Project Scope Management:**\n   - Within each project, add project scope details such as URLs or IP addresses.\n   - APTRS supports multiple scopes within a single project, offering flexibility in project configuration.\n\n3. **Vulnerability Management:**\n   - Create vulnerabilities within a project, providing a detailed overview of potential security risks.\n   - Upload Nessus CSV reports directly to APTRS to seamlessly add vulnerabilities from Nessus scans.\n\n4. **Project Reporting:**\n   - Generate comprehensive reports in various formats, including Excel, PDF, and HTML.\n   - Enhance project communication and documentation through easily accessible and shareable reports.\n\n5. **Project Retesting and Ownership:**\n   - Manage project retesting, allowing for the reassessment of vulnerabilities over time.\n   - Assign project ownership for effective project management and accountability.\n\nThese APIs offer a robust set of tools for creating, configuring, and managing projects, providing a centralized hub for vulnerability management, report generation, and ongoing project evaluation.\n\n"
@@ -1641,6 +1715,62 @@
 			"item": [
 				{
 					"name": "Search Database",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - vulnerabilityname and id\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function(vulnerability) {\r",
+									"        pm.expect(vulnerability).to.have.property('vulnerabilityname');\r",
+									"        pm.expect(vulnerability).to.have.property('id');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Vulnerability names are non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function(vulnerability) {\r",
+									"        pm.expect(vulnerability.vulnerabilityname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Vulnerability name should not be empty\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response is an array with at least one element\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('array').and.to.have.lengthOf.at.least(1);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Vulnerability names are non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    \r",
+									"    responseData.forEach(function(vulnerability) {\r",
+									"        pm.expect(vulnerability.vulnerabilityname).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Vulnerability name should not be empty\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableUrlEncoding": true,
 						"tlsPreferServerCiphers": true
@@ -1660,7 +1790,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{domainname}}/api/vulndb/filter/?search=",
+							"raw": "{{domainname}}/api/vulndb/filter/?search=o",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1673,11 +1803,11 @@
 							"query": [
 								{
 									"key": "search",
-									"value": ""
+									"value": "o"
 								}
 							]
 						},
-						"description": "# API Documentation - Search Vulnerabilities\n\n## Endpoint\n\n`GET /api/vulndb/filter/?search={query}`\n\n## Description\n\nThis API endpoint allows you to search for vulnerabilities in the vulnerability database.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameter\n\n- `{query}`: The search query to filter vulnerabilities with vulnerability title.\n\n## Example\n\n```http\nGET /api/vulndb/filter/?search=s\n```\n\n\n## Response\n\nThe API response will include a list of vulnerabilities that match the search query.\n\n### Sample Response\n```json\n[\n  {\n    \"vulnerabilityname\": \"Possible XSS\"\n  },\n  {\n    \"vulnerabilityname\": \"Stored XSS\"\n  }\n]\n```\n\n## Error Handling\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are issues with the search process, a 500 Internal Server Error response may be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned.\n"
+						"description": "# API Documentation - Search Vulnerabilities\n\n## Endpoint\n\n`GET /api/vulndb/filter/?search={query}`\n\n## Description\n\nThis API endpoint allows you to search for vulnerabilities in the vulnerability database.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameter\n\n- `{query}`: The search query to filter vulnerabilities with vulnerability title.\n    \n\n## Example\n\n``` http\nGET /api/vulndb/filter/?search=s\n\n ```\n\n## Response\n\nThe API response will include a list of vulnerabilities that match the search query.\n\n### Sample Response\n\n``` json\n[\n  {\n    \"vulnerabilityname\": \"Possible XSS\"\n  },\n  {\n    \"vulnerabilityname\": \"Stored XSS\"\n  }\n]\n\n ```\n\n## Error Handling\n\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are issues with the search process, a 500 Internal Server Error response may be returned.\n- If there are validation errors or other issues with the request, a 400 Bad Request response will be returned."
 					},
 					"response": []
 				},
@@ -1714,7 +1844,8 @@
 									"value": "Possible XSS"
 								}
 							]
-						}
+						},
+						"description": "# API Documentation - Fetch Vulnerability Details\n\n## Endpoint\n\n`GET /api/vulndb/database/?title={title}`\n\n## Description\n\nThis API endpoint allows you to fetch details of a vulnerability from the vulnerability database based on its title.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameter\n\n- `{title}`: The title of the vulnerability to fetch details for.\n\n## Example\n\n```http\nGET /api/vulndb/database/?title=Possible%20XSS\n```\n\n## Response\nThe API response will include details of the vulnerability if it exists in the database.\n\n### Successful Response\n```json\n{\n  \"id\": 1,\n  \"vulnerabilityname\": \"Possible XSS\",\n  \"vulnerabilityseverity\": \"None\",\n  \"vulnerabilitydescription\": \"<p>IDOR.</p>\",\n  \"vulnerabilitysolution\": \"<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\\n\\n<ul>\\n\\t<li>Never rely on obfuscation alone for access control.</li>\\n\\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\\n\\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\\n\\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\\n\\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\\n</ul>\",\n  \"vulnerabilityreferlnk\": \"<ul>\\n\\t<li><a href=\\\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\\\">OWASP</a></li>\\n</ul>\",\n  \"cvssscore\": 0.0,\n  \"cvssvector\": \"CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N\"\n}\n```\n\n## Error Response\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If the vulnerability title does not match or does not exist in the database, a 200 OK response will be returned with an empty array in the body.\n```json\n[ ]\n```\n- If there are issues with the request or the server encounters an internal error, a 500 Internal Server Error response will be returned."
 					},
 					"response": []
 				},
@@ -1724,7 +1855,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{domainname}}/api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=0",
+							"raw": "{{domainname}}/api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=1",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1753,10 +1884,11 @@
 								},
 								{
 									"key": "offset",
-									"value": "0"
+									"value": "1"
 								}
 							]
-						}
+						},
+						"description": "# API Documentation - Fetch All Vulnerabilities with Pagination and Filtering\n\n## Endpoint\n\n`GET /api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=1`\n\n## Description\n\nThis API endpoint allows you to fetch all vulnerabilities from the vulnerability database with pagination and filtering options.\n\n## Authentication\n\nInclude the authentication token in the request headers.\n\n## Query Parameters\n\n- `vulnerabilityname`: Filter vulnerabilities by name.\n- `vulnerabilityseverity`: Filter vulnerabilities by severity.\n- `cvssscore`: Filter vulnerabilities by CVSS score.\n- `limit`: Number of vulnerabilities to fetch per page (default is 1).\n- `offset`: Offset for pagination (default is 1).\n\n## Example\n\n```http\nGET /api/vulndb/all-vulndb/filter?vulnerabilityname=&vulnerabilityseverity=&cvssscore&limit=1&offset=1\n```\n\n## Response\nThe API response will include a paginated list of vulnerabilities based on the provided filters.\n\n```json\n{\n    \"count\": 3,\n    \"next\": \"http://aptrsapi.souravkalal.tech/api/vulndb/all-vulndb/filter?cvssscore=&limit=1&offset=2&vulnerabilityname=&vulnerabilityseverity=\",\n    \"previous\": \"http://aptrsapi.souravkalal.tech/api/vulndb/all-vulndb/filter?cvssscore=&limit=1&vulnerabilityname=&vulnerabilityseverity=\",\n    \"results\": [\n        {\n            \"id\": 2,\n            \"vulnerabilityname\": \"Stored XSS\",\n            \"vulnerabilityseverity\": \"None\",\n            \"vulnerabilitydescription\": \"<p>IDOR.</p>\",\n            \"vulnerabilitysolution\": \"<p>Access control vulnerabilities can generally be prevented by taking a defense-in-depth approach and applying the following principles:</p>\\n\\n<ul>\\n\\t<li>Never rely on obfuscation alone for access control.</li>\\n\\t<li>Unless a resource is intended to be publicly accessible, deny access by default.</li>\\n\\t<li>Wherever possible, use a single application-wide mechanism for enforcing access controls.</li>\\n\\t<li>At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.</li>\\n\\t<li>Thoroughly audit and test access controls to ensure they are working as designed.</li>\\n</ul>\",\n            \"vulnerabilityreferlnk\": \"<ul>\\n\\t<li><a href=\\\"https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html\\\">OWASP</a></li>\\n</ul>\",\n            \"cvssscore\": 0.0,\n            \"cvssvector\": \"CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N\"\n        }\n    ]\n}\n```\n- count: Total number of vulnerabilities matching the query.\n- next: Link to the next page of results if available.\n- previous: Link to the previous page of results if available.\n- results: Array containing the vulnerabilities matching the query parameters.\n\n\n## Error Response\n- If the authentication token is missing or invalid, a 401 Unauthorized response will be returned.\n- If there are issues with the request or the server encounters an internal error, a 500 Internal Server Error response will be returned."
 					},
 					"response": []
 				},
@@ -1896,7 +2028,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{domainname}}/api/customer/all-company/filter?name=&limit=1&offset=0",
+							"raw": "{{domainname}}/api/customer/all-company/filter?name=&limit=19&offset=0&order_by=desc&sort=id",
 							"host": [
 								"{{domainname}}"
 							],
@@ -1913,11 +2045,20 @@
 								},
 								{
 									"key": "limit",
-									"value": "1"
+									"value": "19"
 								},
 								{
 									"key": "offset",
 									"value": "0"
+								},
+								{
+									"key": "order_by",
+									"value": "desc",
+									"description": "asc/desc"
+								},
+								{
+									"key": "sort",
+									"value": "id"
 								}
 							]
 						},
@@ -1979,7 +2120,7 @@
 									"key": "img",
 									"description": "Optional ",
 									"type": "file",
-									"src": "/C:/Users/AnoF/Downloads/OWASP.png"
+									"src": "/C:/Users/AnoF/Pictures/APTRS/Ne Blue loo/logo.png"
 								},
 								{
 									"key": "name",
@@ -2094,7 +2235,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{domainname}}/api/customer/all-customer/filter?username=&full_name=&email=&position=&is_active=&limit=1&offset=0",
+							"raw": "{{domainname}}/api/customer/all-customer/filter?username=&full_name=&company=&email=&position=&is_active=&limit=1&offset=0&order_by=asc&sort=id",
 							"host": [
 								"{{domainname}}"
 							],
@@ -2111,6 +2252,10 @@
 								},
 								{
 									"key": "full_name",
+									"value": ""
+								},
+								{
+									"key": "company",
 									"value": ""
 								},
 								{
@@ -2132,6 +2277,15 @@
 								{
 									"key": "offset",
 									"value": "0"
+								},
+								{
+									"key": "order_by",
+									"value": "asc",
+									"description": "asc/desc"
+								},
+								{
+									"key": "sort",
+									"value": "id"
 								}
 							]
 						},
@@ -2275,6 +2429,111 @@
 				}
 			],
 			"description": "The Customer APIs within APTRS provide functionality to manage customer users associated with client companies. When your organization extends services to a client company using the Company APIs, you can leverage the Customer APIs to seamlessly onboard and manage customer users.\n\n### Key Features of Customer APIs:\n\n1. **Add, Edit, and Delete Operations:**\n    - Add User: Utilize the API endpoints to add customer users to the system, associating them with their respective client companies.\n    - Edit User Profiles: Modify and update customer user profiles, ensuring accurate and up-to-date information.\n    - Delete User: Remove customer users from the system when necessary, maintaining data integrity.\n2. **Client Company User Onboarding:**\n    - The Customer APIs facilitate the onboarding of client company users, streamlining the process of integrating them into the APTRS ecosystem.\n3. **Future Updates:**\n    - The current version of APTRS does not support client login for the management of projects, vulnerabilities, or real-time updates. However, upcoming updates are planned to address this, providing enhanced functionality for client interaction.\n\nThese APIs empower your organization to efficiently handle customer user management, offering a comprehensive solution for onboarding, editing, and removing client company users associated with your services."
+		},
+		{
+			"name": "Config APIs",
+			"item": [
+				{
+					"name": "Fetch Report Standards",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/config/standards/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"config",
+								"standards",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Report Standard - Admin Only",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"OWASP Mobile TOP 10 2024\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/config/standards/create/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"config",
+								"standards",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Project Type - Admin Only",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Web Application Penetration Testing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domainname}}/api/config/project-type/create/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"config",
+								"project-type",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Project Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domainname}}/api/config/project-type/",
+							"host": [
+								"{{domainname}}"
+							],
+							"path": [
+								"api",
+								"config",
+								"project-type",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
