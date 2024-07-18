@@ -17,7 +17,7 @@ from utils.permissions import custom_permission_required
 
 from ..models import (PrjectScope, Project, ProjectRetest, Vulnerability)
 from ..report import CheckReport
-from ..serializers import (Projectserializers)
+from ..serializers import (Projectserializers, UpdateProjectOwnerSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +62,20 @@ def project_edit(request, pk):
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects','Assign Projects'])
+def update_project_owner_view(request):
+    serializer = UpdateProjectOwnerSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        project = serializer.update_project(serializer.validated_data)
+        return Response({"message": "Project owner updated successfully"}, status=status.HTTP_200_OK)
+        
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET'])

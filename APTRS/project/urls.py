@@ -9,6 +9,7 @@ urlpatterns = [
     path('my-projects/',project.GetMyProjects.as_view()),
     path('projects/filter/', project.getallproject_filter, name='Get All Project with Filters and Pagination'),
     path('add-project/',project.newproject,name="Add Project"),
+    path('edit-owner/',project.update_project_owner_view,name="Update Project Owner"),
     path('get-project/<str:pk>/',project.getproject),
     path('delete-project/',project.deleteproject),
     path('status/completed/<str:pk>/',project.complete_project_status),
