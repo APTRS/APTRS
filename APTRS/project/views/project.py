@@ -66,7 +66,7 @@ def project_edit(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated,IsAdminUser])
-@custom_permission_required(['Manage Projects','Assign Projects'])
+@custom_permission_required(['Assign Projects'])
 def update_project_owner_view(request):
     serializer = UpdateProjectOwnerSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
