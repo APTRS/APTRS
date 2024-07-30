@@ -42,7 +42,7 @@ class ImageUploadView(APIView):
     permission_classes = [IsAuthenticated,IsAdminUser]
     parser_classes = [MultiPartParser]
 
-    @custom_permission_required(['Upload Images for Vulnerability'])
+    @custom_permission_required(['Manage Projects'])
     def post(self, request):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
