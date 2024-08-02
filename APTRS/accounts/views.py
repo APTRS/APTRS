@@ -354,6 +354,7 @@ def edit_group(request, pk):
     serializer = CustomGroupSerializer(instance=group, data=request.data)
     if serializer.is_valid():
         serializer.save()
+        cache.delete("list_custom_groups_cache_key")
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -361,7 +362,7 @@ def edit_group(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
 @custom_permission_required(['Manage Users'])
-@cache_page(3600) 
+@cache_page(3600, key_prefix="list_custom_groups_cache_key")
 def list_custom_groups(request):
     groups = CustomGroup.objects.all()
     serializer = CustomGroupSerializer(groups, many=True)
