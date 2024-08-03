@@ -369,6 +369,16 @@ def list_custom_groups(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Users'])
+def delete_custom_groups(request):
+    group = CustomGroup.objects.filter(id__in=request.data)
+    group.delete()
+    respdata={'Status':"Success"}
+    return Response(respdata)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
 @custom_permission_required(['Manage Users'])

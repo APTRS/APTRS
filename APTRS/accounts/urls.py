@@ -23,6 +23,7 @@ urlpatterns = [
     path('edituser/<int:pk>', views.edit_user, name='edituser'),
     path('deleteuser', views.delete_user),
     path('groups/create/', views.create_group, name='create_group'),
+    path('groups/delete', views.delete_custom_groups, name='delete group'),
     path('list/permission/', views.list_permissions, name='List All Permissions'),
     path('groups/update/<int:pk>/', views.edit_group, name='update_group'),
     path('groups/list/', views.list_custom_groups, name='List All Groups'),
