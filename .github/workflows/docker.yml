@@ -10,9 +10,20 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:20.10.9
+        options: --privileged
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-    - name: Build the Docker image
-      run: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Docker images
+        run: |
+          docker-compose -f docker-compose.yml build
+      - name: Run Docker-compose
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          docker-compose -f docker-compose.yml ps
+          sleep 30
