@@ -204,8 +204,9 @@ CACHES = {
     }
 }
 
-CELERY_BROKER_URL = f'redis://:{os.getenv("REDIS_PASSWORD")}@localhost:6379/0'
-CELERY_RESULT_BACKEND = f'redis://:{os.getenv("REDIS_PASSWORD")}@localhost:6379/0'
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 CELERY_BEAT_SCHEDULE = {
     'update_project_status_daily': {
         'task': 'project.tasks.update_project_status',
@@ -396,13 +397,7 @@ SIMPLE_JWT = {
   'AUTH_COOKIE_SAMESITE': 'Lax',
 }
 
-#Your Organization Details
-ORG = os.getenv('YOUR_COMPANY')
-LOGO = os.getenv('YOUR_COMPANY_LOGO')
-if LOGO:
-    MY_ORG_LOGO = os.path.join(MEDIA_ROOT, 'company',LOGO)
-else:
-    MY_ORG_LOGO = None
+
 
 #CVSS 3.1 for Nessus
 CVSS_BASE_SCORE_INFO = 0.0

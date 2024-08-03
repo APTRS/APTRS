@@ -22,7 +22,7 @@ services:
     image: "postgres:latest"
     restart: always
     volumes:
-      - $USERPROFILE/APTRS/postgresql_data:/var/lib/postgresql
+      - ./aptrs/postgresql_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=aptrsdbuser
       - POSTGRES_PASSWORD=aptrsdbpassword
@@ -41,12 +41,16 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
+    networks:
+       - aptrs
     ports:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     environment:  
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
       - REDIS_URL=redis://cache:6379/ 
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
     volumes: 
       - cache:/data
         
@@ -56,26 +60,53 @@ services:
       - POSTGRES_USER=aptrsdbuser
       - POSTGRES_PASSWORD=aptrsdbpassword
       - POSTGRES_DB=aptrs
+      - POSTGRES_HOST=postgres
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - REDIS_URL=redis://cache:6379/
     depends_on:
       - postgres
       - cache
     build:
-      context: .
-      dockerfile: Dockerfile
+        context: .
+        dockerfile: Dockerfile
+    entrypoint: /home/aptrs/scripts/backend.sh
     volumes:
-      - $USERPROFILE/aptrs:/home/aptrs/.aptrs
+      - ./aptrs/api:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/static/
     ports:
      - "8000:8000"
     networks:
       - aptrs
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:5432 || exit 1"]
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
     links:
       - "postgres"
+      - "cache"
+
+  worker:
+    restart: unless-stopped
+    build:
+      context: .
+    entrypoint: /home/aptrs/scripts/worker.sh  
+    volumes:
+      - static_volume:/home/aptrs/APTRS/static/
+    networks:
+       - aptrs
+    environment:
+      - CELERY_BROKER_URL=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
+      - CELERY_RESULT_BACKEND=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
+      - POSTGRES_USER=aptrsdbuser
+      - POSTGRES_PASSWORD=aptrsdbpassword
+      - POSTGRES_DB=aptrs
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - aptrs
+      - cache
+
       
 networks:
   aptrs:

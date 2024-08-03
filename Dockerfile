@@ -100,8 +100,7 @@ RUN chown -R aptrs:aptrs /home/aptrs/
 
 USER aptrs
 
+RUN ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
+RUN ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
 
-
-RUN ["chmod", "+x", "/home/aptrs/scripts/entrypoint.sh"]
-
-CMD ["/home/aptrs/scripts/entrypoint.sh"]
+#CMD ["/home/aptrs/scripts/entrypoint.sh"]
