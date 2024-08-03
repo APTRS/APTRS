@@ -375,6 +375,7 @@ def list_custom_groups(request):
 def delete_custom_groups(request):
     group = CustomGroup.objects.filter(id__in=request.data)
     group.delete()
+    cache.delete("list_custom_groups_cache_key")
     respdata={'Status':"Success"}
     return Response(respdata)
 
