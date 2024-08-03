@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.fields import RichTextUploadingField
 
@@ -37,6 +38,10 @@ class Project(models.Model):
     projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
     owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
+
+    def clean(self):
+        if self.enddate < self.startdate:
+            raise ValidationError(_('End date cannot be earlier than start date'))
 
     @property
     def calculate_status(self):
@@ -112,6 +117,10 @@ class ProjectRetest(models.Model):
     enddate = models.DateField()
     owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
+
+    def clean(self):
+        if self.enddate < self.startdate:
+            raise ValidationError(_('End date cannot be earlier than start date'))
 
     @property
     def calculate_status(self):
