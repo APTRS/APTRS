@@ -15,6 +15,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -203,6 +204,18 @@ CACHES = {
     }
 }
 
+CELERY_BROKER_URL = f'redis://:{os.getenv("REDIS_PASSWORD")}@localhost:6379/0'
+CELERY_RESULT_BACKEND = f'redis://:{os.getenv("REDIS_PASSWORD")}@localhost:6379/0'
+CELERY_BEAT_SCHEDULE = {
+    'update_project_status_daily': {
+        'task': 'project.tasks.update_project_status',
+        'schedule': crontab(hour=0, minute=0),
+    },
+}
+CELERY_TIMEZONE = 'UTC'
+
+
+
 
 
 
@@ -359,8 +372,6 @@ LOGGING = {
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 LOGIN_URL= '/accounts/login'
-
-
 
 
 
