@@ -1,0 +1,27 @@
+name: Docker Compose Check
+
+on:
+  push:
+    branches:
+      - API
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:latest
+        options: --privileged
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up --build --abort-on-container-exit
