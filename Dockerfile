@@ -47,9 +47,6 @@ RUN apt update -y && apt install -y  --no-install-recommends \
 
 
 
-RUN groupadd -g 9901 aptrs
-RUN adduser aptrs --shell /bin/false -u 9901 --ingroup aptrs --gecos "" --disabled-password
-
 
 #COPY requirements.txt .
 
