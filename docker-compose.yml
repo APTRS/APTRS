@@ -22,7 +22,7 @@ services:
     image: "postgres:latest"
     restart: always
     volumes:
-      - ./aptrs/postgresql_data:/var/lib/postgresql
+      - $HOME/APTRS/postgresql_data:/var/lib/postgresql
     environment:
       - POSTGRES_USER=aptrsdbuser
       - POSTGRES_PASSWORD=aptrsdbpassword
@@ -78,7 +78,7 @@ services:
         dockerfile: Dockerfile
     entrypoint: /home/aptrs/scripts/backend.sh && /home/aptrs/scripts/worker.sh
     volumes:
-      - ./aptrs/api:/home/aptrs/.aptrs
+      - $HOME/APTRS/api_data:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/static/
     ports:
      - "8000:8000"

@@ -13,6 +13,11 @@ ENV TZ=UTC
 ENV DEBIAN_FRONTEND=noninteractive
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    APTRS_USER=aptrs \
+    USER_ID=9901 
+
 RUN apt update -y && apt install -y  --no-install-recommends \
     build-essential \
     tzdata \
@@ -57,11 +62,9 @@ ENV POSTGRES_USER=aptrsdbuser \
     POSTGRES_DB=aptrs \
     POSTGRES_HOST=postgres
 
-ENV YOUR_COMPANY='AnoF PVT LTD'
 ENV WHITELIST_IP='["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000","http://testserver"]'
 ENV ALLOWED_HOST='["127.0.0.1","localhost","aptrsapi.souravkalal.tech","*"]'
 ENV CORS_ORIGIN='["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]'
-ENV YOUR_COMPANY_LOGO='APTRS.png'
 
 
 RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
@@ -95,12 +98,13 @@ RUN \
 EXPOSE 8000 8000 
 
 
+RUN groupadd --gid $USER_ID $APTRS_USER && \
+    useradd $APTRS_USER --uid $USER_ID --gid $APTRS_USER --shell /bin/false && \
+    chown -R $APTRS_USER:$APTRS_USER /home/aptrs
+USER $APTRS_USER
 
-RUN chown -R aptrs:aptrs /home/aptrs/
 
-USER aptrs
 
-RUN ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
-RUN ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
+CMD ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
 
 #CMD ["/home/aptrs/scripts/entrypoint.sh"]
