@@ -16,7 +16,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ENV DEBIAN_FRONTEND=noninteractive \
     APTRS_USER=aptrs \
-    USER_ID=9901 
+    USER_ID=9901 \
+	PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONFAULTHANDLER=1 
 
 RUN apt update -y && apt install -y  --no-install-recommends \
     build-essential \
@@ -48,10 +51,9 @@ RUN apt update -y && apt install -y  --no-install-recommends \
 
 
 
-#COPY requirements.txt .
 
-WORKDIR /home/aptrs
-# Copy source code
+
+WORKDIR /home/$APTRS_USER/APTRS
 COPY . .
 
 ENV POSTGRES_USER=aptrsdbuser \
@@ -69,14 +71,10 @@ ENV SECRET_KEY=NEW_SECRET_KEY
 #RUN sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" /home/aptrs/APTRS/.env
 
 RUN python3 -m pip install --upgrade --no-cache-dir pip poetry==1.8.2 && \
-    pip install setuptools
-
-    
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-root --no-interaction --no-ansi
-#--no-dev --only main
-
-
+    poetry config virtualenvs.create false && \
+    poetry install --no-root --no-interaction --no-ansi 
+	
+	
 # Cleanup
 RUN \
     apt remove -y \
@@ -96,13 +94,14 @@ EXPOSE 8000 8000
 
 
 RUN groupadd --gid $USER_ID $APTRS_USER && \
-    useradd $APTRS_USER --uid $USER_ID --gid $APTRS_USER --shell /bin/false && \
-    chown -R $APTRS_USER:$APTRS_USER /home/aptrs
+    useradd $APTRS_USER --uid $USER_ID --gid $APTRS_USER --shell /bin/bash && \
+    mkdir -p /home/$APTRS_USER && \
+    chown -R $APTRS_USER:$APTRS_USER /home/$APTRS_USER
 USER $APTRS_USER
 
-RUN echo $(ls /home/aptrs/)
+RUN dir -s    
+RUN ["chmod", "+x", "/home/aptrs/APTRS/scripts/backend.sh"]
 
 
-CMD ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
+ENTRYPOINT ["bash", "/home/aptrs/APTRS/scripts/backend.sh"]
 
-#CMD ["/home/aptrs/scripts/entrypoint.sh"]

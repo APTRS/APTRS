@@ -76,7 +76,6 @@ services:
     build:
         context: .
         dockerfile: Dockerfile
-    entrypoint: /home/aptrs/scripts/backend.sh && /home/aptrs/scripts/worker.sh
     volumes:
       - $HOME/APTRS/api_data:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/static/
