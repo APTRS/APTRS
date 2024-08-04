@@ -31,6 +31,21 @@ jobs:
           --health-interval 10s 
           --health-timeout 5s 
           --health-retries 5
+      cache:
+        image: redis:6.2-alpine
+        restart: always
+        networks:
+          - aptrs
+        ports:
+          - '6379:6379'
+        command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+        environment:  
+          - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+          - REDIS_URL=redis://cache:6379/ 
+        healthcheck:
+          test: ["CMD", "redis-cli","ping"]
+        volumes: 
+          - cache:/data
     strategy:
       max-parallel: 4
       matrix:
@@ -50,6 +65,8 @@ jobs:
         POSTGRES_DB: ${{ env.POSTGRES_DB }}
         POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
         POSTGRES_PORT: ${{ env.POSTGRES_PORT }}
+        CELERY_BROKER_URL: redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
+        CELERY_RESULT_BACKEND: redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
       run: | 
         echo "${{ secrets.ENV_FILE }}" > APTRS/.env
         echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "http://127.0.0.1:8000"]' >> APTRS/.env
