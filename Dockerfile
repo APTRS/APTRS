@@ -100,6 +100,7 @@ RUN groupadd --gid $USER_ID $APTRS_USER && \
     chown -R $APTRS_USER:$APTRS_USER /home/aptrs
 USER $APTRS_USER
 
+RUN echo $(ls)
 
 
 CMD ["chmod", "+x", "/home/aptrs/scripts/backend.sh"]
