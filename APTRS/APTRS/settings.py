@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'weasyprint',
+    'django_celery_beat',
     'debug_toolbar'
 ]
 
