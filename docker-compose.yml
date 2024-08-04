@@ -61,15 +61,22 @@ services:
       - POSTGRES_PASSWORD=aptrsdbpassword
       - POSTGRES_DB=aptrs
       - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
       - REDIS_URL=redis://cache:6379/
+      - CELERY_BROKER_URL=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
+      - CELERY_RESULT_BACKEND=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
+      - LOG_FILE_LOCATION = './debug.log'
+      - WHITELIST_IP= ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000","http://testserver"]
+      - ALLOWED_HOST = ["127.0.0.1","localhost","aptrsapi.souravkal.tech","*"] 
+      - CORS_ORIGIN = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]
     depends_on:
       - postgres
       - cache
     build:
         context: .
         dockerfile: Dockerfile
-    entrypoint: /home/aptrs/scripts/backend.sh
+    entrypoint: /home/aptrs/scripts/backend.sh && /home/aptrs/scripts/worker.sh
     volumes:
       - ./aptrs/api:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/static/
@@ -85,27 +92,6 @@ services:
     links:
       - "postgres"
       - "cache"
-
-  worker:
-    restart: unless-stopped
-    build:
-      context: .
-    entrypoint: /home/aptrs/scripts/worker.sh  
-    volumes:
-      - static_volume:/home/aptrs/APTRS/static/
-    networks:
-       - aptrs
-    environment:
-      - CELERY_BROKER_URL=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
-      - CELERY_RESULT_BACKEND=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
-      - POSTGRES_USER=aptrsdbuser
-      - POSTGRES_PASSWORD=aptrsdbpassword
-      - POSTGRES_DB=aptrs
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-    depends_on:
-      - aptrs
-      - cache
 
       
 networks:

@@ -9,11 +9,16 @@ done
 echo "PostgreSQL is ready!"
 
 
+python3 APTRS/manage.py makemigrations
+python3 APTRS/manage.py makemigrations accounts
+python3 APTRS/manage.py makemigrations customes
+python3 APTRS/manage.py makemigrations vulnerability
+python3 APTRS/manage.py makemigrations project
+python3 APTRS/manage.py makemigrations configapi
 
-python3 APTRS/manage.py makemigrations && \
 python3 APTRS/manage.py migrate
 
-
+echo "Migations Completed"
 
 
 cd APTRS

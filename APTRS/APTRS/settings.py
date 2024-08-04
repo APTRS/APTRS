@@ -327,7 +327,7 @@ LOGGING = {
         'logfile': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.getenv('LOG_FILE_LOCATION'),
+            'filename': 'debug.log',
             'formatter': 'standard',
         },
     },
