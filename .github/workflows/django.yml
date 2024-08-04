@@ -36,8 +36,8 @@ jobs:
         ports:
           - '6379:6379'
         env:  
-          - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-          - REDIS_URL=redis://cache:6379/ 
+          REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+          REDIS_URL: redis://cache:6379/ 
         
     strategy:
       max-parallel: 4
