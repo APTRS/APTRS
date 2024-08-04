@@ -33,18 +33,13 @@ jobs:
           --health-retries 5
       cache:
         image: redis:6.2-alpine
-        networks:
-          - aptrs
         ports:
           - '6379:6379'
         command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
         environment:  
           - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
           - REDIS_URL=redis://cache:6379/ 
-        healthcheck:
-          test: ["CMD", "redis-cli","ping"]
-        volumes: 
-          - cache:/data
+        
     strategy:
       max-parallel: 4
       matrix:
