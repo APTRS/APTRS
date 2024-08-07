@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
+from rest_framework.decorators import api_view
 from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework import status
@@ -47,3 +48,7 @@ class ProjectTypeListView(APIView):
         queryset = ProjectType.objects.all()
         serializer = ProjectTypeSerializer(queryset, many=True)
         return Response(serializer.data)
+    
+@api_view(['GET'])
+def ping(request):
+    return Response({'status': 'ok', 'message': 'Server is up and running!'}, status=status.HTTP_200_OK)

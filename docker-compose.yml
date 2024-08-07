@@ -1,4 +1,3 @@
-version: '3.8'
 services:
 
   nginx:
@@ -14,25 +13,24 @@ services:
     networks:
         - aptrs
 
-
-
-
-
   postgres:
     image: "postgres:latest"
     restart: always
+    env_file:
+      - APTRS/.env
     volumes:
       - $HOME/APTRS/postgresql_data:/var/lib/postgresql
     environment:
-      - POSTGRES_USER=aptrsdbuser
-      - POSTGRES_PASSWORD=aptrsdbpassword
-      - POSTGRES_DB=aptrs
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
     ports:
-     - "5432:5432"
+     - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     networks:
        - aptrs
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}",]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -41,14 +39,16 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
+    env_file:
+      - APTRS/.env
     networks:
        - aptrs
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     environment:  
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-      - REDIS_URL=redis://cache:6379/ 
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_URL: ${REDIS_URL}
     healthcheck:
       test: ["CMD", "redis-cli","ping"]
     volumes: 
@@ -56,23 +56,26 @@ services:
         
       
   aptrs:
+    env_file:
+      - APTRS/.env
     environment:
-      - POSTGRES_USER=aptrsdbuser
-      - POSTGRES_PASSWORD=aptrsdbpassword
-      - POSTGRES_DB=aptrs
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-      - REDIS_URL=redis://cache:6379/
-      - CELERY_BROKER_URL=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
-      - CELERY_RESULT_BACKEND=redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
-      - LOG_FILE_LOCATION = './debug.log'
-      - WHITELIST_IP= ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000","http://testserver"]
-      - ALLOWED_HOST = ["127.0.0.1","localhost","aptrsapi.souravkal.tech","*"] 
-      - CORS_ORIGIN = ["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_URL: redis://cache:6379/
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+      WHITELIST_IP: ${WHITELIST_IP}
+      ALLOWED_HOST: ${ALLOWED_HOST}
+      CORS_ORIGIN: ${CORS_ORIGIN}
     depends_on:
       - postgres
       - cache
+    
     build:
         context: .
         dockerfile: Dockerfile
@@ -84,7 +87,7 @@ services:
     networks:
       - aptrs
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:8000/api/ || exit 1"]
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/api/config/ping/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
