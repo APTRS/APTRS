@@ -21,32 +21,15 @@ else
   exit 1
 fi
 
-# Remove old migration files
-echo "Removing old migration files..."
-find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-find . -path "*/migrations/*.pyc"  -delete
-find . -name "*.pyc" -exec rm -f {} +
 
 
-
-echo "Running flush"
-python3 manage.py migrate --noinput 
-
-
-echo "Running no input migrate"
-python3 manage.py flush --no-input
-
-
-
-
-
-# Run the initial migration to ensure database schema is in a clean state
-echo "Running initial migration"
-python3 manage.py migrate
-
-# Make migrations for all apps
+# Make migrations  
 echo "Creating migrations for all apps"
-python3 manage.py makemigrations
+python3 manage.py makemigrations accounts
+python3 manage.py makemigrations configapi
+python3 manage.py makemigrations customers
+python3 manage.py makemigrations project
+python3 manage.py makemigrations vulnerability
 
 # Apply migrations
 echo "Applying migrations"
