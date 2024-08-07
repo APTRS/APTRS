@@ -85,7 +85,11 @@ jobs:
 
     - name: Migrate Database
       run: |
-        poetry run python APTRS/manage.py makemigrations
+        poetry run python APTRS/manage.py makemigrations accounts
+        poetry run python APTRS/manage.py makemigrations configapi
+        poetry run python APTRS/manage.py makemigrations customers
+        poetry run python APTRS/manage.py makemigrations project
+        poetry run python APTRS/manage.py makemigrations vulnerability
         poetry run python APTRS/manage.py migrate
         
     - name: Unit Tests
