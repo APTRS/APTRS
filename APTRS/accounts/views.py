@@ -59,9 +59,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         permissions = set()  # Use set to avoid duplicate permissions
         
         # Fetching permissions associated with user's groups
-        user_groups = CustomGroup.objects.filter(customuser=self.user)
+        user_groups = self.user.groups.all()
         for group in user_groups:
-            permissions |= set(group.list_of_permissions.all().values_list('name', flat=True))
+            permissions.update(group.list_of_permissions.values_list('name', flat=True))
 
         data['permissions'] = list(permissions)  # Add collected permissions to response
         return data

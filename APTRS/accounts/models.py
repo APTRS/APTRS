@@ -6,13 +6,16 @@ class CustomPermission(models.Model):
     """Custom permission model."""
     name = models.CharField(max_length=100,unique=True)
     description = models.TextField()
-
+    
     def __str__(self):
         return self.name
 
 class CustomGroup(models.Model):
     """Custom group model."""
-    group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
+    #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
+    #name = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
+    #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
+    name = models.CharField(max_length=150, null=True, blank=True)
     list_of_permissions = models.ManyToManyField(CustomPermission, blank=True)
     description = models.CharField(max_length=150, null=True, blank=True)
 
@@ -47,7 +50,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     company = models.ForeignKey('customers.Company', on_delete=models.CASCADE, editable=False, null=True, blank=True)
     position = models.CharField(max_length=100, blank=True, null=True)
-    groups = models.ManyToManyField('CustomGroup', verbose_name='groups', blank=True)
+    groups = models.ManyToManyField(
+        CustomGroup,
+        verbose_name=('groups'),
+        blank=True,
+        help_text=(
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']

@@ -39,12 +39,15 @@ echo "Migrations Completed"
 
 echo "Setting up new accounts and permissions"
 # Check if the first setup has already been performed
-if [ ! -f /data/first_setup_done]; then
+if [ ! -f /tmp/first_setup_done ]; then
   echo "Running first-time setup..."
   python3 manage.py first_setup
-  touch /data/first_setup_done
+  touch /tmp/first_setup_done
 else
   echo "First-time setup has already been completed."
 fi
+
+celery -A APTRS worker --loglevel=info &
+celery -A APTRS beat --loglevel=info &
 
 exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600

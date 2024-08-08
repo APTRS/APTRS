@@ -17,13 +17,13 @@ PASSWORD = "I-am-Weak-Password-Please-Change-Me"
 COMPANY_NAME = "APTRS PVT"
 
 Required_Permissions = [
-  "Permission to manage users",
-  "Permission to manage projects",
-  "Permission to assign projects",
-  "Permission to manage vulnerability data",
-  "Permission to manage customer data",
-  "Permission to manage company data",
-  "Permission to manage configurations"
+  "Manage Users",
+  "Manage Projects",
+  "Assign Projects",
+  "Manage Vulnerability Data",
+  "Manage Customer",
+  "Manage Company",
+  "Manage Configurations"
 ]
 
 Required_Groups = ["Administrator", "Project Mananger", "Manangers", "User"]
@@ -69,13 +69,8 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Creating Groups"))
         for group_name in Required_Groups:
             # Check if the group exists in the Group model
-            group, group_created = Group.objects.get_or_create(name=group_name)
-
-            self.stdout.write(self.style.SUCCESS("Creating Custom Groups"))
-            
-            # Create CustomGroup related to the Group
             custom_group, custom_group_created = CustomGroup.objects.get_or_create(
-                group=group,
+                name=group_name,
                 defaults={
                     'description': f'{group_name} description'  # or any default description
                 }
@@ -98,27 +93,27 @@ class Command(BaseCommand):
         group_permissions = {
             "Administrator": CustomPermission.objects.all(),  # Admins get all permissions
             "Managers": [
-                "Permission to manage projects",
-                "Permission to assign projects",
-                "Permission to manage vulnerability data",
-                "Permission to manage configurations"
+                "Manage Projects",
+                "Assign Projects",
+                "Manage Vulnerability Data",
+                "Manage Configurations"
             ],
             "User": [
-                "Permission to manage projects",
-                "Permission to manage vulnerability data"
+                "Manage Projects",
+                "Manage Vulnerability Data"
             ],
             "Project Manager": [
-                "Permission to manage customer data",
-                "Permission to manage company data",
-                "Permission to manage projects",
-                "Permission to assign projects"
+                "Manage Customer",
+                "Manage Company",
+                "Manage Projects",
+                "Assign Projects"
             ]
         }
 
         for group_name, permissions in group_permissions.items():
             try:
                 # Retrieve the corresponding CustomGroup instance
-                custom_group = CustomGroup.objects.get(group__name=group_name)
+                custom_group = CustomGroup.objects.get(name=group_name)
                 
                 if isinstance(permissions, list):
                     # Get permissions by name
@@ -157,7 +152,7 @@ class Command(BaseCommand):
         """
         Create a new super admin user and add user to Administrator Group
         """
-        admin_group = CustomGroup.objects.get_or_create(group__name='Administrator')[0]
+        admin_group = CustomGroup.objects.get_or_create(name='Administrator')[0]
 
         # Ensure the company exists
         company, _ = Company.objects.get_or_create(name=COMPANY_NAME)

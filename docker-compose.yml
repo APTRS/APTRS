@@ -20,7 +20,7 @@ services:
     restart: always
     env_file: "APTRS/.env"
     volumes:
-      - $HOME/APTRS/postgresql_data:/var/lib/postgresql
+      - ./postgresql_data:/var/lib/postgresql
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -65,7 +65,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       PGUSER: ${POSTGRES_USER}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-      REDIS_URL: redis://cache:6379/
+      REDIS_URL: ${REDIS_URL}
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
       WHITELIST_IP: ${WHITELIST_IP}
@@ -79,8 +79,8 @@ services:
         context: .
         dockerfile: Dockerfile
     volumes:
-      - $HOME/APTRS/api_data:/home/aptrs/.aptrs
-      - static_volume:/home/aptrs/APTRS/static/
+      - ./api_data:/home/aptrs/.aptrs
+      - static_volume:/home/aptrs/APTRS/APTRS/static/
     ports:
      - "8000:8000"
     networks:
