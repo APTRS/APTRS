@@ -4,9 +4,11 @@ services:
     image: nginx
     volumes:
       - ./scripts/nginx.conf:/etc/nginx/conf.d/aptrs.conf
+      - ./Certificate:/etc/nginx/certs
       - static_volume:/home/aptrs/APTRS/static/  
     ports:
       - 80:80
+      - 443:443
     restart: unless-stopped
     depends_on:
       - aptrs

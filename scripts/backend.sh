@@ -30,12 +30,21 @@ python3 manage.py makemigrations configapi
 python3 manage.py makemigrations customers
 python3 manage.py makemigrations project
 python3 manage.py makemigrations vulnerability
+python3 manage.py makemigrations 
 
 # Apply migrations
 echo "Applying migrations"
 python3 manage.py migrate
-
 echo "Migrations Completed"
 
+echo "Setting up new accounts and permissions"
+# Check if the first setup has already been performed
+if [ ! -f /data/first_setup_done]; then
+  echo "Running first-time setup..."
+  python3 manage.py first_setup
+  touch /data/first_setup_done
+else
+  echo "First-time setup has already been completed."
+fi
 
 exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600
