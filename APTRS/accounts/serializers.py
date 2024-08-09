@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password, ValidationError
+from customers.models import Company
 from .models import CustomUser, CustomGroup,CustomPermission
 
 
@@ -239,8 +240,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password": e.messages})
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)
+        company = Company.objects.filter(internal=True).first()
+        user.company = company
         user.save()
         user.groups.set(groups_data)
+        
         return user
 
     def update(self, instance, validated_data):
