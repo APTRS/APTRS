@@ -1,11 +1,8 @@
-import os
 import subprocess
 
 from accounts.models import CustomGroup, CustomPermission, CustomUser
 from customers.models import Company
 from configapi.models import ReportStandard, ProjectType
-from django.conf import settings
-from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 
 USERNAME = "Sourav.Kalal"
@@ -26,9 +23,6 @@ Required_Permissions = [
   "Manage Configurations"
 ]
 
-Required_Groups = ["Administrator", "Project Mananger", "Manangers", "User"]
-
-
 class Command(BaseCommand):
     """
     Custom manage.py command to setup user details for first time installation users
@@ -39,7 +33,6 @@ class Command(BaseCommand):
         self.check_gtk3()
         self.load_permissions()
         self.create_groups()
-        self.assign_permissions_to_groups()
         self.create_company()
         self.create_super_user()
         self.create_report_standards()
@@ -61,35 +54,12 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("All permissions were successfully loaded"))
 
 
-
     def create_groups(self):
         """
-        Create specified groups in the system.
+        Create specified groups in the system and assign permissions based on group_permissions.
         """
         self.stdout.write(self.style.SUCCESS("Creating Groups"))
-        for group_name in Required_Groups:
-            # Check if the group exists in the Group model
-            custom_group, custom_group_created = CustomGroup.objects.get_or_create(
-                name=group_name,
-                defaults={
-                    'description': f'{group_name} description'  # or any default description
-                }
-            )
-            
-            if custom_group_created:
-                self.stdout.write(
-                    self.style.SUCCESS(f"CustomGroup '{group_name}' created successfully.")
-                )
-            else:
-                self.stdout.write(
-                    self.style.SUCCESS(f"CustomGroup '{group_name}' already exists.")
-                )
-        self.stdout.write(self.style.SUCCESS("All Groups Created"))
 
-
-    def assign_permissions_to_groups(self):
-        """Assign permissions to groups based on predefined requirements."""
-        # Define permissions for each group
         group_permissions = {
             "Administrator": CustomPermission.objects.all(),  # Admins get all permissions
             "Managers": [
@@ -110,34 +80,32 @@ class Command(BaseCommand):
             ]
         }
 
-        for group_name, permissions in group_permissions.items():
-            try:
-                # Retrieve the corresponding CustomGroup instance
-                custom_group = CustomGroup.objects.get(name=group_name)
-                
-                if isinstance(permissions, list):
-                    # Get permissions by name
-                    permissions_objects = CustomPermission.objects.filter(name__in=permissions)
-                else:
-                    # If permissions is not a list, assume it is a queryset
-                    permissions_objects = permissions
-                
-                # Assign permissions to the group
-                custom_group.list_of_permissions.set(permissions_objects)
-                
-                # Save the CustomGroup instance if needed (depends on your setup)
-                custom_group.save()
-                
-                self.stdout.write(self.style.SUCCESS(f"Permissions assigned to '{group_name}' group"))
+        for group_name, perms in group_permissions.items():
+            custom_group, created = CustomGroup.objects.get_or_create(
+                name=group_name,
+                defaults={
+                    'description': f'{group_name} description'
+                }
+            )
 
-            except CustomGroup.DoesNotExist:
-                self.stdout.write(self.style.ERROR(f"CustomGroup with group name '{group_name}' does not exist"))
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"CustomGroup '{group_name}' created successfully."))
+            else:
+                self.stdout.write(self.style.SUCCESS(f"CustomGroup '{group_name}' already exists."))
 
-            except Exception as e:
-                self.stdout.write(self.style.ERROR(f"An error occurred: {str(e)}"))
+            if isinstance(perms, list):
+                permissions = CustomPermission.objects.filter(name__in=perms)
+            else:
+                permissions = perms
+
+            for perm in permissions:
+                custom_group.list_of_permissions.add(perm)
+                self.stdout.write(self.style.SUCCESS(f"Permission '{perm.name}' assigned to CustomGroup '{group_name}'."))
+
+        self.stdout.write(self.style.SUCCESS("All Groups and Permissions have been created and assigned."))
 
 
-
+   
 
     def create_company(self):
         company, created = Company.objects.get_or_create(name=COMPANY_NAME, defaults={'internal': True})
@@ -154,7 +122,6 @@ class Command(BaseCommand):
         """
         admin_group = CustomGroup.objects.get_or_create(name='Administrator')[0]
 
-        # Ensure the company exists
         company, _ = Company.objects.get_or_create(name=COMPANY_NAME)
         if not CustomUser.objects.filter(username=USERNAME).exists():
             user = CustomUser.objects.create(
