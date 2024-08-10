@@ -34,37 +34,32 @@ echo "Generating Random Secret key"
 secret_key=$(generate_password)
 echo "SECRET_KEY='$secret_key'" > /var/www/aptrs/APTRS/.env
 
+# Function to get public IP address
+get_public_ip() {
+    curl -s ifconfig.me
+}
 
-## Setup New Account in APTRS
-read -p "Please provide the username for new Admin account in APTRS (default: APTRS)" aptrs_username
-read -p "Please provide the email for the new Admin account in APTRS (default: admin@aptrs.com): " email
-read -p "Please provide the full name for the new Admin account in APTRS (default: Aptrs Admin): " full_name
-read -p "Please provide the number for the new Admin account in APTRS (default: 916661234586): " number
-read -p "Please provide the position for the new Admin account in APTRS (default: Security Engineer): " position
-read -p "Please provide the password for the new Admin account in APTRS (default: iamweakpassword): " password
-read -p "Please provide the name of your Organization (default: APTRS PVT): " org
+# Function to get LAN IP addresses
+get_lan_ips() {
+    hostname -I
+}
 
-aptrs_username=${aptrs_username:-APTRS}
-email=${email:-admin@aptrs.com}
-full_name=${full_name:-Aptrs Admin}
-number=${number:-916661234586}
-position=${position:-Security Engineer}
-password=${password:-iamweakpassword}
-org=${org:-APTRS PVT}
+public_ip=$(get_public_ip)
 
-echo "USERNAME='$aptrs_username'" >> /var/www/aptrs/APTRS/.env
-echo "EMAIL='$email'" >> /var/www/aptrs/APTRS/.env
-echo "FullName='$full_name'" >> /var/www/aptrs/APTRS/.env
-echo "Number='$number'" >> /var/www/aptrs/APTRS/.env
-echo "Position='$position'" >> /var/www/aptrs/APTRS/.env
-echo "PASSWORD='$password'" >> /var/www/aptrs/APTRS/.env
-echo "ADMIN = True" >> /var/www/aptrs/APTRS/.env
-echo "Group = 'Administrator'" >> /var/www/aptrs/APTRS/.env
-echo "YOUR_COMPANY='$org'" >> /var/www/aptrs/APTRS/.env
-echo "LOG_FILE_LOCATION = '/var/www/aptrs/aptrs.log'" >> /var/www/aptrs/APTRS/.env
+lan_ips=$(get_lan_ips)
 
+# Check if there are multiple LAN IP addresses
+if [ "$(echo "$lan_ips" | wc -w)" -gt 1 ]; then
+    lan_ips_message="LAN IP addresses: $lan_ips"
+else
+    lan_ips_message="LAN IP address: $lan_ips"
+fi
 
-read -p "Please provide the domain name or public ip address if any (default: 127.0.0.1, aptrs.local): " domain
+default_list="127.0.0.1 $(get_public_ip) $(get_lan_ips)"
+
+read -p "Please provide a list of domain names or IP addresses (separated by spaces) [default: $default_list]: " domain
+echo $domain
+
 domain=${domain:-127.0.0.1}
 echo "WHITELIST_IP= [\"$domain\"]" >> /var/www/aptrs/APTRS/.env
 echo "ALLOWED_HOST= [\"$domain\"]" >> /var/www/aptrs/APTRS/.env

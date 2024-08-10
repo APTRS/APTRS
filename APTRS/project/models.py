@@ -29,14 +29,14 @@ PROJECT_STATUS_CHOICES = [
 
 class Project(models.Model):
     name = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
-    companyname = models.ForeignKey(Company, on_delete=models.CASCADE,editable=False)
+    companyname = models.ForeignKey(Company, on_delete=models.SET_NULL,editable=False)
     description = models.CharField(max_length=1000, unique = False, null = False, blank = False, default=None)
     projecttype = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
     startdate = models.DateField()
     enddate = models.DateField()
     testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
     projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
-    owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
+    owner = models.ForeignKey(CustomUser,on_delete=models.SET_NULL,blank=True,null=True,to_field='username')
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
 
     def clean(self):
@@ -115,7 +115,7 @@ class ProjectRetest(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     startdate = models.DateField()
     enddate = models.DateField()
-    owner = models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True,to_field='username')
+    owner = models.ForeignKey(CustomUser,on_delete=models.SET_NULL,blank=True,null=True,to_field='username')
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
 
     def clean(self):
