@@ -29,7 +29,7 @@ PROJECT_STATUS_CHOICES = [
 
 class Project(models.Model):
     name = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
-    companyname = models.ForeignKey(Company, on_delete=models.SET_NULL,editable=False)
+    companyname = models.ForeignKey(Company, on_delete=models.SET_NULL,editable=False,blank=True,null=True)
     description = models.CharField(max_length=1000, unique = False, null = False, blank = False, default=None)
     projecttype = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
     startdate = models.DateField()
