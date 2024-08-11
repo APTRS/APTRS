@@ -95,11 +95,3 @@ If you discover any security vulnerabilities in this open-source project, please
 ## Authors
 
 - [Sourav Kalal](https://twitter.com/Ano_F_)
-
-## Contributors
-
-We are in search of a volunteer developer who has experience in Django Backend or React FrontEnd to help us enhance our project by adding more security and features. If you are interested, please get in touch with us at kalalsourav20@gmail.com.
-
-<a href = "https://github.com/APTRS/APTRS/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo=APTRS/APTRS"/>
-</a>
