@@ -8,12 +8,14 @@ from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 # local imports
 from utils.filters import UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
-
+from .throttles import LoginThrottle
 from .models import CustomGroup, CustomPermission, CustomUser
 from .serializers import (ChangePasswordSerializer, CustomGroupSerializer,
                           CustomPermissionSerializer, CustomUserSerializer,
@@ -73,8 +75,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
     This view extends the functionality of TokenObtainPairView and uses the
     MyTokenObtainPairSerializer to include extra user information in the response.
     """
-    #serializer_class = MyTokenObtainPairSerializer
     serializer_class = MyTokenObtainPairSerializer
+    throttle_classes = [LoginThrottle, AnonRateThrottle] 
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

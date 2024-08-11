@@ -133,7 +133,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
         'accounts.authenticate.CustomAuthentication'
-    ]
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day', 
+        'login': '5/minute',
+    }
 
 }
 
