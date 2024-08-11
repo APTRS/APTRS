@@ -82,7 +82,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
         try:
             serializer.is_valid(raise_exception=True)
         except Exception as e:
-            return Response({'detail': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': "Something Went Wrong"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Get the token data
         token_data = serializer.validated_data
