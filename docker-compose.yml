@@ -16,6 +16,8 @@ services:
       - aptrs
     networks:
         - aptrs
+    security_opt:
+      - no-new-privileges:true
 
   postgres:
     image: "postgres:latest"
