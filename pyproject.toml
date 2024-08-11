@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-django = "4.2"
+django = "4.2.15"
 django-ckeditor = "6.5.1"
 django-phonenumber-field = "7.0.0"
 django-phonenumbers = "1.0.1"
