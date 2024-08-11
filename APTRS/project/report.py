@@ -101,7 +101,7 @@ def get_subdoc(doc, raw_html):
     # Save temporary DOCX in memory
     subdoc_tmp = io.BytesIO()
     temp_doc.save(subdoc_tmp)
-    
+
 
     # Create docxtpl subdoc object
     subdoc = doc.new_subdoc(subdoc_tmp)
@@ -125,7 +125,6 @@ def generate_vulnerability_document(pk,Report_type,standard):
         vulnerability.POC = get_subdoc(doc, vulnerability.POC)
         vulnerability.vulnerabilitysolution = get_subdoc(doc, vulnerability.vulnerabilitysolution)
         vulnerability.vulnerabilityreferlnk = get_subdoc(doc, vulnerability.vulnerabilityreferlnk)
-        #print(vulnerability.POC)
 
         vulnerability.instances_data = [
             {
@@ -137,7 +136,6 @@ def generate_vulnerability_document(pk,Report_type,standard):
             if instance.URL  # Exclude instances with empty URL
         ]
         currentdate=datetime.now()
-        #print(vulnerability.instances_data)
     context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,
                "settings":settings,"currentdate":currentdate,'value2':'10',
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
@@ -147,14 +145,11 @@ def generate_vulnerability_document(pk,Report_type,standard):
     font = doc.styles['List Bullet'].font
     font.name = 'Calibri'
     font.size = Pt(16)
-    
+
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     response['Content-Disposition'] = f'attachment; filename=vulnerability_report_{project_id}.docx'
-    
     doc.save(response)
-
     return response
-    
 
 
 def is_whitelisted(url):

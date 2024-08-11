@@ -124,10 +124,10 @@ class UpdateProjectOwnerSerializer(serializers.Serializer):
             user = CustomUser.objects.get(username=owner_username)
             if not user.is_active:
                 raise serializers.ValidationError("Owner is not an active user")
-            
+
             project.owner = user
             project.save()
-            
+
         except Project.DoesNotExist:
             raise serializers.ValidationError("Project with provided ID does not exist")
 
@@ -180,7 +180,6 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
             'project',
             'created_by',
             'last_updated_by'
-            
         ]
         read_only_fields = ['status', 'created_by', 'last_updated_by']
 
@@ -189,15 +188,12 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
         validated_data['created_by'] = request.user
         validated_data['last_updated_by'] = request.user
         return super(Vulnerabilityserializers, self).create(validated_data)
-    
+
     def update(self, instance, validated_data):
         request = self.context.get('request')
         validated_data['created_by'] = request.user
         validated_data['last_updated_by'] = request.user
         return super().update(instance, validated_data)
-
-    
-
 
 class VulnerableinstanceSerializerNessus(serializers.ModelSerializer):
     vulnerabilityid = serializers.PrimaryKeyRelatedField(queryset=Vulnerability.objects.all())
