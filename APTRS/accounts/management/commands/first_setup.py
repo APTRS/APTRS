@@ -169,7 +169,7 @@ class Command(BaseCommand):
             "External Network Penetration Testing",
             "Internal Network Penetration Testing"
         ]
-        
+
         for name in project_types:
             _, created = ProjectType.objects.get_or_create(name=name)
             if created:

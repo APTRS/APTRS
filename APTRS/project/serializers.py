@@ -34,8 +34,8 @@ class Projectserializers(serializers.ModelSerializer):
             permissions |= set(group.list_of_permissions.all().values_list('name', flat=True))
 
         return permissions
-    
-    
+
+
 
 
     def create(self, validated_data):

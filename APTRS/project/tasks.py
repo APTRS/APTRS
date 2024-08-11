@@ -19,7 +19,7 @@ def update_project_status():
 
     # Only fetch projects that are not completed
     projects = Project.objects.filter(status__in=['Upcoming', 'In Progress', 'Delay'])
-    
+
     for project in projects:
         # Update based on the project's own dates
         if project.startdate > today:
