@@ -63,7 +63,7 @@ def get_subdoc(doc, raw_html):
 
         # Convert HTML to temporary DOCX
 
-    
+
         temp_parser.add_html_to_document(styled_html, temp_doc)
 
         # Resize images in the temporary DOCX

@@ -32,7 +32,7 @@ class Projectserializers(serializers.ModelSerializer):
         permissions = set()
         for group in user_groups:
             permissions |= set(group.list_of_permissions.all().values_list('name', flat=True))
-        
+
         return permissions
     
     

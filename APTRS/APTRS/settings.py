@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
         'accounts.authenticate.CustomAuthentication'
     ]
-    
+
 }
 
 ROOT_URLCONF = 'APTRS.urls'

@@ -16,7 +16,7 @@ def update_project_status():
         elif today > retest.enddate:
             retest.status = 'Delay'
         retest.save()
-    
+
     # Only fetch projects that are not completed
     projects = Project.objects.filter(status__in=['Upcoming', 'In Progress', 'Delay'])
     

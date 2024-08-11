@@ -119,5 +119,5 @@ def parse_nessus_csv(reader):
 
             unique_vulnerabilities[row['Name']] = {'vulnerabilityname': row['Name'], 'vulnerabilitydescription': row['Description'], 'vulnerabilitysolution': row['Solution'], 'vulnerabilityseverity': row['Risk'], 'cvssscore': score, 'cvssvector': Base}
     vulnerability_dict = {'vulnerability': list(unique_vulnerabilities.values())}
-    
+
     return vulnerability_dict

@@ -56,7 +56,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['isAdmin'] = self.user.is_superuser
         data['isStaff'] = self.user.is_staff
         permissions = set()  # Use set to avoid duplicate permissions
-        
+
         # Fetching permissions associated with user's groups
         user_groups = self.user.groups.all()
         for group in user_groups:
@@ -199,7 +199,7 @@ def getallusers_filter(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
-@cache_page(3600) 
+@cache_page(3600)
 def ActiveUserList(request):
     """
     API endpoint for retrieving a list of active staff user usernames.

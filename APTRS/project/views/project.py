@@ -72,7 +72,7 @@ def update_project_owner_view(request):
     if serializer.is_valid(raise_exception=True):
         _ = serializer.update_project(serializer.validated_data)
         return Response({"message": "Project owner updated successfully"}, status=status.HTTP_200_OK)
-        
+
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,7 +112,7 @@ class GetMyProjects(views.APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
     def get(self, request):
         projects = Project.objects.filter(
-            Q(owner=request.user) & 
+            Q(owner=request.user) &
             Q(status__in=['Upcoming', 'In Progress', 'Delay'])
         ).select_related('companyname', 'owner')#.prefetch_related('related_model1', 'related_model2')
         
@@ -135,7 +135,7 @@ def getallproject_filter(request):
 
     if not projects:
         projects = Project.objects.all()
-        cache.set(cache_key, projects, timeout=3600) 
+        cache.set(cache_key, projects, timeout=3600)
     
     project_filter = ProjectFilter(request.GET, queryset=projects)
 

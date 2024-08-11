@@ -152,7 +152,7 @@ class Command(BaseCommand):
             "NIST SP 800-53",
             "NIST SP 800-153"
         ]
-        
+
         for name in report_standards:
             _, created = ReportStandard.objects.get_or_create(name=name)
             if created:
