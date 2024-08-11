@@ -49,7 +49,7 @@ def resize_inline_images(temp_doc, fixed_width):
         # Set the fixed width and calculated height
         image.width = fixed_width
         image.height = new_height
-       
+
 def get_subdoc(doc, raw_html):
 
     temp_doc = Document()
@@ -80,10 +80,9 @@ def get_subdoc(doc, raw_html):
             paragraph.paragraph_format.left_indent = Inches(1)
             paragraph.paragraph_format.right_indent = Inches(1)
             paragraph.paragraph_format.top_indent = Inches(1)
-            #paragraph.style.font.name = 'Calibri'
-            #paragraph.style.font.size = Pt(16) 
 
-        
+
+
         obj_styles = temp_doc.styles
         for current_style in obj_styles:
             element = current_style
@@ -112,7 +111,6 @@ def get_subdoc(doc, raw_html):
 
 def generate_vulnerability_document(pk,Report_type,standard):
     project_id = pk
-    #vulnerabilities_for_project_10 = Vulnerability.objects.filter(project__id=project_id)
     project = get_object_or_404(Project, id=project_id)
     vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
     totalvulnerability = vuln.filter(project=project).count()

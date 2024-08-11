@@ -7,7 +7,6 @@ from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
 
 
 class ImageSerializer(serializers.Serializer):
-    #upload = serializers.ListField(child=serializers.ImageField(allow_empty_file=False),allow_empty=False)
     upload = serializers.ImageField(allow_empty_file=False)
 
 class Projectserializers(serializers.ModelSerializer):
@@ -26,7 +25,7 @@ class Projectserializers(serializers.ModelSerializer):
             rep['owner'] = instance.owner.username
 
         return rep
-    
+
     def get_user_permissions(self, user):
         # Fetching permissions associated with user's groups
         user_groups = user.groups.all()

@@ -30,8 +30,8 @@ def getallcompnay_filter(request):
 
     if not companyname:
         companyname = Company.objects.all()
-        cache.set(cache_key, companyname, timeout=3600) 
-    
+        cache.set(cache_key, companyname, timeout=3600)
+
     companyname_filter = CompanyFilter(request.GET, queryset=companyname)
     filtered_queryset = companyname_filter.qs
     if sort_order == 'asc':
@@ -67,7 +67,7 @@ def getallcustomer_filter(request):
 
     if not customername:
         customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
-        cache.set(cache_key, customername, timeout=3600) 
+        cache.set(cache_key, customername, timeout=3600)
 
     customername_filter = UserFilter(request.GET, queryset=customername)
     filtered_queryset = customername_filter.qs

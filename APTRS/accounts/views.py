@@ -43,7 +43,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     - The associated groups and permissions are fetched based on the user's groups.
     """
 
-    
+
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -137,7 +137,7 @@ def change_password(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
-@cache_page(3600) 
+@cache_page(3600)
 def getallusers(request):
     """
     API endpoint for retrieving details of all staff/Internal users.
@@ -177,14 +177,11 @@ def getallusers_filter(request):
 
     userdetails = CustomUser.objects.filter(is_staff=True)
 
-    cache_key = 'all_staff_users_data' 
+    cache_key = 'all_staff_users_data'
     userdetails = cache.get(cache_key)
 
     if not userdetails:
-        #userdetails = CustomUser.objects.filter(is_staff=True)
         userdetails = CustomUser.objects.filter(is_staff=True).select_related('company').prefetch_related('groups')
-
-       
         cache.set(cache_key, userdetails, timeout=3600)
 
     user_filter = UserFilter(request.GET, queryset=userdetails)

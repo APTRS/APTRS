@@ -105,7 +105,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("All Groups and Permissions have been created and assigned."))
 
 
-   
 
     def create_company(self):
         company, created = Company.objects.get_or_create(name=COMPANY_NAME, defaults={'internal': True})

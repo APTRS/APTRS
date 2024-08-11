@@ -53,7 +53,7 @@ def save_vulnerability(data, pk):
             vulnerabilitydescription=vulnerability_data['vulnerabilitydescription'],
             vulnerabilitysolution=vulnerability_data['vulnerabilitysolution']
         )
-        
+
         vulnerability.save()
 
 

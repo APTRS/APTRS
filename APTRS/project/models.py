@@ -58,7 +58,7 @@ class Project(models.Model):
         super(Project, self).save(*args, **kwargs)
 
     class Meta:
-        ordering = ['-id'] 
+        ordering = ['-id']
 
 
 

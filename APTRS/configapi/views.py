@@ -48,7 +48,7 @@ class ProjectTypeListView(APIView):
         queryset = ProjectType.objects.all()
         serializer = ProjectTypeSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
 @api_view(['GET'])
 def ping(request):
     return Response({'status': 'ok', 'message': 'Server is up and running!'}, status=status.HTTP_200_OK)

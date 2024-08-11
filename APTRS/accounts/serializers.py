@@ -244,7 +244,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.company = company
         user.save()
         user.groups.set(groups_data)
-        
+
         return user
 
     def update(self, instance, validated_data):
