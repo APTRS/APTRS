@@ -14,7 +14,6 @@ from weasyprint import HTML, default_url_fetcher
 from xlsxwriter.workbook import Workbook
 from docx import Document
 from docxtpl import DocxTemplate,RichText
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from htmldocx import HtmlToDocx
 from datetime import datetime
@@ -117,7 +116,6 @@ def generate_vulnerability_document(pk,Report_type,standard):
     totalretest = ProjectRetest.objects.filter(project_id=pk)
     projectscope = PrjectScope.objects.filter(project=project)
     internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
-    customeruser = CustomUser.objects.filter(is_active=True,company=project.companyname)
     template_path = os.path.join(settings.BASE_DIR, 'templates', 'report.docx')
     doc = DocxTemplate(template_path)
 

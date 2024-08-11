@@ -2,7 +2,6 @@
 from celery import shared_task
 from django.utils import timezone
 from .models import Project, ProjectRetest
-from django.db.models import Q
 
 @shared_task(name="project_status")
 def update_project_status():

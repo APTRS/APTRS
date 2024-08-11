@@ -15,7 +15,7 @@ from utils.filters import (ProjectFilter,
                            paginate_queryset)
 from utils.permissions import custom_permission_required
 
-from ..models import (PrjectScope, Project, ProjectRetest, Vulnerability)
+from ..models import (Project, ProjectRetest)
 from ..report import CheckReport
 from ..serializers import (Projectserializers, UpdateProjectOwnerSerializer)
 
@@ -70,7 +70,7 @@ def project_edit(request, pk):
 def update_project_owner_view(request):
     serializer = UpdateProjectOwnerSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        project = serializer.update_project(serializer.validated_data)
+        _ = serializer.update_project(serializer.validated_data)
         return Response({"message": "Project owner updated successfully"}, status=status.HTTP_200_OK)
         
     else:

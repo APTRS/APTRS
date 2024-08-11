@@ -3,7 +3,6 @@ import logging
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from rest_framework import status
-from django.db.models import Prefetch
 
 from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes

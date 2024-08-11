@@ -1,7 +1,6 @@
 import logging
 import os
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 from rest_framework.decorators import (api_view, permission_classes)
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
