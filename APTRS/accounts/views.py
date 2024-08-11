@@ -173,9 +173,6 @@ def getallusers_filter(request):
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id') or 'id'
 
-
-    userdetails = CustomUser.objects.filter(is_staff=True)
-
     cache_key = 'all_staff_users_data'
     userdetails = cache.get(cache_key)
 
