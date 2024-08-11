@@ -176,7 +176,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f'ProjectType "{name}" created successfully.'))
             else:
                 self.stdout.write(self.style.SUCCESS(f'ProjectType "{name}" already exists.'))
-   
+
     def check_gtk3(self):
         """
         Check if GTK3 is available or not, pdf generation library weasyprint requires GTK3.

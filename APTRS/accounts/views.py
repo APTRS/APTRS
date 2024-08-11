@@ -230,7 +230,7 @@ def myprofile(request):
     - If the user has the required permissions, the endpoint returns a JSON object
       containing the profile details of the authenticated user.
     """
-    
+
     serializer = CustomUserSerializer(request.user)
     return Response(serializer.data)
 
@@ -332,7 +332,7 @@ def create_group(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
 @custom_permission_required(['Manage Users'])
-@cache_page(3600) 
+@cache_page(3600)
 def list_permissions(request):
     permissions = CustomPermission.objects.all()
     serializer = CustomPermissionSerializer(permissions, many=True)

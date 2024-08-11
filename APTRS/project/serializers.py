@@ -49,8 +49,8 @@ class Projectserializers(serializers.ModelSerializer):
                 validated_data['companyname'] = company
             except Company.DoesNotExist:
                 raise serializers.ValidationError("Company with provided name does not exist")
-            
-        
+
+
 
         if request and request.user:
             if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):  # If request user is an admin

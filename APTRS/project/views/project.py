@@ -123,9 +123,6 @@ class GetMyProjects(views.APIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def getallproject_filter(request):
-    
-    
-
     sort_order = request.GET.get('order_by', 'desc')
     sort_field = request.GET.get('sort', 'id') or 'id'
 
@@ -135,7 +132,7 @@ def getallproject_filter(request):
     if not projects:
         projects = Project.objects.all()
         cache.set(cache_key, projects, timeout=3600)
-    
+
     project_filter = ProjectFilter(request.GET, queryset=projects)
 
     filtered_queryset = project_filter.qs
@@ -144,7 +141,6 @@ def getallproject_filter(request):
     else:
         filtered_queryset = filtered_queryset.order_by('-'+sort_field)
 
-    #filtered_queryset = project_filter.qs
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
     serializer = Projectserializers(paginated_queryset, many=True)
 

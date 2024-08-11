@@ -89,7 +89,7 @@ def get_subdoc(doc, raw_html):
                 font = element.font
                 font.name = 'Calibri'
                 font.size = Pt(16)
-        
+
 
         font = temp_doc.styles['Normal'].font
         font.name = 'Calibri'
