@@ -56,15 +56,6 @@ RUN apt update -y && apt install -y  --no-install-recommends \
 WORKDIR /home/$APTRS_USER/APTRS
 COPY . .
 
-ENV POSTGRES_USER=aptrsdbuser \
-    POSTGRES_PASSWORD=aptrsdbpassword \
-    POSTGRES_DB=aptrs \
-    POSTGRES_HOST=postgres
-
-ENV WHITELIST_IP='["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:8000","http://testserver"]'
-ENV ALLOWED_HOST='["127.0.0.1","localhost","aptrsapi.souravkalal.tech","*"]'
-ENV CORS_ORIGIN='["http://127.0.0.1:8080", "https://aptrsapi.souravkalal.tech","http://127.0.0.1:5000"]'
-
 
 RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
 ENV SECRET_KEY=NEW_SECRET_KEY
