@@ -1,9 +1,0 @@
-FROM redis:7
-
-# Set the Redis password as an environment variable
-ENV REDIS_PASSWORD=q8N8HwlaOWqOl1hG7rdmBsm7oT52fLKHZXFwOB4VM7SXFDV8wg
-
-
-CMD ["sh", "-c", "redis-server --requirepass $REDIS_PASSWORD"]
-# Expose the Redis port
-EXPOSE 6379

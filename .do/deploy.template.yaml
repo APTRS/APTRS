@@ -1,8 +1,0 @@
-spec:
-  name: aptrs
-  services:
-    - name: aptrs
-      git:
-        branch: main
-        repo_clone_url: https://github.com/APTRS/APTRS.git
-   

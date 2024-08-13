@@ -53,14 +53,6 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 
 
-## Deployment
-
-[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Anof-cyber/APTRS/tree/API&refcode=daa899c901f2)
-
-
-
-
-
 ## Features
 - Manage Vulnerabilities
 - Custom Report Template in Docx or HTML/CSS
