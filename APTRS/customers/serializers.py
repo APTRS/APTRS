@@ -3,15 +3,35 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import (ValidationError,
                                                      validate_password)
 from rest_framework import serializers
-
+from django.conf import settings
+from utils.s3_utils import generate_presigned_url
 from .models import Company
-
 
 class CompanySerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False)
     class Meta:
         model = Company
         fields = '__all__'
+
+    def to_representation(self, instance):
+        # Call the parent class's to_representation method to get the default representation
+        representation = super().to_representation(instance)
+
+        # Check if the image exists and update its URL
+        if instance.img:
+            request = self.context.get('request')
+            img_url = instance.img.url
+
+            if settings.USE_S3:
+                # Generate a signed URL if using S3
+                signed_url = generate_presigned_url(instance.img.name, response_content_type='image/jpeg')  # Adjust content type as needed
+                representation['img'] = signed_url
+            else:
+                representation['img'] = request.build_absolute_uri(img_url)
+
+        return representation
+
+   
 
 class CustomerSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)

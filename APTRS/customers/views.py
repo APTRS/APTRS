@@ -40,7 +40,7 @@ def getallcompnay_filter(request):
         filtered_queryset = filtered_queryset.order_by('-'+sort_field)
     #filtered_queryset = companyname_filter.qs
     paginator, paginated_queryset = paginate_queryset(filtered_queryset, request)
-    serializer = CompanySerializer(paginated_queryset, many=True)
+    serializer = CompanySerializer(paginated_queryset, many=True,context={"request": request})
 
     return paginator.get_paginated_response(serializer.data)
 
@@ -164,7 +164,7 @@ def getcompany(request,pk):
         logger.error("Company not found with pk=%s", pk)
         return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = CompanySerializer(company,many=False)
+    serializer = CompanySerializer(company,many=False,context={"request": request})
     return Response(serializer.data)
 
 
@@ -173,7 +173,7 @@ def getcompany(request,pk):
 @permission_classes([IsAuthenticated,IsAdminUser])
 @custom_permission_required(['Manage Company'])
 def add_company(request):
-    serializer = CompanySerializer(data=request.data)
+    serializer = CompanySerializer(data=request.data,context={"request": request})
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         respdata={'Status':"Success"}
@@ -194,7 +194,7 @@ def edit_company(request,pk):
         logger.error("Company not found with pk=%s", pk)
         return Response({"message": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = CompanySerializer(instance=company,data=request.data, partial=True)
+    serializer = CompanySerializer(instance=company,data=request.data, partial=True,context={"request": request})
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         respdata={'Status':"Success"}

@@ -7,6 +7,12 @@ class Company(models.Model):
     address = models.TextField()
     internal = models.BooleanField(default=False)
 
+    ### Get full URL
+    def get_full_image_url(self):
+        if self.img and hasattr(self.img, 'url'):
+            return self.img.url
+        return None
+
     ### Internal company cannot be deleted, Deleting this remove all users, projects etc.
     def delete(self, *args, **kwargs):
         if not self.internal:

@@ -1,13 +1,25 @@
 from rest_framework import serializers
-
+from django.core.exceptions import ValidationError
 from accounts.models import CustomUser
 from customers.models import Company
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
 
 
+def validate_file_extension(value):
+    allowed_extensions = ['jpg', 'jpeg', 'png']
+    extension = value.name.split('.')[-1]
+    
+    if extension not in allowed_extensions:
+        raise ValidationError(f'Invalid file type: {extension}. Only {", ".join(allowed_extensions)} are accepted.')
+
+
 class ImageSerializer(serializers.Serializer):
-    upload = serializers.ImageField(allow_empty_file=False)
+    upload = serializers.ImageField(allow_empty_file=False,validators=[validate_file_extension])
+
+    
+
+
 
 class Projectserializers(serializers.ModelSerializer):
     status = serializers.CharField(read_only=True)

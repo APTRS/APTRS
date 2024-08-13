@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     'django_filters',
     'weasyprint',
     'django_celery_beat',
+    'storages',
     'debug_toolbar'
 ]
 
@@ -186,12 +187,13 @@ DATABASES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ['POSTGRES_DB'],
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],
         'PORT': os.environ['POSTGRES_PORT'],
+       
     }
 }
 # End Postgres support
@@ -206,14 +208,14 @@ CACHES = {
         "TIMEOUT": 60 * 15,  # in seconds: 60 * 15 (15 minutes)
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-             "PASSWORD": os.getenv("REDIS_PASSWORD")
+            #"PASSWORD": os.getenv("REDIS_PASSWORD")
         },
     }
 }
 
 
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+CELERY_BROKER_URL = os.getenv("REDIS_URL")
+CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 CELERY_BEAT_SCHEDULE = {
     'update_project_status_daily': {
         'task': 'project.tasks.update_project_status',
@@ -284,18 +286,27 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]#,os.path.join(BASE_DIR, 'frontend','build','static')]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
-    #MEDIA_URL2 = '/media/'
+
+
+USE_S3 = os.environ.get('USE_S3', 'False') == 'True' 
+if USE_S3:
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME') 
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = os.environ.get('AWS_S3_ENDPOINT_URL')
+    
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = AWS_S3_ENDPOINT_URL
+else:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+
 MEDIA_PATH = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(MEDIA_PATH, 'media')
 Company_LOGO = os.path.join(MEDIA_URL, 'company')
