@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from django.conf import settings
 from rest_framework.decorators import (api_view, permission_classes)
 from rest_framework.parsers import MultiPartParser
@@ -38,7 +39,7 @@ def delete_images(request):
 
 
 class ImageUploadView(APIView):
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
     parser_classes = [MultiPartParser]
 
     @custom_permission_required(['Manage Projects'])
@@ -46,12 +47,18 @@ class ImageUploadView(APIView):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
             image = serializer.validated_data['upload']
-            file_path = os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, image.name)
+            filename = sanitize_filename(image.name)
+            file_path = os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, filename)
             file = default_storage.save(file_path, image)
             file_url = default_storage.url(file)
             full_url = request.build_absolute_uri(file_url)
+            
             response_data = {"url": full_url}
             return Response(response_data)
         else:
             return Response(serializer.errors, status=400)
 
+
+
+def sanitize_filename(filename):
+    return re.sub(r'[^\w\s-]', '', filename).strip().replace(' ', '_')
