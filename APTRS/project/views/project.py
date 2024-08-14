@@ -175,6 +175,24 @@ def complete_project_status(request, pk):
     return Response({'message': f'Status of project {safe_pk} updated to Completed'})
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+@custom_permission_required(['Manage Projects'])
+def reopen_project_status(request, pk):
+    safe_pk = bleach.clean(pk)
+    try:
+        project = Project.objects.get(pk=safe_pk)
+    except ObjectDoesNotExist:
+        logger.error("Project not found for id=%s", safe_pk)
+        return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Set the project status to 'Completed'
+    project.status = 'In Progress'
+    project.save()
+
+    return Response({'message': f'Status of project {safe_pk} updated'})
+
+
 
 @api_view(['POST','GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])

@@ -54,7 +54,8 @@ class Project(models.Model):
             return 'Delay'
 
     def save(self, *args, **kwargs):
-        self.status = self.calculate_status
+        if self.status != 'Completed':
+            self.status = self.calculate_status
         super(Project, self).save(*args, **kwargs)
 
     class Meta:

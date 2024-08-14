@@ -13,6 +13,7 @@ urlpatterns = [
     path('get-project/<str:pk>/',project.getproject),
     path('delete-project/',project.deleteproject),
     path('status/completed/<str:pk>/',project.complete_project_status),
+    path('status/reopen/<str:pk>/',project.reopen_project_status),
     path('report/<str:pk>/', project.project_report,name="generate report"),
 
     # Scope
