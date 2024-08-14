@@ -2,7 +2,6 @@ services:
 
   nginx:
     image: nginx
-    read_only: true
     volumes:
       - ./scripts/nginx.conf:/etc/nginx/conf.d/aptrs.conf
       - ./Certificate:/etc/nginx/certs
@@ -16,8 +15,6 @@ services:
       - aptrs
     networks:
         - aptrs
-    security_opt:
-      - no-new-privileges:true
 
   postgres:
     image: "postgres:latest"
@@ -52,7 +49,6 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     environment:  
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-      REDIS_URL: ${REDIS_URL}
     healthcheck:
       test: ["CMD", "redis-cli","ping"]
     volumes: 
@@ -68,13 +64,17 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       PGUSER: ${POSTGRES_USER}
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_URL: ${REDIS_URL}
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
       WHITELIST_IP: ${WHITELIST_IP}
       ALLOWED_HOST: ${ALLOWED_HOST}
       CORS_ORIGIN: ${CORS_ORIGIN}
+      USE_S3: ${USE_S3}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME}
+      AWS_S3_CUSTOM_DOMAIN: ${AWS_S3_CUSTOM_DOMAIN}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
     depends_on:
       - postgres
       - cache
