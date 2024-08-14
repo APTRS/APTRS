@@ -52,7 +52,7 @@ class ImageUploadView(APIView):
             unique_filename = f"{uuid.uuid4()}{os.path.splitext(image.name)[1]}" 
             upload_path = os.path.join('poc', unique_filename)
             default_storage.save(upload_path, image)
-            response_data = {"url": f"/api/project/getimage?filename={unique_filename}"}
+            response_data = {"url": f"project/getimage/?filename={unique_filename}"}
             return Response(response_data)
         else:
             return Response(serializer.errors, status=400)
@@ -77,7 +77,6 @@ class GetImageView(APIView):
                     endpoint_url=settings.AWS_S3_ENDPOINT_URL
                 )
                 file_path = os.path.join('poc', filename)
-                print(file_path)
                 s3_object = s3_client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_path)
                 content_type = s3_object['ContentType']
                 image_data = s3_object['Body'].read()
@@ -93,7 +92,6 @@ class GetImageView(APIView):
 
         else:
             file_path = os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, filename)
-            print(file_path)
             if default_storage.exists(file_path):
                 image_file = default_storage.open(file_path)
                 content_type = self._get_content_type(filename)

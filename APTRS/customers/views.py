@@ -52,7 +52,7 @@ def getallcompnay_filter(request):
 @cache_page(3600)
 def getallcompnay(request):
     companyname = Company.objects.all()
-    serializer = CompanySerializer(companyname,many=True)
+    serializer = CompanySerializer(companyname,many=True,context={"request": request})
     return Response(serializer.data)
 
 

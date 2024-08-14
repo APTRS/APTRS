@@ -54,18 +54,21 @@ CORS_ALLOWED_ORIGINS = ["https://example.com","http://127.0.0.1:9000"]  os.geten
 CORS_ORIGIN_ALLOW_ALL = True
 
 
-'''
-CORS Headers Security
-For Additional security add this
+
+#CORS Headers Security
+#For Additional security add this
 
 CORS_ALLOW_HEADERS = (
     "accept",
     "authorization",
     "content-type",
     "user-agent",
+    'cookie',
+    'Set-Cookie',
+    'x-requested-with'
 )
 
-'''
+
 
 #### Do Not Change this
 CORS_ALLOW_CREDENTIALS = True
@@ -139,7 +142,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day', 
+        'anon': '1000/day', 
         'login': '5/minute',
     }
 
