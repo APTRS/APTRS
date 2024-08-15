@@ -65,7 +65,7 @@ CORS_ALLOW_HEADERS = (
     "user-agent",
     'cookie',
     'Set-Cookie',
-    'x-requested-with'
+    'x-requested-with',
     'Content-Disposition',
 )
 
