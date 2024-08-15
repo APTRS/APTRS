@@ -189,8 +189,9 @@ def reopen_project_status(request, pk):
     # Set the project status to 'Completed'
     project.status = 'In Progress'
     project.save()
+    latest_status = project.calculate_status
 
-    return Response({'message': f'Status of project {safe_pk} updated'})
+    return Response({'message': f'Status of project {safe_pk} updated', 'latest_status': latest_status})
 
 
 
