@@ -65,10 +65,10 @@ CORS_ALLOW_HEADERS = (
     "user-agent",
     'cookie',
     'Set-Cookie',
-    'x-requested-with',
-    'Content-Disposition',
+    'x-requested-with'
 )
 
+CORS_EXPOSE_HEADERS = ['Content-Disposition','Set-Cookie']
 
 
 #### Do Not Change this
