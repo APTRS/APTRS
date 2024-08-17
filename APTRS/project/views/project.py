@@ -45,7 +45,7 @@ def newproject(request):
 def project_edit(request, pk):
     try:
         #project = Project.objects.get(pk=pk)
-        project = Project.objects.select_related('companyname', 'owner').get(pk=pk)
+        project = Project.objects.prefetch_related('owner').select_related('companyname').get(pk=pk)
     except ObjectDoesNotExist:
         logger.error("Project not found with pk=%s", pk)
 

@@ -121,29 +121,30 @@ class Projectserializers(serializers.ModelSerializer):
 
 class UpdateProjectOwnerSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
-    owner = serializers.CharField(max_length=150, required=True)
+    owner = serializers.ListField(child=serializers.CharField(max_length=150), required=True)
+
 
     def validate_owner(self, value):
-        try:
-            user = CustomUser.objects.get(username=value)
-            if not user.is_active:
-                raise serializers.ValidationError("Owner is not an active user")
-        except CustomUser.DoesNotExist:
-            raise serializers.ValidationError("Owner with provided username does not exist")
+        # Ensure all provided usernames are valid and active
+        users = []
+        for username in value:
+            try:
+                user = CustomUser.objects.get(username=username)
+                if not user.is_active:
+                    raise serializers.ValidationError(f"Owner '{username}' is not an active user")
+                users.append(user)
+            except CustomUser.DoesNotExist:
+                raise serializers.ValidationError(f"Owner with username '{username}' does not exist")
 
-        return value
+        return users
 
     def update_project(self, validated_data):
-        id = validated_data.get('id')
-        owner_username = validated_data.get('owner')
+        project_id = validated_data.get('id')
+        owners = validated_data.get('owner')
 
         try:
-            project = Project.objects.get(id=id)
-            user = CustomUser.objects.get(username=owner_username)
-            if not user.is_active:
-                raise serializers.ValidationError("Owner is not an active user")
-
-            project.owner = user
+            project = Project.objects.get(id=project_id)
+            project.owner.set(owners)  # Set the many-to-many relationship
             project.save()
 
         except Project.DoesNotExist:
