@@ -36,7 +36,7 @@ class Project(models.Model):
     enddate = models.DateField()
     testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
     projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
-    owner = models.ForeignKey(CustomUser,on_delete=models.SET_NULL,blank=True,null=True,to_field='username')
+    owner = models.ManyToManyField(CustomUser,blank=True,null=True)
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
 
     def clean(self):

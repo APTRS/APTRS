@@ -19,11 +19,14 @@ class ImageSerializer(serializers.Serializer):
 
     
 
-
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['username'] 
 
 class Projectserializers(serializers.ModelSerializer):
     status = serializers.CharField(read_only=True)
-    owner = serializers.CharField(write_only=True)
+    owner = serializers.ListField(child=serializers.CharField(), write_only=True)
     companyname = serializers.CharField(write_only=True)
 
     class Meta:
@@ -33,8 +36,7 @@ class Projectserializers(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super(Projectserializers, self).to_representation(instance)
         rep['companyname'] = instance.companyname.name
-        if 'owner' not in rep:
-            rep['owner'] = instance.owner.username
+        rep['owner'] = [user.username for user in instance.owner.all()]
 
         return rep
 
@@ -53,7 +55,7 @@ class Projectserializers(serializers.ModelSerializer):
     def create(self, validated_data):
         # Access the request object from the context
         request = self.context.get('request')
-
+        owners_usernames = validated_data.pop('owner', [])
         company_name = validated_data.pop('companyname', None)
         if company_name:
             try:
@@ -66,21 +68,24 @@ class Projectserializers(serializers.ModelSerializer):
 
         if request and request.user:
             if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):  # If request user is an admin
-                if 'owner' in validated_data:
-                    ownerusername = validated_data.pop('owner')
-                    try:
-                        user = CustomUser.objects.get(username=ownerusername)
-                        if not user.is_active:
-                            raise serializers.ValidationError("Owner is not an active user")
-                    except CustomUser.DoesNotExist:
-                        raise serializers.ValidationError("Owner with provided name does not exist")
-                    validated_data['owner'] = user
+                if owners_usernames:
+                    owners = []
+                    for username in owners_usernames:
+                        try:
+                            user = CustomUser.objects.get(username=username)
+                            if not user.is_active:
+                                raise serializers.ValidationError(f"Owner '{username}' is not an active user")
+                            owners.append(user)
+                        except CustomUser.DoesNotExist:
+                            raise serializers.ValidationError(f"Owner '{username}' does not exist")
+                    
                     project = Project.objects.create(**validated_data)
+                    project.owner.set(owners)
                     return project
                 else:
                     raise serializers.ValidationError("owner field is missing")
             else:  # If request user is not an admin
-                validated_data['owner'] = request.user.username
+                validated_data['owner'] = [request.user]
                 project = Project.objects.create(**validated_data)
                 return project
         else:
@@ -88,24 +93,25 @@ class Projectserializers(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
-
+        owners_usernames = validated_data.pop('owner', [])
         validated_data.pop('companyname', None)
         if request and request.user:
             if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):
-                if 'owner' in validated_data:
-                    ownerusername = validated_data.pop('owner')
-                    try:
-                        user = CustomUser.objects.get(username=ownerusername)
-                        if not user.is_active:
-                            raise serializers.ValidationError("Owner is not an active user")
-                    except CustomUser.DoesNotExist:
-                        raise serializers.ValidationError("Owner with provided name does not exist")
-                    validated_data['owner'] = user
-
+                if owners_usernames:
+                    owners = []
+                    for username in owners_usernames:
+                        try:
+                            user = CustomUser.objects.get(username=username)
+                            if not user.is_active:
+                                raise serializers.ValidationError(f"Owner '{username}' is not an active user")
+                            owners.append(user)
+                        except CustomUser.DoesNotExist:
+                            raise serializers.ValidationError(f"Owner '{username}' does not exist")
+                    instance.owner.set(owners)  # Update many-to-many relationships
                 else:
-                    raise serializers.ValidationError("owner field is missing")
+                    raise serializers.ValidationError("At least one owner is required")
             else:  # If request user is not an admin
-                validated_data['owner'] = request.user.username
+                instance.owner.set([request.user])
 
         else:
             raise serializers.ValidationError("Invalid request")

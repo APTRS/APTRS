@@ -83,7 +83,7 @@ def update_project_owner_view(request):
 def getproject(request,pk):
     try:
         #project = Project.objects.get(pk=pk)
-        project = Project.objects.select_related('companyname', 'owner').get(pk=pk)
+        project = Project.objects.prefetch_related('owner').select_related('companyname').get(pk=pk)
 
     except ObjectDoesNotExist:
         logger.error("Project not found for id=%s", pk)
@@ -101,8 +101,7 @@ class GetAllProjects(views.APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request):
-        #projects = Project.objects.all()
-        projects = Project.objects.select_related('companyname','owner').all()
+        projects = Project.objects.prefetch_related('owner').select_related('companyname').all()
         serializer = Projectserializers(projects, many=True)
         return Response(serializer.data)
 
@@ -114,7 +113,7 @@ class GetMyProjects(views.APIView):
         projects = Project.objects.filter(
             Q(owner=request.user) &
             Q(status__in=['Upcoming', 'In Progress', 'Delay'])
-        ).select_related('companyname', 'owner')#.prefetch_related('related_model1', 'related_model2')
+        ).prefetch_related('owner').select_related('companyname')
         serializer = Projectserializers(projects, many=True)
         return Response(serializer.data)
 

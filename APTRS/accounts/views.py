@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.views import APIView
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -23,6 +24,16 @@ from .serializers import (ChangePasswordSerializer, CustomGroupSerializer,
 
 logger = logging.getLogger(__name__)
 
+
+class LogoutGetView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Create a response object
+        response = Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+
+        # Clear the JWT token cookie
+        response.delete_cookie('access_token', path='/')
+        
+        return response
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """

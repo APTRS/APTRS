@@ -4,7 +4,7 @@ from django.urls import path
 
 # local imports
 from . import views
-from .views import MyTokenObtainPairView
+from .views import MyTokenObtainPairView,LogoutGetView
 
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('logout/', LogoutGetView.as_view(), name='logout'),
     path('changepassword', views.change_password, name='change_password'),
     path('users', views.getallusers, name='getallusers'),
     path('users-active', views.ActiveUserList, name='Get All Active Users'),
