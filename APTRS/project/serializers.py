@@ -154,15 +154,53 @@ class UpdateProjectOwnerSerializer(serializers.Serializer):
 
 
 class Retestserializers(serializers.ModelSerializer):
-    owner = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    owner = serializers.SlugRelatedField(
+        slug_field='username',
+        queryset=CustomUser.objects.all(),
+        many=True
+       
+    )
+
     class Meta:
         model = ProjectRetest
-        fields = '__all__'
+        fields = ('id', 'project', 'startdate', 'enddate', 'status', 'owner')
+
+
+    def get_user_permissions(self, user):
+        user_groups = user.groups.all()
+        permissions = set()
+        for group in user_groups:
+            permissions |= set(group.list_of_permissions.all().values_list('name', flat=True))
+        return permissions
 
     def create(self, validated_data):
-        request = self.context.get("request")
-        validated_data['owner'] = request.user
-        return super(Retestserializers, self).create(validated_data)
+        request = self.context.get('request')
+        owners_usernames = validated_data.pop('owner', [])
+        
+        if request and request.user:
+            if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):
+                if owners_usernames:
+                    owners = []
+                    for username in owners_usernames:
+                        try:
+                            user = CustomUser.objects.get(email=username)
+                            if not user.is_active:
+                                raise serializers.ValidationError(f"Owner '{username}' is not an active user")
+                            owners.append(user)
+                        except CustomUser.DoesNotExist:
+                            raise serializers.ValidationError(f"Owner '{username}' does not exist")
+                    
+                    project_retest = ProjectRetest.objects.create(**validated_data)
+                    project_retest.owner.set(owners)
+                    return project_retest
+                else:
+                    raise serializers.ValidationError("owner field is missing")
+            else:  # If request user is not an admin o have assign permission
+                validated_data['owner'] = [request.user]
+                project = ProjectRetest.objects.create(**validated_data)
+                return project
+        else:
+            raise serializers.ValidationError("Invalid request")
 
 
 class PrjectScopeserializers(serializers.ModelSerializer):

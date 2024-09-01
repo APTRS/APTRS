@@ -116,7 +116,7 @@ class ProjectRetest(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     startdate = models.DateField()
     enddate = models.DateField()
-    owner = models.ForeignKey(CustomUser,on_delete=models.SET_NULL,blank=True,null=True,to_field='username')
+    owner = models.ManyToManyField(CustomUser,blank=True,null=True)
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
 
     def clean(self):
