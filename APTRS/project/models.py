@@ -132,14 +132,3 @@ class ProjectRetest(models.Model):
             return 'In Progress'
         elif current_date > self.enddate:
             return 'Delay'
-
-    def save(self, *args, **kwargs):
-        # Check if there's an existing ProjectRetest with a non-completed status for the same project
-        existing_retests = ProjectRetest.objects.filter(project=self.project, status__in=['Upcoming', 'In Progress', 'Delay']).exclude(id=self.id)
-
-        if existing_retests.exists():
-            raise ValidationError("Cannot create a new Project Retest. There is an existing retest task that hasn't been completed.")
-
-        self.status = self.calculate_status
-        super(ProjectRetest, self).save(*args, **kwargs)
-

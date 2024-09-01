@@ -166,6 +166,24 @@ class Retestserializers(serializers.ModelSerializer):
         fields = ('id', 'project', 'startdate', 'enddate', 'status', 'owner')
 
 
+    def validate(self, attrs):
+        project = attrs.get('project')
+        startdate = attrs.get('startdate')
+        enddate = attrs.get('enddate')
+
+        if enddate and startdate and enddate < startdate:
+            raise serializers.ValidationError("End date cannot be earlier than start date.")
+
+        # Check for existing non-completed retests
+        existing_retests = ProjectRetest.objects.filter(project=project, status__in=['Upcoming', 'In Progress', 'Delay'])
+        if self.instance:
+            existing_retests = existing_retests.exclude(id=self.instance.id)
+
+        if existing_retests.exists():
+            raise serializers.ValidationError("Cannot create a new Project Retest. There is an existing retest task that hasn't been completed.")
+
+        return attrs
+
     def get_user_permissions(self, user):
         user_groups = user.groups.all()
         permissions = set()
