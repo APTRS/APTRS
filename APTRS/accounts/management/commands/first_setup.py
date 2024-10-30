@@ -6,7 +6,7 @@ from configapi.models import ReportStandard, ProjectType
 from django.core.management.base import BaseCommand
 
 USERNAME = "Sourav.Kalal"
-EMAIL = "sourav.kalal@anof.com"
+EMAIL = "sourav.kalal@aptrs.com"
 FullName = "Sourav Kalal"
 Number = "+919910000001"
 Position = "Security Engineer"
