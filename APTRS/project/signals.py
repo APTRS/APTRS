@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Project, Vulnerability, Vulnerableinstance
+from .models import Project, Vulnerability, Vulnerableinstance, ProjectRetest
 
 VULNERABLE = 'Vulnerable'
 CONFIRMED = 'Confirm Fixed'
@@ -71,6 +71,21 @@ def update_project_status(sender, instance, **kwargs):
     if not instance.id:  # Check if it's a new project being created
         instance.status = instance.status  # Calculate status for a new project
     else:  # For existing projects, check and update status based on date change
+        try:
+            previous_instance = sender.objects.get(id=instance.id)
+            if (previous_instance.startdate != instance.startdate or
+                    previous_instance.enddate != instance.enddate):
+                instance.status = instance.status  # Recalculate status if start/end date changes
+        except sender.DoesNotExist:
+            pass  # Ignore if the previous instance doesn't exist ( during loaddata)
+
+
+
+@receiver(models.signals.pre_save, sender=ProjectRetest)
+def update_projectretest_status(sender, instance, **kwargs):
+    if not instance.id:  # Check if it's a new project retest being created
+        instance.status = instance.status  # Calculate status for a new project
+    else:  # For existing projects status, check and update status based on date change
         try:
             previous_instance = sender.objects.get(id=instance.id)
             if (previous_instance.startdate != instance.startdate or
