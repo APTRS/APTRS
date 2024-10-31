@@ -136,4 +136,4 @@ class ProjectRetest(models.Model):
     def save(self, *args, **kwargs):
         if self.status != 'Completed':
             self.status = self.calculate_status
-        super(Project, self).save(*args, **kwargs)
+        super(ProjectRetest, self).save(*args, **kwargs)
