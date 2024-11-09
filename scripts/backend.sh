@@ -42,11 +42,6 @@ echo "Setting up new accounts and permissions"
 if [ ! -f /tmp/first_setup_done ]; then
   echo "Running first-time setup..."
   python3 manage.py first_setup
-  python3 manage.py create_users
-  python3 manage.py create_companies
-  python3 manage.py create_projects
-
-
 
   touch /tmp/first_setup_done
 else
