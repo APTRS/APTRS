@@ -38,14 +38,14 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 
 
-[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://anof-cyber.github.io/APTRS/) [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" width="220" height="45">](https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&creator=24236036)
+[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://doc.aptrs.com) [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" width="220" height="45">](https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&creator=24236036)
 
 
 
 - Try APTRS Live - [aptrs.souravkalal.tech](https://live.aptrs.com)
 
 > [!NOTE]  
-> Default creds are admin@aptrs.com & iamweakpassword
+> Default creds are sourav.kalal@aptrs.com & I-am-Weak-Password-Please-Change-Me
 
 
 
