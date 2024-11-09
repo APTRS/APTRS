@@ -1,10 +1,9 @@
 services:
 
   nginx:
-    image: nginx
+    build:
+      dockerfile: ./docker/Dockerfile_frontend
     volumes:
-      - ./scripts/nginx.conf:/etc/nginx/conf.d/aptrs.conf
-      - ./Certificate:/etc/nginx/certs
       - static_volume:/home/aptrs/APTRS/static/
       - ./nginx/logs:/var/log/nginx 
     ports:
@@ -15,6 +14,7 @@ services:
       - aptrs
     networks:
         - aptrs
+
 
   postgres:
     image: "postgres:latest"
@@ -54,7 +54,8 @@ services:
     volumes: 
       - cache:/data
         
-      
+
+
   aptrs:
     env_file: "APTRS/.env"
     environment:
@@ -81,7 +82,7 @@ services:
     
     build:
         context: .
-        dockerfile: Dockerfile
+        dockerfile: docker/Dockerfile_API
     volumes:
       - ./api_data:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/APTRS/static/

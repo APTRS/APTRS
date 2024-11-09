@@ -54,8 +54,12 @@ RUN apt update -y && apt install -y  --no-install-recommends \
 
 
 WORKDIR /home/$APTRS_USER/APTRS
-COPY . .
-
+COPY ../APTRS ./APTRS
+COPY ../Certificate ./Certificate
+COPY ../scripts ./scripts
+COPY ../poetry.lock ./poetry.lock
+COPY ../pyproject.toml ./pyproject.toml
+COPY ../requirements.txt ./requirements.txt
 
 RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
 ENV SECRET_KEY=NEW_SECRET_KEY
@@ -90,7 +94,6 @@ RUN groupadd --gid $USER_ID $APTRS_USER && \
     chown -R $APTRS_USER:$APTRS_USER /home/$APTRS_USER
 USER $APTRS_USER
 
-RUN dir -s    
 RUN ["chmod", "+x", "/home/aptrs/APTRS/scripts/backend.sh"]
 
 
