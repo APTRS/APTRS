@@ -14,7 +14,7 @@ export type Vulnerability = {
 export type ProjectVulnerability = Omit<Vulnerability, 'id'> & {
   id: number
   project: number | string
-  poc: string
+  POC: string
   instance:VulnerabilityInstance[]
 }
 export type VulnerabilityInstance =  { 
