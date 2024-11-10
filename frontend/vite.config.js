@@ -10,7 +10,8 @@ export default defineConfig({
     commonjsOptions: {
       include: [/node_modules/],
       exclude: ['ckeditor5-custom-build']
-    }
+    },
+    sourcemap: false,
   },
   plugins: [
     react(),

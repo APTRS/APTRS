@@ -92,9 +92,9 @@ services:
       - aptrs
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000/api/config/ping/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 1000s
+      timeout: 100s
+      retries: 2
     links:
       - "postgres"
       - "cache"

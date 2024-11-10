@@ -33,9 +33,8 @@ export function avatarUrl(profilepic: string | null = ''): string {
     return ''
   }
   if(!profilepic.includes('http')){
-    const base = new URL(import.meta.env.VITE_APP_API_URL);
-    const origin = base.origin;            
-    return origin + profilepic
+    const base = window.location.origin;  // Get the current origin
+    return base + profilepic; 
   }
   return profilepic
 }
