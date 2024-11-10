@@ -104,7 +104,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
         response = Response(token_data, status=status.HTTP_200_OK)
 
         # Set the JWT token in the cookie
-        response.set_cookie(key='access_token',value=token_data['access'],httponly=False,secure=False,samesite='None',path='/')
+        response.set_cookie(key='access_token',value=token_data['access'],httponly=False,secure=False,samesite='Lax',path='/')
         
         return response
 

@@ -201,7 +201,8 @@ def project_report(request, pk):
     try:
         #project = Project.objects.get(pk=pk)
         report_format = request.query_params.get('Format')
-        project = Project.objects.select_related('companyname', 'owner').get(pk=pk)
+        project = Project.objects.prefetch_related('owner').select_related('companyname').get(pk=pk)
+
 
 
         #Checking if project has any vulnerabilities added

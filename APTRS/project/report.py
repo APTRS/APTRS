@@ -2,6 +2,7 @@ import io
 import logging
 import urllib
 import os
+import requests
 import bleach
 import pygal
 from django.conf import settings
@@ -25,6 +26,9 @@ from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
 
 logger = logging.getLogger(__name__)
+logger = logging.getLogger('weasyprint')
+
+token = None
 
 def apply_font_style(element, font_name, font_size):
     if hasattr(element, 'font'):
@@ -157,6 +161,7 @@ def is_whitelisted(url):
     parsed_url = urllib.parse.urlparse(url)
     netloc = parsed_url.netloc.lower()  # Normalize for case-insensitive comparison
     port = parsed_url.port if parsed_url.port else 80  # Default to port 80 if not specified
+    
 
     # Construct a normalized representation of the whitelisted entry
     for whitelisted_entry in settings.WHITELIST_IP:
@@ -173,10 +178,39 @@ def is_whitelisted(url):
 
 
 def my_fetcher(url):
+    print(url)
+    
+    # Check if the URL is whitelisted
     if is_whitelisted(url):
+        print("url is " + url)
+        # If the URL is part of the `/api/project/getimage/` endpoint, we need to authenticate
+        if "/api/project/getimage/" in url:
+            print("token is " + token)
+            # Add JWT Bearer token to the headers
+            headers = {
+                "Authorization": f"Bearer {token}"
+            }
+            
+            # Make the HTTP request with the Bearer token
+            response = requests.get(url, headers=headers)
+            
+            # Raise an error if the request failed
+            response.raise_for_status()
+            
+            # Return the content in a format compatible with WeasyPrint
+            return {
+                "string": response.content,  # Binary content for images
+                "mime_type": response.headers.get("Content-Type", "image/jpeg"),  # Default to 'image/jpeg' if not specified
+                "encoding": response.encoding,
+                "redirected_url": response.url
+            }
+        
+        # If the URL is not the one we want to authenticate, use the default fetcher
         return default_url_fetcher(url)
+    
     else:
         raise ValueError(f'URL is Not WhiteListed for: {url!r}')
+
 
 
 
@@ -186,6 +220,12 @@ def CheckReport(Report_format,Report_type,pk,url,standard,request):
     elif Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
     else:
+        global token
+        auth_header = request.headers.get('Authorization')
+    
+        if auth_header:
+        # Extract token from "Bearer <token>"
+            token = auth_header.split(' ')[1] if auth_header.startswith('Bearer ') else None
         response = GetHTML(Report_format,Report_type,pk,url,standard,request)
     return response
 
@@ -282,7 +322,11 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
     data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,
             'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,
             'medium':medium,'low':low,'info':info,'instances':instances,'internalusers':internalusers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
-    base_url = f"{request.scheme}://{request.get_host()}"
+    if settings.USE_DOCKER:
+        base_url = "https://nginx"
+    else:
+        base_url = f"{request.scheme}://{request.get_host()}"
+    
     try:
         # Render the template to a string
         rendered_content = render_to_string('report.html', data, request=request)

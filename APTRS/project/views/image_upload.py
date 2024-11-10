@@ -62,6 +62,7 @@ class ImageUploadView(APIView):
 
 
 class GetImageView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def get(self, request):
         filename = request.GET.get('filename')
         if not filename:
