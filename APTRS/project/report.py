@@ -1,8 +1,10 @@
 import io
 import logging
+import ssl
 import urllib
 import os
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import bleach
 import pygal
 from django.conf import settings
@@ -178,36 +180,36 @@ def is_whitelisted(url):
 
 
 def my_fetcher(url):
-    print(url)
     
     # Check if the URL is whitelisted
     if is_whitelisted(url):
-        print("url is " + url)
-        # If the URL is part of the `/api/project/getimage/` endpoint, we need to authenticate
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
         if "/api/project/getimage/" in url:
-            print("token is " + token)
-            # Add JWT Bearer token to the headers
             headers = {
                 "Authorization": f"Bearer {token}"
             }
-            
-            # Make the HTTP request with the Bearer token
-            response = requests.get(url, headers=headers)
-            
-            # Raise an error if the request failed
+            response = requests.get(url, headers=headers, verify=False)
             response.raise_for_status()
             
-            # Return the content in a format compatible with WeasyPrint
             return {
-                "string": response.content,  # Binary content for images
-                "mime_type": response.headers.get("Content-Type", "image/jpeg"),  # Default to 'image/jpeg' if not specified
+                "string": response.content,
+                "mime_type": response.headers.get("Content-Type", "image/jpeg"),
                 "encoding": response.encoding,
                 "redirected_url": response.url
             }
         
-        # If the URL is not the one we want to authenticate, use the default fetcher
-        return default_url_fetcher(url)
-    
+        else:
+            response = requests.get(url, verify=False)
+            response.raise_for_status()
+            
+            mime_type = response.headers.get("Content-Type", "application/octet-stream")
+            
+            return {
+                "string": response.content,
+                "mime_type": mime_type,
+                "encoding": response.encoding,
+                "redirected_url": response.url
+            }
     else:
         raise ValueError(f'URL is Not WhiteListed for: {url!r}')
 
@@ -323,7 +325,7 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
             'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,
             'medium':medium,'low':low,'info':info,'instances':instances,'internalusers':internalusers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
     if settings.USE_DOCKER:
-        base_url = "https://nginx"
+        base_url = "https://nginx/"
     else:
         base_url = f"{request.scheme}://{request.get_host()}"
     

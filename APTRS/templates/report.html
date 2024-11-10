@@ -1,11 +1,7 @@
 {% load content_sanitization %}
 <html>
   <head>
-    {% if settings.USE_DOCKER %}
-      <base href="http://127.0.0.1:8000">
-    {% else %}
-      <base href="{{ request.scheme }}://{{ request.get_host }}">
-    {% endif %}
+
     <meta charset="utf-8">
     <link href="/static/css/report-page.css" rel="stylesheet">
     <link href="/static/css/report-cover-page.css" rel="stylesheet">
