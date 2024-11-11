@@ -1,6 +1,6 @@
 import { uploadFile } from '../lib/data/api';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-
+import 'ckeditor5/ckeditor5.css';
 
 import {
     ClassicEditor,
@@ -22,9 +22,48 @@ import {
     Table,
     Image,
     TableToolbar,
-    ImageUpload
+    ImageUpload,
+	Alignment,
+	Autosave,
+	FontBackgroundColor,
+	FontColor,
+	FontFamily,
+	FontSize,
+	GeneralHtmlSupport,
+	Highlight,
+	HorizontalLine,
+	ImageBlock,
+	ImageInline,
+	ImageResize,
+	ImageStyle,
+	ImageToolbar,
+	IndentBlock,
+	ListProperties,
+	Markdown,
+	PasteFromMarkdownExperimental,
+	PasteFromOffice,
+	SelectAll,
+	SpecialCharacters,
+	SpecialCharactersArrows,
+	SpecialCharactersCurrency,
+	SpecialCharactersEssentials,
+	SpecialCharactersLatin,
+	SpecialCharactersMathematical,
+	SpecialCharactersText,
+	Strikethrough,
+	Subscript,
+	Superscript,
+	TableCaption,
+	TableCellProperties,
+	TableColumnResize,
+	TableProperties,
+	TextTransformation,
+	TodoList,
+	Underline,
+	Undo
 } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+
+
 
 class Editor extends ClassicEditor {
     static builtinPlugins = [
@@ -51,26 +90,128 @@ class Editor extends ClassicEditor {
 
     static defaultConfig = {
         toolbar: {
-            items: [
-                '|', 'heading',
-                '|', 'bold', 'italic',
-                '|', 'link', 'insertTable', 'blockQuote',
-                '|', 'bulletedList', 'numberedList', 'outdent', 'indent',
-                '|', 'Code', 'CodeBlock', 'Autoformat',
-                '|', 'ImageUpload', 'ImageResizeEditing', 'ImageResizeHandles',
-                '|', 'toggleImageCaption',
-            ]
-        },
-        resizeOptions: [
-            { name: 'resizeImage:original', value: null, label: 'Original' },
-            { name: 'resizeImage:25', value: '25', label: '25%' },
-            { name: 'resizeImage:50', value: '50', label: '50%' },
-            { name: 'resizeImage:75', value: '75', label: '75%' }
-        ],
-        image: { upload: { types: ['png', 'jpeg', 'gif'] } },
-        language: 'en',
+			items: [
+				'undo',
+				'redo',
+				'|',
+				'heading',
+				'|',
+				'fontSize',
+				'fontFamily',
+				'fontColor',
+				'fontBackgroundColor',
+				'|',
+				'bold',
+				'italic',
+				'underline',
+				'strikethrough',
+				'subscript',
+				'superscript',
+				'code',
+				'|',
+				'ImageUpload',
+				'specialCharacters',
+				'horizontalLine',
+				'link',
+				'insertTable',
+				'highlight',
+				'blockQuote',
+				'codeBlock',
+				'|',
+				'alignment',
+				'|',
+				'bulletedList',
+				'numberedList',
+				'todoList',
+				'outdent',
+				'indent'
+			],
+			shouldNotGroupWhenFull: true
+		},
+		plugins: [
+			
+			Alignment,
+			Autoformat,
+			Autosave,
+			BlockQuote,
+			Bold,
+			
+			Code,
+			CodeBlock,
+			Essentials,
+			FontBackgroundColor,
+			FontColor,
+			FontFamily,
+			FontSize,
+			GeneralHtmlSupport,
+			Heading,
+			Highlight,
+			HorizontalLine,
+			ImageBlock,
+			ImageInline,
+			ImageResize,
+			ImageStyle,
+			ImageToolbar,
+			ImageUpload,
+			Indent,
+			IndentBlock,
+			Italic,
+			Link,
+			List,
+			ListProperties,
+			Markdown,
+			Paragraph,
+			PasteFromMarkdownExperimental,
+			PasteFromOffice,
+			SelectAll,
+			SpecialCharacters,
+			SpecialCharactersArrows,
+			SpecialCharactersCurrency,
+			SpecialCharactersEssentials,
+			SpecialCharactersLatin,
+			SpecialCharactersMathematical,
+			SpecialCharactersText,
+			Strikethrough,
+			Subscript,
+			Superscript,
+			Table,
+			TableCaption,
+			TableCellProperties,
+			TableColumnResize,
+			TableProperties,
+			TableToolbar,
+			TextTransformation,
+			TodoList,
+			Underline,
+			Undo
+		],
+		fontFamily: {
+			supportAllValues: true
+		},
+		fontSize: {
+			options: [10, 12, 14, 'default', 18, 20, 22],
+			supportAllValues: true
+		},
+		image: {
+			toolbar: ['imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:breakText', '|', 'resizeImage'],
+			upload: { types: ['png', 'jpeg', 'gif'] } 
+		},
+		initialData:
+			'CKEDITOR',
+		list: {
+			properties: {
+				styles: true,
+				startIndex: true,
+				reversed: true
+			}
+		},
+		placeholder: 'Type or paste your content here!',
+		table: {
+			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+		}
+	};
     };
-}
+
 
 interface CKEditorProps {
     id: string;
@@ -105,10 +246,10 @@ class MyUploadAdapter {
 export const CKWrapper = (props: CKEditorProps) => {
     const { id, data, onChange, onReady } = props;
     return (
-        <div className="dark:text-black">
+        <div className="dark:text-black ck-content">
             <CKEditor
                 id={id}
-                data={data}
+                data={props.data}
                 editor={Editor}
                 onChange={(event, editor) => {
                     onChange(id, editor.getData());

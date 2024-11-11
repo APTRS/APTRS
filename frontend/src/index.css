@@ -10,3 +10,6 @@ p {
   @apply mb-1;
 }
 
+.ck-editor__editable {
+  max-height: 400px;
+}
