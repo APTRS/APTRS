@@ -29,7 +29,7 @@
   }
   #toc ul li::before {
     color: #fbc847;
-    content: '• ';
+    content: '\2022 ';  /** Unicode for •  , some reason pdf have unicode for • after weasyprint version upgrade **/
     font-size: 40pt;
     line-height: 16pt;
     vertical-align: bottom;
