@@ -48,7 +48,10 @@ else
   echo "First-time setup has already been completed."
 fi
 
-celery -A APTRS worker --loglevel=info &
-celery -A APTRS beat --loglevel=info &
+echo "Starting Celery worker and beat in the background..."
+nohup celery -A APTRS worker --loglevel=info &
+nohup celery -A APTRS beat --loglevel=info &
 
-exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600
+
+exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600 
+

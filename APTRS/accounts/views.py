@@ -360,13 +360,19 @@ def edit_group(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated,IsAdminUser])
+@permission_classes([IsAuthenticated, IsAdminUser])
 @custom_permission_required(['Manage Users'])
-@cache_page(3600, key_prefix="list_custom_groups_cache_key")
 def list_custom_groups(request):
+    cached_data = cache.get("list_custom_groups_cache_key")
+    if cached_data:
+        return Response(cached_data, status=status.HTTP_200_OK)
+
     groups = CustomGroup.objects.all()
     serializer = CustomGroupSerializer(groups, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    response_data = serializer.data
+    cache.set("list_custom_groups_cache_key", response_data, 3600)
+    return Response(response_data, status=status.HTTP_200_OK)
+
 
 
 @api_view(['DELETE'])
