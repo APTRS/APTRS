@@ -37,7 +37,7 @@ class Project(models.Model):
     testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
     projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
     owner = models.ManyToManyField(CustomUser,blank=True)
-    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
+    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
 
     def clean(self):
         if self.enddate < self.startdate:
@@ -117,7 +117,7 @@ class ProjectRetest(models.Model):
     startdate = models.DateField()
     enddate = models.DateField()
     owner = models.ManyToManyField(CustomUser,blank=True)
-    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES, default='Completed')
+    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
 
     def clean(self):
         if self.enddate < self.startdate:

@@ -112,8 +112,18 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
     }));
   };
   const handleOwnerChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData({ ...formData, owner: event.target.value.split(',').map(owner => owner.trim()) });
+    const owners = event.target.value.split(',').map(owner => owner.trim());
+    
+    // Update form data
+    setFormData({ ...formData, owner: owners });
+    
+    // Set or clear error based on the owners array
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      owner: owners.length > 0 && owners[0] !== '' ? '' : 'Project Owner is required'
+    }));
   };
+  
   
   const handleDatePicker = (input: string, value:string): void => {
     setFormData((prevFormData) => ({
@@ -153,6 +163,12 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
     }
     if (!formData.description || formData.description === '') {
       newErrors.description = 'Please enter a description';
+    }
+    if (!formData.owner || formData.owner.length === 0 || formData.owner[0] === '') {
+      newErrors.owner = 'Project Owner is required';
+    }
+    if (!formData.companyname || formData.companyname === '') {
+      newErrors.companyname = 'Company is required';
     }
     
     
@@ -292,6 +308,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                     dateFormat="yyyy-MM-dd"
                     onChange={(date:string) => handleDatePicker('startdate', date)}
                     selected={formData.startdate ? new Date(formData.startdate) : ''}
+                    required
                   />
                   {errors.startdate && <FormErrorMessage message={errors.startdate} />} 
                   
@@ -313,6 +330,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                       dateFormat="yyyy-MM-dd"
                       onChange={(date:string) => handleDatePicker('enddate', date)}
                       selected={formData.enddate ? new Date(formData.enddate) : ''}
+                      required
                   />
                   {errors.enddate && <FormErrorMessage message={errors.enddate} />} 
                 </div>
@@ -335,8 +353,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                         name="companyname"
                         id="companyname"
                         value={formData.companyname || ''} 
-                        changeHandler={handleChange} 
-                        required={true}
+                        changeHandler={handleChange}
                         error={errors.companyname ? true : false}
                       />
                     }
@@ -361,7 +378,6 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                           defaultValue={formData.owner}
                           value={formData.owner || ''} 
                           changeHandler={handleOwnerChange} 
-                          required={true}
                           multiple={true}
                           error={errors.owner ? true : false}
                         />

@@ -216,24 +216,10 @@ class Retestserializers(serializers.ModelSerializer):
                     raise serializers.ValidationError("owner field is missing")
             else:  # If request user is not an admin o have assign permission
                 validated_data['owner'] = [request.user]
-                startdate = validated_data.get('startdate')
-                enddate = validated_data.get('enddate')
-                status = self.calculate_status(startdate, enddate)
-                validated_data['status'] = status 
                 project = ProjectRetest.objects.create(**validated_data)
                 return project
         else:
             raise serializers.ValidationError("Invalid request")
-        
-    def calculate_status(self, startdate, enddate):
-        current_date = timezone.now().date()
-        if current_date < startdate:
-            return 'Upcoming'
-        elif startdate <= current_date <= enddate:
-            return 'In Progress'
-        elif current_date > enddate:
-            return 'Delay'
-
 
 class PrjectScopeserializers(serializers.ModelSerializer):
     class Meta:
