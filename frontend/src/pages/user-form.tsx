@@ -62,7 +62,7 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
   const currentUser = useCurrentUser()
   
   const navigate = useNavigate()
-  if(!currentUserCan('Manage User')){
+  if(!currentUserCan('Manage Users')){
     navigate('/access-denied')
   }
   //extend User type to support password fields

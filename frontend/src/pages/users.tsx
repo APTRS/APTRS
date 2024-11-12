@@ -62,7 +62,6 @@ export function Users() {
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
   if(!currentUserCan('Manage Users')){
-    console.log("Access Denied for the user")
     navigate('/access-denied')
   }
   const [selected, setSelected] = useState([])
