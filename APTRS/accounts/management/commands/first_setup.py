@@ -122,7 +122,7 @@ class Command(BaseCommand):
         admin_group = CustomGroup.objects.get_or_create(name='Administrator')[0]
 
         company, _ = Company.objects.get_or_create(name=COMPANY_NAME)
-        if not CustomUser.objects.filter(username=USERNAME).exists():
+        if not CustomUser.objects.filter(is_superuser=True).exists():
             user = CustomUser.objects.create(
                 username=USERNAME,
                 email=EMAIL,

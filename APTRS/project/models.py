@@ -85,8 +85,8 @@ class Vulnerability(models.Model):
     created = models.DateTimeField(auto_now_add=True,editable=False,null=True)
     vulnerabilitysolution = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
     vulnerabilityreferlnk = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
-    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, editable=False,to_field='username',related_name='vulnerability_created_by')
-    last_updated_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True,to_field='username',related_name='vulnerability_last_updated_by')
+    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, editable=False,to_field='id',related_name='vulnerability_created_by')
+    last_updated_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True,to_field='id',related_name='vulnerability_last_updated_by')
 
 
     class Meta:

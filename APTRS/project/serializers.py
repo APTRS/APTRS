@@ -161,7 +161,7 @@ class Retestserializers(serializers.ModelSerializer):
         many=True
        
     )
-
+    status = serializers.CharField(read_only=True)
     class Meta:
         model = ProjectRetest
         fields = ('id', 'project', 'startdate', 'enddate', 'status', 'owner')
@@ -260,6 +260,7 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get("request")
+        print(f"User: {request.user.id}")
         validated_data['created_by'] = request.user
         validated_data['last_updated_by'] = request.user
         return super(Vulnerabilityserializers, self).create(validated_data)
