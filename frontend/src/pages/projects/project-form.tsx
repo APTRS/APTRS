@@ -372,7 +372,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                     Project Owner
                   </label>
                   <div className="relative">
-                    {(currentUserCan('Manage Projects') || currentUserCan('Assign Projects')) ? (
+                    {(currentUserCan('Manage Projects') && currentUserCan('Assign Projects')) ? (
                       <UserSelect
                           name='owner'
                           defaultValue={formData.owner}

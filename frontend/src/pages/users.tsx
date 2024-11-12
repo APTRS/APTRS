@@ -37,6 +37,8 @@ export function Users() {
   if(search){
     initialState.queryParams = {offset:0, limit:DEFAULT_DATA_LIMIT, full_name: search};
   }
+
+  const canEdit = currentUserCan('Manage Users')
   const reducer = (state: DatasetState, action: DatasetAction): DatasetState | void => {
     switch (action.type) {
       case 'set-search': {
@@ -59,7 +61,8 @@ export function Users() {
   //super user check to prevent url tampering
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
-  if(!currentUser?.isAdmin){
+  if(!currentUserCan('Manage Users')){
+    console.log("Access Denied for the user")
     navigate('/access-denied')
   }
   const [selected, setSelected] = useState([])
@@ -342,7 +345,7 @@ export function Users() {
                 striped
                 onSelectedRowsChange={handleSelectedChange}
                 theme={theme}
-                {...(currentUserCan('Manage Users') ? { selectableRows: true, pointerOnHover: true } : {})}
+                {...(canEdit ? { selectableRows: true, pointerOnHover: true } : {})}
 
             />
           </div>

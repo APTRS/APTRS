@@ -209,12 +209,15 @@ const Vulnerabilities = () => {
     <>
       <PageTitle title='Vulnerability Templates' />
       <div className="flow-root" >
+        
+      {currentUserCan('Manage Vulnerability Data') &&
         <Button 
           className='btn bg-primary float-right m-2 mr-0' 
           onClick={()=> navigate('/vulnerabilities/new')}
           >
           New Vulnerability
         </Button>
+        }
         {currentUserCan('Manage Vulnerability Data') &&
           <Button  
             className="btn bg-secondary float-right m-2 mr-0 disabled:opacity-50" 

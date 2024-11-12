@@ -60,7 +60,7 @@ export const currentUserCan = (group: string): boolean => {
   if (user.isAdmin){
     return true
   }
-  return user.groups?.includes(group) || false
+  return user.permissions?.includes(group) || false
 }
 export const getProjectStatusColor = (status: string): string => {
   const colorMap: { [key: string]: string } = {

@@ -86,8 +86,10 @@ class Projectserializers(serializers.ModelSerializer):
                 else:
                     raise serializers.ValidationError("owner field is missing")
             else:  # If request user is not an admin
-                validated_data['owner'] = [request.user]
+                #validated_data['owner'] = [request.user]
                 project = Project.objects.create(**validated_data)
+                project.owner.set([request.user])
+                
                 return project
         else:
             raise serializers.ValidationError("Invalid request")

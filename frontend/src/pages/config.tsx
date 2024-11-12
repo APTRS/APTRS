@@ -71,9 +71,9 @@ function ReportStandards() {
               <DialogHeader>Add Report Standard</DialogHeader>
               <DialogBody>
                   <form>
-                      <input type="text" placeholder="Name" className={StyleTextfield} />
-                      {errors.name && <FormErrorMessage message={errors.name} />}
-                  </form>
+                    <input type="text" placeholder="Name" className={StyleTextfield} value={name} onChange={(e) => setName(e.target.value)} />
+                    {errors.name && <FormErrorMessage message={errors.name} />}
+                </form>
               </DialogBody>
               <DialogFooter>
                   <button className="bg-secondary p-2 text-white rounded-md disabled:opacity-50" onClick={handleCancel}>Cancel</button>
