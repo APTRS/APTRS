@@ -1,5 +1,5 @@
+{% load content_sanitization %}
 <!--  Page 3 - Executive Summary Page  -->
-
 <article id="executivesummary">
     <h1 id="executivesummary-title" class="report-title">Executive Summary</h1>
       
@@ -13,7 +13,7 @@
   
     <h2>Project Detail </h2>
   
-        <p>{{project.description}}  </p>
+        <p>{{project.description|clean_html}}  </p>
   
   
   
@@ -33,7 +33,11 @@
                       <td>1.0</td>
                       <td>{{project.startdate|date:"d/m/Y" }}</td>
                       <td>{{ project.enddate|date:"d/m/Y" }}</td>
-                      <td>{{ project.owner.full_name }}</td>
+                      <td>
+                        {% for owner in project.owner.all %}
+                          {{ owner.full_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </td>
                     </tr>
   
   
@@ -48,7 +52,11 @@
                       <td>1.{{forloop.counter}}</td>
                       <td>{{ retest.startdate|date:"d/m/Y" }}</td>
                       <td>{{ retest.enddate|date:"d/m/Y" }}</td>
-                      <td>{{ retest.owner.full_name}}</td>
+                      <td>
+                        {% for owner in retest.owner.all %}
+                          {{ owner.full_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </td>
                     </tr>
                   {% endfor %}
   
@@ -90,7 +98,7 @@
                 </div>
   
     
-                <h2>{{settings.ORG}} Team </h2>
+                <h2>{{mycomany}} Team</h2>
   
                 <div id="version-table">
                   <table class="styled-table">
@@ -105,7 +113,16 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for user in internalusers %}
+                      {% for user in projectmanagers %}
+                      <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ user.full_name }} </td>
+                        <td>{{ user.email }} </td>
+                        <td>{{ user.number }} </td>
+                        <td>{{ user.position }} </td>
+                      </tr>
+                      {% endfor %}  
+                      {% for user in project.owner.all %}
                       <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{ user.full_name }} </td>
@@ -119,7 +136,7 @@
   
                 </div>
   
-  <!--
+  
     <h2>{{project.companyname.name}} Team </h2>
   
             <div id="version-table">
@@ -148,12 +165,11 @@
               </table>
   
             </div>
-        -->
   
     {% if project.projectexception %}
         <h2>Project Exception </h2>
   
-            <p>{{project.projectexception}}  </p>
+            <p>{{project.projectexception|clean_html}}  </p>
   
     {% endif %}
   

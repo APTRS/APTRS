@@ -23,7 +23,8 @@ from datetime import datetime
 from docx.shared import Inches, Pt
 
 
-from accounts.models import CustomUser
+from accounts.models import CustomUser, CustomGroup
+from customers.models import Company
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
 
@@ -284,9 +285,10 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
 
     #### Get ALL Instances for the Projects  (Not using Vulnerability colum)  ### Need to optimize to speed up the HTML generation
     instances = Vulnerableinstance.objects.filter(project=project)
+    project_manager_group = CustomGroup.objects.get(name='Project Manager')
 
-    internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
-    customeruser = CustomUser.objects.filter(is_active=True,company=project.companyname)
+    projectmanagers = CustomUser.objects.filter(groups=project_manager_group)
+    customeruser =  CustomUser.objects.filter(company=project.companyname, is_active=True)
 
 
     ciritcal =  vuln.filter(project=project,vulnerabilityseverity='Critical',status='Vulnerable').count()
@@ -315,15 +317,17 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
 
     ### Get Total Vulnerability Count
     totalvulnerability = vuln.filter(project=project).count()
+    mycomany = Company.objects.filter(internal=True).values_list('name', flat=True).first()
+
 
     ### Get All Scope from the project
     projectscope = PrjectScope.objects.filter(project=project)
 
     ## Get Retest Details
     totalretest = ProjectRetest.objects.filter(project_id=pk)
-    data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,
+    data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,'mycomany':mycomany,
             'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,"url":url,'ciritcal':ciritcal,'high':high,
-            'medium':medium,'low':low,'info':info,'instances':instances,'internalusers':internalusers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
+            'medium':medium,'low':low,'info':info,'instances':instances,'projectmanagers':projectmanagers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
     if settings.USE_DOCKER:
         base_url = "https://nginx/"
     else:

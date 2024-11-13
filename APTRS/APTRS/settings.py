@@ -103,8 +103,6 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'vulnerability',
     'configapi',
-    'ckeditor',
-    'ckeditor_uploader',
     'project',
     'rest_framework',
     'corsheaders',

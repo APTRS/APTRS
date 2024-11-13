@@ -4,8 +4,6 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from ckeditor_uploader.fields import RichTextUploadingField
-
 # local import
 from customers.models import Company
 from accounts.models import CustomUser
@@ -30,12 +28,12 @@ PROJECT_STATUS_CHOICES = [
 class Project(models.Model):
     name = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
     companyname = models.ForeignKey(Company, on_delete=models.SET_NULL,editable=False,blank=True,null=True)
-    description = models.CharField(max_length=1000, unique = False, null = False, blank = False, default=None)
+    description = models.TextField(unique = False, null = False, blank = False, default=None,validators=[xss_validator])
     projecttype = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
     startdate = models.DateField()
     enddate = models.DateField()
     testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
-    projectexception = models.CharField(max_length=1000, unique = False, null = True, blank = True)
+    projectexception = models.TextField(unique = False, null = True, blank = True,validators=[xss_validator])
     owner = models.ManyToManyField(CustomUser,blank=True)
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
 
@@ -80,11 +78,11 @@ class Vulnerability(models.Model):
     cvssscore = models.FloatField(blank=True,null=True)
     cvssvector = models.CharField(max_length=300,default=None,null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=VULNERABLE)
-    vulnerabilitydescription = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
-    POC = RichTextUploadingField(default=None,blank=True,null=True,validators=[xss_validator])
+    vulnerabilitydescription = models.TextField(blank=True,null=True,validators=[xss_validator])
+    POC = models.TextField(default=None,blank=True,null=True,validators=[xss_validator])
     created = models.DateTimeField(auto_now_add=True,editable=False,null=True)
-    vulnerabilitysolution = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
-    vulnerabilityreferlnk = RichTextUploadingField(blank=True,null=True,validators=[xss_validator])
+    vulnerabilitysolution = models.TextField(blank=True,null=True,validators=[xss_validator])
+    vulnerabilityreferlnk = models.TextField(blank=True,null=True,validators=[xss_validator])
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, editable=False,to_field='id',related_name='vulnerability_created_by')
     last_updated_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True,to_field='id',related_name='vulnerability_last_updated_by')
 
