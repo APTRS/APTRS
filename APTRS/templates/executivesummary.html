@@ -104,7 +104,6 @@
                   <table class="styled-table">
                     <thead class="thead-light">
                       <tr>
-                        <th scope="col">SR</th>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
                         <th scope="col">Number</th>
@@ -113,24 +112,25 @@
                       </tr>
                     </thead>
                     <tbody>
+                     
                       {% for user in projectmanagers %}
                       <tr>
-                        <td>{{forloop.counter}}</td>
                         <td>{{ user.full_name }} </td>
                         <td>{{ user.email }} </td>
                         <td>{{ user.number }} </td>
                         <td>{{ user.position }} </td>
                       </tr>
+                   
                       {% endfor %}  
                       {% for user in project.owner.all %}
                       <tr>
-                        <td>{{forloop.counter}}</td>
                         <td>{{ user.full_name }} </td>
                         <td>{{ user.email }} </td>
                         <td>{{ user.number }} </td>
                         <td>{{ user.position }} </td>
                       </tr>
-                      {% endfor %}  
+                      {% endfor %}
+                      
                     </tbody>
                   </table>
   
@@ -143,7 +143,6 @@
               <table class="styled-table">
                 <thead class="thead-light">
                   <tr>
-                    <th scope="col">SR</th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Number</th>
@@ -154,7 +153,6 @@
                 <tbody>
                   {% for user in customeruser %}
                   <tr>
-                    <td>{{forloop.counter}}</td>
                     <td>{{ user.full_name }} </td>
                     <td>{{ user.email }} </td>
                     <td>{{ user.number }} </td>
