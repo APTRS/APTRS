@@ -118,13 +118,20 @@ def get_subdoc(doc, raw_html):
 def generate_vulnerability_document(pk,Report_type,standard):
     project_id = pk
     project = get_object_or_404(Project, id=project_id)
+    owners = project.owner.all()
     vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
     totalvulnerability = vuln.filter(project=project).count()
-    totalretest = ProjectRetest.objects.filter(project_id=pk)
+    totalretests_queryset = ProjectRetest.objects.filter(project_id=pk)
+
     projectscope = PrjectScope.objects.filter(project=project)
     internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
     template_path = os.path.join(settings.BASE_DIR, 'templates', 'report.docx')
     doc = DocxTemplate(template_path)
+    project_manager_group = CustomGroup.objects.get(name='Project Manager')
+    projectmanagers = CustomUser.objects.filter(groups=project_manager_group)
+    customeruser =  CustomUser.objects.filter(company=project.companyname, is_active=True)
+    mycomany = Company.objects.filter(internal=True).values_list('name', flat=True).first()
+    project_description = get_subdoc(doc, project.description)
 
     for vulnerability in vuln:
         # Convert CKEditor fields from HTML to DOCX format
@@ -143,11 +150,20 @@ def generate_vulnerability_document(pk,Report_type,standard):
             if instance.URL  # Exclude instances with empty URL
         ]
         currentdate=datetime.now()
-    context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,
-               "settings":settings,"currentdate":currentdate,'value2':'10',
+    totalretest = [
+    {
+        "startdate": retest.startdate,
+        "enddate": retest.enddate,
+        "owners": [owner.full_name for owner in retest.owner.all()]
+    }
+    for retest in totalretests_queryset
+]
+    context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,'mycomany':mycomany,'projectmanagers':projectmanagers,'customeruser':customeruser,'owners': owners,
+              'project_description':project_description,"settings":settings,"currentdate":currentdate,'value2':'10',
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
                'internalusers':internalusers,'page_break': RichText('\f')
                }
+    logging.debug("Context data for template rendering: %s", context)
     doc.render(context)
     font = doc.styles['List Bullet'].font
     font.name = 'Calibri'
@@ -156,6 +172,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     response['Content-Disposition'] = f'attachment; filename=vulnerability_report_{project_id}.docx'
     doc.save(response)
+    doc.save("test_output.docx")
     return response
 
 
