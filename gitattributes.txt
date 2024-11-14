@@ -1,0 +1,30 @@
+# default to letting Git perform auto newline conversion on check-out and check-in
+* text=auto
+# disable newline conversion on checkout with no conversion on check-in
+installer/* -text
+dev_tools/* -text
+# define all filenames and extensions that must retain LF line endings
+install text eol=lf
+uninstall text eol=lf
+*.sh text eol=lf
+# binary files
+*.eot binary
+*.gz  binary
+*.ico binary
+*.jpg binary
+*.m4a binary
+*.mo  binary
+*.mp3 binary
+*.ogg binary
+*.pdf binary
+*.png binary
+*.PNG binary
+*.psd binary
+*.swc binary
+*.swf binary
+*.tar binary
+*.ttf binary
+*.wav binary
+*.woff binary
+*.wma binary
+*.zip binary
