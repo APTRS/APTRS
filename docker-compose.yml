@@ -19,7 +19,7 @@ services:
   postgres:
     image: "postgres:latest"
     restart: always
-    env_file: "APTRS/.env"
+    env_file: ".env"
     volumes:
       - ./postgresql_data:/var/lib/postgresql
     environment:
@@ -41,7 +41,7 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
-    env_file: "APTRS/.env"
+    env_file: ".env"
     networks:
        - aptrs
     ports:
@@ -57,7 +57,7 @@ services:
 
 
   aptrs:
-    env_file: "APTRS/.env"
+    env_file: ".env"
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: ${POSTGRES_PORT}

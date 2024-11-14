@@ -83,10 +83,10 @@ def get_subdoc(doc, raw_html):
         for paragraph in temp_doc.paragraphs:
             paragraph.paragraph_format.space_before = Pt(5)
             paragraph.paragraph_format.space_after = Pt(5)
-            paragraph.paragraph_format.left_indent = Inches(1)
+            paragraph.paragraph_format.left_indent = Pt(45)
             paragraph.paragraph_format.right_indent = Inches(1)
             paragraph.paragraph_format.top_indent = Inches(1)
-
+            paragraph.paragraph_format.line_spacing = 1.5
 
 
         obj_styles = temp_doc.styles
