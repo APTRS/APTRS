@@ -16,7 +16,7 @@ from pygal.style import Style
 from weasyprint import HTML, default_url_fetcher
 from xlsxwriter.workbook import Workbook
 from docx import Document
-from docxtpl import DocxTemplate,RichText
+from docxtpl import DocxTemplate,RichText, InlineImage
 from django.shortcuts import get_object_or_404
 from htmldocx import HtmlToDocx
 from datetime import datetime
@@ -27,7 +27,7 @@ from accounts.models import CustomUser, CustomGroup
 from customers.models import Company
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
-
+from utils.image_parsing import fetch_image_bytes, find_images
 logger = logging.getLogger(__name__)
 logger = logging.getLogger('weasyprint')
 
@@ -63,15 +63,16 @@ def get_subdoc(doc, raw_html):
 
     if raw_html is not None:
 
+        images = find_images(raw_html, settings.USE_S3, base_url)
+
         # Convert image src paths - doctpl does not support loading img over url, adding image full path
-        raw_html = raw_html.replace('src="/media', f'src="{settings.BASE_DIR}/static/media/')
-        # Wrap the HTML in a div with styling for margins
-        styled_html = f'<div style="margin-left: 20pt; margin-right: 20pt;">{raw_html}</div>'
+        for i, img in enumerate(images):
+            raw_html = raw_html.replace(img['html_tag'], f"{{{{img{i}}}}}")
 
         # Convert HTML to temporary DOCX
 
 
-        temp_parser.add_html_to_document(styled_html, temp_doc)
+        temp_parser.add_html_to_document(raw_html, temp_doc)
 
         # Resize images in the temporary DOCX
         ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
@@ -79,7 +80,7 @@ def get_subdoc(doc, raw_html):
 
         resize_inline_images(temp_doc, fixed_width=text_width)
         apply_font_to_elements(temp_doc.element.body, 'Calibri', 16)
-
+        
         for paragraph in temp_doc.paragraphs:
             paragraph.paragraph_format.space_before = Pt(5)
             paragraph.paragraph_format.space_after = Pt(5)
@@ -88,7 +89,7 @@ def get_subdoc(doc, raw_html):
             paragraph.paragraph_format.top_indent = Inches(1)
             paragraph.paragraph_format.line_spacing = 1.5
 
-
+        
         obj_styles = temp_doc.styles
         for current_style in obj_styles:
             element = current_style
@@ -104,15 +105,26 @@ def get_subdoc(doc, raw_html):
         font = temp_doc.styles['List Bullet'].font
         font.name = 'Calibri'
         font.size = Pt(16)
+        
 
-    # Save temporary DOCX in memory
-    subdoc_tmp = io.BytesIO()
-    temp_doc.save(subdoc_tmp)
+        # Save temporary DOCX in memory
+        subdoc_tmp = io.BytesIO()
+        temp_doc.save(subdoc_tmp)
+        subdoc_tmp.seek(0)
+        sub_docxtpl = DocxTemplate(subdoc_tmp)
+        context = {}
+        for i, img in enumerate(images):
+            img_obj = InlineImage(sub_docxtpl, img['bytes'])
+            context[f"img{i}"] = img_obj
+        
+        sub_docxtpl.render(context)
+        sub_docxtpl.save(subdoc_tmp)
+        subdoc_tmp.seek(0)
 
 
-    # Create docxtpl subdoc object
-    subdoc = doc.new_subdoc(subdoc_tmp)
-    return subdoc
+        # Create docxtpl subdoc object
+        subdoc = doc.new_subdoc(subdoc_tmp)
+        return subdoc
 
 
 def generate_vulnerability_document(pk,Report_type,standard):
@@ -132,6 +144,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     customeruser =  CustomUser.objects.filter(company=project.companyname, is_active=True)
     mycomany = Company.objects.filter(internal=True).values_list('name', flat=True).first()
     project_description = get_subdoc(doc, project.description)
+    project_exception = get_subdoc(doc, project.projectexception)
 
     for vulnerability in vuln:
         # Convert CKEditor fields from HTML to DOCX format
@@ -159,7 +172,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     for retest in totalretests_queryset
 ]
     context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,'mycomany':mycomany,'projectmanagers':projectmanagers,'customeruser':customeruser,'owners': owners,
-              'project_description':project_description,"settings":settings,"currentdate":currentdate,'value2':'10',
+              'project_exception':project_exception,'project_description':project_description,"settings":settings,"currentdate":currentdate,'value2':'10',
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
                'internalusers':internalusers,'page_break': RichText('\f')
                }
@@ -168,7 +181,20 @@ def generate_vulnerability_document(pk,Report_type,standard):
     font = doc.styles['List Bullet'].font
     font.name = 'Calibri'
     font.size = Pt(16)
-
+    section = doc.sections[1]
+    #section.left_margin = Inches(1)
+    #section.right_margin = Inches(1)
+    section.top_margin = Inches(1)
+    section.bottom_margin = Inches(1)
+    for table in doc.tables:
+        for row in table.rows:
+            if all(cell.text.strip() == "" for cell in row.cells):
+                row_element = row._element
+                row_element.getparent().remove(row_element)
+            else:
+                # Set row height to fit content
+                row.height = None  # Automatic height
+                row.height_rule = None  # Automatically adjust height
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
     response['Content-Disposition'] = f'attachment; filename=vulnerability_report_{project_id}.docx'
     doc.save(response)
@@ -232,12 +258,29 @@ def my_fetcher(url):
         raise ValueError(f'URL is Not WhiteListed for: {url!r}')
 
 
+# Global variable to store base_url
+base_url = ""
+
+def get_base_url(request=None):
+    """Generate and return the base URL based on settings and request."""
+    global base_url
+    if settings.USE_DOCKER:
+        base_url = "https://nginx/"
+    else:
+        if request:
+            base_url = f"{request.scheme}://{request.get_host()}"
+        else:
+            raise Exception("Request is required when not using Docker.")
+    return base_url
+
 
 
 def CheckReport(Report_format,Report_type,pk,url,standard,request):
     if Report_format == "excel":
         response =  CreateExcel(pk)
-    elif Report_format == "docx":
+    get_base_url()
+
+    if Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
     else:
         global token

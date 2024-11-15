@@ -144,7 +144,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '1000/day', 
+        'anon': '100/hour', 
         'login': '5/minute',
     }
 
