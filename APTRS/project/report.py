@@ -21,6 +21,7 @@ from django.shortcuts import get_object_or_404
 from htmldocx import HtmlToDocx
 from datetime import datetime
 from docx.shared import Inches, Pt
+import jinja2
 
 
 from accounts.models import CustomUser, CustomGroup
@@ -174,10 +175,13 @@ def generate_vulnerability_document(pk,Report_type,standard):
     context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,'mycomany':mycomany,'projectmanagers':projectmanagers,'customeruser':customeruser,'owners': owners,
               'project_exception':project_exception,'project_description':project_description,"settings":settings,"currentdate":currentdate,'value2':'10',
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
-               'internalusers':internalusers,'page_break': RichText('\f')
+               'internalusers':internalusers,'page_break': RichText('\f'),'new_line': RichText('\n')
                }
     logging.debug("Context data for template rendering: %s", context)
-    doc.render(context)
+    jinja_env = jinja2.Environment()
+    jinja_env.trim_blocks = True
+    jinja_env.lstrip_blocks = True
+    doc.render(context,jinja_env)
     font = doc.styles['List Bullet'].font
     font.name = 'Calibri'
     font.size = Pt(16)
@@ -196,10 +200,10 @@ def generate_vulnerability_document(pk,Report_type,standard):
                 row.height = None  # Automatic height
                 row.height_rule = None  # Automatically adjust height
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename=vulnerability_report_{project_id}.docx'
+    response['Content-Disposition'] = f'attachment; filename={project.name}vulnerability_report.docx'
     doc.save(response)
-    doc.save("test_output.docx")
     return response
+
 
 
 def is_whitelisted(url):
