@@ -115,7 +115,10 @@ class GetMyProjects(views.APIView):
             Q(status__in=['Upcoming', 'In Progress', 'Delay'])
         ).prefetch_related('owner').select_related('companyname')
         serializer = Projectserializers(projects, many=True)
-        return Response(serializer.data)
+        response_data = {
+            "results": serializer.data
+        }
+        return Response(response_data)
 
 
 
