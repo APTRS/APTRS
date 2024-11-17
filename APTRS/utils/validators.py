@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 ALLOWED_TAGS = settings.ALLOWED_TAGS
 
 class TagValidator(HTMLParser):
-    def __init__(self, allowed_path='/media/'):
+    def __init__(self, allowed_path='/api/project/getimage/?filename='):
         super().__init__()
         self.allowed_path = allowed_path
         self.disallowed_tags = set()
@@ -24,6 +24,8 @@ class TagValidator(HTMLParser):
             if attr.lower() == 'src':
                 if value is None:
                     raise ValidationError(_("Image source cannot be None"))
+                if not value.startswith(self.allowed_path):
+                    self.disallowed_imgs.append(value)
 
 
 def xss_validator(value):
@@ -36,7 +38,7 @@ def xss_validator(value):
 
     if validator.disallowed_imgs:
         disallowed_img_str = ", ".join(validator.disallowed_imgs)
-        raise ValidationError(_("Only images from the whitelisted paths are allowed"+disallowed_img_str))
+        raise ValidationError(_("Only images from the whitelisted paths are allowed "+disallowed_img_str))
 
     return value
 
