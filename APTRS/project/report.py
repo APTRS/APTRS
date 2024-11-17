@@ -18,10 +18,11 @@ from xlsxwriter.workbook import Workbook
 from docx import Document
 from docxtpl import DocxTemplate,RichText, InlineImage
 from django.shortcuts import get_object_or_404
-from htmldocx import HtmlToDocx
+from lib.htmldocx import HtmlToDocx
 from datetime import datetime
 from docx.shared import Inches, Pt
 import jinja2
+import html
 
 
 from accounts.models import CustomUser, CustomGroup
@@ -177,7 +178,6 @@ def generate_vulnerability_document(pk,Report_type,standard):
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
                'internalusers':internalusers,'page_break': RichText('\f'),'new_line': RichText('\n')
                }
-    logging.debug("Context data for template rendering: %s", context)
     jinja_env = jinja2.Environment()
     jinja_env.trim_blocks = True
     jinja_env.lstrip_blocks = True
@@ -280,13 +280,12 @@ def get_base_url(request=None):
 
 
 def CheckReport(Report_format,Report_type,pk,url,standard,request):
+    get_base_url()
     if Report_format == "excel":
         response =  CreateExcel(pk)
-    get_base_url()
-
     if Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
-    else:
+    if Report_format == "pdf":
         global token
         auth_header = request.headers.get('Authorization')
     
@@ -294,12 +293,12 @@ def CheckReport(Report_format,Report_type,pk,url,standard,request):
         # Extract token from "Bearer <token>"
             token = auth_header.split(' ')[1] if auth_header.startswith('Bearer ') else None
         response = GetHTML(Report_format,Report_type,pk,url,standard,request)
+    
     return response
 
 
 def CreateExcel(pk):
     instances = Vulnerableinstance.objects.filter(project_id=pk).select_related('vulnerabilityid').order_by('-vulnerabilityid__cvssscore')
-
     output = io.BytesIO()
     book = Workbook(output)
     sheet = book.add_worksheet('Vulnerabilities')
@@ -325,8 +324,8 @@ def CreateExcel(pk):
             instance.URL,
             instance.Parameter,
             instance.vulnerabilityid.cvssscore,
-            bleach.clean(instance.vulnerabilityid.vulnerabilitydescription, tags=[], strip=True),
-            bleach.clean(instance.vulnerabilityid.vulnerabilitysolution, tags=[], strip=True)
+            html.unescape(bleach.clean(instance.vulnerabilityid.vulnerabilitydescription, tags=[], strip=True)),
+            html.unescape(bleach.clean(instance.vulnerabilityid.vulnerabilitysolution, tags=[], strip=True))
         ]
         for col_num, col_value in enumerate(row_data):
             sheet.write(row_num, col_num, col_value, wrap_format)
@@ -400,11 +399,7 @@ def GetHTML(Report_format,Report_type,pk,url,standard,request):
     try:
         # Render the template to a string
         rendered_content = render_to_string('report.html', data, request=request)
-        if Report_format == "pdf":
-            response = generate_pdf_report(rendered_content,base_url)
-        if Report_format == "html":
-
-            response = HttpResponse(rendered_content,content_type='text/html')
+        response = generate_pdf_report(rendered_content,base_url)
         return response
     except (TemplateDoesNotExist, IOError) as e:
         # Handle template not found error

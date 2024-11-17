@@ -10,7 +10,6 @@ import {
     Italic,
     BlockQuote,
     Heading, 
-    Indent,
     Link,
     List,
     Paragraph,
@@ -19,15 +18,10 @@ import {
     Code,
     ImageResizeEditing,
     ImageResizeHandles,
-    Table,
     Image,
-    TableToolbar,
     ImageUpload,
 	Alignment,
 	Autosave,
-	FontBackgroundColor,
-	FontColor,
-	FontFamily,
 	FontSize,
 	GeneralHtmlSupport,
 	Highlight,
@@ -37,7 +31,6 @@ import {
 	ImageResize,
 	ImageStyle,
 	ImageToolbar,
-	IndentBlock,
 	ListProperties,
 	PasteFromOffice,
 	SelectAll,
@@ -51,12 +44,7 @@ import {
 	Strikethrough,
 	Subscript,
 	Superscript,
-	TableCaption,
-	TableCellProperties,
-	TableColumnResize,
-	TableProperties,
 	TextTransformation,
-	TodoList,
 	Underline,
 	Undo
 } from 'ckeditor5';
@@ -71,11 +59,9 @@ class Editor extends ClassicEditor {
         Italic,
         Autoformat,
         Heading,
-        Indent,
         Link,
         List,
         Paragraph,
-        Table,
         Image,
         ImageUpload,
         ImageInsertUI,
@@ -83,7 +69,6 @@ class Editor extends ClassicEditor {
         Code,
         ImageResizeEditing,
         ImageResizeHandles,
-        TableToolbar,
     ];
 
     static defaultConfig = {
@@ -95,9 +80,6 @@ class Editor extends ClassicEditor {
 				'heading',
 				'|',
 				'fontSize',
-				'fontFamily',
-				'fontColor',
-				'fontBackgroundColor',
 				'|',
 				'bold',
 				'italic',
@@ -111,7 +93,6 @@ class Editor extends ClassicEditor {
 				'specialCharacters',
 				'horizontalLine',
 				'link',
-				'insertTable',
 				'highlight',
 				'blockQuote',
 				'codeBlock',
@@ -120,9 +101,7 @@ class Editor extends ClassicEditor {
 				'|',
 				'bulletedList',
 				'numberedList',
-				'todoList',
 				'outdent',
-				'indent'
 			],
 			shouldNotGroupWhenFull: true
 		},
@@ -137,9 +116,6 @@ class Editor extends ClassicEditor {
 			Code,
 			CodeBlock,
 			Essentials,
-			FontBackgroundColor,
-			FontColor,
-			FontFamily,
 			FontSize,
 			GeneralHtmlSupport,
 			Heading,
@@ -151,8 +127,6 @@ class Editor extends ClassicEditor {
 			ImageStyle,
 			ImageToolbar,
 			ImageUpload,
-			Indent,
-			IndentBlock,
 			Italic,
 			Link,
 			List,
@@ -170,20 +144,10 @@ class Editor extends ClassicEditor {
 			Strikethrough,
 			Subscript,
 			Superscript,
-			Table,
-			TableCaption,
-			TableCellProperties,
-			TableColumnResize,
-			TableProperties,
-			TableToolbar,
 			TextTransformation,
-			TodoList,
 			Underline,
 			Undo
 		],
-		fontFamily: {
-			supportAllValues: true
-		},
 		fontSize: {
 			options: [10, 12, 14, 'default', 18, 20, 22],
 			supportAllValues: true
@@ -202,9 +166,6 @@ class Editor extends ClassicEditor {
 			}
 		},
 		placeholder: 'Type or paste your content here!',
-		table: {
-			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
-		}
 	};
     };
 

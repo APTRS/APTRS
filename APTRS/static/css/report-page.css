@@ -79,6 +79,50 @@ i {
   font-style: italic;
 }
 
+
+code {
+  background-color: #272822; 
+  color: #f8f8f2; 
+  border-radius: 0.3em; 
+  padding: 4px 5px 6px; 
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+}
+
+
+pre {
+  background-color: #272822;
+  color: #f8f8f2; 
+  padding: 10px; 
+  border-radius: 0.5em;
+  overflow-x: auto;
+}
+
+/* Optional: Fix for code inside pre blocks to preserve whitespace and formatting */
+pre code {
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+}
+
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 5px 5px;
+  padding: 5px 5px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
 /** Executive sumrrary and other page Title text CSS**/
 .report-title {
   margin: -2cm -3cm 1cm -3cm;

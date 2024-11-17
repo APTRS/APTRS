@@ -27,7 +27,6 @@ pygal = "3.0.4"
 bleach = {extras = ["css"], version = "^6.2.0"}
 xlsxwriter = "3.1.9"
 whitenoise = "6.6.0"
-htmldocx = "0.0.6"
 docxtpl = "0.18.0"
 redis = "5.0.1"
 psycopg2-binary = "^2.9.9"
@@ -37,7 +36,7 @@ celery = "^5.4.0"
 django-celery-beat = "^2.6.0"
 boto3 = "^1.34.159"
 django-storages = "^1.14.4"
-
+bs4 = "^0.0.2"
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^4.3.0"
 
