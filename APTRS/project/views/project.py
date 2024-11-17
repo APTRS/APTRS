@@ -14,7 +14,7 @@ from django.db.models import Q
 from utils.filters import (ProjectFilter,
                            paginate_queryset)
 from utils.permissions import custom_permission_required
-
+from utils.validators import get_base_url
 from ..models import (Project, ProjectRetest)
 from ..report import CheckReport
 from ..serializers import (Projectserializers, UpdateProjectOwnerSerializer)
@@ -239,7 +239,8 @@ def project_report(request, pk):
             logger.error("Project %s has no retests. Generate Re-Audit report", pk)
             return Response({"Status": "Failed", "Message": "Project has no retests. Generate Re-Audit report"}, status=status.HTTP_400_BAD_REQUEST)
 
-        url = request.build_absolute_uri()
+        #url = request.build_absolute_uri()
+        url = get_base_url(request)
         standard = request.query_params.getlist('Standard')
         output = CheckReport(report_format,report_type,pk,url,standard,request)
         return output

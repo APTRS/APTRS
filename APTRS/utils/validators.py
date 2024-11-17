@@ -90,3 +90,17 @@ class MinimumLengthValidator:
         return _(
             f"Your password must contain at least {self.min_length} characters."
         )
+
+
+
+def get_base_url(request=None):
+    """Generate and return the base URL based on settings and request."""
+    global base_url
+    if settings.USE_DOCKER:
+        base_url = "https://nginx/"
+    else:
+        if request:
+            base_url = f"{request.scheme}://{request.get_host()}"
+        else:
+            raise Exception("Request is required when not using Docker.")
+    return base_url
