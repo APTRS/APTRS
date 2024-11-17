@@ -4,7 +4,8 @@ services:
     build:
       dockerfile: ./docker/Dockerfile_frontend
     volumes:
-      - static_volume:/home/aptrs/APTRS/static/
+      - static_volume:/home/aptrs/APTRS/APTRS/static/
+      - media_volume:/home/aptrs/APTRS/APTRS/media/
       - ./nginx/logs:/var/log/nginx 
     ports:
       - 80:80
@@ -87,6 +88,7 @@ services:
     volumes:
       - ./api_data:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/APTRS/static/
+      - media_volume:/home/aptrs/APTRS/APTRS/media/
     ports:
      - "8000:8000"
     networks:
@@ -107,7 +109,8 @@ networks:
 
 
 volumes:
-  static_volume: 
+  static_volume:
+  media_volume:
   cache:
   
   
