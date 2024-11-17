@@ -13,6 +13,9 @@ from rest_framework.views import APIView
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+
 # local imports
 from utils.filters import UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
@@ -26,15 +29,19 @@ logger = logging.getLogger(__name__)
 
 
 class LogoutGetView(APIView):
-    def get(self, request, *args, **kwargs):
+    def post(self, request):
         # Create a response object
-        response = Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(token=refresh_token)
+            token.blacklist()
 
-        # Clear the JWT token cookie
-        response.delete_cookie('access_token', path='/')
-        
-        return response
-
+            response = Response(status=status.HTTP_205_RESET_CONTENT)
+            response.delete_cookie('access_token', path='/')
+            return response
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
     Token serializer for obtaining JWT tokens with additional user information.

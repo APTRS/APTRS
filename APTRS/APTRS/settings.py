@@ -108,6 +108,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'weasyprint',
+    'rest_framework_simplejwt.token_blacklist',
     'django_celery_beat',
     'storages',
     'debug_toolbar'
@@ -224,6 +225,10 @@ CELERY_BEAT_SCHEDULE = {
     'update_project_status_daily': {
         'task': 'project.tasks.update_project_status',
         'schedule': crontab(hour=0, minute=0),
+    },
+    'flush-expired-tokens-every-day': {
+        'task': 'accounts.tasks.flush_expired_tokens_task',
+        'schedule': crontab(minute=0, hour=0),
     },
 }
 CELERY_TIMEZONE = 'UTC'

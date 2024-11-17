@@ -184,10 +184,18 @@ export async function refreshAuth() {
     return null
   }
 }
-export function logout() {
-  localStorage.removeItem('user');
-  localStorage.removeItem('lastRefresh');
-}
+export async function logout() {
+  const user = _userObject();
+    if(!user){
+      return null
+    }
+    const body = {refresh_token: user.refresh}
+    const url = apiUrl('auth/logout/');
+    const response = await postOrRedirect(url, body, authHeaders());
+
+    localStorage.removeItem('user');
+    localStorage.removeItem('lastRefresh');
+    } 
 
 export async function fetchCustomers() {
   const url = apiUrl('customer/all-customer');

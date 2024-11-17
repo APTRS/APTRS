@@ -93,9 +93,10 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
           setFormData(companyData);
           if(companyData.img){
             //prepend with image host
-            const base = new URL(import.meta.env.VITE_APP_API_URL);
-            const origin = base.origin;
-            setFileDataURL(String(origin + companyData.img))
+            //const base = new URL(import.meta.env.VITE_APP_API_URL);
+            //const origin = base.origin;
+            //setFileDataURL(String(origin + companyData.img))
+            setFileDataURL(String(companyData.img))
           }
         } catch (error) {
           console.error("Error fetching company data:", error);
