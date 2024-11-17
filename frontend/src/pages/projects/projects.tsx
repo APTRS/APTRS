@@ -337,11 +337,6 @@ export function Projects(props:ProjectsProps): JSX.Element {
     return <ErrorPage message={state.error}/>
   }
   const customStyles = {
-    // rows: {
-    //   style: {
-    //     minHeight: '72px', // override the row height
-    //   },
-    // },
     headCells: {
       style: {
         paddingLeft: '4px', // override the cell padding for head cells

@@ -14,7 +14,7 @@ import {
   ModalErrorMessage
 } from '../lib/formstyles'
 import PageTitle from '../components/page-title';
-import { PasswordDescription, validPassword } from '../components/passwordValidator'
+import { PasswordDescription } from '../components/passwordValidator'
 import { WithAuth } from "../lib/authutils";
 import Button from '../components/button';
 import ShowPasswordButton from '../components/show-password-button';
@@ -234,9 +234,10 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
         setErrors(parseErrors(error))
         setSaveError(String(error))
         // Handle error (e.g., show error message)
-      }
+      } 
     }
     setBtnDisabled(false);
+    
   }
   
   if(loading) return <FormSkeleton numInputs={6}/>
@@ -477,11 +478,13 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
           <div className="w-1/2 flex justify-left">
               <button 
                 className="bg-primary disabled:bg-gray-light text-white p-2 py-1 rounded-md disabled:border-gray-light disabled:shadow-none"
+                disabled={btnDisabled}
                 type="submit">
                   Save
               </button>
               <Button 
                 className="bg-red-500 ml-1"
+                disabled={btnDisabled}
                 onClick = {() => closeModal()}>
                   Cancel
               </Button>
