@@ -51,7 +51,6 @@ class ImageUploadView(APIView):
             image = serializer.validated_data['upload']
             unique_filename = f"{uuid.uuid4()}{os.path.splitext(image.name)[1]}" 
             upload_path = os.path.join('poc', unique_filename)
-            print("upload_path value"+ upload_path)
             default_storage.save(upload_path, image)
             response_data = {"url": f"project/getimage/?filename={unique_filename}"}
             return Response(response_data)
