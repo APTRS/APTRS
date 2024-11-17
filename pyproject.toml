@@ -24,7 +24,7 @@ django-filter = "23.5"
 python-dotenv = "1.0.0"
 weasyprint = "^62.3"
 pygal = "3.0.4"
-bleach = "6.1.0"
+bleach = {extras = ["css"], version = "^6.2.0"}
 xlsxwriter = "3.1.9"
 whitenoise = "6.6.0"
 htmldocx = "0.0.6"
