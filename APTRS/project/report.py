@@ -29,7 +29,7 @@ from customers.models import Company
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
 from utils.image_parsing import find_images
-from utils.doc_style import get_subdoc ,main_doc_style, apply_font_to_elements , resize_inline_images
+from utils.doc_style import get_subdoc ,main_doc_style, apply_font_to_elements
 logger = logging.getLogger(__name__)
 logger = logging.getLogger('weasyprint')
 

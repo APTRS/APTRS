@@ -20,16 +20,7 @@ def apply_font_to_elements(elements, font_name, font_size):
             for run in element.runs:
                 apply_font_style(run, font_name, font_size)
 
-def resize_inline_images(temp_doc, fixed_width):
-    for i, image in enumerate(temp_doc.inline_shapes):
-        original_width, original_height = image.width, image.height
 
-        # Calculate new height to maintain the aspect ratio
-        new_height = int(original_height * fixed_width / original_width)
-
-        # Set the fixed width and calculated height
-        image.width = fixed_width
-        image.height = new_height
 
 
 def get_subdoc(doc,raw_html, headers,base_url):
@@ -99,7 +90,7 @@ def get_subdoc(doc,raw_html, headers,base_url):
             img_obj = InlineImage(sub_docxtpl, img['bytes'])
             context[f"img{i}"] = img_obj
         sub_docxtpl.render(context)
-        resize_inline_images(sub_docxtpl, fixed_width=text_width)
+        
         sub_docxtpl.save(subdoc_tmp)
         subdoc_tmp.seek(0)
         
@@ -126,5 +117,4 @@ def main_doc_style(doc):
                 # Set row height to fit content
                 row.height = None  # Automatic height
                 row.height_rule = None  # Automatically adjust height
-
     return doc
