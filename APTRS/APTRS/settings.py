@@ -15,7 +15,6 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
-from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -220,16 +219,6 @@ CACHES = {
 
 CELERY_BROKER_URL = os.getenv("REDIS_URL")
 CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
-CELERY_BEAT_SCHEDULE = {
-    'update_project_status_daily': {
-        'task': 'project.tasks.update_project_status',
-        'schedule': crontab(hour=0, minute=0),
-    },
-    'flush-expired-tokens-every-day': {
-        'task': 'accounts.tasks.flush_expired_tokens_task',
-        'schedule': crontab(minute=0, hour=0),
-    },
-}
 CELERY_TIMEZONE = 'UTC'
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 CELERY_WORKER_SEND_TASK_EVENTS = False

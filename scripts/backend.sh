@@ -23,14 +23,14 @@ fi
 
 
 
-# Make migrations  
+# Make migrations
 echo "Creating migrations for all apps"
 python3 manage.py makemigrations accounts
 python3 manage.py makemigrations configapi
 python3 manage.py makemigrations customers
 python3 manage.py makemigrations project
 python3 manage.py makemigrations vulnerability
-python3 manage.py makemigrations 
+python3 manage.py makemigrations
 
 # Apply migrations
 echo "Applying migrations"
@@ -49,9 +49,8 @@ else
 fi
 
 echo "Starting Celery worker and beat in the background..."
-nohup celery -A APTRS worker --loglevel=info &
-nohup celery -A APTRS beat --loglevel=info &
+nohup celery -A APTRS worker  --beat -l info -E &
 
 
-exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600 
+exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600
 
