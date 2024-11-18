@@ -10,6 +10,7 @@ import {  getProject,
           markProjectAsOpen,
         } from '../../lib/data/api';
 import { Project, Scope } from '../../lib/data/definitions';
+import CKWrapper from '../../components/ckwrapper';
 import ReportForm from './report-form';
 import Retests from './retests';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -219,13 +220,30 @@ function ProjectView({ id: externalId }: ProjectViewProps): JSX.Element {
                   </div>
                   <div className="mt-4">
                     <label className={StyleLabel}>Project Exception</label>
-                    <div dangerouslySetInnerHTML={{ __html: project.projectexception || '' }}></div>
+                    <div>
+                    <CKWrapper
+                    id="description"
+                    data = {project.projectexception}
+                    onChange={(id, data) => {
+                      console.log("Edit not allowed, read-only mode");
+                  }}
+                    readOnly={true}
+                  />
+                    </div>
                   </div>
                   <div className="mt-4">
                     <label className={StyleLabel}>Description</label>
                     <div className="relative cursor-text">
-                      <div dangerouslySetInnerHTML={{ __html: project.description || '' }}></div>
-                    </div>
+                  <CKWrapper
+                    id="description"
+                    data = {project.description}
+                    onChange={(id, data) => {
+                      console.log("Edit not allowed, read-only mode");
+                  }}
+                    readOnly={true}
+                  />
+                </div>
+                 
                   </div>
                 </div>
               </TabPanel>

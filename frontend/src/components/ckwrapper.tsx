@@ -175,6 +175,7 @@ interface CKEditorProps {
     data: string;
     onChange: (id: string, data: string) => void;
     onReady?: (editor: ClassicEditor) => void;
+	readOnly?: boolean;
 }
 
 class MyUploadAdapter {
@@ -201,7 +202,8 @@ class MyUploadAdapter {
 }
 
 export const CKWrapper = (props: CKEditorProps) => {
-    const { id, data, onChange, onReady } = props;
+    const { id, data, onChange, onReady, readOnly = false } = props;
+	const lockId = 'CKWrapper-read-only';
     return (
         <div className="dark:text-black ck-content">
             <CKEditor
@@ -209,13 +211,21 @@ export const CKWrapper = (props: CKEditorProps) => {
                 data={props.data}
                 editor={Editor}
                 onChange={(event, editor) => {
+					if (!readOnly) {
                     onChange(id, editor.getData());
+				}
                 }}
+				//disabled
                 onReady={editor => {
                     if (data) editor.setData(data);
                     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
                         return new MyUploadAdapter(loader);
                     };
+					if (readOnly) {
+                        editor.enableReadOnlyMode(lockId);
+                    } else {
+                        editor.disableReadOnlyMode(lockId);
+                    }
                     if (onReady) onReady(editor);
                 }}
             />
