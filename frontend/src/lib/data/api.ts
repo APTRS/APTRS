@@ -10,23 +10,26 @@ import axios, { AxiosResponse, AxiosError } from 'axios'
 interface AuthHeaders {
   headers: Record<string, string>;
 }
-function redirectIfUnauthorized(response: AxiosResponse){
+function redirectIfUnauthorized(response: AxiosResponse): boolean | void {
   if(response?.status === 401){
     logout()
-  }
+    return true
+  } 
+  return false
 }
 
 axios.defaults.withCredentials = true;
 
-async function getOrRedirect(url: string, params?: any): Promise<AxiosResponse> {
-  let response: AxiosResponse | AxiosError;
+async function getOrRedirect(url: string, params?: any): Promise<AxiosResponse | void> {
+  let response: AxiosResponse | AxiosError | undefined;
   try {
     response = await axios.get(url, params);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        redirectIfUnauthorized(error.response);
-        response = error;
+        if(!redirectIfUnauthorized(error.response)){
+          throw error;
+        }
       } else {
         throw error;
       }
@@ -43,7 +46,9 @@ async function postOrRedirect(url: string, params?: any, headers?: any): Promise
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        redirectIfUnauthorized(error.response);
+        if(!redirectIfUnauthorized(error.response)){
+          throw error;
+        }
         response = error;
       } else {
         throw error;
@@ -656,7 +661,7 @@ export async function upsertUser(formData: User): Promise<any> {
     delete temp.password
   }
   let url = apiUrl(`auth/adduser`);
-  if (Object.keys(formData).includes('id')) {
+  if (formData.id) {
     url = apiUrl(`auth/edituser/${formData['id']}`);
   }
   const response = await postOrRedirect(url, temp, authHeaders());
