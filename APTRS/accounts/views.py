@@ -128,6 +128,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
         try:
             serializer.is_valid(raise_exception=True)
         except Exception as e:
+            logger.error("Error while refreshing token: %s", str(e), exc_info=True)
             return Response({'detail': "Something Went Wrong"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Get the token data
