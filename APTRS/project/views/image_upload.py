@@ -49,7 +49,7 @@ class ImageUploadView(APIView):
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
             image = serializer.validated_data['upload']
-            unique_filename = f"{uuid.uuid4()}{os.path.splitext(image.name)[1]}" 
+            unique_filename = f"{uuid.uuid4()}{os.path.splitext(image.name)[1]}"
             upload_path = os.path.join('poc', unique_filename)
             default_storage.save(upload_path, image)
             response_data = {"url": f"project/getimage/?filename={unique_filename}"}
@@ -81,9 +81,9 @@ class GetImageView(APIView):
                 s3_object = s3_client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_path)
                 content_type = s3_object['ContentType']
                 image_data = s3_object['Body'].read()
-                
+
                 return HttpResponse(image_data, content_type=content_type)
-            
+
             except s3_client.exceptions.NoSuchKey:
                 raise Http404("Image not found in S3")
             except (NoCredentialsError, PartialCredentialsError) as e:

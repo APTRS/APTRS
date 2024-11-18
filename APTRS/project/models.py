@@ -130,7 +130,7 @@ class ProjectRetest(models.Model):
             return 'In Progress'
         elif current_date > self.enddate:
             return 'Delay'
-        
+
     def save(self, *args, **kwargs):
         if self.status != 'Completed':
             self.status = self.calculate_status

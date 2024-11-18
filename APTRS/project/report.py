@@ -50,9 +50,9 @@ def CheckReport(Report_format,Report_type,pk,url,standard,request):
         token = auth_header.split(' ')[1] if auth_header.startswith('Bearer ') else None
     if Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
-    if Report_format == "pdf": 
+    if Report_format == "pdf":
         response = GetHTML(Report_type,pk,standard,request)
-    
+
     return response
 
 
@@ -92,7 +92,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
             for instance in Vulnerableinstance.objects.filter(vulnerabilityid=vulnerability, project=project)
             if instance.URL  # Exclude instances with empty URL
         ]
-        
+
     totalretest = [
     {
         "startdate": retest.startdate,
@@ -242,7 +242,7 @@ def is_whitelisted(url):
     parsed_url = urllib.parse.urlparse(url)
     netloc = parsed_url.netloc.lower()  # Normalize for case-insensitive comparison
     port = parsed_url.port if parsed_url.port else 80  # Default to port 80 if not specified
-    
+
 
     # Construct a normalized representation of the whitelisted entry
     for whitelisted_entry in settings.WHITELIST_IP:
@@ -259,7 +259,7 @@ def is_whitelisted(url):
 
 
 def my_fetcher(url):
-    
+
     # Check if the URL is whitelisted
     if is_whitelisted(url):
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -269,20 +269,18 @@ def my_fetcher(url):
             }
             response = requests.get(url, headers=headers, verify=False)
             response.raise_for_status()
-            
+
             return {
                 "string": response.content,
                 "mime_type": response.headers.get("Content-Type", "image/jpeg"),
                 "encoding": response.encoding,
                 "redirected_url": response.url
             }
-        
+
         else:
             response = requests.get(url, verify=False)
             response.raise_for_status()
-            
             mime_type = response.headers.get("Content-Type", "application/octet-stream")
-            
             return {
                 "string": response.content,
                 "mime_type": mime_type,

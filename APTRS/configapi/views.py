@@ -33,7 +33,7 @@ class ReportStandardListView(APIView):
         cached_data = cache.get(REPORT_STANDARD_LIST_CACHE_KEY)
         if cached_data:
             return Response(cached_data)
-        
+
         queryset = ReportStandard.objects.all()
         serializer = ReportStandardSerializer(queryset, many=True)
         cache.set(REPORT_STANDARD_LIST_CACHE_KEY, serializer.data, 3600)
@@ -60,7 +60,7 @@ class ProjectTypeListView(APIView):
         cached_data = cache.get(PROJECT_TYPE_LIST_CACHE_KEY)
         if cached_data:
             return Response(cached_data)
-        
+
         queryset = ProjectType.objects.all()
         serializer = ProjectTypeSerializer(queryset, many=True)
         cache.set(PROJECT_TYPE_LIST_CACHE_KEY, serializer.data, 3600)

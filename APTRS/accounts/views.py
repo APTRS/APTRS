@@ -45,7 +45,7 @@ class MyTokenRefreshView(TokenRefreshView):
         refresh_token = data.get("refresh", None)
         response = Response(data, status=status.HTTP_200_OK)
         response.set_cookie(
-                key='access_token', 
+                key='access_token',
                 value=access_token,
                 httponly=False,secure=False,samesite='Lax',path='/'
             )
@@ -60,14 +60,13 @@ class LogoutGetView(APIView):
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(token=refresh_token)
             token.blacklist()
-
             response = Response(status=status.HTTP_205_RESET_CONTENT)
             response.delete_cookie('access_token', path='/')
             return response
         except Exception as e:
             logger.error("Error while refreshing token: %s", str(e), exc_info=True)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
@@ -121,7 +120,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     MyTokenObtainPairSerializer to include extra user information in the response.
     """
     serializer_class = MyTokenObtainPairSerializer
-    throttle_classes = [LoginThrottle, AnonRateThrottle] 
+    throttle_classes = [LoginThrottle, AnonRateThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -139,7 +138,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
         # Set the JWT token in the cookie
         response.set_cookie(key='access_token',value=token_data['access'],httponly=False,secure=False,samesite='Lax',path='/')
-        
         return response
 
 

@@ -31,7 +31,6 @@ class CompanySerializer(serializers.ModelSerializer):
 
         return representation
 
-   
 
 class CustomerSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)

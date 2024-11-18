@@ -10,7 +10,6 @@ from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
 def validate_file_extension(value):
     allowed_extensions = ['jpg', 'jpeg', 'png']
     extension = value.name.split('.')[-1]
-    
     if extension not in allowed_extensions:
         raise ValidationError(f'Invalid file type: {extension}. Only {", ".join(allowed_extensions)} are accepted.')
 
@@ -18,12 +17,10 @@ def validate_file_extension(value):
 class ImageSerializer(serializers.Serializer):
     upload = serializers.ImageField(allow_empty_file=False,validators=[validate_file_extension])
 
-    
-
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username'] 
+        fields = ['username']
 
 class Projectserializers(serializers.ModelSerializer):
     status = serializers.CharField(read_only=True)
@@ -79,7 +76,7 @@ class Projectserializers(serializers.ModelSerializer):
                             owners.append(user)
                         except CustomUser.DoesNotExist:
                             raise serializers.ValidationError(f"Owner '{username}' does not exist")
-                    
+
                     project = Project.objects.create(**validated_data)
                     project.owner.set(owners)
                     return project
@@ -89,7 +86,7 @@ class Projectserializers(serializers.ModelSerializer):
                 #validated_data['owner'] = [request.user]
                 project = Project.objects.create(**validated_data)
                 project.owner.set([request.user])
-                
+
                 return project
         else:
             raise serializers.ValidationError("Invalid request")
@@ -161,7 +158,7 @@ class Retestserializers(serializers.ModelSerializer):
         slug_field='username',
         queryset=CustomUser.objects.all(),
         many=True
-       
+
     )
     status = serializers.CharField(read_only=True)
     class Meta:
@@ -197,7 +194,7 @@ class Retestserializers(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         owners_usernames = validated_data.pop('owner', [])
-        
+
         if request and request.user:
             if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):
                 if owners_usernames:
@@ -210,7 +207,7 @@ class Retestserializers(serializers.ModelSerializer):
                             owners.append(user)
                         except CustomUser.DoesNotExist:
                             raise serializers.ValidationError(f"Owner '{username}' does not exist")
-                    
+
                     project_retest = ProjectRetest.objects.create(**validated_data)
                     project_retest.owner.set(owners)
                     return project_retest
