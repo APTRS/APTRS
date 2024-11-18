@@ -14,8 +14,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
-
+from rest_framework_simplejwt.views import TokenRefreshView
 # local imports
 from utils.filters import UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
@@ -28,9 +27,35 @@ from .serializers import (ChangePasswordSerializer, CustomGroupSerializer,
 logger = logging.getLogger(__name__)
 
 
+
+class MyTokenRefreshView(TokenRefreshView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            logger.error("Error while refreshing token: %s", str(e), exc_info=True)
+            return Response({'detail': 'Invalid refresh token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        data = serializer.validated_data
+
+        # Extract the new access token
+        access_token = data.get("access")
+        refresh_token = data.get("refresh", None)
+        response = Response(data, status=status.HTTP_200_OK)
+        response.set_cookie(
+                key='access_token', 
+                value=access_token,
+                httponly=False,secure=False,samesite='Lax',path='/'
+            )
+        response.data = {'access': access_token,'refresh':refresh_token}
+        return response
+
+
 class LogoutGetView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
-        # Create a response object
         try:
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(token=refresh_token)
@@ -40,8 +65,10 @@ class LogoutGetView(APIView):
             response.delete_cookie('access_token', path='/')
             return response
         except Exception as e:
-            print(e)
+            logger.error("Error while refreshing token: %s", str(e), exc_info=True)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
     Token serializer for obtaining JWT tokens with additional user information.

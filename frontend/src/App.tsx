@@ -41,8 +41,8 @@ const App: React.FC = () => {
         console.error('Error refreshing authentication:', error);
       }
     };
-    // Call the refreshUser function every 10 minutes
-    const intervalId = setInterval(refreshUser, 600000);
+    // Call the refreshUser function every 28 minutes, token valid for 30 mins, 2 mins buffer time to refresh at 28th mins
+    const intervalId = setInterval(refreshUser, 1680000);
     return () => clearInterval(intervalId);
   }, []);
   if(shouldRefreshToken()){
