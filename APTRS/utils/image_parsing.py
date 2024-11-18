@@ -6,7 +6,7 @@ from urllib.parse import urlparse, parse_qs
 import os
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-def fetch_image_bytes(image_url_or_path, headers,use_s3=False,base_url="https://nginx/"):
+def fetch_image_bytes(image_url_or_path, headers,base_url="https://nginx/"):
     """Fetch image bytes from a URL (S3) or from the local file system."""
 
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -20,24 +20,8 @@ def fetch_image_bytes(image_url_or_path, headers,use_s3=False,base_url="https://
         return BytesIO(response.content)
     else:
         raise Exception(f"Failed to retrieve image from {image_url}, status code {response.status_code}")
-    '''
-    else:
-        # If use_s3 is False, fetch from the local file system
-        try:
-            parsed_url = urlparse(image_url_or_path)
-            query_params = parse_qs(parsed_url.query)
-        
-            # Extract the filename from the query parameter (e.g., filename=<filename_value>)
-            filename = query_params.get('filename', [None])[0]
-            local_path = os.path.join(settings.BASE_DIR, 'static', 'media', 'poc', filename)
-        
-            with open(local_path, 'rb') as img_file:
-                return BytesIO(img_file.read())
-        except Exception as e:
-            raise Exception(f"Failed to retrieve image from local file system: {str(e)}")
-    '''
 
-def find_images(raw_html, headers,use_s3=False,base_url="https://nginx/"):
+def find_images(raw_html, headers,base_url="https://nginx/"):
     """Find all <img> tags in raw HTML and replace with jinja2 placeholders."""
     regex = r'<img.*?>'
     images = []
@@ -55,7 +39,7 @@ def find_images(raw_html, headers,use_s3=False,base_url="https://nginx/"):
             image_metadata['image_url_or_path'] = image_url_or_path
             
             # Fetch image bytes from the URL or local file system
-            image_metadata['bytes'] = fetch_image_bytes(image_url_or_path, headers,use_s3,base_url)
+            image_metadata['bytes'] = fetch_image_bytes(image_url_or_path, headers,base_url)
 
         images.append(image_metadata)
     

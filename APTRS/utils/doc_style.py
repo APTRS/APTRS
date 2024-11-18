@@ -30,7 +30,7 @@ def get_subdoc(doc,raw_html, headers,base_url):
 
     if raw_html is not None:
 
-        images = find_images(raw_html, headers,settings.USE_S3, base_url)
+        images = find_images(raw_html, headers, base_url)
         '''
         CKEDITOR HTML allow images like POC images, html imc tag will have src=/api/project/getimage/?filename=img-uuid.jpg
         The use of API allow to handle both case in case images stored on cloud bucket or locally
