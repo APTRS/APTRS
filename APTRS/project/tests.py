@@ -16,7 +16,6 @@ class AddProjectAPITest(APITestCase):
 
     def setUp(self):
         client = APIClient(REMOTE_ADDR='127.0.0.1')
-       
 
 
     @classmethod
@@ -106,7 +105,7 @@ class AddProjectAPITest(APITestCase):
 
     def test_add_vulnerability(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()  
+        self.test_add_project_with_owner()
         project_id = Project.objects.latest('id').id
 
         self._add_vulnerability(token, project_id)
@@ -147,7 +146,7 @@ class AddProjectAPITest(APITestCase):
 
     def test_generate_docx_report(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()  
+        self.test_add_project_with_owner()
         project_id = Project.objects.latest('id').id
         self._add_vulnerability(token, project_id)
 
@@ -161,7 +160,7 @@ class AddProjectAPITest(APITestCase):
 
     def test_generate_pdf_report(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()  
+        self.test_add_project_with_owner()
         project_id = Project.objects.latest('id').id
         self._add_vulnerability(token, project_id)
 
@@ -175,7 +174,7 @@ class AddProjectAPITest(APITestCase):
 
     def test_generate_excel_report(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()  
+        self.test_add_project_with_owner()
         project_id = Project.objects.latest('id').id
         self._add_vulnerability(token, project_id)
 
@@ -197,4 +196,3 @@ class AddProjectAPITest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, "Generating report failed")
 
-        

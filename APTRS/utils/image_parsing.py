@@ -37,10 +37,10 @@ def find_images(raw_html, headers,base_url="https://nginx/"):
         if src_match:
             image_url_or_path = src_match.group(1)
             image_metadata['image_url_or_path'] = image_url_or_path
-            
+
             # Fetch image bytes from the URL or local file system
             image_metadata['bytes'] = fetch_image_bytes(image_url_or_path, headers,base_url)
 
         images.append(image_metadata)
-    
+
     return images

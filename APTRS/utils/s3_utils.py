@@ -25,4 +25,4 @@ def generate_presigned_url(object_key, expiration=3600, response_content_type=No
     )
 
     return url
-    
+

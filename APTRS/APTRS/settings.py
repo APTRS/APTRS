@@ -145,7 +145,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/hour', 
+        'anon': '100/hour',
         'login': '5/minute',
     }
 
@@ -197,7 +197,7 @@ DATABASES = {
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],
-        'PORT': os.environ['POSTGRES_PORT'],  
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 # End Postgres support

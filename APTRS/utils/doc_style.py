@@ -51,7 +51,7 @@ def get_subdoc(doc,raw_html, headers,base_url):
         text_width = temp_doc.sections[0].page_width - temp_doc.sections[0].left_margin - temp_doc.sections[0].right_margin
 
         apply_font_to_elements(temp_doc.element.body, 'Calibri', 16)
-        
+
         for paragraph in temp_doc.paragraphs:
             paragraph.paragraph_format.space_before = Pt(5)
             paragraph.paragraph_format.space_after = Pt(5)
@@ -60,7 +60,7 @@ def get_subdoc(doc,raw_html, headers,base_url):
             paragraph.paragraph_format.top_indent = Inches(1)
             paragraph.paragraph_format.line_spacing = 1.5
 
-        
+
         obj_styles = temp_doc.styles
         for current_style in obj_styles:
             element = current_style
@@ -76,7 +76,7 @@ def get_subdoc(doc,raw_html, headers,base_url):
         font = temp_doc.styles['List Bullet'].font
         font.name = 'Calibri'
         font.size = Pt(16)
-        
+
 
         # Save temporary DOCX in memory
         subdoc_tmp = io.BytesIO()
@@ -89,18 +89,18 @@ def get_subdoc(doc,raw_html, headers,base_url):
         for i, img in enumerate(images):
             img_obj = InlineImage(sub_docxtpl, img['bytes'])
             context[f"img{i}"] = img_obj
+
         sub_docxtpl.render(context)
-        
         sub_docxtpl.save(subdoc_tmp)
         subdoc_tmp.seek(0)
-        
-        
+
+
 
 
         # Create docxtpl subdoc object
         subdoc = doc.new_subdoc(subdoc_tmp)
         return subdoc
-    
+
 def main_doc_style(doc):
     font = doc.styles['List Bullet'].font
     font.name = 'Calibri'

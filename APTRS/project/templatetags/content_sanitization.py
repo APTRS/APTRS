@@ -6,13 +6,13 @@ import bleach
 
 ALLOWED_TAGS = settings.ALLOWED_TAGS
 HTML_ATTRIBUTE = {
-    '*': ['style'], 
+    '*': ['style'],
     'a': ['href', 'title'],
     'img': ['src'],
     'span': ['style'],
 }
 ALLOWED_STYLES = [
-    'font-size', 'font-family', 'color', 'background-color', 'font-weight', 'font-style', 'text-align', 
+    'font-size', 'font-family', 'color', 'background-color', 'font-weight', 'font-style', 'text-align',
     'text-decoration', 'line-height', 'margin', 'padding', 'border', 'display'
 ]
 css_sanitizer = CSSSanitizer(allowed_css_properties=ALLOWED_STYLES)

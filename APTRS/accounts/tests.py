@@ -31,4 +31,3 @@ class AuthAPITest(APITestCase):
 
         # Check if the login was successful (HTTP status code 200)
         self.assertEqual(login_response.status_code, status.HTTP_200_OK)
-       
