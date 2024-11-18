@@ -1,4 +1,5 @@
 import re
+from urllib.parse import urlparse
 from html.parser import HTMLParser
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -26,6 +27,21 @@ class TagValidator(HTMLParser):
                     raise ValidationError(_("Image source cannot be None"))
                 if not value.startswith(self.allowed_path):
                     self.disallowed_imgs.append(value)
+
+    def validate_link_src(self, attrs):
+        for attr, value in attrs:
+            if attr.lower() == 'href':  # Check the 'href' attribute
+                if value is None:
+                    raise ValidationError(_("Link href cannot be None"))
+
+                # Ensure it starts with HTTP or HTTPS
+                if not value.lower().startswith(('http://', 'https://')):
+                    raise ValidationError(_("Link href must start with 'http://' or 'https://'"))
+
+                # Validate if it's a proper URL
+                parsed_url = urlparse(value)
+                if not parsed_url.scheme or not parsed_url.netloc:
+                    raise ValidationError(_("Invalid URL in href attribute"))
 
 
 def xss_validator(value):
