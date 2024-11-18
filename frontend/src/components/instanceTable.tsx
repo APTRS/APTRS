@@ -34,7 +34,7 @@ export default function InstanceTable(props: InstanceTableProps) {
   };
   const [state, dispatch] = useDataReducer(reducer, initialState);
   const {id} = props
-  const [editingData, setEditingData] = useState<VulnerabilityInstance | undefined>(undefined)
+  const [editingData, setEditingData] = useState<VulnerabilityInstance | {}>({})
   const [showDialog, setShowDialog] = useState(false)
   const [showBulkDialog, setShowBulkDialog] = useState(false)
   const theme = useContext(ThemeContext);
@@ -66,7 +66,7 @@ export default function InstanceTable(props: InstanceTableProps) {
   }
   const openNewDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    setEditingData(undefined)
+    setEditingData({})
     setShowDialog(true)
   }
   const openBulkDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -74,7 +74,7 @@ export default function InstanceTable(props: InstanceTableProps) {
     setShowBulkDialog(true)
   }
   const clearDialogs = () => {
-    setEditingData(undefined)
+    setEditingData({})
     setShowDialog(false)
     setShowBulkDialog(false)
     setShowStatusDialog(false)
@@ -335,19 +335,34 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(props.visible)
   const [error, setError] = useState(false)
   interface InstanceFormState {
-    id?: number | 'new'
-    URL?: string
-    Parameter?: string
-    status?: string
+    id: string | number
+    URL: string
+    Parameter: string
+    status: 'Vulnerable' | 'Confirm Fixed' | 'Accepted Risk'
   }
-  const [formData, setFormData] = useState<InstanceFormState>({ 
-      URL: props.data?.URL || '', 
-      Parameter: props.data?.Parameter || '', 
-      status: (props.data?.status as 'Vulnerable' | 'Confirm Fixed' | 'Accepted Risk') || 'Vulnerable',
-      id:  typeof props.data?.id === 'number' ? props.data.id : 'new'
-    })
+  const [formData, setFormData] = useState<InstanceFormState>({
+    URL: '',
+    Parameter: '',
+    status: 'Vulnerable',
+    id: 'new'
+  });
+
+  useEffect(() => {
+    setFormData({
+      URL: props.data?.URL || '',
+      Parameter: props.data?.Parameter || '',
+      status: (props.data?.status as InstanceFormState['status']) || 'Vulnerable',
+      id: props.data?.id ?? 'new'
+    });
+  }, [props.data]);
   const clearDialog = () => {
     setIsOpen(false)
+    setFormData({ 
+      URL: '', 
+      Parameter: '', 
+      status: 'Vulnerable',
+      id: 'new'
+    })
     props.onCancel()
   }
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
@@ -382,7 +397,6 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
       toast.error(String(error))
     }
   }
-  
   return (
           <Dialog key={`instance-${props?.data?.id}`} handler={clearDialog} open={isOpen} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md" >
             <DialogHeader>{props?.data?.id === 'new' ? 'Add URL' : 'Edit URL'}</DialogHeader>
