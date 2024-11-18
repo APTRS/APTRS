@@ -14,12 +14,9 @@ from django.template import TemplateDoesNotExist
 from pygal.style import Style
 from weasyprint import HTML
 from xlsxwriter.workbook import Workbook
-from docx import Document
-from docxtpl import DocxTemplate,RichText, InlineImage
+from docxtpl import DocxTemplate,RichText
 from django.shortcuts import get_object_or_404
-from lib.htmldocx import HtmlToDocx
 from datetime import datetime
-from docx.shared import Inches, Pt
 import jinja2
 import html
 
@@ -28,8 +25,7 @@ from accounts.models import CustomUser, CustomGroup
 from customers.models import Company
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
-from utils.image_parsing import find_images
-from utils.doc_style import get_subdoc ,main_doc_style, apply_font_to_elements
+from utils.doc_style import get_subdoc ,main_doc_style
 logger = logging.getLogger(__name__)
 logger = logging.getLogger('weasyprint')
 

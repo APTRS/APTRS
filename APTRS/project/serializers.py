@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.utils import timezone
 from django.core.exceptions import ValidationError
 from accounts.models import CustomUser
 from customers.models import Company

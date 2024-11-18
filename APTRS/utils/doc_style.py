@@ -1,6 +1,4 @@
 from docx.shared import Inches, Pt
-from django.conf import settings
-from docx import Document
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Inches, Pt
 import io

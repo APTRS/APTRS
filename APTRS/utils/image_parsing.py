@@ -1,12 +1,9 @@
 import requests
 from io import BytesIO
 import re
-from django.conf import settings
-from urllib.parse import urlparse, parse_qs
-import os
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-def fetch_image_bytes(image_url_or_path, headers,base_url="https://nginx/"):
+def fetch_image_bytes(image_url_or_path, headers, base_url="https://nginx/"):
     """Fetch image bytes from a URL (S3) or from the local file system."""
 
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -15,13 +12,13 @@ def fetch_image_bytes(image_url_or_path, headers,base_url="https://nginx/"):
     token_headers = {
                 "Authorization": f"Bearer {headers}"
             }
-    response = requests.get(image_url,headers=token_headers, verify=False)
+    response = requests.get(image_url, headers=token_headers, verify=False)
     if response.status_code == 200:
         return BytesIO(response.content)
     else:
         raise Exception(f"Failed to retrieve image from {image_url}, status code {response.status_code}")
 
-def find_images(raw_html, headers,base_url="https://nginx/"):
+def find_images(raw_html, headers, base_url="https://nginx/"):
     """Find all <img> tags in raw HTML and replace with jinja2 placeholders."""
     regex = r'<img.*?>'
     images = []
