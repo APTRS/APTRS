@@ -3,7 +3,6 @@ import logging
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from rest_framework import status
-
 from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -14,6 +13,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenRefreshView
 # local imports
 from utils.filters import UserFilter, paginate_queryset
@@ -29,6 +29,8 @@ logger = logging.getLogger(__name__)
 
 
 class MyTokenRefreshView(TokenRefreshView):
+
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -60,12 +62,12 @@ class LogoutGetView(APIView):
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(token=refresh_token)
             token.blacklist()
-            response = Response(status=status.HTTP_205_RESET_CONTENT)
+            response = Response(status=status.HTTP_200_OK)
             response.delete_cookie('access_token', path='/')
             return response
         except Exception as e:
             logger.error("Error while refreshing token: %s", str(e), exc_info=True)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Invalid refresh token.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
