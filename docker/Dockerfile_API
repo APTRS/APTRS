@@ -85,7 +85,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/* > /dev/null 2>&1
 
 
-EXPOSE 8000 8000 
+EXPOSE 8000 8000
 
 
 RUN groupadd --gid $USER_ID $APTRS_USER && \

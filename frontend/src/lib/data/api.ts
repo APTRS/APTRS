@@ -124,7 +124,7 @@ export function shouldRefreshToken(): boolean {
   const last = new Date(lastRefresh)
   const now = new Date()
   const diff = now.getTime() - last.getTime()
-  return diff > 1000 * 60 * 10
+  return diff > 1000 * 60 * 28
 }
 
 export async function login(email: string, password:string) {
