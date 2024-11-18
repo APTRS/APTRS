@@ -29,17 +29,12 @@ import ScopeTable from '../../components/scope-table';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 
-interface ProjectViewProps {
-  id?: string;
-  tab?: string;
-}
 
-function ProjectView({ id: externalId }: ProjectViewProps): JSX.Element {
+function ProjectView(): JSX.Element {
   const navigate = useNavigate();
   const params = useParams();
-  const { id: routeId, tab: routeTab } = params;
-  const id = externalId || routeId;
-  const [selectedTab, setSelectedTab] = useState(routeTab || 'summary');
+  const { id, tab} = params;
+  const [selectedTab, setSelectedTab] = useState(tab || 'summary');
   const [loading, setLoading] = useState(false);
   const [project, setProject] = useState<Project | undefined>();
   const [scopes, setScopes] = useState<Scope[]>([]);
