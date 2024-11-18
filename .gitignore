@@ -241,3 +241,5 @@ APTRS/.env
 APTRS/sqlite_dump.sql
 .env
 APTRS/templates/.~lock.report.docx#
+!APTRS/lib/
+
