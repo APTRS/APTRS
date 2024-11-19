@@ -10,9 +10,11 @@ import { toast } from 'react-hot-toast';
 
 interface ReportFormProps {
   projectId: number;
-  scopes: Scope[];
+  scopeCount: number;
 }
-export default function ReportForm({ projectId, scopes }: ReportFormProps) {
+export default function ReportForm(props: ReportFormProps) {
+  const {projectId} = props
+  const [scopeCount, setScopeCount] = useState(props.scopeCount)
   const [error, setError] = useState('');
   const [standards, setStandards] = useState<any[]>([]);
   const [formData, setFormData] = useState({
@@ -22,7 +24,7 @@ export default function ReportForm({ projectId, scopes }: ReportFormProps) {
     Standard: [] as string[]
   });
   const [loading, setLoading] = useState(false);
-
+  const [scopes, setScopes] = useState<Scope[]>([]);
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -35,6 +37,7 @@ export default function ReportForm({ projectId, scopes }: ReportFormProps) {
       setFormData({ ...formData, Standard: [...Standard, event.target.value] });
     }
   };
+  
 
   const isValid = () => {
     return formData.Format && formData.Type && formData.Standard.length > 0;
@@ -46,9 +49,9 @@ export default function ReportForm({ projectId, scopes }: ReportFormProps) {
   };
 
   useEffect(() => {
-    loadStandards();
-  }, []);
-
+    setScopeCount(props.scopeCount)
+  }, [props]);
+  
   const fetchReport = async () => {
     setLoading(true);
     try {
@@ -89,8 +92,7 @@ export default function ReportForm({ projectId, scopes }: ReportFormProps) {
       setLoading(false);
     }
   };
-
-  if (!scopes || scopes.length === 0) {
+  if (scopeCount === 0) {
     return (
       <>
         <FormErrorMessage message="No scopes defined" />

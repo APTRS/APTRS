@@ -5,7 +5,8 @@ import { StyleTextfield } from '../lib/formstyles'
 
 import { Dialog, DialogBody } from '@material-tailwind/react';
 
-interface ModalScopeFormProps {
+
+interface ScopeFormProps {
   projectId: number
   scope?: string
   description?: string
@@ -13,7 +14,6 @@ interface ModalScopeFormProps {
   onClose: () => void
   afterSave: () => void
 }
-
 export default function ScopeForm(props: ScopeFormProps):JSX.Element{
   const [scope, setScope] = useState(props.scope || '')
   const [description, setDescription] = useState(props.description || '')
@@ -36,7 +36,7 @@ export default function ScopeForm(props: ScopeFormProps):JSX.Element{
     } finally {
       setSaving(false)
     }
-    props.afterSave(result)
+    props.afterSave()
     props.onClose()
   }
   const handleScopeChange = (event: any) => {
@@ -82,6 +82,14 @@ export default function ScopeForm(props: ScopeFormProps):JSX.Element{
       </>
     )
 }
+interface ModalScopeFormProps {
+  projectId: number
+  scope?: string
+  description?: string
+  id?:number
+  onClose: () => void
+  afterSave: () => void
+}
 export function ModalScopeForm(props: ModalScopeFormProps):JSX.Element{
   const [showModal, setShowModal] = useState(true)
   const clearModal = () => {
@@ -102,12 +110,4 @@ export function ModalScopeForm(props: ModalScopeFormProps):JSX.Element{
           </DialogBody>
         </Dialog>
   )
-}
-interface ScopeFormProps {
-  projectId: number
-  scope?: string
-  description?: string
-  id?:number
-  onClose: () => void
-  afterSave: (scope: Scope) => void
 }

@@ -29,17 +29,12 @@ import ScopeTable from '../../components/scope-table';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 
-interface ProjectViewProps {
-  id?: string;
-  tab?: string;
-}
 
-function ProjectView({ id: externalId }: ProjectViewProps): JSX.Element {
+function ProjectView(): JSX.Element {
   const navigate = useNavigate();
   const params = useParams();
-  const { id: routeId, tab: routeTab } = params;
-  const id = externalId || routeId;
-  const [selectedTab, setSelectedTab] = useState(routeTab || 'summary');
+  const { id, tab} = params;
+  const [selectedTab, setSelectedTab] = useState(tab || 'summary');
   const [loading, setLoading] = useState(false);
   const [project, setProject] = useState<Project | undefined>();
   const [scopes, setScopes] = useState<Scope[]>([]);
@@ -106,7 +101,7 @@ function ProjectView({ id: externalId }: ProjectViewProps): JSX.Element {
           const projectData = await getProject(id) as Project;
           setProject(projectData);
           setOwner(projectData.owner || '');
-          const scopes = await getProjectScopes(id) as Scope[];
+          const scopes = await loadScopes();
           setScopes(scopes);
         } catch (error) {
           console.error("Error fetching project data:", error);
@@ -118,11 +113,13 @@ function ProjectView({ id: externalId }: ProjectViewProps): JSX.Element {
     };
     loadData();
   }, [id]);
-
+  const loadScopes = async () => {
+    const scopes = await getProjectScopes(id) as Scope[];
+    return scopes;
+  }
   useEffect(() => {
     navigate(`/projects/${id}/${selectedTab}`);
   }, [selectedTab]);
-
   if (loading) return <FormSkeleton numInputs={6} className='max-w-lg' />;
   if (loadingError) return <ModalErrorMessage message={"Error loading project"} />;
   return (
@@ -251,14 +248,14 @@ function ProjectView({ id: externalId }: ProjectViewProps): JSX.Element {
                 <VulnerabilityTable projectId={Number(id)} />
               </TabPanel>
               <TabPanel value="scopes">
-                <ScopeTable projectId={Number(id)} />
+                <ScopeTable projectId={Number(id)} onScopesChange={setScopes} />
               </TabPanel>
               <TabPanel value="retest">
                 <Retests project={project} />
               </TabPanel>
               <TabPanel value="reports">
                 <div className="mt-4 max-w-lg"> 
-                  <ReportForm projectId={Number(id)} scopes={scopes} />
+                  <ReportForm projectId={Number(id)} scopeCount={scopes.length} />
                 </div>
               </TabPanel>
             </TabsBody>
