@@ -5,7 +5,7 @@ from django.urls import reverse
 from project.models import Project
 from django.test import Client
 from rest_framework.test import APIClient
-
+from urllib.parse import urlencode
 
 class CustomTestClient(Client):
     def request(self, **request):
@@ -189,10 +189,17 @@ class AddProjectAPITest(APITestCase):
 
 
     def generate_report(self, token, project_id, report_data):
+        query_params = {
+        "Format": report_data["Format"],
+        "Type": report_data["Type"],
+        "Standard": ",".join(report_data["Standard"]),
+        }
         generate_report_url = reverse('generate report', kwargs={'pk': project_id})
+        generate_report_url_with_params = f"{generate_report_url}?{urlencode(query_params)}"
         self.client = APIClient(REMOTE_ADDR='127.0.0.1')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        response = self.client.post(generate_report_url, report_data, format='json')
+        #response = self.client.post(generate_report_url, report_data, format='json')
+        response = self.client.get(generate_report_url_with_params)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, "Generating report failed")
 
