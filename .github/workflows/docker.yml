@@ -20,4 +20,4 @@ jobs:
           cp env.docker .env
           docker compose -f docker-compose.yml up -d --wait
       - name: "Test server"
-        run: docker exec -it aptrs-1 cd /home /home/aptrs/APTRS/APTRS && python3 manange.py test
+        run: docker exec -it aptrs-aptrs-1 bash -c "cd /home/aptrs/APTRS/APTRS && python3 manage.py test"
