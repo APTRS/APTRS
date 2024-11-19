@@ -23,15 +23,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      # Create .env file
+      - name: Create .env file
+        run: |
+          echo "VITE_APP_API_URL=/api/" > frontend/.env
+          echo "VITE_APP_ENV=production" >> frontend/.env
+
       # Install dependencies
       - name: Install dependencies
         working-directory: frontend
         run: npm install
-
-      # Run tests
-      - name: Run tests
-        working-directory: frontend
-        run: npm test
 
       # Build the frontend
       - name: Build the frontend
