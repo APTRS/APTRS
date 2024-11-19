@@ -49,7 +49,7 @@ else
 fi
 
 echo "Starting Celery worker and beat in the background..."
-nohup celery -A APTRS worker  --beat -l info -E &
+nohup celery -A APTRS beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler &
 
 
 exec gunicorn -b 0.0.0.0:8000 "APTRS.wsgi:application" --workers=3 --threads=3 --timeout=3600
