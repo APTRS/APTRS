@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from project.models import Project, PrjectScope, Vulnerability, Vulnerableinstance
@@ -56,8 +57,8 @@ class AddProjectAPITest(APITestCase):
             name="Juice Shop2",
             description="The project is about Juice Shop application security assessment.",
             projecttype="Web Application Penetration Testing",
-            startdate="2024-10-26",
-            enddate="2024-10-31",
+            startdate=timezone.now().date(),
+            enddate=timezone.now().date(),
             companyname=company,
             testingtype="Black Box",
             projectexception="",
