@@ -79,7 +79,7 @@ class AddProjectAPITest(APITestCase):
             "companyname": "OWASP",
             "testingtype": "Black Box",
             "projectexception": "",
-            "owner": "user"
+            "owner": ["user"]
         }
         add_project_url = reverse('Add Project')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
