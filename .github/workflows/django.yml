@@ -81,7 +81,7 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        poetry install --no-root --no-interaction --no-ansi
+        python3 -m pip install --upgrade --no-cache-dir pip poetry==1.8.2 && poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi 
 
     - name: Migrate Database
       run: |
