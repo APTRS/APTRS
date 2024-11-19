@@ -10,7 +10,7 @@ from rest_framework import status, views
 from rest_framework.decorators import (api_view, permission_classes)
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.response import Response
-from django.db.models import Q
+from django.db.models import Q, Exists, OuterRef
 from utils.filters import (ProjectFilter,
                            paginate_queryset)
 from utils.permissions import custom_permission_required
@@ -113,8 +113,19 @@ class GetMyProjects(views.APIView):
         projects = Project.objects.filter(
             Q(owner=request.user) &
             Q(status__in=['Upcoming', 'In Progress', 'Delay'])
-        ).prefetch_related('owner').select_related('companyname')
-        serializer = Projectserializers(projects, many=True)
+        )
+
+        retest_exists = ProjectRetest.objects.filter(
+            project=OuterRef('pk'),
+            status__in=['Upcoming', 'In Progress', 'Delay'],
+            owner=request.user,
+        ).values('pk')
+
+        projects_with_retests = Project.objects.filter(Exists(retest_exists))
+        combined_projects = (projects | projects_with_retests).distinct()
+        combined_projects = combined_projects.prefetch_related('owner').select_related('companyname')
+
+        serializer = Projectserializers(combined_projects, many=True)
         response_data = {
             "results": serializer.data
         }
