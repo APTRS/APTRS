@@ -15,6 +15,8 @@ class CustomTestClient(Client):
 
 class AddProjectAPITest(APITestCase):
 
+    project_id = None
+
     def setUp(self):
         client = APIClient(REMOTE_ADDR='127.0.0.1')
 
@@ -89,8 +91,14 @@ class AddProjectAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         add_project_response = self.client.post(add_project_url, project_data, format='json')
         self.assertEqual(add_project_response.status_code, status.HTTP_200_OK, "Adding project failed")
-        project_id = Project.objects.latest('id').id
-        self._add_project_scope(token, project_id)
+        AddProjectAPITest.project_id = add_project_response.data.get('id')
+        self.assertIsNotNone(AddProjectAPITest.project_id, "Project ID not found in response")
+        project_exists = Project.objects.filter(id=AddProjectAPITest.project_id).exists()
+        if project_exists:
+        #project_id = Project.objects.latest('id').id
+            self._add_project_scope(token, AddProjectAPITest.project_id)
+        else:
+            print("Project id Does not exist")
 
 
     def _add_project_scope(self, token, project_id):
@@ -110,7 +118,7 @@ class AddProjectAPITest(APITestCase):
     def test_add_vulnerability(self):
         token = self.login_user(self.admin_user_data)
         self.test_add_project_with_owner()
-        project_id = Project.objects.latest('id').id
+        project_id = AddProjectAPITest.project_id
 
         self._add_vulnerability(token, project_id)
 
@@ -151,7 +159,7 @@ class AddProjectAPITest(APITestCase):
     def test_generate_docx_report(self):
         token = self.login_user(self.admin_user_data)
         self.test_add_project_with_owner()
-        project_id = Project.objects.latest('id').id
+        project_id = AddProjectAPITest.project_id
         self._add_vulnerability(token, project_id)
 
         report_data = {
@@ -165,7 +173,7 @@ class AddProjectAPITest(APITestCase):
     def test_generate_pdf_report(self):
         token = self.login_user(self.admin_user_data)
         self.test_add_project_with_owner()
-        project_id = Project.objects.latest('id').id
+        project_id = AddProjectAPITest.project_id
         self._add_vulnerability(token, project_id)
 
         report_data = {
@@ -179,7 +187,7 @@ class AddProjectAPITest(APITestCase):
     def test_generate_excel_report(self):
         token = self.login_user(self.admin_user_data)
         self.test_add_project_with_owner()
-        project_id = Project.objects.latest('id').id
+        project_id = AddProjectAPITest.project_id
         self._add_vulnerability(token, project_id)
 
         report_data = {
@@ -195,7 +203,7 @@ class AddProjectAPITest(APITestCase):
     def generate_report(self, report_data):
         token = self.login_user(self.admin_user_data)
         self.test_add_project_with_owner()
-        project_id = Project.objects.latest('id').id
+        project_id = AddProjectAPITest.project_id
         self._add_vulnerability(token, project_id)
         query_params = {
         "Format": report_data["Format"],
