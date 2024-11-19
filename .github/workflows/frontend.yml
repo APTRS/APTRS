@@ -1,0 +1,47 @@
+name: Frontend Test and Build
+
+on:
+  push:
+    branches: [ "main" ,'API']
+  pull_request:
+    branches: [ "main" ,'API']
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Install dependencies
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install
+
+      # Run tests
+      - name: Run tests
+        working-directory: frontend
+        run: npm test
+
+      # Build the frontend
+      - name: Build the frontend
+        working-directory: frontend
+        run: npm run build
+
+      # Upload build artifact (optional)
+      - name: Upload build artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/dist
