@@ -3,6 +3,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from project.models import Project
+from customers.models import Company
 from django.test import Client
 from rest_framework.test import APIClient
 from urllib.parse import urlencode
@@ -70,7 +71,9 @@ class AddProjectAPITest(APITestCase):
 
     def test_add_project_with_owner(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_company()
+        company_exists = Company.objects.filter(name="OWASP").exists()
+        if not company_exists:
+            self.test_add_company()
         project_data = {
             "name": "Juice Shop2",
             "description": "The project is about Juice Shop application security assessment.",
