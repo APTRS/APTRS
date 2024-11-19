@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from project.models import Project
+from project.models import Project, PrjectScope, Vulnerability, Vulnerableinstance
 from customers.models import Company
 from django.test import Client
 from rest_framework.test import APIClient
@@ -49,6 +49,58 @@ class AddProjectAPITest(APITestCase):
             "password": "password123"
         }
         cls.user = User.objects.create_user(**cls.user_data)
+        user = User.objects.get(username="user")
+        Company.objects.create(name='OWASP', address='USA')
+        company = Company.objects.get(name="OWASP")
+        project = Project.objects.create(
+            name="Juice Shop2",
+            description="The project is about Juice Shop application security assessment.",
+            projecttype="Web Application Penetration Testing",
+            startdate="2024-10-26",
+            enddate="2024-10-31",
+            companyname=company,
+            testingtype="Black Box",
+            projectexception="",
+            status="Upcoming"  # Ensure the status is set correctly
+        )
+        project.owner.add(user)
+        project.save()
+
+        project_scope = PrjectScope.objects.create(
+            project=project,
+            scope="https://aptrs.com",
+            description="APTRS Test"
+        )
+
+        vulnerability = Vulnerability.objects.create(
+                project=project,
+                vulnerabilityname="XSS",
+                vulnerabilityseverity="None",
+                cvssscore=0.0,
+                cvssvector="CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N",
+                status="Accepted Risk",
+                vulnerabilitydescription="<p>Information disclosure, also known as information leakage, is when a website unintentionally reveals sensitive information to its users...</p>",
+                POC="test",
+                vulnerabilitysolution="<p>Preventing information disclosure completely is tricky due to the huge variety of ways in which it can occur...</p>",
+                vulnerabilityreferlnk="Another Ckedior",
+                created_by=user,  
+                last_updated_by=user
+            )
+        instances_data = [
+            {"URL": "http://10.10.165.234/#/search", "Parameter": "", "status": "Confirm Fixed"},
+            {"URL": "http://10.10.14.68/ftp/coupons_2013.md.bak", "Parameter": "", "status": "Accepted Risk"}
+        ]
+
+        for instance in instances_data:
+            Vulnerableinstance.objects.create(
+                vulnerabilityid=vulnerability,
+                project=project,
+                URL=instance["URL"],
+                Parameter=instance["Parameter"],
+                status=instance["status"]
+            )
+
+
 
 
 
@@ -65,7 +117,7 @@ class AddProjectAPITest(APITestCase):
     def test_add_company(self):
         token = self.login_user(self.admin_user_data)
         add_company_url = reverse('Add Company')
-        company_data = {'name': 'OWASP', 'address': 'USA'}
+        company_data = {'name': 'OWASP_test', 'address': 'USA'}
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         add_company_response = self.client.post(add_company_url, company_data, format='json')
         self.assertEqual(add_company_response.status_code, status.HTTP_200_OK, "Adding company failed")
@@ -73,7 +125,7 @@ class AddProjectAPITest(APITestCase):
 
     def test_add_project_with_owner(self):
         token = self.login_user(self.admin_user_data)
-        company_exists = Company.objects.filter(name="OWASP").exists()
+        company_exists = Company.objects.filter(name="OWASP_test").exists()
         if not company_exists:
             self.test_add_company()
         project_data = {
@@ -105,7 +157,7 @@ class AddProjectAPITest(APITestCase):
         add_scope_url = reverse('Add Project Scope', kwargs={'pk': project_id})
         scope_data = [
             {
-                "scope": "https://aptrs.com",
+                "scope": "https://api.aptrs.com",
                 "description": "APTRS Test"
             }
         ]
@@ -126,7 +178,7 @@ class AddProjectAPITest(APITestCase):
     def _add_vulnerability(self, token, project_id):
         add_vulnerability_url = reverse('Add vulnerability')
         vulnerability_data = {
-            "vulnerabilityname": "XSS",
+            "vulnerabilityname": "SQL",
             "vulnerabilityseverity": "None",
             "cvssscore": 0.0,
             "cvssvector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:N",
@@ -202,9 +254,12 @@ class AddProjectAPITest(APITestCase):
 
     def generate_report(self, report_data):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()
-        project_id = AddProjectAPITest.project_id
-        self._add_vulnerability(token, project_id)
+        project = Project.objects.filter(name="Juice Shop2").first()
+        if project:
+            project_id = project.id 
+            print(project_id)
+        else:
+            print("Project not found")
         query_params = {
         "Format": report_data["Format"],
         "Type": report_data["Type"],
