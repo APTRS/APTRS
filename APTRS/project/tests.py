@@ -66,6 +66,7 @@ class AddProjectAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         add_company_response = self.client.post(add_company_url, company_data, format='json')
         self.assertEqual(add_company_response.status_code, status.HTTP_200_OK, "Adding company failed")
+        print("Company added successfully")
 
     def test_add_project_with_owner(self):
         token = self.login_user(self.admin_user_data)
@@ -156,7 +157,7 @@ class AddProjectAPITest(APITestCase):
             "Standard": ["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
         }
 
-        self.generate_report(token, project_id, report_data)
+        self.generate_report(report_data)
 
     def test_generate_pdf_report(self):
         token = self.login_user(self.admin_user_data)
@@ -170,7 +171,7 @@ class AddProjectAPITest(APITestCase):
             "Standard": ["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
         }
 
-        self.generate_report(token, project_id, report_data)
+        self.generate_report(report_data)
 
     def test_generate_excel_report(self):
         token = self.login_user(self.admin_user_data)
