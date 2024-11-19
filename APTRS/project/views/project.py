@@ -248,6 +248,6 @@ def project_report(request, pk):
         output = CheckReport(report_format,report_type,pk,url,standard,request)
         return output
 
-    except ObjectDoesNotExist:
-        logger.error("Project Not Found, Project: %s is incorrect", pk)
+    except Exception as e:
+        logger.error(e)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)

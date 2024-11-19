@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from project.models import Project, PrjectScope, Vulnerability, Vulnerableinstance
+from accounts.models import CustomPermission, CustomGroup
 from customers.models import Company
 from django.test import Client
 from rest_framework.test import APIClient
@@ -16,7 +17,6 @@ class CustomTestClient(Client):
 
 class AddProjectAPITest(APITestCase):
 
-    project_id = None
 
     def setUp(self):
         client = APIClient(REMOTE_ADDR='127.0.0.1')
@@ -50,6 +50,45 @@ class AddProjectAPITest(APITestCase):
             "password": "password123"
         }
         cls.user = User.objects.create_user(**cls.user_data)
+
+        Required_Permissions = [
+            "Manage Users",
+            "Manage Projects",
+            "Assign Projects",
+            "Manage Vulnerability Data",
+            "Manage Customer",
+            "Manage Company",
+            "Manage Configurations"
+            ]
+        for permission_name in Required_Permissions:
+            CustomPermission.objects.get_or_create(name=permission_name,defaults={'description': permission_name})
+
+        group_permissions = {
+            "Administrator": CustomPermission.objects.all(),
+            "Managers": [
+                "Manage Projects",
+                "Assign Projects",
+                "Manage Vulnerability Data",
+                "Manage Configurations"
+            ],
+            "User": [
+                "Manage Projects",
+                "Manage Vulnerability Data"
+            ],
+            "Project Manager": [
+                "Manage Customer",
+                "Manage Company",
+                "Manage Projects",
+                "Assign Projects"
+            ]
+        }
+        for group_name, perms in group_permissions.items():
+            custom_group, created = CustomGroup.objects.get_or_create(
+                name=group_name,
+                defaults={
+                    'description': f'{group_name} description'
+                }
+            )
         user = User.objects.get(username="user")
         Company.objects.create(name='OWASP', address='USA')
         company = Company.objects.get(name="OWASP")
@@ -144,14 +183,8 @@ class AddProjectAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         add_project_response = self.client.post(add_project_url, project_data, format='json')
         self.assertEqual(add_project_response.status_code, status.HTTP_200_OK, "Adding project failed")
-        AddProjectAPITest.project_id = add_project_response.data.get('id')
-        self.assertIsNotNone(AddProjectAPITest.project_id, "Project ID not found in response")
-        project_exists = Project.objects.filter(id=AddProjectAPITest.project_id).exists()
-        if project_exists:
-        #project_id = Project.objects.latest('id').id
-            self._add_project_scope(token, AddProjectAPITest.project_id)
-        else:
-            print("Project id Does not exist")
+        project_id = add_project_response.data.get('id')
+        self._add_project_scope(token, project_id)
 
 
     def _add_project_scope(self, token, project_id):
@@ -167,13 +200,10 @@ class AddProjectAPITest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, "Adding project scope failed")
 
-
-    def test_add_vulnerability(self):
-        token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()
-        project_id = AddProjectAPITest.project_id
-
         self._add_vulnerability(token, project_id)
+
+
+
 
 
     def _add_vulnerability(self, token, project_id):
@@ -209,60 +239,22 @@ class AddProjectAPITest(APITestCase):
 
 
 
-    def test_generate_docx_report(self):
-        token = self.login_user(self.admin_user_data)
 
-        report_data = {
-            "Format": "docx",
-            "Type": "Audit",
-            "Standard": ["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
-        }
-
-        self.generate_report(report_data)
-
-    def test_generate_pdf_report(self):
-        token = self.login_user(self.admin_user_data)
-
-        report_data = {
-            "Format": "pdf",
-            "Type": "Audit",
-            "Standard": ["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
-        }
-
-        self.generate_report(report_data)
-
-    def test_generate_excel_report(self):
-        token = self.login_user(self.admin_user_data)
-
-        report_data = {
-            "Format": "excel",
-            "Type": "Audit",
-            "Standard": ["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
-        }
-
-        self.generate_report(report_data)
+   
 
 
+    def test_generate_report(self):
 
-    def generate_report(self, report_data):
-        token = self.login_user(self.admin_user_data)
-        project = Project.objects.filter(name="Juice Shop2").first()
-        if project:
-            project_id = project.id 
-            print(project_id)
-        else:
-            print("Project not found")
-        query_params = {
-        "Format": report_data["Format"],
-        "Type": report_data["Type"],
-        "Standard": ",".join(report_data["Standard"]),
-        }
-        generate_report_url = reverse('generate report', kwargs={'pk': project_id})
-        generate_report_url_with_params = f"{generate_report_url}?{urlencode(query_params)}"
-        self.client = APIClient(REMOTE_ADDR='127.0.0.1')
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        #response = self.client.post(generate_report_url, report_data, format='json')
-        response = self.client.get(generate_report_url_with_params)
+        report_formats = ['excel', 'pdf', 'docx']
+        for report_format in report_formats:
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK, "Generating report failed")
+            #report_format = 'excel'
+            token = self.login_user(self.admin_user_data)
+            self.client = APIClient(REMOTE_ADDR='127.0.0.1')
+            self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+            #response = self.client.post(generate_report_url, report_data, format='json')
+            response = self.client.get(f"/api/project/report/1/?Format={report_format}&Type=Audit&Standard=OWASP%20Top%2010%20web,OWASP%20Top%2010%20API,NIST")
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK, "Generating report failed")
+            print("Report is generated " + report_format)
 

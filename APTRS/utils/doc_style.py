@@ -1,6 +1,7 @@
 from docx.shared import Inches, Pt
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Inches, Pt
+from docx import Document
 import io
 from lib.htmldocx import HtmlToDocx
 from utils.image_parsing import find_images
@@ -21,7 +22,7 @@ def apply_font_to_elements(elements, font_name, font_size):
 
 
 
-def get_subdoc(doc,raw_html, headers,base_url):
+def get_subdoc(doc,raw_html, headers, base_url):
 
     temp_doc = Document()
     temp_parser = HtmlToDocx()
