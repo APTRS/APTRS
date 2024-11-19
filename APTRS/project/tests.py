@@ -194,6 +194,7 @@ class AddProjectAPITest(APITestCase):
         "Type": report_data["Type"],
         "Standard": ",".join(report_data["Standard"]),
         }
+        project_id = Project.objects.latest('id').id
         generate_report_url = reverse('generate report', kwargs={'pk': project_id})
         generate_report_url_with_params = f"{generate_report_url}?{urlencode(query_params)}"
         self.client = APIClient(REMOTE_ADDR='127.0.0.1')
