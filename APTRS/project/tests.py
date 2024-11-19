@@ -211,9 +211,6 @@ class AddProjectAPITest(APITestCase):
 
     def test_generate_docx_report(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()
-        project_id = AddProjectAPITest.project_id
-        self._add_vulnerability(token, project_id)
 
         report_data = {
             "Format": "docx",
@@ -225,9 +222,6 @@ class AddProjectAPITest(APITestCase):
 
     def test_generate_pdf_report(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()
-        project_id = AddProjectAPITest.project_id
-        self._add_vulnerability(token, project_id)
 
         report_data = {
             "Format": "pdf",
@@ -239,9 +233,6 @@ class AddProjectAPITest(APITestCase):
 
     def test_generate_excel_report(self):
         token = self.login_user(self.admin_user_data)
-        self.test_add_project_with_owner()
-        project_id = AddProjectAPITest.project_id
-        self._add_vulnerability(token, project_id)
 
         report_data = {
             "Format": "excel",
