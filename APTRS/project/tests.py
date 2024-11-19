@@ -184,18 +184,21 @@ class AddProjectAPITest(APITestCase):
             "Standard": ["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
         }
 
-        self.generate_report(token, project_id, report_data)
+        self.generate_report(report_data)
 
 
 
-    def generate_report(self, token, project_id, report_data):
+    def generate_report(self, report_data):
+        token = self.login_user(self.admin_user_data)
+        self.test_add_project_with_owner()
+        project_id = Project.objects.latest('id').id
+        self._add_vulnerability(token, project_id)
         query_params = {
         "Format": report_data["Format"],
         "Type": report_data["Type"],
         "Standard": ",".join(report_data["Standard"]),
         }
-        project_id = Project.objects.latest('id').id
-        generate_report_url = reverse('generate report', kwargs={'pk': 1})
+        generate_report_url = reverse('generate report', kwargs={'pk': project_id})
         generate_report_url_with_params = f"{generate_report_url}?{urlencode(query_params)}"
         self.client = APIClient(REMOTE_ADDR='127.0.0.1')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
