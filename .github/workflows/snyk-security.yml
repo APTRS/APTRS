@@ -28,7 +28,7 @@ jobs:
         # For Snyk Open Source you must first set up the development environment for your application's dependencies
     
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
         continue-on-error: true
@@ -55,10 +55,12 @@ jobs:
 
         # Build the docker image for testing
       - name: Build a Docker image
-        run: docker build -t aptrs .
+        run: |
+          cp env.docker .env
+          docker compose -f docker-compose.yml up -d --wait
         # Runs Snyk Container (Container and SCA) analysis and uploads result to Snyk.
       - name: Snyk Container monitor
-        run: SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk container monitor -t aptrs . --file=
+        run: SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} snyk container monitor -t aptrs-aptrs-1 . --file=
         continue-on-error: true
 
         # Push the Snyk Code results into GitHub Code Scanning tab

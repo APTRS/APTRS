@@ -26,13 +26,13 @@
   <body>
 
     <!--  Cover Page  -->
-    {% include "cover-page.html" with project=project settings=settings %}
+    {% include "cover-page.html" with project=project %}
     
     <!--  Page 2 - table Of Conent Page  -->
     {% include 'table-of-content.html' %}
 
     <!--  Page 3 - Executive Summary Page  -->
-    {% include 'executivesummary.html' with  project=project settings=settings standard=standard totalvulnerability=totalvulnerability totalretest=totalretest projectscope=projectscope internalusers=internalusers %}
+    {% include 'executivesummary.html' with  project=project standard=standard totalvulnerability=totalvulnerability totalretest=totalretest projectscope=projectscope internalusers=internalusers %}
 
     <!--  Page 4 - Vulnerabilities summary Page  -->
     {% include 'vulnerabilities-summary.html' with vuln=vuln pie_chart=pie_chart %}

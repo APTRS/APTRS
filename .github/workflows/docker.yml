@@ -10,21 +10,15 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  tests:
+    name: "Integration testing"
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:20.10.9
-        options: --privileged
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build Docker images
+      - uses: actions/checkout@v3
+      - name: "Set up environment"
         run: |
-          sudo apt-get install -y docker-compose
-          docker-compose -f docker-compose.yml build
-      - name: Run Docker-compose
-        run: |
-          docker-compose -f docker-compose.yml up -d
-          docker-compose -f docker-compose.yml ps
-          sleep 30
+          cp env.docker .env
+          docker compose -f docker-compose.yml up -d --wait
+      - name: "Test server"
+        run: docker exec aptrs-aptrs-1 bash -c "cd /home/aptrs/APTRS/APTRS && python3 manage.py test"
+

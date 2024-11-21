@@ -34,11 +34,11 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 ## Documentation
 
 > [!WARNING]  
-> Please ensure to review the Pre-Deployment Guide for configuration and security instructions from the documentation.
+> Please ensure to review the Deployment Guide for configuration and security instructions from the documentation.
 
 
 
-[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://doc.aptrs.com) [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" width="220" height="45">](https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&creator=24236036)
+[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://aptrs.com) [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" width="220" height="45">](https://www.postman.com/aptrs-api)
 
 
 
@@ -72,11 +72,6 @@ If you've found APTRS helpful and valuable, your support through donations is gr
     <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
   </a>
 </p>
-
-## Screenshots
-
-
-
 
 
 ## Security

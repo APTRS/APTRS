@@ -43,7 +43,7 @@ jobs:
       max-parallel: 4
       matrix:
         os: [ubuntu-22.04]
-        python-version: [3.8, 3.9, 3.11,3.12]
+        python-version: [3.9, 3.11,3.12]
 
     steps:
     - uses: actions/checkout@v3
@@ -81,7 +81,7 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        poetry install --no-root --no-interaction --no-ansi
+        python3 -m pip install --upgrade --no-cache-dir pip poetry==1.8.2 && poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi 
 
     - name: Migrate Database
       run: |
