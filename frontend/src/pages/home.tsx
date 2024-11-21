@@ -1,7 +1,7 @@
 import Logo from '../components/logo';
 import Login from './login';
 import { useNavigate } from 'react-router-dom';
-
+import { getAuthUser } from '../lib/data/api';
 interface HomeProps {
   isRelogin?: boolean
 }
@@ -9,9 +9,12 @@ export default function Home({isRelogin = false}: HomeProps) {
   //is this a relogin after session expiration? set in WithAuth in authutils
   const navigate = useNavigate()
   //if logged in, redirect to dashboard
+  const user = getAuthUser()
+  if(user){
+    navigate('/dashboard')
+  }
   const onLoginSuccess = () => {
     const storedRedirect = localStorage.getItem('redirect')
-      console.log('login success, redirects is', storedRedirect)
       if(storedRedirect){
         localStorage.removeItem('redirect')
         navigate(storedRedirect)
