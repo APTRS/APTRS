@@ -262,7 +262,7 @@ export default function InstanceTable(props: InstanceTableProps) {
             theme={theme}
             selectableRows
           />
-          <InstanceForm visible={showDialog} projectVulnerabilityId={id} data={editingData} onCancel={clearDialogs} onSave={afterUpdateBulkStatus}/>
+          <InstanceForm visible={showDialog} projectVulnerabilityId={id} data={editingData as VulnerabilityInstance} onCancel={clearDialogs} onSave={afterUpdateBulkStatus}/>
           <BulkInstanceForm visible={showBulkDialog} projectVulnerabilityId={id} onCancel={clearDialogs} onSave={loadInstances}/>
           <UpdateStatusDialog visible={showStatusDialog} selected={selected.map(instance => instance.id as number)} onCancel={clearDialogs} onSave={afterUpdateBulkStatus}/>
         </div>

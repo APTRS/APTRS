@@ -4,6 +4,7 @@ import {  Company,
           LoginUser, 
           IPAddressInfo,
           Vulnerability,
+          VulnerabilityInstance,
           FilteredSet,
           Group } from './definitions'
 import axios, { AxiosResponse, AxiosError } from 'axios'
@@ -20,8 +21,8 @@ function redirectIfUnauthorized(response: AxiosResponse): boolean | void {
 
 axios.defaults.withCredentials = true;
 
-async function getOrRedirect(url: string, params?: any): Promise<AxiosResponse | void> {
-  let response: AxiosResponse | AxiosError | undefined;
+let response: AxiosResponse | AxiosError | undefined;
+async function getOrRedirect(url: string, params?: any): Promise<any> {
   try {
     response = await axios.get(url, params);
   } catch (error) {
@@ -196,7 +197,7 @@ export async function logout() {
     }
     const body = {refresh_token: user.refresh}
     const url = apiUrl('auth/logout/');
-    const response = await postOrRedirect(url, body, authHeaders());
+    await postOrRedirect(url, body, authHeaders());
 
     localStorage.removeItem('user');
     localStorage.removeItem('lastRefresh');
@@ -397,7 +398,7 @@ export async function getProjectVulnerability(id: string | undefined) {
   const response = await getOrRedirect(url, authHeaders());
   return response.data;
 }
-export async function fetchVulnerabilityInstances(id: string | number | undefined) {
+export async function fetchVulnerabilityInstances(id: string | number | undefined): Promise<VulnerabilityInstance[]>  {
   const url = apiUrl(`project/vulnerability/instances/${id}/`);
   const response = await getOrRedirect(url, authHeaders());
   return response.data;
