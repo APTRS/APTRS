@@ -3,7 +3,7 @@ from celery import shared_task
 from django.utils import timezone
 from .models import Project, ProjectRetest
 
-@shared_task(name="project_status")
+@shared_task
 def update_project_status():
     today = timezone.now().date()
 
@@ -29,14 +29,3 @@ def update_project_status():
         elif today > project.enddate:
             project.status = 'Delay'
         project.save()
-
-    # Fetch projects with retests that are not completed
-    projects_with_retests = Project.objects.filter(
-        projectretest__status__in=['Upcoming', 'In Progress', 'Delay']
-    ).distinct()
-
-    for project in projects_with_retests:
-        ongoing_retests = ProjectRetest.objects.filter(project=project, status__in=['Upcoming', 'In Progress', 'Delay'])
-        if ongoing_retests.exists():
-            project.status = ongoing_retests.first().status
-            project.save()

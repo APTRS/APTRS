@@ -99,7 +99,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     ]
     currentdate=datetime.now()
     context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,'mycomany':mycomany,'projectmanagers':projectmanagers,'customeruser':customeruser,'owners': owners,
-              'project_exception':project_exception,'project_description':project_description,"settings":settings,"currentdate":currentdate,'value2':'10',
+              'project_exception':project_exception,'project_description':project_description,"settings":settings,"currentdate":currentdate,
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
                'internalusers':internalusers,'page_break': RichText('\f'),'new_line': RichText('\n')
                }
@@ -207,7 +207,7 @@ def GetHTML(Report_type,pk,standard,request):
     ## Get Retest Details
     totalretest = ProjectRetest.objects.filter(project_id=pk)
     data = {'projectscope':projectscope,'totalvulnerability':totalvulnerability,'standard':standard,'Report_type':Report_type,'mycomany':mycomany,
-            'totalretest':totalretest,'vuln':vuln,'project':project,"settings":settings,'ciritcal':ciritcal,'high':high,
+            'totalretest':totalretest,'vuln':vuln,'project':project,'ciritcal':ciritcal,'high':high,
             'medium':medium,'low':low,'info':info,'instances':instances,'projectmanagers':projectmanagers,'customeruser':customeruser,'pie_chart':pie_chart.render(is_unicode=True)}
     try:
         # Render the template to a string

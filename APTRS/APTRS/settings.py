@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from json import loads
 from pathlib import Path
 import os
+from celery.schedules import crontab
 from datetime import timedelta
 from dotenv import load_dotenv
 
@@ -223,11 +224,16 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 CELERY_WORKER_SEND_TASK_EVENTS = False
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-
-
-
-
-
+CELERY_BEAT_SCHEDULE = {
+    "update_project_status": {
+        "task": "project.tasks.update_project_status",
+        "schedule": crontab(hour=0, minute=0),
+    },
+    "flush_expired_tokens_task": {
+        "task": "accounts.tasks.flush_expired_tokens_task",
+        "schedule": crontab(hour=0, minute=0),
+    },
+}
 
 
 # Password validation
