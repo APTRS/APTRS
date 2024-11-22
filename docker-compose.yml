@@ -1,7 +1,21 @@
 services:
 
 
-
+  nginx:
+    build:
+      dockerfile: ./docker/Dockerfile_frontend
+    volumes:
+      - static_volume:/home/aptrs/APTRS/APTRS/static/
+      - media_volume:/home/aptrs/APTRS/APTRS/media/
+      - ./nginx/logs:/var/log/nginx 
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    depends_on:
+      - aptrs
+    networks:
+        - aptrs
 
   postgres:
     image: "postgres:latest"

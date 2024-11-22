@@ -7,11 +7,13 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 <br/><br/>
 
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
-[![Python Version](https://img.shields.io/badge/Python-3.8+-brightgreen)](https://www.python.org/downloads/release/python-3810/)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
+[![Python Version](https://img.shields.io/badge/Python-3.9+-brightgreen)](https://www.python.org/downloads/release/python-391/)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/APTRS/APTRS?include_prereleases)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/APTRS/aptrs)
-[![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
+[![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/APTRS/APTRS)
 [![Django Build](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml)
+[![Frontend Test and Build](https://github.com/APTRS/APTRS/actions/workflows/frontend.yml/badge.svg)](https://github.com/APTRS/APTRS/actions/workflows/frontend.yml)
+[![Docker Image CI](https://github.com/APTRS/APTRS/actions/workflows/docker.yml/badge.svg)](https://github.com/APTRS/APTRS/actions/workflows/docker.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/fce97190bae94040823a2994c0722ea8)](https://app.codacy.com/gh/Anof-cyber/APTRS/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=security_rating&branch=main)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS&branch=API)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS)
@@ -22,13 +24,11 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 
 **Support APTRS**
 
-<a href="https://www.buymeacoffee.com/AnoF">
-  <img src="https://img.buymeacoffee.com/button-api/?text=Support APTRS&emoji=❤️&slug=AnoF&button_colour=FF5F5F&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff" 
-       width="220" height="50" border="0" />
-</a>
-<br/><br/>
-If you've found APTRS helpful and valuable, your support through donations is greatly appreciated.
 
+<a href="https://github.com/sponsors/APTRS"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Sponsor APTRS" width="230" height="50"></a>
+<br/><br/>
+
+If you've found APTRS helpful and valuable, your support through donations is greatly appreciated.
 
 
 ## Documentation
@@ -42,7 +42,7 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 
 
-- Try APTRS Live - [aptrs.souravkalal.tech](https://live.aptrs.com)
+- Try APTRS Live - [https://live.aptrs.com](https://live.aptrs.com)
 
 > [!NOTE]  
 > Default creds are sourav.kalal@aptrs.com & I-am-Weak-Password-Please-Change-Me
@@ -59,6 +59,7 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 - Manage All Projects in one place
 - Maintain the Vulnerability Database
 - Easily Generate PDF, DOCX and Excel Report
+- Easily Customize PDF and DOCX Report Template
 - Dynamically add POC, Description and Recommendations
 - Manage Customers and Companies
 - Manage Project Status, Schedules and Retest

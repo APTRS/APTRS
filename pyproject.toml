@@ -37,6 +37,7 @@ django-celery-beat = "^2.6.0"
 boto3 = "^1.34.159"
 django-storages = "^1.14.4"
 bs4 = "^0.0.2"
+requests = "^2.32.3"
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^4.3.0"
 

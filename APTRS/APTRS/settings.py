@@ -32,7 +32,7 @@ Security settings, Make sure that you change the configuration before deploying 
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
-USE_DOCKER = os.getenv('USE_DOCKER')
+USE_DOCKER = os.getenv('USE_DOCKER', 'False')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -234,6 +234,8 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(hour=0, minute=0),
     },
 }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Password validation
