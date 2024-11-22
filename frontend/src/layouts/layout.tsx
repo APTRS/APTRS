@@ -1,7 +1,7 @@
 import SideNav from './sidenav'; 
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { useCurrentUser } from '../lib/customHooks';
+import { getAuthUser } from '../lib/data/api';
 import { getInitials, avatarUrl } from '../lib/utilities'
 import { Link } from 'react-router-dom';
 import { Avatar } from '@material-tailwind/react';
@@ -11,7 +11,6 @@ import { ThemeIcon } from '../components/themeIcon';
 
 export const ThemeContext = createContext('light')
 const Layout: React.FC = () => {
-  const navigate = useNavigate()
   const [theme, setTheme] = useState('light')
   const toggleTheme = () => {
     if(theme === 'light'){
@@ -40,19 +39,11 @@ const Layout: React.FC = () => {
       });
     }
   }, [])
-  const [currentUser, setCurrentUser] = useState<LoginUser | null>(useCurrentUser())
-  // can't use useLocation here because the layout is outside of the  Router in App.tsx
+  const [currentUser, setCurrentUser] = useState<LoginUser | null>(getAuthUser())
   const location = useLocation();
-  // useEffect(() => {
-  //   const user = useCurrentUser()
-  //   setCurrentUser(user)
-  //   if(!user){
-  //     if(!['/','/401'].includes(location.pathname)){
-  //       navigate('/')
-  //     }
-  //   }
-  // }, [location.pathname])
-   
+  useEffect(() => {
+    setCurrentUser(getAuthUser())
+  }, [location.pathname])
   return (
         <>
           <ThemeContext.Provider value={theme}>

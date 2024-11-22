@@ -2,7 +2,6 @@
 import React from 'react';
 import NavLinks from './navlinks';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import {logout} from '../lib/data/api'
 import Button from '../components/button';
 import { useCurrentUser } from '../lib/customHooks';
 import { useNavigate } from 'react-router-dom';
@@ -15,9 +14,7 @@ const SideNav: React.FC<SideNavProps> = ({ theme, toggleTheme }) => {
   const currentUser = useCurrentUser()
   const navigate = useNavigate()
   const handleSignOut = () => {
-    console.log('signing out')
-    logout();
-    navigate('/')
+    navigate('/logout')
  }
   
   return (

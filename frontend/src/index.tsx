@@ -8,16 +8,11 @@ import { ThemeProvider } from "@material-tailwind/react";
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-/**
- * Turns URL path into router basename by removing everything after the last slash
- * @param {string} path URL path, probably window.location.pathname
- * @returns {string} final basename
- */
-const getBasename = (path: string): string => path.substr(0, path.lastIndexOf('/'));
+const baseUrl = import.meta.env.BASE_URL
 root.render(
   <React.StrictMode>
       <ThemeProvider>
-        <BrowserRouter basename={getBasename(window.location.pathname)}>
+        <BrowserRouter basename={baseUrl}>
           <App />
         </BrowserRouter>
       </ThemeProvider>

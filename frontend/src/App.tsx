@@ -22,6 +22,7 @@ import Profile from './pages/profile';
 import Config from './pages/config';
 import { useEffect } from 'react';
 import { refreshAuth, getAuthUser, shouldRefreshToken } from './lib/data/api';
+import Logout from './pages/logout';
 import.meta.env.VITE_APP_ENV
 
 
@@ -82,6 +83,7 @@ const App: React.FC = () => {
                     <Route path="/groups" element={<Groups />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/access-denied" element={<AccessDenied />} />
+                    <Route path="/logout" element={<Logout />} />
                     <Route path="*" element={<ErrorPage is404={true}/>} />
                   </>
                 : 
