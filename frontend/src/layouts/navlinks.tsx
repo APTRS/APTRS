@@ -10,7 +10,6 @@ import {
   UsersIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
-import { useCurrentUser } from '../lib/customHooks';
 import clsx from 'clsx';
 // ... (Icons and other imports)
 import { ThemeIcon } from '../components/themeIcon';
@@ -23,7 +22,6 @@ interface NavLinksProps {
 const NavLinks: React.FC<NavLinksProps> = ({ theme, toggleTheme }) => {
   
   const pathname = useLocation().pathname;
-  const currentUser = useCurrentUser()
   const links = [
     { name: 'Dashboard', href: '/dashboard', icon: RocketLaunchIcon },
     {name: 'Companies', href: '/companies', icon: BuildingOfficeIcon },

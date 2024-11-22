@@ -7,6 +7,7 @@ import { PageTitle } from "../components/page-title"
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 import { StyleTextfield, FormErrorMessage } from "../lib/formstyles"
 import { toast } from "react-hot-toast"
+import { Spinner } from "@material-tailwind/react"
 export default function Config() {
     if (!currentUserCan('Manage Configurations')) {
         return <AccessDenied />
@@ -29,6 +30,7 @@ function ReportStandards() {
     setName('')
     setShowAddReportStandard(false)
   }
+  const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if(name.trim().length === 0) {
@@ -48,25 +50,32 @@ function ReportStandards() {
     }
   }
   const loadReportStandards = async () => {
+    setLoading(true)
     try {
       const result = await api.fetchReportStandards()
       setReportStandards(result)
     } catch(err) {
       toast.error(err as string)
+    } finally {
+      setLoading(false)
     }
   }
   useEffect(() => {
     loadReportStandards()
   }, [])
   return (
-      <div className="mt-4 mb-2">
-          <h2 className='text-xl'>Report Standards</h2>
-          <ul className='cursor-text'>
+      <div className="mt-4 mb-2 min-h-[200px]">
+          <h2 className='text-xl'>Report Standards {loading && <Spinner className="inline ml-1 -mt-1 h-4 w-4 text-center"/>}</h2>
+          {loading ? <></> :
+          <>
+            <ul className='cursor-text'>
               {reportStandards.map(standard => (
                   <li key={standard.id}>{standard.name}</li>
               ))}
-          </ul>
-          <button className="text-primary underline text-sm ml-6" onClick={() => setShowAddReportStandard(true)}>Add New</button>
+            </ul>
+            <button className="text-primary underline text-sm ml-6" onClick={() => setShowAddReportStandard(true)}>Add New</button>
+          </>
+        }
           <Dialog open={showAddReportStandard} handler={setShowAddReportStandard}>
               <DialogHeader>Add Report Standard</DialogHeader>
               <DialogBody>
@@ -80,6 +89,7 @@ function ReportStandards() {
                   <button type="submit" onClick={handleSave} className="bg-primary p-2 ml-2 text-white rounded-md disabled:opacity-50">Save</button>
               </DialogFooter>
           </Dialog>
+          
         </div>
     )
 }
@@ -87,12 +97,16 @@ function ReportStandards() {
 function ProjectTypes() {
   const [projectTypes, setProjectTypes] = useState<ProjectType[]>([])
   const [showAddProjectType, setShowAddProjectType] = useState(false)
+  const [loading, setLoading] = useState(true)
   const loadProjectTypes = async () => {
+    setLoading(true)
     try {
       const result = await api.fetchProjectTypes()
       setProjectTypes(result)
     } catch(err) {
       toast.error(err as string)
+    } finally {
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -123,7 +137,9 @@ function ProjectTypes() {
   }
   return (
       <div className="mt-4 mb-2">
-            <h2 className='text-xl'>Project Types</h2>
+        <h2 className='text-xl'>Project Types {loading && <Spinner className="inline ml-1 -mt-1 h-4 w-4 text-center"/>}</h2>
+            {loading ? <></> :
+            <>
             <ul className='cursor-text'>
                 {projectTypes.map(type => (
                     <li key={type.id}>{type.name}</li>
@@ -143,6 +159,8 @@ function ProjectTypes() {
                 <button type="submit" onClick={handleSave} className="bg-primary p-2 ml-2 text-white rounded-md disabled:opacity-50">Save</button>
               </DialogFooter>
             </Dialog>
-        </div>
+            </>
+          }
+          </div>
     )
 }
