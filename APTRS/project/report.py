@@ -62,7 +62,6 @@ def generate_vulnerability_document(pk,Report_type,standard):
     totalretests_queryset = ProjectRetest.objects.filter(project_id=pk)
 
     projectscope = PrjectScope.objects.filter(project=project)
-    internalusers = CustomUser.objects.filter(is_staff=True,is_active=True)
     template_path = os.path.join(settings.BASE_DIR, 'templates', 'report.docx')
     doc = DocxTemplate(template_path)
     project_manager_group = CustomGroup.objects.get(name='Project Manager')
@@ -101,7 +100,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     context = {'project': project, 'vulnerabilities': vuln,'Report_type':Report_type,'mycomany':mycomany,'projectmanagers':projectmanagers,'customeruser':customeruser,'owners': owners,
               'project_exception':project_exception,'project_description':project_description,"settings":settings,"currentdate":currentdate,
                'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
-               'internalusers':internalusers,'page_break': RichText('\f'),'new_line': RichText('\n')
+               'page_break': RichText('\f'),'new_line': RichText('\n')
                }
     jinja_env = jinja2.Environment()
     jinja_env.trim_blocks = True
