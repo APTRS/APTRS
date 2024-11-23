@@ -19,6 +19,24 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "djscruggs",
+      "name": "DJ Scruggs",
+      "avatar_url": "https://avatars.githubusercontent.com/u/41671?v=4",
+      "profile": "https://pwn.by/djscruggs",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "noraj",
+      "name": "Alexandre ZANNI",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16578570?v=4",
+      "profile": "https://pwn.by/noraj",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
