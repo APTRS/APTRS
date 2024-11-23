@@ -51,6 +51,10 @@ export default function ReportForm(props: ReportFormProps) {
   useEffect(() => {
     setScopeCount(props.scopeCount)
   }, [props]);
+
+  useEffect(() => {
+    loadStandards();
+  }, []);
   
   const fetchReport = async () => {
     setLoading(true);
