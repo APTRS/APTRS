@@ -87,9 +87,11 @@ class GetImageView(APIView):
             except s3_client.exceptions.NoSuchKey:
                 raise Http404("Image not found in S3")
             except (NoCredentialsError, PartialCredentialsError) as e:
-                return Response({"error": str(e)}, status=500)
+                logger.error(str(e))
+                return Response({"error": "Something Went Wrong"}, status=500)
             except Exception as e:
-                return Response({"error": str(e)}, status=500)
+                logger.error(str(e))
+                return Response({"error": "Something Went Wrong"}, status=500)
 
         else:
             file_path = os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, filename)
