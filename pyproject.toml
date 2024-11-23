@@ -5,6 +5,7 @@ description = "APTRS (Automated Penetration Testing Reporting System) is a Pytho
 authors = ["Sourav Kalal <kalalsourav20@gmail.com>"]
 license = "APTRS Licence"
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"

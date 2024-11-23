@@ -44,6 +44,8 @@ def CheckReport(Report_format,Report_type,pk,url,standard,request):
     auth_header = request.headers.get('Authorization')
     if auth_header:
         token = auth_header.split(' ')[1] if auth_header.startswith('Bearer ') else None
+    else:
+        token = request.cookies.get('access_token')
     if Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
     if Report_format == "pdf":
