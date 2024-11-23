@@ -10,7 +10,18 @@
   "imageSize": 100,
   "commit": true,
   "commitConvention": "none",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "anof-cyber",
+      "name": "Sourav Kalal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39705906?v=4",
+      "profile": "https://souravkalal.tech/",
+      "contributions": [
+        "maintenance"
+      ]
+    }
+  ],
   "contributorsPerLine": 7,
-  "linkToUsage": false
+  "linkToUsage": false,
+  "commitType": "docs"
 }
