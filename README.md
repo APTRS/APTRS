@@ -22,7 +22,7 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 [![CodeQL](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml)
 [![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+![GitHub contributors from allcontributors.org](https://img.shields.io/github/all-contributors/aptrs/aptrs)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **Support APTRS**
