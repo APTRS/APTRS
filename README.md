@@ -81,11 +81,14 @@ If you discover any security vulnerabilities in this open-source project, please
 
 ## Contributors ✨
 
-<a href="https://github.com/aptrs/aptrs/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=aptrs/aptrs" />
-</a>
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 
-Made with [contrib.rocks](https://contrib.rocks).
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## Authors
 
