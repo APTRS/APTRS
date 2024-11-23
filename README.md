@@ -22,7 +22,7 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 [![CodeQL](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml)
 [![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **Support APTRS**
@@ -87,6 +87,14 @@ If you discover any security vulnerabilities in this open-source project, please
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/noraj"><img src="https://avatars.githubusercontent.com/u/16578570?v=4?s=100" width="100px;" alt="Alexandre ZANNI"/><br /><sub><b>Alexandre ZANNI</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=noraj" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
