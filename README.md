@@ -90,7 +90,7 @@ If you discover any security vulnerabilities in this open-source project, please
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://souravkalal.tech/"><img src="https://avatars.githubusercontent.com/u/39705906?v=4?s=100" width="100px;" alt="Sourav Kalal"/><br /><sub><b>Sourav Kalal</b></sub></a><br /><a href="#maintenance-anof-cyber" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://souravkalal.tech/"><img src="https://avatars.githubusercontent.com/u/39705906?v=4?s=100" width="100px;" alt="Sourav Kalal"/><br /><sub><b>Sourav Kalal</b></sub></a><br /><a href="#maintenance-anof-cyber" title="Maintenance">🚧</a> <a href="https://github.com/APTRS/APTRS/commits?author=anof-cyber" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
