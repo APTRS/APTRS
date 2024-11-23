@@ -1,0 +1,108 @@
+{% load content_sanitization %}
+<article id="Vulnerabilities-details">
+    <h1 id="Vulnerabilities-details-title"  class="report-title">Vulnerability Details</h1>
+
+    {% for vulnerabilities in vuln %}
+
+      <main>
+        <section class="vulnerability-details">
+          <div class="section-title">
+            <h1>{{vulnerabilities.vulnerabilityname}}</h1>
+          </div>
+    
+          <div class="details-section">
+            <div class="columns">
+
+            {% if vulnerabilities.vulnerabilityseverity %}
+              <div class="column">
+                <h3>CVSS Score</h3>
+                <p class="value {{ vulnerabilities.vulnerabilityseverity|add:'severity' }}">{{vulnerabilities.cvssscore}}</p>
+              </div>
+              
+              <div class="column">
+                <h3>Severity</h3>
+                <p class="value {{ vulnerabilities.vulnerabilityseverity|add:'severity' }}">{{ vulnerabilities.vulnerabilityseverity }}</p>
+              </div>
+
+            {% endif %}
+
+            {% if vulnerabilities.status  %}
+              <div class="column">
+                <h3>Status</h3>
+                <p class="value {{ vulnerabilities.status |cut:' ' }}">{{ vulnerabilities.status }}</p>
+              </div>
+
+              {% endif %}
+              
+              <div class="column">
+                <h3>CVSS Vector</h3>
+                <p class="value cvss-vector">{{vulnerabilities.cvssvector}}</p>
+              </div>
+    
+          </div>
+
+
+    
+             <h3 class="vulnerabilities-details-title">Description</h3>
+                <span class=vulnerabilities-details-details>
+                    {{vulnerabilities.vulnerabilitydescription| clean_html }}
+                <span>
+
+            <h3 class="vulnerabilities-details-title">Steps To Reproduce</h3>
+            {% if vulnerabilities.POC is not None %}
+                <span class=vulnerabilities-details-details>
+                    {{vulnerabilities.POC|clean_html}}
+                <span>
+            {% endif %}
+
+
+            <h3 class="vulnerabilities-details-title">Recommendations</h3>
+                <span class=vulnerabilities-details-details>
+                    {{vulnerabilities.vulnerabilitysolution|clean_html}}
+                <span>
+
+
+            <h3 class="vulnerabilities-details-title">Instances</h3>
+
+                    <div id="version-table">
+                        <table class="styled-table">
+                          <thead class="thead-light">
+                            <tr>
+                              <th scope="col">URL</th>
+                              <th scope="col">Parameter</th>
+                              <th scope="col">Status</th>
+                              
+                            </tr>
+                          </thead>
+                          <tbody class="instancestable">
+                            {% for instance in instances %}
+                                    {% if instance.vulnerabilityid.id == vulnerabilities.id %}
+
+                                        <tr>
+                                        <td>{{instance.URL}}</td>
+                                        <td>{{instance.Parameter}} </td>
+                                        <td class="{{ instance.status |cut:' ' }}">{{instance.status}} </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                          </tbody>
+                        </table>
+        
+                      </div>
+                
+            {% if vulnerabilities.vulnerabilityreferlnk %}
+                <h3 class="vulnerabilities-details-title">Reference</h3>
+                    <span class=vulnerabilities-details-details>
+                        {{vulnerabilities.vulnerabilityreferlnk|clean_html}}
+                    <span>
+            {% endif %}
+
+
+            
+          </div>
+        </section>
+      </main>
+
+      {% endfor %}
+
+</article>

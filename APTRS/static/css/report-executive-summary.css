@@ -1,0 +1,25 @@
+
+/** Break the page before the executive summary start, new page after table of content**/
+#executivesummary {
+    page-break-before: always;
+}
+
+
+
+
+/** Executive summary paragraph css**/
+#executivesummary p {
+    line-height: 2;
+    text-align: justify;
+    font-size: 17px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/** Sub Title of Executive summary page**/
+#executivesummary h2 {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top:  60px;
+    color: #21263F;
+}

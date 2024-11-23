@@ -1,0 +1,101 @@
+# Base image
+FROM ubuntu:22.04
+
+# Labels and Credits
+LABEL \
+    name="APTRS" \
+    author="Sourav Kalal <kalalsourav20@gmail.com>" \
+    maintainer="Sourav Kalal <kalalsourav20@gmail.com>" \
+    description="APTRS (Automated Penetration Testing Reporting System) is an automated reporting tool in Python and Django. The tool allows Penetration testers to create a report directly without using the Traditional Docx file. It also provides an approach to keeping track of the projects and vulnerabilities."
+
+
+ENV TZ=UTC
+ENV DEBIAN_FRONTEND=noninteractive
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    APTRS_USER=aptrs \
+    USER_ID=9901 \
+	PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONFAULTHANDLER=1 
+
+RUN apt update -y && apt install -y  --no-install-recommends \
+    build-essential \
+    tzdata \
+    locales \
+    sqlite3 \
+    fontconfig-config \
+    libjpeg-turbo8 \
+    libxrender1 \
+    libfontconfig1 \
+    libxext6 \
+    fontconfig \
+    xfonts-75dpi \
+    xfonts-base \
+    python3 \
+    python3-dev \
+    python3-pip \
+    wget \
+    curl \
+    git \
+    nginx \
+    libpango-1.0-0 \
+    libharfbuzz0b \
+    libpangoft2-1.0-0 \
+    postgresql \
+    postgresql-contrib \
+    libpq-dev
+
+
+
+
+
+
+WORKDIR /home/$APTRS_USER/APTRS
+COPY ../APTRS ./APTRS
+COPY ../Certificate ./Certificate
+COPY ../scripts ./scripts
+COPY ../poetry.lock ./poetry.lock
+COPY ../pyproject.toml ./pyproject.toml
+COPY ../requirements.txt ./requirements.txt
+
+RUN NEW_SECRET_KEY=$(python3 -c "import random, string; print(''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50)))")
+ENV SECRET_KEY=NEW_SECRET_KEY
+#RUN sed -i "s/^SECRET_KEY=.*/SECRET_KEY='$NEW_SECRET_KEY'/" /home/aptrs/APTRS/.env
+
+RUN python3 -m pip install --upgrade --no-cache-dir pip poetry==1.8.2 && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-root --no-interaction --no-ansi 
+	
+	
+# Cleanup
+RUN \
+    apt remove -y \
+        libssl-dev \
+        libffi-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        python3-dev \
+        wget && \
+    apt clean && \
+    apt autoclean && \
+    apt autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* > /dev/null 2>&1
+
+
+EXPOSE 8000 8000
+
+
+RUN groupadd --gid $USER_ID $APTRS_USER && \
+    useradd $APTRS_USER --uid $USER_ID --gid $APTRS_USER --shell /bin/bash && \
+    mkdir -p /home/$APTRS_USER && \
+    chown -R $APTRS_USER:$APTRS_USER /home/$APTRS_USER
+USER $APTRS_USER
+
+RUN ["chmod", "+x", "/home/aptrs/APTRS/scripts/backend.sh"]
+
+
+ENTRYPOINT ["bash", "/home/aptrs/APTRS/scripts/backend.sh"]
+

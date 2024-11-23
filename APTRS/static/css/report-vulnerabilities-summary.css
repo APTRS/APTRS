@@ -1,0 +1,91 @@
+#Vulnerabilities {
+    page-break-before: always;
+  }
+
+  #Vulnerabilities h2 {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top:  60px;
+    color: #21263F;
+}
+
+#severity-table {
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-bottom: 80px;
+}
+
+
+
+#piechart {
+
+  padding-left: 30px;
+  padding-right: 30px;
+  max-width: 400px;
+  border: 1px solid black;
+  margin-left: 50px;
+  margin-top: 40px;
+
+}
+
+.legend-box {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 14px;
+  /* Add other styles as needed */
+}
+
+/* Specific style for Critical class */
+.Critical:before {
+  content: "";
+  display: inline-block;
+  width: 10px; /* Adjust width of the color box */
+  height: 10px; /* Adjust height of the color box */
+  margin-right: 5px; /* Adjust space between color box and text */
+  background-color: #FF491C; /* Set color for Critical */
+  vertical-align: middle; /* Align the color box vertically */
+}
+
+/* Specific style for High class */
+.High:before {
+  content: "";
+  display: inline-block;
+  width: 10px; /* Adjust width of the color box */
+  height: 10px; /* Adjust height of the color box */
+  margin-right: 5px; /* Adjust space between color box and text */
+  background-color: #F66E09; /* Set color for High */
+  vertical-align: middle; /* Align the color box vertically */
+}
+
+/* Specific style for Medium class */
+.Medium:before {
+  content: "";
+  display: inline-block;
+  width: 10px; /* Adjust width of the color box */
+  height: 10px; /* Adjust height of the color box */
+  margin-right: 5px; /* Adjust space between color box and text */
+  background-color: #FBBC02; /* Set color for Medium */
+  vertical-align: middle; /* Align the color box vertically */
+}
+
+/* Specific style for Low class */
+.Low:before {
+  content: "";
+  display: inline-block;
+  width: 10px; /* Adjust width of the color box */
+  height: 10px; /* Adjust height of the color box */
+  margin-right: 5px; /* Adjust space between color box and text */
+  background-color: #20B803; /* Set color for Low */
+  vertical-align: middle; /* Align the color box vertically */
+}
+
+/* Specific style for Informational class */
+.Informational:before {
+  content: "";
+  display: inline-block;
+  width: 10px; /* Adjust width of the color box */
+  height: 10px; /* Adjust height of the color box */
+  margin-right: 5px; /* Adjust space between color box and text */
+  background-color: #3399FF; /* Set color for Informational */
+  vertical-align: middle; /* Align the color box vertically */
+}

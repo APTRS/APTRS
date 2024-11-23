@@ -1,83 +1,69 @@
 
 # APTRS
 <p align="center">
-  <img src="https://repository-images.githubusercontent.com/558932728/e8ff2c72-3797-41ab-9505-90c9008cc472" />
+  <img src="https://repository-images.githubusercontent.com/558932728/6a0fb8ea-a539-4ba6-8ef8-2ee7fb0b3f17" width="500" height="300"/>
 </p>
-APTRS (Automated Penetration Testing Reporting System) is an automated reporting tool in Python and Django. The tool allows Penetration testers to create a report directly without using the Traditional Docx file. It also provides an approach to keeping track of the projects and vulnerabilities. 
+APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS.
 <br/><br/>
 
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
-[![Python Version](https://img.shields.io/badge/Python-3.8-brightgreen)](https://www.python.org/downloads/release/python-3810/)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Anof-cyber/APTRS?include_prereleases)
-![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Anof-cyber/APTRS/django.yml?branch=main)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Anof-cyber/aptrs)
-[![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/Anof-cyber/APTRS)
+[![Python Version](https://img.shields.io/badge/Python-3.9+-brightgreen)](https://www.python.org/downloads/release/python-391/)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/APTRS/APTRS?include_prereleases)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/APTRS/aptrs)
+[![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/APTRS/APTRS)
+[![Django Build](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/django.yml)
+[![Frontend Test and Build](https://github.com/APTRS/APTRS/actions/workflows/frontend.yml/badge.svg)](https://github.com/APTRS/APTRS/actions/workflows/frontend.yml)
+[![Docker Image CI](https://github.com/APTRS/APTRS/actions/workflows/docker.yml/badge.svg)](https://github.com/APTRS/APTRS/actions/workflows/docker.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fce97190bae94040823a2994c0722ea8)](https://app.codacy.com/gh/Anof-cyber/APTRS/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=security_rating&branch=main)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS&branch=API)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS)
+[![CodeQL](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml)
 [![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
 
 
-## Support
+**Support APTRS**
 
-<a href="https://www.buymeacoffee.com/AnoF"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=AnoF&button_colour=FF5F5F&font_colour=ffffff&font_family=Arial&outline_colour=000000&coffee_colour=FFDD00" /></a>
+
+<a href="https://github.com/sponsors/APTRS"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Sponsor APTRS" width="230" height="50"></a>
+<br/><br/>
+
+If you've found APTRS helpful and valuable, your support through donations is greatly appreciated.
 
 
 ## Documentation
 
-<a href="https://anof-cyber.github.io/APTRS/"><img src="https://i.ibb.co/NLTJ6MR/70686099-3855f780-1c79-11ea-8141-899e39459da2.png" alt="70686099-3855f780-1c79-11ea-8141-899e39459da2" border="0"></a>
-<a href="https://www.postman.com/anof-cyber/workspace/aptrs/collection/24236036-131e5e02-32e5-45be-9c15-02c91fe9230a?action=share&creator=24236036"><img src="https://assets.postman.com/postman-docs/run-in-postman-button-icon.jpg" alt="70686099-3855f780-1c79-11ea-8141-899e39459da2" width="200" height="50" border="0"></a>
-- Early Release Live API (https://aptrsapi.souravkalal.tech/)
+> [!WARNING]  
+> Please ensure to review the Deployment Guide for configuration and security instructions from the documentation.
 
 
 
-## Prerequisites
-
-- Python 3.8 and above (https://www.python.org/downloads/release/python-3810/)
-- wkhtmltopdf 0.12.6 and above (https://wkhtmltopdf.org/downloads.html)
+[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://aptrs.com) [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" width="220" height="45">](https://www.postman.com/aptrs-api)
 
 
-## Installation
 
-The tool has been tested using Python 3.8.10 on Kali Linux 2022.2/3, Ubuntu 20.04.5 LTS, Windows 10/11.
+- Try APTRS Live - [https://live.aptrs.com](https://live.aptrs.com)
 
-Windows Installation
-
-```Windows
-  git clone https://github.com/Anof-cyber/APTRS.git
-  cd APTRS
-  install.bat
-```
-    
-Linux Installation
-
-```Windows
-  git clone https://github.com/Anof-cyber/APTRS.git
-  cd APTRS
-  install.sh
-```
-  
-## Running
-
-Windows 
-```Windows
-  run.bat
-```
+> [!NOTE]  
+> Default creds are sourav.kalal@aptrs.com & I-am-Weak-Password-Please-Change-Me
 
 
-Linux
-```bash
-  run.sh
-```
+
+
 
 
 
 ## Features
-- [Demo Report](/Doc/Report/Web%20Application%20Penetration%20Testing%20Report%20of%20Juice%20Shop.pdf)
-- Managing Vulnerabilities
+- Manage Vulnerabilities
+- Custom Report Template in Docx or HTML/CSS
 - Manage All Projects in one place
-- Create a Vulnerability Database and avoid writing the same description and recommendations again
-- Easily Create PDF Reprot
+- Maintain the Vulnerability Database
+- Easily Generate PDF, DOCX and Excel Report
+- Easily Customize PDF and DOCX Report Template
 - Dynamically add POC, Description and Recommendations
-- Manage Customers and Comapany
+- Manage Customers and Companies
+- Manage Project Status, Schedules and Retest
+
 
 ## Sponsor
 
@@ -88,49 +74,19 @@ Linux
   </a>
 </p>
 
-## Screenshots
 
-### Project
-![App Screenshot](/Doc/image/Project.png)
+## Security
 
+If you discover any security vulnerabilities in this open-source project, please responsibly disclose it by referring to our [Security Policy](https://github.com/Anof-cyber/APTRS/security/policy). We appreciate and value your efforts to improve the security of this project.
 
-### View Project
-![App Screenshot](/Doc/image/View%20Project.png)
+## Contributors ✨
 
+<a href="https://github.com/aptrs/aptrs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=aptrs/aptrs" />
+</a>
 
-### Project Vulnerability
-![App Screenshot](/Doc/image/Project%20Vulnerability.png)
-
-### Project Report
-![App Screenshot](/Doc/image/Project%20Report.png)
-
-
-### Project Add Vulnerability
-![App Screenshot](/Doc/image/Project%20New%20Vulnerability.png)
-
-
-## Roadmap
-
-- Improving Report Quality
-- Bulk Instance Upload
-- [Pentest Mapper](https://portswigger.net/bappstore/af490ae7e79546fa81a28d8d0b90874e) Burp Suite Extension Integration
-- Allowing Multiple Project Scope
-- Improving Code, Error handling and Security
-- Docker Support
-- Implementing Rest API
-- Project and Project Retest Handler
-- Access Control and Authorization
-- Support Nessus Parsing
-
+Made with [contrib.rocks](https://contrib.rocks).
 
 ## Authors
 
 - [Sourav Kalal](https://twitter.com/Ano_F_)
-
-## Contributors
-
-We are seeking a volunteer developer with experience in Django or Front End development to help improve our project by adding more security and features. If you're interested, please reach out to kalalsourav20@gmail.com. For reporting errors or bugs, please use the Github issues feature rather than emailing.
-
-<a href = "https://github.com/Anof-cyber/APTRS/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo=Anof-cyber/APTRS"/>
-</a>

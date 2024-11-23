@@ -1,0 +1,116 @@
+services:
+
+
+  nginx:
+    build:
+      dockerfile: ./docker/Dockerfile_frontend
+    volumes:
+      - static_volume:/home/aptrs/APTRS/APTRS/static/
+      - media_volume:/home/aptrs/APTRS/APTRS/media/
+      - ./nginx/logs:/var/log/nginx 
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    depends_on:
+      - aptrs
+    networks:
+        - aptrs
+
+  postgres:
+    image: "postgres:latest"
+    restart: always
+    env_file: ".env"
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+    ports:
+     - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    networks:
+       - aptrs
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}",]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    env_file: ".env"
+    networks:
+       - aptrs
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    environment:  
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+    volumes: 
+      - cache:/data
+        
+
+
+  aptrs:
+    env_file: ".env"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      REDIS_URL: ${REDIS_URL}
+      WHITELIST_IP: ${WHITELIST_IP}
+      ALLOWED_HOST: ${ALLOWED_HOST}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      USE_S3: ${USE_S3}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME}
+      AWS_S3_CUSTOM_DOMAIN: ${AWS_S3_CUSTOM_DOMAIN}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+      USE_DOCKER: "True"
+    depends_on:
+      - postgres
+      - cache
+    
+    build:
+        context: .
+        dockerfile: docker/Dockerfile_API
+    volumes:
+      - ./api_data:/home/aptrs/.aptrs
+      - static_volume:/home/aptrs/APTRS/APTRS/static/
+      - media_volume:/home/aptrs/APTRS/APTRS/media/
+    ports:
+     - "8000:8000"
+    networks:
+      - aptrs
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/api/config/ping/ || exit 1"]
+      interval: 1000s
+      timeout: 100s
+      retries: 2
+    links:
+      - "postgres"
+      - "cache"
+
+      
+networks:
+  aptrs:
+
+
+
+volumes:
+  static_volume:
+  media_volume:
+  cache:
+  
+  
