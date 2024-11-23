@@ -21,9 +21,8 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Anof-cyber_APTRS&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Anof-cyber_APTRS)
 [![CodeQL](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml/badge.svg)](https://github.com/Anof-cyber/APTRS/actions/workflows/codeql.yml)
 [![Twitter](https://img.shields.io/twitter/follow/ano_f_)](https://twitter.com/Ano_F_)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 ![GitHub contributors from allcontributors.org](https://img.shields.io/github/all-contributors/aptrs/aptrs)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 
 **Support APTRS**
 
