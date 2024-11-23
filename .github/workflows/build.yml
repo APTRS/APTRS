@@ -62,6 +62,8 @@ jobs:
         echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "http://127.0.0.1:8000"]' >> APTRS/.env
         echo 'ALLOWED_HOST = ["127.0.0.1","localhost","*"]'  >> APTRS/.env
         echo 'CORS_ORIGIN = ["http://127.0.0.1:8080","http://127.0.0.1:5000"]' >> APTRS/.env
+        echo 'USER_TIME_ZONE="Asia/Kolkata"' >> APTRS/.env
+        echo 'USE_DOCKER=False' >> APTRS/.env
       
         
 
