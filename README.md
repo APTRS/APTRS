@@ -2,7 +2,7 @@
 
 # APTRS
 <p align="center">
-  <img src="https://repository-images.githubusercontent.com/558932728/6a0fb8ea-a539-4ba6-8ef8-2ee7fb0b3f17" width="500" height="300"/>
+  <img src="https://repository-images.githubusercontent.com/558932728/6a0fb8ea-a539-4ba6-8ef8-2ee7fb0b3f17" width="500" height="400"/>
 </p>
 APTRS (Automated Penetration Testing Reporting System) is a Python and Django-based automated reporting tool designed for penetration testers and security organizations. This tool streamlines the report generation process by enabling users to create PDF and Excel reports directly, eliminating the need for manual approaches. Additionally, APTRS offers a systematic way to monitor and manage vulnerabilities within various projects. Keep your penetration testing projects organized and efficient with APTRS.
 <br/><br/>
@@ -91,12 +91,9 @@ If you discover any security vulnerabilities in this open-source project, please
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://souravkalal.tech/"><img src="https://avatars.githubusercontent.com/u/39705906?v=4?s=100" width="100px;" alt="Sourav Kalal"/><br /><sub><b>Sourav Kalal</b></sub></a><br /><a href="#maintenance-anof-cyber" title="Maintenance">🚧</a></td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/djscruggs"><img src="https://avatars.githubusercontent.com/u/41671?v=4" width="100px;" alt="DJ Scruggs"/><br /><sub><b>DJ Scruggs</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=djscruggs" title="Code">💻</a></td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/noraj"><img src="https://avatars.githubusercontent.com/u/16578570?v=4?s=100" width="100px;" alt="Alexandre ZANNI"/><br /><sub><b>Alexandre ZANNI</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=noraj" title="Code">💻</a></td>
+       <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/djscruggs"><img src="https://avatars.githubusercontent.com/u/41671?v=4" width="100px;" alt="DJ Scruggs"/><br /><sub><b>DJ Scruggs</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=djscruggs" title="Code">💻</a></td>
+       <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/noraj"><img src="https://avatars.githubusercontent.com/u/16578570?v=4?s=100" width="100px;" alt="Alexandre ZANNI"/><br /><sub><b>Alexandre ZANNI</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=noraj" title="Code">💻</a></td>
+ 
     </tr>
   </tbody>
 </table>
