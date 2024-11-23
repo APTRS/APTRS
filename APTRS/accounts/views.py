@@ -60,9 +60,9 @@ class LogoutGetView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
-            token = RefreshToken(token=refresh_token)
+            token = RefreshToken(refresh_token)
             token.blacklist()
-            response = Response(status=status.HTTP_200_OK)
+            response = Response("OK",status=status.HTTP_200_OK)
             response.delete_cookie('access_token', path='/')
             return response
         except Exception as e:
