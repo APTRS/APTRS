@@ -79,6 +79,13 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 
 If you discover any security vulnerabilities in this open-source project, please responsibly disclose it by referring to our [Security Policy](https://github.com/Anof-cyber/APTRS/security/policy). We appreciate and value your efforts to improve the security of this project.
 
+## Contributors ✨
+
+<a href="https://github.com/aptrs/aptrs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=aptrs/aptrs" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 ## Authors
 
