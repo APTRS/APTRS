@@ -93,10 +93,10 @@ If you discover any security vulnerabilities in this open-source project, please
       <td align="center" valign="top" width="14.28%"><a href="https://souravkalal.tech/"><img src="https://avatars.githubusercontent.com/u/39705906?v=4?s=100" width="100px;" alt="Sourav Kalal"/><br /><sub><b>Sourav Kalal</b></sub></a><br /><a href="#maintenance-anof-cyber" title="Maintenance">🚧</a></td>
        <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/djscruggs"><img src="https://avatars.githubusercontent.com/u/41671?v=4" width="100px;" alt="DJ Scruggs"/><br /><sub><b>DJ Scruggs</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=djscruggs" title="Code">💻</a></td>
        <td align="center" valign="top" width="14.28%"><a href="https://pwn.by/noraj"><img src="https://avatars.githubusercontent.com/u/16578570?v=4?s=100" width="100px;" alt="Alexandre ZANNI"/><br /><sub><b>Alexandre ZANNI</b></sub></a><br /><a href="https://github.com/APTRS/APTRS/commits?author=noraj" title="Code">💻</a></td>
- 
     </tr>
   </tbody>
 </table>
+
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
