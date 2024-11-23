@@ -60,6 +60,18 @@ export default function ReportForm(props: ReportFormProps) {
     setLoading(true);
     try {
       const response = await getProjectReport(formData);
+      const contentType_JSON = response.headers['content-type'];
+      if (contentType_JSON == "application/json") {
+        const text = await response.data.text();
+        const responseData = JSON.parse(text);
+        if (responseData.Status == "Failed") {
+          setError(responseData.Message);
+          setLoading(false);
+          return;
+        }
+      }
+      setLoading(true);
+      setError("");
       const contentDisposition = response.headers['content-disposition'];
       let filename = 'report';
       if (contentDisposition && contentDisposition.includes('filename=')) {
