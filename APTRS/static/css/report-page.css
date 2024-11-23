@@ -123,6 +123,24 @@ blockquote:before {
 blockquote p {
   display: inline;
 }
+
+/* Ckeditor images are part of figure tag, figure tag is used by other tags as well in ckedior, you can use figure tag with "image" class if needed */
+figure {
+  display: block;
+  width: 100%;
+  margin: 0 10% 0 0;
+  padding: 0;
+  text-align: center;
+}
+
+figure img {
+  max-width: 100%;  
+ width: auto;
+  height: auto;
+  margin-left: -5%; 
+}
+
+
 /** Executive sumrrary and other page Title text CSS**/
 .report-title {
   margin: -2cm -3cm 1cm -3cm;

@@ -49,7 +49,7 @@ class MyTokenRefreshView(TokenRefreshView):
         response.set_cookie(
                 key='access_token',
                 value=access_token,
-                httponly=False,secure=False,samesite='Lax',path='/'
+                httponly=True,secure=True,samesite='Lax',path='/'
             )
         response.data = {'access': access_token,'refresh':refresh_token}
         return response
@@ -140,7 +140,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
         response = Response(token_data, status=status.HTTP_200_OK)
 
         # Set the JWT token in the cookie
-        response.set_cookie(key='access_token',value=token_data['access'],httponly=False,secure=False,samesite='Lax',path='/')
+        response.set_cookie(key='access_token',value=token_data['access'],httponly=True,secure=True,samesite='Lax',path='/')
         return response
 
 
