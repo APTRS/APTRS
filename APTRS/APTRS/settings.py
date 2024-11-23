@@ -327,8 +327,7 @@ LOGGING = {
         },
         'color': {
             '()': 'colorlog.ColoredFormatter',
-            'format':
-                '%(log_color)s[%(levelname)s] %(asctime)-15s - %(message)s',
+            'format': '%(log_color)s[%(levelname)s] %(asctime)-15s - %(message)s',
             'datefmt': '%d/%b/%Y %H:%M:%S',
             'log_colors': {
                 'DEBUG': 'cyan',
@@ -338,57 +337,65 @@ LOGGING = {
                 'CRITICAL': 'red,bg_white',
             },
         },
-    },'handlers': {
+    },
+    'handlers': {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'color',
         },
-        'logfile': {
+        'rotating_logfile': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'debug.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 3,
             'formatter': 'standard',
         },
     },
+    'root': {
+        'handlers': ['console', 'rotating_logfile'],
+        'level': 'INFO',
+    },
     'loggers': {
         'django': {
-    'handlers': ['console', 'logfile'],
-    'level': 'WARNING',
-    'propagate': True,
-},
-'django.db.backends': {
-    'handlers': ['console', 'logfile'],
-    'level': 'INFO',
-    'propagate': False,
-},
-'rest_framework':{
-    'handlers': ['console', 'logfile'],
-    'level': 'WARNING',
-    'propagate': False,},
-
+            'handlers': ['console', 'rotating_logfile'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['console', 'rotating_logfile'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'rest_framework': {
+            'handlers': ['console', 'rotating_logfile'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
         'accounts': {
-            'handlers': ['console', 'logfile'],
+            'handlers': ['console', 'rotating_logfile'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'customers': {
-            'handlers': ['console', 'logfile'],
+            'handlers': ['console', 'rotating_logfile'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'vulnerability': {
-            'handlers': ['console', 'logfile'],
+            'handlers': ['console', 'rotating_logfile'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'project': {
-            'handlers': ['console', 'logfile'],
+            'handlers': ['console', 'rotating_logfile'],
             'level': 'DEBUG',
             'propagate': True,
         },
     },
 }
+
 
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
