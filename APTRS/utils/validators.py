@@ -118,7 +118,7 @@ def get_base_url(request=None):
     logging.error("Docker Status "+ settings.USE_DOCKER)
     if settings.USE_DOCKER:
         base_url = "https://nginx/"
-        logging.error("Docker Status True "+ base_url)
+        logging.error("Docker Status True"+ settings.USE_DOCKER + base_url)
     else:
         if request:
             base_url = f"{request.scheme}://{request.get_host()}"
