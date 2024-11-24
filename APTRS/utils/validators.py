@@ -115,14 +115,15 @@ class MinimumLengthValidator:
 def get_base_url(request=None):
     """Generate and return the base URL based on settings and request."""
     global base_url
+    USE_DOCKER = settings.USE_DOCKER
     logging.error("Docker Status "+ settings.USE_DOCKER)
-    if settings.USE_DOCKER:
+    if USE_DOCKER:
         base_url = "https://nginx/"
-        logging.error("Docker Status True"+ settings.USE_DOCKER + base_url)
+        logging.error("Docker Status True"+ USE_DOCKER + base_url)
     else:
         if request:
             base_url = f"{request.scheme}://{request.get_host()}"
-            logging.error("Docker Status False "+ base_url)
+            logging.error("Docker Status False "+ USE_DOCKER  +  base_url)
         else:
             logging.error("Docker Status False, but request is empty to fetch url")
             raise Exception("Request is required when not using Docker.")
