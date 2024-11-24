@@ -216,8 +216,26 @@ def project_report(request, pk):
         #project = Project.objects.get(pk=pk)
         report_format = request.query_params.get('Format')
         project = Project.objects.prefetch_related('owner').select_related('companyname').get(pk=pk)
+        report_type = request.query_params.get('Type')
 
+        # Checking if Re-Audit report type is requested and if project has retests
+        if report_type == 'Re-Audit' and not ProjectRetest.objects.filter(project=project).exists():
+            logger.error("Project %s has no retests. Generate Re-Audit report", pk)
+            return Response({"Status": "Failed", "Message": "Project has no retests. Generate Re-Audit report"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not report_format in ['pdf', 'excel','docx']:
+            logger.error("Report Format is incorrect Only pdf, docx and excel are supported")
+            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf, docx and excel are supported"})
 
+        # Validating report type    
+        if report_type not in ['Audit', 'Re-Audit']:
+            logger.error("Report type is incorrect. Only Audit or Re-Audit are supported")
+            return Response({"Status": "Failed", "Message": "Report type is incorrect. Only Audit or Re-Audit are supported"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        #has_scope = PrjectScope.objects.filter(project=project).exists()
+        if not project.prjectscope_set.exists():
+            logger.error("Project has no Sccope added, Project: %s is Empty", pk)
+            return Response({"Status": "Failed", "Message": "Project has no Sccope added, Kindly add Scope to generate project"})
 
         #Checking if project has any vulnerabilities added
         #has_vulnerabilities = Vulnerability.objects.filter(project=project).exists()
@@ -226,10 +244,7 @@ def project_report(request, pk):
             logger.error("Project has no vulnerabilities, Project: %s is Empty", pk)
             return Response({"Status": "Failed", "Message": "Project has no vulnerabilities, Kindly add vulnerabilities to generate project"})
 
-        #has_scope = PrjectScope.objects.filter(project=project).exists()
-        if not project.prjectscope_set.exists():
-            logger.error("Project has no Sccope added, Project: %s is Empty", pk)
-            return Response({"Status": "Failed", "Message": "Project has no Sccope added, Kindly add Scope to generate project"})
+        
 
         #for vulnerability in project.vulnerability_set.all():
         for vulnerability in vulnerabilities:
@@ -237,28 +252,20 @@ def project_report(request, pk):
                 logger.error("Vulnerability %s has no Instance added", vulnerability.vulnerabilityname)
                 response_data = {"Status": "Failed", "Message": f"Vulnerability {vulnerability.vulnerabilityname} has no Instance added, Kindly add Instance to generate project"}
                 return Response(response_data)
-        if not report_format in ['pdf', 'excel','docx']:
-            logger.error("Report Format is incorrect Only pdf, docx and excel are supported")
-            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf, docx and excel are supported"})
-
-
-        # Validating report type
-        report_type = request.query_params.get('Type')
-        if report_type not in ['Audit', 'Re-Audit']:
-            logger.error("Report type is incorrect. Only Audit or Re-Audit are supported")
-            return Response({"Status": "Failed", "Message": "Report type is incorrect. Only Audit or Re-Audit are supported"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Checking if Re-Audit report type is requested and if project has retests
-        if report_type == 'Re-Audit' and not ProjectRetest.objects.filter(project=project).exists():
-            logger.error("Project %s has no retests. Generate Re-Audit report", pk)
-            return Response({"Status": "Failed", "Message": "Project has no retests. Generate Re-Audit report"}, status=status.HTTP_400_BAD_REQUEST)
-
-        #url = request.build_absolute_uri()
-        url = get_base_url(request)
-        standard = request.query_params.getlist('Standard')
-        output = CheckReport(report_format,report_type,pk,url,standard,request)
-        return output
 
     except Exception as e:
         logger.error(e)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    #url = request.build_absolute_uri()
+    url = get_base_url(request)
+    try:
+        standard = request.query_params.getlist('Standard')
+        if not standard:
+            raise ValueError("No 'Standard' query parameter found.")
+    except ValueError as e:
+        logging.error(f"Error: {e}")
+        return Response({"Status": "Failed", "Message": "Report Standards are not provided"})
+        
+    output = CheckReport(report_format,report_type,pk,url,standard,request)
+    return output
