@@ -238,8 +238,8 @@ def project_report(request, pk):
                 response_data = {"Status": "Failed", "Message": f"Vulnerability {vulnerability.vulnerabilityname} has no Instance added, Kindly add Instance to generate project"}
                 return Response(response_data)
         if not report_format in ['pdf', 'excel','docx']:
-            logger.error("Report Format is incorrect Only pdf, docx and excel is supported")
-            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf, docx and excel is supported"})
+            logger.error("Report Format is incorrect Only pdf, docx and excel are supported")
+            return Response({"Status": "Failed", "Message": "Report Format is incorrect Only pdf, docx and excel are supported"})
 
 
         # Validating report type

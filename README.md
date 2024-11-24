@@ -9,6 +9,7 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 
 [![sponsors](https://img.shields.io/github/sponsors/Anof-cyber)](https://github.com/sponsors/Anof-cyber)
 [![Python Version](https://img.shields.io/badge/Python-3.9+-brightgreen)](https://www.python.org/downloads/release/python-391/)
+[![NodeJS Version](https://img.shields.io/badge/NodeJS-18+-brightgreen)](https://nodejs.org/en/download/package-manager)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/APTRS/APTRS?include_prereleases)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/APTRS/aptrs)
 [![platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/APTRS/APTRS)

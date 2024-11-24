@@ -1,4 +1,5 @@
 import re
+import logging
 from urllib.parse import urlparse
 from html.parser import HTMLParser
 from django.conf import settings
@@ -114,6 +115,7 @@ class MinimumLengthValidator:
 def get_base_url(request=None):
     """Generate and return the base URL based on settings and request."""
     global base_url
+    logging.error("Docker Status "+ settings.USE_DOCKER)
     if settings.USE_DOCKER:
         base_url = "https://nginx/"
     else:
