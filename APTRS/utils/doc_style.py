@@ -85,7 +85,7 @@ def get_subdoc(doc,raw_html, headers, base_url):
 
         # handle image bytes and place image byte as inline imaage in doc
         for i, img in enumerate(images):
-            img_obj = InlineImage(sub_docxtpl, img['bytes'],width=Inches(7.3), height=Inches(5))
+            img_obj = InlineImage(sub_docxtpl, img['bytes'],width=Inches(6.69291), height=Inches(4.2244094))
             context[f"img{i}"] = img_obj
 
         sub_docxtpl.render(context)
