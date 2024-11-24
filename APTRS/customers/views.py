@@ -49,9 +49,13 @@ def getallcompnay_filter(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
-@cache_page(3600)
 def getallcompnay(request):
-    companyname = Company.objects.all()
+    cache_key = 'all_company_data'
+    companyname = cache.get(cache_key)
+
+    if not companyname:
+        companyname = Company.objects.all()
+        cache.set(cache_key, companyname, timeout=3600)
     serializer = CompanySerializer(companyname,many=True,context={"request": request})
     return Response(serializer.data)
 
@@ -84,9 +88,13 @@ def getallcustomer_filter(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated,IsAdminUser])
-@cache_page(3600)
 def getallcustomer(request):
-    customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
+    cache_key = 'all_customer_data'
+    customername = cache.get(cache_key)
+
+    if not customername:
+        customername = CustomUser.objects.filter(is_staff=False, company__isnull=False)
+        cache.set(cache_key, customername, timeout=3600)
     serializer = CustomerSerializer(customername,many=True)
     return Response(serializer.data)
 
@@ -98,6 +106,7 @@ def customeradd(request):
     serializer = CustomerSerializer(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
         serializer.save()
+        cache.delete('all_customer_data')
         return Response(serializer.data)
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
@@ -124,6 +133,7 @@ def getcustomer(request,pk):
 def customerdelete(request):
     customers = CustomUser.objects.filter(id__in=request.data,is_staff=False)
     customers.delete()
+    cache.delete('all_customer_data')
     respdata={'Status':"Success"}
     return Response(respdata)
 
@@ -146,6 +156,7 @@ def customeredit(request,pk):
         serializer.save()
         respdata={'Status':"Success"}
         respdata.update(serializer.data)
+        cache.delete('all_customer_data')
         return Response(respdata)
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
@@ -178,6 +189,7 @@ def add_company(request):
         serializer.save()
         respdata={'Status':"Success"}
         respdata.update(serializer.data)
+        cache.delete('all_company_data')
         return Response(respdata)
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
@@ -199,6 +211,7 @@ def edit_company(request,pk):
         serializer.save()
         respdata={'Status':"Success"}
         respdata.update(serializer.data)
+        cache.delete('all_company_data')
         return Response(respdata)
     else:
         logger.error("Serializer errors: %s", str(serializer.errors))
@@ -212,4 +225,5 @@ def companydelete(request):
     company = Company.objects.filter(id__in=request.data,internal=False)
     company.delete()
     respdata={'Status':"Success"}
+    cache.delete('all_company_data')
     return Response(respdata)
