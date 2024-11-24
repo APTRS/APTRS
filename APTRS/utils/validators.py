@@ -118,9 +118,12 @@ def get_base_url(request=None):
     logging.error("Docker Status "+ settings.USE_DOCKER)
     if settings.USE_DOCKER:
         base_url = "https://nginx/"
+        logging.error("Docker Status True "+ base_url)
     else:
         if request:
             base_url = f"{request.scheme}://{request.get_host()}"
+            logging.error("Docker Status False "+ base_url)
         else:
+            logging.error("Docker Status False, but request is empty to fetch url")
             raise Exception("Request is required when not using Docker.")
     return base_url
