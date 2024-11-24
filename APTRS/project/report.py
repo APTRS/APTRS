@@ -20,6 +20,7 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime
 import jinja2
 import html
+import traceback
 
 
 from accounts.models import CustomUser, CustomGroup
@@ -118,6 +119,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
     
     except Exception as e:
         logger.error(f"An error occurred: {e}")
+        logger.error("Traceback: " + traceback.format_exc())
         return Response({"Status": "Failed", "Message": "Something Went Wrong"})
 
 

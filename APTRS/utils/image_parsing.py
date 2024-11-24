@@ -3,7 +3,7 @@ from io import BytesIO
 import re
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-def fetch_image_bytes(image_url_or_path, headers, base_url="https://nginx/"):
+def fetch_image_bytes(image_url_or_path, headers, base_url):
     """Fetch image bytes from a URL (S3) or from the local file system."""
 
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -18,7 +18,7 @@ def fetch_image_bytes(image_url_or_path, headers, base_url="https://nginx/"):
     else:
         raise Exception(f"Failed to retrieve image from {image_url}, status code {response.status_code}")
 
-def find_images(raw_html, headers, base_url="https://nginx/"):
+def find_images(raw_html, headers, base_url):
     """Find all <img> tags in raw HTML and replace with jinja2 placeholders."""
     regex = r'<img.*?>'
     images = []
