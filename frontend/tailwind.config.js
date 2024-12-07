@@ -15,6 +15,11 @@ module.exports = withMT({
   
   theme: {
     extend: {},
+    fontFamily: {
+      sans: ["Roboto", "sans-serif"],
+      serif: ["Roboto Slab", "serif"],
+      body: ["Roboto", "sans-serif"],
+    },
     colors: {
       primary: '#4090C7',
       secondary: '#D60C5F',

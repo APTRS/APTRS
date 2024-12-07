@@ -20,50 +20,45 @@ interface NavLinksProps {
 }
 
 const NavLinks: React.FC<NavLinksProps> = ({ theme, toggleTheme }) => {
-  
   const pathname = useLocation().pathname;
+
   const links = [
     { name: 'Dashboard', href: '/dashboard', icon: RocketLaunchIcon },
-    {name: 'Companies', href: '/companies', icon: BuildingOfficeIcon },
+    { name: 'Companies', href: '/companies', icon: BuildingOfficeIcon },
     { name: 'Customers', href: '/customers', icon: UserGroupIcon },
     { name: 'Projects', href: '/projects', icon: RocketLaunchIcon },
     { name: 'Vulnerability DB', href: '/vulnerabilities', icon: CircleStackIcon },
     ...(currentUserCan('Manage Users') ? [
-      { name: 'Users', href: '/users', icon: UserIcon},
-      { name: 'Groups', href: '/groups', icon: UsersIcon},
+      { name: 'Users', href: '/users', icon: UserIcon },
+      { name: 'Groups', href: '/groups', icon: UsersIcon },
     ] : []),
     ...(currentUserCan('Manage Configurations') ? [
-      { name: 'Configurations', href: '/config', icon: Cog6ToothIcon},
+      { name: 'Configurations', href: '/config', icon: Cog6ToothIcon },
     ] : []),
-    
   ];
-  
+
   return (
-    <>
+    <div className="flex flex-col h-full space-y-4 py-6">
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (
           <Link
-            replace
+            key={link.name}
             to={link.href}
             className={clsx(
-              'flex h-[48px] grow items-center justify-center gap-2 bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
-              {
-                'bg-sky-100 text-blue-600': pathname === link.href,
-              }
+              'flex items-center gap-4 p-3 rounded-xl transition-all duration-200 ease-in-out',
+              pathname === link.href
+                ? 'bg-black text-white' // Active link with black background and white text
+                : 'text-gray-700', // Non-active link with default text color
+              'md:flex-none md:justify-start md:p-3 md:px-6 md:w-full'
             )}
-            key={link.name} // Add a unique key
           >
-            <LinkIcon className="w-6 md:w-8" />
-            <p className="hidden md:block md:text-md">{link.name}</p>
+            <LinkIcon className="w-6 h-6 md:w-8 md:h-8" />
+            <p className="text-base font-medium hidden md:block">{link.name}</p>
           </Link>
         );
       })}
-
-      <div className='h-[48px] md:hidden mt-1.5'>
-        <ThemeIcon theme={theme} toggleTheme={toggleTheme}/>
-      </div>
-    </>
+    </div>
   );
 };
 
