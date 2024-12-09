@@ -97,7 +97,7 @@ export function ModalScopeForm(props: ModalScopeFormProps):JSX.Element{
     setShowModal(false)
   }
   return(
-    <Dialog handler={clearModal} open={showModal}  size="md" className="modal-box w-full bg-white p-4 rounded-md dark:bg-gray-800" >
+    <Dialog handler={clearModal} open={showModal}  size="md" className="modal-box w-full bg-white p-4 rounded-md dark:bg-black" >
           <DialogBody className='max-w-[600px] '>
           <ScopeForm 
             projectId={props.projectId}

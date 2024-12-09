@@ -20,10 +20,12 @@ import {Customer, Column, FilteredSet} from '../lib/data/definitions'
 import DataTable from 'react-data-table-component';
 import { HeaderFilter, ClearFilter } from "../components/headerFilter";
 import { toast } from 'react-hot-toast'
+import useCustomStyles from '../components/tableStyle'
 
 
 export function Customers() {
   const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme);
   const initialState: DatasetState = {
     mode: 'idle',
     data: [],
@@ -281,13 +283,14 @@ export function Customers() {
       <PageTitle title='Customers' />
       {/* modal content */}
       {showModal &&
-      <Dialog handler={clearModal} open={showModal}  size="md" className="p-4 rounded-md dark:bg-gray-darkest dark:text-white" >
+      <Dialog handler={clearModal} open={showModal} size="md" className="p-4 rounded-md dark:bg-black dark:text-white">
+    
         <form method="dialog" onSubmit={clearModal}>
-          <Button className="bg-gray visible absolute right-2 top-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-            <span className="text-gray-400 hover:text-white-900">x</span>
-          </Button>
+        <Button className="absolute right-4 top-4  rounded-full text-lg w-8 h-8 flex justify-center items-center">
+        <span className="dark:bg-white">X</span>
+      </Button>
         </form>
-        <DialogBody className="w-full dark:bg-gray-darkest dark:text-white">
+        <DialogBody className="w-full dark:bg-black dark:text-white">
         {customerId   && <CustomerForm id={customerId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
         {!customerId && <CustomerForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
         </DialogBody>
@@ -326,6 +329,7 @@ export function Customers() {
               progressComponent={<RowsSkeleton numRows={state.queryParams.limit}/>}
               onSelectedRowsChange={handleSelectedChange}
               theme={theme}
+              customStyles={customStyles}
               {...(currentUserCan('Manage Customers') ? { selectableRows: true } : {})}
           />
         </div>

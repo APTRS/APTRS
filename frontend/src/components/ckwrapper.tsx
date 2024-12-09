@@ -205,7 +205,7 @@ export const CKWrapper = (props: CKEditorProps) => {
     const { id, data, onChange, onReady, readOnly = false } = props;
 	const lockId = 'CKWrapper-read-only';
     return (
-        <div className="dark:text-black ck-content">
+        <div className="dark:text-black ck-content mb-4">
             <CKEditor
                 id={id}
                 data={props.data}
@@ -226,6 +226,8 @@ export const CKWrapper = (props: CKEditorProps) => {
                     } else {
                         editor.disableReadOnlyMode(lockId);
                     }
+					const editorElements = document.querySelectorAll(`.ck`);
+					editorElements.forEach(element => {element.classList.add('custom-ckeditor-dark'); } )
                     if (onReady) onReady(editor);
                 }}
             />

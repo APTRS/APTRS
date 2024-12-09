@@ -14,6 +14,7 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import DataTable from 'react-data-table-component'
 import { ThemeContext } from '../layouts/layout'
 import { RowsSkeleton } from '../components/skeletons'
+import useCustomStyles from '../components/tableStyle'
 import { HeaderFilter, ClearFilter } from '../components/headerFilter';
 interface InstanceTableProps {
   id: number
@@ -38,6 +39,7 @@ export default function InstanceTable(props: InstanceTableProps) {
   const [showDialog, setShowDialog] = useState(false)
   const [showBulkDialog, setShowBulkDialog] = useState(false)
   const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme);
   const [showStatusDialog, setShowStatusDialog] = useState(false)
   const loadInstances = async() => {
     try {
@@ -226,8 +228,8 @@ export default function InstanceTable(props: InstanceTableProps) {
   }
   return (
         <>
-        <label>Vulnerable URLs</label>
-        <div className='mt-2 float-right'>
+        <label className='dark:text-white'>Vulnerable URLs</label>
+        <div className='mt-2 float-right mb-4'>
           
           <button  
             className="bg-secondary p-2 text-white rounded-md disabled:opacity-50"
@@ -260,6 +262,7 @@ export default function InstanceTable(props: InstanceTableProps) {
             striped
             onSelectedRowsChange={handleSelectedRowsChange}
             theme={theme}
+            customStyles={customStyles}
             selectableRows
           />
           <InstanceForm visible={showDialog} projectVulnerabilityId={id} data={editingData as VulnerabilityInstance} onCancel={clearDialogs} onSave={afterUpdateBulkStatus}/>
@@ -302,8 +305,8 @@ function UpdateStatusDialog(props: StatusFormProps): React.JSX.Element {
     }
   }
   return (
-    <Dialog handler={clearDialogs} open={visible} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md">
-      <DialogHeader>Update Status</DialogHeader>
+    <Dialog handler={clearDialogs} open={visible} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black">
+      <DialogHeader className='dark:text-white'>Update Status</DialogHeader>
       <DialogBody>
         <div>
           <label className={StyleLabel}>Change status to:</label>
@@ -398,8 +401,8 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
     }
   }
   return (
-          <Dialog key={`instance-${props?.data?.id}`} handler={clearDialog} open={isOpen} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md" >
-            <DialogHeader>{props?.data?.id === 'new' ? 'Add URL' : 'Edit URL'}</DialogHeader>
+          <Dialog key={`instance-${props?.data?.id}`} handler={clearDialog} open={isOpen} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black" >
+            <DialogHeader className='dark:text-white'>{props?.data?.id === 'new' ? 'Add URL' : 'Edit URL'}</DialogHeader>
               <DialogBody>
                 <div className="flex min-w-fit mb-2">
                   <div className="w-1/2">
@@ -407,7 +410,7 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
                     name='URL'
                     autoFocus
                     id='URL'
-                    className={error ? `border border-red-500 ${StyleTextfield}` : StyleTextfield}
+                    className={error ? `dark:text-white border border-red-500 ${StyleTextfield}` : StyleTextfield}
                     value={formData.URL}
                     placeholder='URL'
                     onChange={handleChange}
@@ -432,7 +435,7 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
                       name='status'
                       id='status'
                       value={formData.status} 
-                      className='peer block min-w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm outline-2 placeholder:text-gray-500'
+                      className='peer block min-w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm outline-2 placeholder:text-gray-500 dark:text-white dark:bg-black'
                       onChange={handleChange}
                     >
                       
@@ -493,7 +496,7 @@ function BulkInstanceForm(props: BulkInstanceFormProps): React.JSX.Element {
   };
 
   return (
-    <Dialog handler={clearDialog} open={showDialog} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md">
+    <Dialog handler={clearDialog} open={showDialog} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black">
       <label htmlFor="bulkUrls" className={StyleLabel}>
         Enter URLs with optional parameters, one per line. URL first followed by a comma and then parameters (if any)
       </label>

@@ -100,8 +100,8 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
   
   const userNotSet = () => formData.owner.length === 0 || formData.owner.length === 1 && formData.owner[0] === '';
   return (
-          <Dialog open={open} handler={onClose} size='sm'className='dark:bg-gray-darkest dark:text-white'>
-            <DialogHeader className='dark:bg-gray-darkest dark:text-white'>New Retest</DialogHeader>
+          <Dialog open={open} handler={onClose} size='sm'className='dark:bg-black dark:text-white'>
+            <DialogHeader className='dark:bg-black dark:text-white'>New Retest</DialogHeader>
             <DialogBody>
                 {currentUserCan('Manage Projects') && (
                   <>
@@ -138,6 +138,7 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
                         className={StyleTextfield}
                         dateFormat="yyyy-MM-dd"
                         selectsStart
+                        autoComplete="off"
                         onChange={(date:string) => handleDatePicker('startdate', date)}
                         selected={formData.startdate ? new Date(formData.startdate) : ''}
                       />
@@ -153,6 +154,7 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
                       placeholderText='Select date'
                       dateFormat="yyyy-MM-dd"
                       selectsEnd
+                      autoComplete="off"
                       onChange={(date: string) => handleDatePicker('enddate', date)}
                       selected={formData.enddate ? new Date(formData.enddate) : ''}
                       className={StyleTextfield}

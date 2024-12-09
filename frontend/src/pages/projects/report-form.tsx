@@ -120,14 +120,14 @@ export default function ReportForm(props: ReportFormProps) {
   return (
     <>
       {error && <FormErrorMessage message={error} />}
-      <label htmlFor='Format'>Format</label>
+      <label htmlFor='Format' className='dark:text-white'>Format</label>
       <select name='Format' id='Format' className={StyleTextfield} onChange={handleChange}>
         <option value="">Select...</option>
         <option value="pdf">PDF</option>
         <option value="docx">Microsoft Word</option>
         <option value="excel">Microsoft Excel</option>
       </select>
-      <label htmlFor='Type'>Type</label>
+      <label htmlFor='Type'className='dark:text-white'>Type</label>
       <select name='Type' id='Type' className={StyleTextfield} onChange={handleChange}>
         <option value="">Select...</option>
         <option value="Audit">Audit</option>
@@ -141,10 +141,10 @@ export default function ReportForm(props: ReportFormProps) {
               id={`Standard_${standard.id}`}
               name="Standard[]"
               value={standard.name}
-              className={StyleCheckbox}
+              className={StyleCheckbox + 'dark:text-white'}
               onChange={handleCheckboxChange}
             />
-            <label className='ml-2' htmlFor={`Standard_${standard.id}`}>
+            <label className='ml-2 dark:text-white' htmlFor={`Standard_${standard.id}`}>
               {standard.name}
             </label>
           </div>

@@ -76,8 +76,8 @@ function ReportStandards() {
             <button className="text-primary underline text-sm ml-6" onClick={() => setShowAddReportStandard(true)}>Add New</button>
           </>
         }
-          <Dialog open={showAddReportStandard} handler={setShowAddReportStandard}>
-              <DialogHeader>Add Report Standard</DialogHeader>
+          <Dialog open={showAddReportStandard} handler={setShowAddReportStandard} className="dark:bg-black dark:text-white">
+              <DialogHeader className="dark:text-white">Add Report Standard</DialogHeader>
               <DialogBody>
                   <form>
                     <input type="text" placeholder="Name" className={StyleTextfield} value={name} onChange={(e) => setName(e.target.value)} />
@@ -146,8 +146,8 @@ function ProjectTypes() {
                 ))}
             </ul>
             <button className="text-primary underline text-sm ml-6" onClick={() => setShowAddProjectType(true)}>Add New</button>
-            <Dialog open={showAddProjectType} handler={setShowAddProjectType}>
-            <DialogHeader>Add Project Type</DialogHeader>
+            <Dialog open={showAddProjectType} handler={setShowAddProjectType} className="dark:bg-black dark:text-white">
+            <DialogHeader className="dark:text-white">Add Project Type</DialogHeader>
               <DialogBody>
                 <form>
                     <input type="text" placeholder="Name" className={StyleTextfield} value={name} onChange={(e) => setName(e.target.value)} />

@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast'
 import { Column, Scope } from '../lib/data/definitions'
 import ScopeForm, { ModalScopeForm } from '../components/scope-form'
 import { Dialog } from "@material-tailwind/react";
+import useCustomStyles from '../components/tableStyle'
 
 interface ScopeTableProps {
   projectId: number
@@ -25,6 +26,7 @@ export default function ScopeTable(props: ScopeTableProps): JSX.Element {
   const [saving, setSaving] = useState(false)
   const [scopeError, setScopeError] = useState('')
   const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme)
   useEffect(() => {
     loadScopes()
   }, [projectId])
@@ -160,7 +162,7 @@ export default function ScopeTable(props: ScopeTableProps): JSX.Element {
             <button className='bg-secondary text-white p-2 rounded-md inline ' onClick={addBulkScopes}>
               Add Multiple
             </button>
-            <Dialog handler={cancelBulkScopes} open={showDialog} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md" >
+            <Dialog handler={cancelBulkScopes} open={showDialog} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black" >
               <label 
                 htmlFor="bulkScopes"
                 className={StyleLabel}>
@@ -200,6 +202,7 @@ export default function ScopeTable(props: ScopeTableProps): JSX.Element {
           striped
           onSelectedRowsChange={handleSelectedChange}
           theme={theme}
+          customStyles={customStyles}
         />
         {editingScope &&
         <ModalScopeForm

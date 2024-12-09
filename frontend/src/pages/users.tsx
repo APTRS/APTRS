@@ -17,6 +17,7 @@ import { useDataReducer } from '../lib/useDataReducer';
 import { DatasetState, DatasetAction, DEFAULT_DATA_LIMIT } from '../lib/useDataReducer'
 import {HeaderFilter, ClearFilter} from '../components/headerFilter'
 import { ThemeContext } from '../layouts/layout';
+import useCustomStyles from '../components/tableStyle'
 
 interface UserWithActions extends User {
   actions: JSX.Element;
@@ -30,6 +31,7 @@ export function Users() {
     totalRows: 0,
   }
   const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme);
   // initial load - if there's a search term in the url, set it in state,
   // this makes search load immediately in useEffect
   const params = new URLSearchParams(window.location.search);
@@ -293,13 +295,13 @@ export function Users() {
         
       {/* modal content */}
         {showModal &&
-        <Dialog handler={clearModal} open={showModal} size="sm" className="modal-box w-[500px] bg-white dark:bg-gray-darkest dark:text-white p-4 rounded-md" >
+        <Dialog handler={clearModal} open={showModal} size="sm" className="modal-box w-[500px] bg-white dark:bg-black dark:text-white p-4 rounded-md" >
           <form method="dialog" onSubmit={hideModal}>
             <Button className="bg-gray visible absolute right-2 top-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
               <span className="text-gray-400 hover:text-white-900">x</span>
             </Button>
           </form>
-          <DialogBody className='max-w-[600px] '>
+          <DialogBody className='max-w-[600px] dark:bg-black '>
           {userId   && <UserForm id={userId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
           {!userId && <UserForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
           </DialogBody>
@@ -344,6 +346,7 @@ export function Users() {
                 striped
                 onSelectedRowsChange={handleSelectedChange}
                 theme={theme}
+                customStyles={customStyles}
                 {...(canEdit ? { selectableRows: true, pointerOnHover: true } : {})}
 
             />

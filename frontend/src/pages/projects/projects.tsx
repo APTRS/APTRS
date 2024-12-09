@@ -16,7 +16,7 @@ import Button from '../../components/button';
 import { HeaderFilter, ClearFilter} from "../../components/headerFilter";
 import { RowsSkeleton } from '../../components/skeletons'
 import ErrorPage from '../../pages/error-page'
-
+import useCustomStyles from '../../components/tableStyle'
  
 export interface ProjectsProps {
   pageTitle: string; 
@@ -43,6 +43,8 @@ export function Projects(props:ProjectsProps): JSX.Element {
   const params = new URLSearchParams(window.location.search);
   const search = params.get('name') || '';
   const canEdit = currentUserCan('Manage Users')
+  const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme);
   
   if(search){
     initialState.queryParams = {offset:0, limit:DEFAULT_DATA_LIMIT, name: search};
@@ -336,20 +338,6 @@ export function Projects(props:ProjectsProps): JSX.Element {
     console.error(state.error)
     return <ErrorPage message={state.error}/>
   }
-  const customStyles = {
-    headCells: {
-      style: {
-        paddingLeft: '4px', // override the cell padding for head cells
-        paddingRight: '4px',
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '4px', // override the cell padding for data cells
-        paddingRight: '4px',
-      },
-    },
-  };
   return(
     <>
       {props.pageTitle && <PageTitle title={props.pageTitle} /> }
@@ -393,8 +381,8 @@ export function Projects(props:ProjectsProps): JSX.Element {
             pointerOnHover
             fixedHeader
             onSelectedRowsChange={handleSelectedChange}
-            customStyles={customStyles}
             theme={useContext(ThemeContext)}
+            customStyles={customStyles}
           />
         </div>  
       </div>

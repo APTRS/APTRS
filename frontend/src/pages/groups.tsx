@@ -12,9 +12,11 @@ import { Dialog, DialogBody } from '@material-tailwind/react'
 import { TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import DataTable from 'react-data-table-component';
 import { toast } from 'react-hot-toast';
+import useCustomStyles from '../components/tableStyle'
 
 export function Groups() {
   const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme);
   const [loading, setLoading] = useState(true)
   
   // initial load - if there's a search term in the url, set it in state,
@@ -66,9 +68,9 @@ export function Groups() {
     {
       name: 'Permissions',
       selector: (row: Group) => (
-        <div className={`my-1 grid gap-x-4 ${row.list_of_permissions.length > 3 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+        <div className={`my-1 grid gap-x-4 ${row.list_of_permissions.length > 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
           {row.list_of_permissions.map((permission, index) => (
-            <div key={index} className="mb-1 w-[160px]">{permission}</div>
+            <div key={index} className="mb-1 w-[170px]">{permission}</div>
           ))}
         </div>
       ),
@@ -139,7 +141,7 @@ export function Groups() {
       <PageTitle title='User Groups' />
       {/* modal content */}
         {showModal &&
-        <Dialog handler={clearModal} open={showModal} size="md" className="rounded-md dark:bg-gray-darkest dark:text-white" >
+        <Dialog handler={clearModal} open={showModal} size="md" className="rounded-md dark:bg-black dark:text-white" >
           <DialogBody>
           {group  && <GroupForm group={group} onSave={() => setRefresh(true)} onClose={clearModal}/>}
           </DialogBody>
@@ -173,6 +175,7 @@ export function Groups() {
             striped
             progressPending={loading}
             theme={theme}
+            customStyles={customStyles}
             {...(canEdit ? { selectableRows: true } : {})}
           />
         </div>

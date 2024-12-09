@@ -244,7 +244,7 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
   if (loadingError) return <ModalErrorMessage message={"Error loading user"} />
 
   return (
-    <div className="max-w-lg flex-1 rounded-lg bg-white dark:bg-gray-darkest dark:text-white">
+    <div className="max-w-lg flex-1 rounded-lg bg-white dark:bg-black dark:text-white">
       <PageTitle title={id ? "Edit User" : "Create User"} />
       {saveError && <FormErrorMessage message={saveError} />}
       

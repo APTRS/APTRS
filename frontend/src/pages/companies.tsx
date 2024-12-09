@@ -15,6 +15,8 @@ import DataTable from 'react-data-table-component';
 import { toast } from 'react-hot-toast';
 import { useDataReducer, DatasetState, DatasetAction, DEFAULT_DATA_LIMIT } from '../lib/useDataReducer'
 import { HeaderFilter, ClearFilter } from "../components/headerFilter";
+import useCustomStyles from '../components/tableStyle'
+
 export function Companies() {
   const theme = useContext(ThemeContext);
   const initialState: DatasetState = {
@@ -26,6 +28,7 @@ export function Companies() {
   
   // initial load - if there's a search term in the url, set it in state,
   // this makes search load immediately in useEffect
+  const customStyles = useCustomStyles(theme);
   const params = new URLSearchParams(window.location.search);
   const search = params.get('name') || '';
   const canEdit = currentUserCan('Manage Company')
@@ -213,7 +216,7 @@ export function Companies() {
       <PageTitle title='Companies' />
       {/* modal content */}
         {showModal &&
-        <Dialog handler={clearModal} open={showModal} size="xs" className="rounded-md dark:bg-gray-darkest dark:text-white" >
+        <Dialog handler={clearModal} open={showModal} size="xs" className="rounded-md dark:bg-black dark:text-white" >
           <form method="dialog" onSubmit={clearModal}>
             <Button className="bg-gray visible absolute right-2 top-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
               <span className="text-gray-400 hover:text-white-900">x</span>
@@ -259,6 +262,7 @@ export function Companies() {
             onChangePage={handlePageChange}
             paginationTotalRows={state.totalRows}
             theme={theme}
+            customStyles={customStyles}
             {...(canEdit ? { selectableRows: true } : {})}
           />
         </div>

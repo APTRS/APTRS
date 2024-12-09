@@ -68,7 +68,7 @@ export default function Retests({ project }: { project: Project }) {
     <>
       <div className="max-w-lg ">
       {project.status !== 'Completed' && (
-          <p className='mt-4'>You may only add retests to completed projects and if all previous retests are completed.</p>
+          <p className='mt-4 dark:text-white'>You may only add retests to completed projects and if all previous retests are completed.</p>
         )}
         {canAddRetest() && (
           <button 
@@ -78,14 +78,14 @@ export default function Retests({ project }: { project: Project }) {
             Add New Retest
           </button>
         )}
-        <div className="min-w-full bg-white dark:bg-gray-darker">
+        <div className="min-w-full bg-white dark:bg-black">
           {error && <FormErrorMessage message={error} />}
           <div className="flex py-2 px-4 border-b">
-            <div className="w-1/5">&nbsp;</div>
-            <div className="w-1/5">Start Date</div>
-            <div className="w-1/5">End Date</div>
-            <div className="w-1/5">Status</div>
-            <div className="w-1/5">Owner</div>
+            <div className="w-1/5 dark:text-white">&nbsp;</div>
+            <div className="w-1/5 dark:text-white">Start Date</div>
+            <div className="w-1/5 dark:text-white">End Date</div>
+            <div className="w-1/5 dark:text-white">Status</div>
+            <div className="w-1/5 dark:text-white">Owner</div>
           </div>
           {retests?.length === 0 && <div className="py-2 px-4 border-b">No retests found</div>}
           {retests?.map((retest) => (
@@ -93,17 +93,17 @@ export default function Retests({ project }: { project: Project }) {
               <div className="w-1/5 mr-2">
                 {retest.status !== 'Completed' ? (
                   <>
-                    <CheckCircleIcon onClick={() => markRetestComplete(retest.id)} className="inline w-5 cursor-pointer "/>
+                    <CheckCircleIcon onClick={() => markRetestComplete(retest.id)} className="inline w-5 cursor-pointer  dark:text-white "/>
                   </>
                 ) : (
                   <CheckCircleIcon className="inline w-5 text-green-500"/>
                 )}
-                <TrashIcon onClick={() => deleteRetest(retest.id)} className="inline w-5 ml-1 cursor-pointer" />
+                <TrashIcon onClick={() => deleteRetest(retest.id)} className="inline w-5 ml-1 cursor-pointer  dark:text-white" />
               </div>
-              <div className="w-1/5">{retest.startdate}</div>
-              <div className="w-1/5">{retest.enddate}</div>
-              <div className="w-1/5">{retest.status}</div>
-              <div className="w-1/5">{retest.owner.join(', ')}</div>
+              <div className="w-1/5 dark:text-white">{retest.startdate}</div>
+              <div className="w-1/5 dark:text-white">{retest.enddate}</div>
+              <div className="w-1/5 dark:text-white">{retest.status}</div>
+              <div className="w-1/5 dark:text-white">{retest.owner.join(', ')}</div>
             </div>
           ))}
         </div>

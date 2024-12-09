@@ -46,15 +46,15 @@ const NavLinks: React.FC<NavLinksProps> = ({ theme, toggleTheme }) => {
             key={link.name}
             to={link.href}
             className={clsx(
-              'flex items-center gap-4 p-3 rounded-xl transition-all duration-200 ease-in-out',
+              'flex items-center gap-4 p-3 rounded-xl transition-all duration-200 ease-in-out dark:text-white',
               pathname === link.href
-                ? 'bg-black text-white' // Active link with black background and white text
-                : 'text-gray-700', // Non-active link with default text color
+                ? 'bg-gray-700 text-white dark:bg-gray-900' // Active link with black background and white text
+                : 'text-gray-700  hover:bg-blue-300 hover:text-white dark:hover:text-white', // Non-active link with default text color
               'md:flex-none md:justify-start md:p-3 md:px-6 md:w-full'
             )}
           >
-            <LinkIcon className="w-6 h-6 md:w-8 md:h-8" />
-            <p className="text-base font-medium hidden md:block">{link.name}</p>
+            <LinkIcon className="w-6 h-6 md:w-8 md:h-8 dark:white" />
+            <p className="text-base font-medium hidden md:block dark:text-white">{link.name}</p>
           </Link>
         );
       })}

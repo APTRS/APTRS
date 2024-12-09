@@ -14,7 +14,7 @@ import { useVulnerabilityColor } from '../lib/customHooks';
 import { toast } from 'react-hot-toast';
 import { HeaderFilter, ClearFilter } from '../components/headerFilter';
 import { ThemeContext } from '../layouts/layout';
-
+import useCustomStyles from '../components/tableStyle'
 
 
  
@@ -26,6 +26,7 @@ const Vulnerabilities = () => {
     totalRows: 0,
   };
   const theme = useContext(ThemeContext);
+  const customStyles = useCustomStyles(theme);
   // initial load - if there's a search term in the url, set it in state,
   // this makes search load immediately in useEffect
   const params = new URLSearchParams(window.location.search);
@@ -245,6 +246,7 @@ const Vulnerabilities = () => {
               onSelectedRowsChange={handleSelectedChange}
               pointerOnHover
               theme={theme}
+              customStyles={customStyles}
               {...(canEdit ? { selectableRows: true } : {})}
           />
         </div>

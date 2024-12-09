@@ -14,7 +14,11 @@ module.exports = withMT({
   ],
   
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+      'custom-gray': '#6b7280',  // Custom gray color for borders
+      'custom-bg': '#374151',    // Custom background color for focus state
+    },},
     fontFamily: {
       sans: ["Roboto", "sans-serif"],
       serif: ["Roboto Slab", "serif"],
@@ -31,7 +35,9 @@ module.exports = withMT({
       'gray-dark': '#989696',
       'gray-darker': '#706f6f',
       'gray-darkest': '#4a4848',
+      'gray-700': '#374151',
       'black': '#222021',
+      'border-gray-200': '#989696', 
 
       'brand-light': '#fdcdd4',
       'brand': '#d60c5f',

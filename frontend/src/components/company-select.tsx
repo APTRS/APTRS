@@ -38,6 +38,7 @@ export default function CompanySelect(props: React.PropsWithChildren<CompanySele
     
   }
   if(typeof companies === 'undefined'){
+    console.log("Company is undefiended")
     return (<SingleInputSkeleton />)
   }
   return (
@@ -46,6 +47,7 @@ export default function CompanySelect(props: React.PropsWithChildren<CompanySele
               defaultValue={value}
               searchArray={companies && companies.map(company => ({label: company.name as string, value: company.name as string}))}
               onSelect={handleChange}
+              
             />
   )
 }
