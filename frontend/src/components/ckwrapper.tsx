@@ -226,8 +226,10 @@ export const CKWrapper = (props: CKEditorProps) => {
                     } else {
                         editor.disableReadOnlyMode(lockId);
                     }
+					if (document.getElementsByTagName('html')[0].className === 'dark') {
 					const editorElements = document.querySelectorAll(`.ck`);
 					editorElements.forEach(element => {element.classList.add('custom-ckeditor-dark'); } )
+				}
                     if (onReady) onReady(editor);
                 }}
             />

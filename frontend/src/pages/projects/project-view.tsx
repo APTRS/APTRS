@@ -128,12 +128,12 @@ function ProjectView(): JSX.Element {
         <Tabs value={selectedTab}>
           <div className="max-w-screen flex-1 rounded-lg bg-white dark:bg-black dark:text-white px-6 pb-4">
             <PageTitle title='Project Details' />
-            <TabsHeader className='mt-4'>
-              <Tab key="summary" value="summary" onClick={() => setSelectedTab('summary')}className='dark:text-white '>Summary</Tab>
-              <Tab key="vulnerabilities" value="vulnerabilities" onClick={() => setSelectedTab('vulnerabilities')}className='dark:text-white '>Vulnerabilities</Tab>
-              <Tab key="scopes" value="scopes" onClick={() => setSelectedTab('scopes')}className='dark:text-white '>Scopes</Tab>
-              <Tab key="retest" value="retest" onClick={() => setSelectedTab('retest')}className='dark:text-white '>Retest</Tab>
-              <Tab key="reports" value="reports" onClick={() => setSelectedTab('reports')}className='dark:text-white '>Reports</Tab>
+            <TabsHeader className='mt-4 dark:bg-gray-200 bg-gray-700'>
+              <Tab key="summary" value="summary" onClick={() => setSelectedTab('summary')}className='text-white '>Summary</Tab>
+              <Tab key="vulnerabilities" value="vulnerabilities" onClick={() => setSelectedTab('vulnerabilities')}className='text-white '>Vulnerabilities</Tab>
+              <Tab key="scopes" value="scopes" onClick={() => setSelectedTab('scopes')}className='text-white '>Scopes</Tab>
+              <Tab key="retest" value="retest" onClick={() => setSelectedTab('retest')}className='text-white '>Retest</Tab>
+              <Tab key="reports" value="reports" onClick={() => setSelectedTab('reports')}className='text-white '>Reports</Tab>
             </TabsHeader>
             <TabsBody>
               <TabPanel value="summary">

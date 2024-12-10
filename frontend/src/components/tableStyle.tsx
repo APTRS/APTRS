@@ -7,144 +7,126 @@ const useCustomStyles = (theme: string) => {
     return {
         table: {
             style: {
-                borderCollapse: 'collapse',
-                width: '100%',
-                backgroundColor: isDark ? '#2d3748' : '#ffffff',
-                color: isDark ? '#e2e8f0' : '#374151',
-                borderRadius: '5px',
-                
+              backgroundColor: theme === 'dark' ? 'rgb(0, 0, 0)' : 'white',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              borderRadius: '15px'
             },
-        },
-        rows: {
+          },
+          tableWrapper: {
             style: {
-                minHeight: '48px',
-                borderBottom: `1px solid ${isDark ? '#4a5568' : '#e5e7eb'}`,
-                '&:nth-child(odd)': {
-                    backgroundColor: isDark ? '#19212c' : '#f9fafb', // Light row color for odd rows
-                },
-                '&:nth-child(even)': {
-                    backgroundColor: isDark ? '#1f2937' : '#ffffff', // Light row color for even rows
-                },
-                '&:hover': {
-                    backgroundColor: isDark ? '#4a5568' : '#c8d1e3',
-                },
+              display: 'table',
+              backgroundColor: theme === 'dark' ? 'rgb(0, 0, 0)' : 'white',
             },
-        },
-        headRow: {
+          },
+          header: {
             style: {
-                backgroundColor: isDark ? '#1f2937' : '#f1f5f9', // Lighter header background color for light mode
-                
-                borderBottom: `2px solid ${isDark ? '#4a5568' : '#e5e7eb'}`,
-                borderRadius: '5px',
-                
+              backgroundColor: theme === 'dark' ? 'rgb(0, 0, 0)' : 'white',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              paddingLeft: '16px',
+              paddingRight: '16px',
+              borderRadius: '15px'
             },
-        },
-        headCells: {
+          },
+          headRow: {
             style: {
-                fontSize: '14px',
-                fontWeight: '600',
-                color: isDark ? '#e2e8f0' : '#4b5563', // Darker text color for headers in light mode
-                padding: '16px',
-                textAlign: 'left',
-                paddingLeft: '4px', // override the cell padding for head cells
-        paddingRight: '4px',
-        borderRadius: '5px',
-            
+              backgroundColor: theme === 'dark' ? 'rgb(14 18 26)' : '#f9fafb',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              borderBottomWidth: '1px',
+              borderBottomColor: theme === 'dark' ? 'rgb(31, 41, 55)' : '#e5e7eb',
+              minHeight: '56px',
+              borderTopLeftRadius: '10px',
+          borderTopRightRadius: '10px',
             },
-        },
-        cells: {
-            style: {
-                fontSize: '14px',
-                color: isDark ? '#e2e8f0' : '#374151', // Darker text for cells in light mode
-                padding: '16px',
-                textAlign: 'left',
-                paddingLeft: '4px', // override the cell padding for data cells
-        paddingRight: '4px',
+            denseStyle: {
+              minHeight: '32px',
             },
-        },
-        pagination: {
+          },
+          headCells: {
             style: {
-                borderTop: `1px solid ${isDark ? '#4a5568' : '#e5e7eb'}`,
-                paddingTop: '12px',
-                paddingBottom: '12px',
-                backgroundColor: isDark ? '#2d3748' : '#ffffff',
-                color: isDark ? '#e2e8f0' : '#374151',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              fontSize: '14px',
+              fontWeight: 600,
+              paddingLeft: '16px',
+              paddingRight: '16px',
             },
-        },
-        paginationDropdown: {
+          },
+          cells: {
             style: {
-                backgroundColor: isDark ? '#4a5568' : '#ffffff',
-                color: isDark ? '#e2e8f0' : '#374151',
-                border: `1px solid ${isDark ? '#4a5568' : '#e5e7eb'}`,
-                borderRadius: '4px',
-                padding: '5px 10px',
-                fontSize: '14px',
+              paddingLeft: '16px',
+              paddingRight: '16px',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+            },
+          },
+          rows: {
+            style: {
+              backgroundColor: theme === 'dark' ? 'rgb(14 18 26)' : 'white',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              fontSize: '14px',
+              fontWeight: 400,
+              minHeight: '48px',
+              '&:not(:last-of-type)': {
+                borderBottomStyle: 'solid',
+                borderBottomWidth: '1px',
+                borderBottomColor: theme === 'dark' ? 'rgb(31, 41, 55)' : '#e5e7eb',
+              },
+              '&:last-of-type':{
+                borderBottomLeftRadius: '10px',
+          borderBottomRightRadius: '10px',
+              },
+              '&:hover': {
+                backgroundColor: theme === 'dark' ? 'rgb(55,65,81)' : '#f3f4f6',
                 cursor: 'pointer',
-                '&:focus': {
-                    outline: 'none',
-                    borderColor: isDark ? '#cbd5e0' : '#6b7280',
-                },
-                '&:hover': {
-                    backgroundColor: isDark ? '#2d3748' : '#f3f4f6',
-                },
-                '&:active': {
-                    backgroundColor: isDark ? '#2d3748' : '#e5e7eb',
-                },
+              },
             },
-        },
-        paginationPageButton: {
+            stripedStyle: {
+              backgroundColor: theme === 'dark' ? 'rgb(14 18 26)' : '#f9fafb',
+            },
+            selectedHighlightStyle: {
+              backgroundColor: theme === 'dark' ? 'rgba(2, 132, 199, 0.1)' : 'rgba(2, 132, 199, 0.1)',
+            },
+          },
+          pagination: {
             style: {
-                borderRadius: '50%',
-                height: '30px',
-                width: '30px',
-                padding: '6px',
-                margin: '0 4px',
-                cursor: 'pointer',
-                transition: '0.4s',
-                color: isDark ? '#e2e8f0' : '#374151',
-                backgroundColor: isDark ? '#4a5568' : '#ffffff',
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: isDark ? '#4a5568' : '#e5e7eb',
-                    backgroundColor: isDark ? '#2d3748' : '#f3f4f6',
-                },
-                '&:hover:not(:disabled)': {
-                    backgroundColor: isDark ? '#2d3748' : '#f3f4f6',
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: isDark ? '#2d3748' : '#e5e7eb',
-                },
+              backgroundColor: theme === 'dark' ? 'rgb(0, 0, 0)' : 'white',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              borderTopWidth: '1px',
+              borderTopColor: theme === 'dark' ? 'rgb(31, 41, 55)' : '#e5e7eb',
             },
-        },
-        paginationSelectedPage: {
+            pageButtonsStyle: {
+              borderRadius: '8px',
+              height: '32px',
+              width: '32px',
+              padding: '4px 8px',
+              margin: '0px 4px',
+              cursor: 'pointer',
+              transition: '0.2s all',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              fill: theme === 'dark' ? '#e5e7eb' : '#111827',
+              backgroundColor: 'transparent',
+              '&:disabled': {
+                cursor: 'not-allowed',
+                color: theme === 'dark' ? 'rgb(107, 114, 128)' : '#9ca3af',
+                fill: theme === 'dark' ? 'rgb(107, 114, 128)' : '#9ca3af',
+              },
+              '&:hover:not(:disabled)': {
+                backgroundColor: theme === 'dark' ? 'rgb(17, 24, 39)' : '#f3f4f6',
+              },
+              '&:focus': {
+                outline: 'none',
+                backgroundColor: theme === 'dark' ? 'rgb(17, 24, 39)' : '#f3f4f6',
+              },
+            },
+          },
+          noData: {
             style: {
-                backgroundColor: isDark ? '#38b2ac' : '#e2e8f0',
-                color: isDark ? '#2d3748' : '#374151',
-                '&:hover': {
-                    backgroundColor: isDark ? '#38b2ac' : '#e2e8f0',
-                },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: theme === 'dark' ? '#e5e7eb' : '#111827',
+              backgroundColor: theme === 'dark' ? 'rgb(0, 0, 0)' : 'white',
+              padding: '24px',
             },
-        },
-        paginationPrevNext: {
-            style: {
-                cursor: 'pointer',
-                padding: '6px 10px',
-                backgroundColor: isDark ? '#4a5568' : '#ffffff',
-                borderRadius: '4px',
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: isDark ? '#4a5568' : '#e5e7eb',
-                },
-                '&:hover:not(:disabled)': {
-                    backgroundColor: isDark ? '#2d3748' : '#f3f4f6',
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: isDark ? '#2d3748' : '#e5e7eb',
-                },
-            },
-        },
+          },
     };
 };
 
