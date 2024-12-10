@@ -9,7 +9,7 @@ from utils.image_parsing import find_images
 def apply_font_style(element, font_name, font_size):
     if hasattr(element, 'font'):
         element.font.name = font_name
-        element.font.size = Pt(font_size)
+        #element.font.size = Pt(font_size)
 
 def apply_font_to_elements(elements, font_name, font_size):
     for element in elements:
@@ -65,15 +65,15 @@ def get_subdoc(doc,raw_html, headers, base_url):
             if hasattr(element, 'font'):
                 font = element.font
                 font.name = 'Calibri'
-                font.size = Pt(16)
+                #font.size = Pt(16)
 
 
         font = temp_doc.styles['Normal'].font
         font.name = 'Calibri'
-        font.size = Pt(16)
+        #font.size = Pt(16)
         font = temp_doc.styles['List Bullet'].font
         font.name = 'Calibri'
-        font.size = Pt(16)
+        #font.size = Pt(16)
 
 
         # Save temporary DOCX in memory

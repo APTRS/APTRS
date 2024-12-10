@@ -231,6 +231,12 @@ class HtmlToDocx(HTMLParser):
             # TODO handle non px units
 
     def add_styles_to_run(self, style):
+        if 'font-size' in style:
+            font_size = style['font-size']
+            px_to_pt = 1.333
+            pt_size = float(font_size.replace('px', '')) / px_to_pt
+            self.run.font.size = Pt(pt_size)
+
         if 'color' in style:
             if 'rgb' in style['color']:
                 color = re.sub(r'[a-z()]+', '', style['color'])

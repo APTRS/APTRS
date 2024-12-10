@@ -149,7 +149,7 @@ class Editor extends ClassicEditor {
 			Undo
 		],
 		fontSize: {
-			options: [10, 12, 14, 'default', 18, 20, 22],
+			options: [10, 12, 14, 14.5, 15, 'default', 18, 20, 22, 24, 28, 30, 32],
 			supportAllValues: true
 		},
 		image: {
