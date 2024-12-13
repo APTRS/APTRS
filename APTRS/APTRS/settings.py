@@ -233,6 +233,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "accounts.tasks.flush_expired_tokens_task",
         "schedule": crontab(hour=0, minute=0),
     },
+    "update_cwe_json":{
+        "task": "vulnerability.tasks.update_cwe_json",
+        "schedule": timedelta(days=30),
+    }
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
