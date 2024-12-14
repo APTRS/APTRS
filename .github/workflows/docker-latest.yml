@@ -31,5 +31,6 @@ jobs:
             with:
                 push: true
                 context: .
+                file: docker/Dockerfile_API
                 platforms: linux/amd64,linux/arm64
                 tags: aptrsproject/aptrs:latest
