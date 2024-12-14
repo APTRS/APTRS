@@ -3,7 +3,7 @@ name: 'Build and Publish to DockerHub'
 on:
     push:
         branches:
-            - master
+            - main
 
 jobs:
     buildx:
