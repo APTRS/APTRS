@@ -58,6 +58,7 @@ services:
 
 
   aptrs:
+    image: aptrsproject/aptrs:latest
     env_file: ".env"
     environment:
       POSTGRES_HOST: postgres
