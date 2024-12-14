@@ -57,8 +57,8 @@ jobs:
         POSTGRES_PORT: ${{ env.POSTGRES_PORT }}
         CELERY_BROKER_URL: redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
         CELERY_RESULT_BACKEND: redis://eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379/0
+        SECRET_KEY: 3-3hnf1kkn#x0350(we+9^m@69xc3_e_@_7$2tf=d)6$i*t_0#
       run: | 
-        echo "${{ secrets.ENV_FILE }}" > APTRS/.env
         echo 'WHITELIST_IP = ["http://127.0.0.1:8080", "http://127.0.0.1:8000"]' >> APTRS/.env
         echo 'ALLOWED_HOST = ["127.0.0.1","localhost","*"]'  >> APTRS/.env
         echo 'CORS_ORIGIN = ["http://127.0.0.1:8080","http://127.0.0.1:5000"]' >> APTRS/.env
