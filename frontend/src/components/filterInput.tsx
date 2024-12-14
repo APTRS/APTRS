@@ -108,7 +108,7 @@ export default function FilterInput(props: FilterInputProps) {
     return obj as React.ChangeEvent<HTMLInputElement>
   }
   return (
-    <div className="relative bg-white dark:bg-gray-darkest dark:text-white">
+    <div className="relative bg-white dark:bg-black dark:text-white">
       <div className="flex flex-wrap items-center gap-2 p-2 border rounded">
         {multiple && Array.isArray(selectedValues) && selectedValues.map((value, index) => (
           <div key={index} className="flex items-center bg-gray-lighter dark:bg-gray-darker rounded-full px-3 py-1">
@@ -129,7 +129,7 @@ export default function FilterInput(props: FilterInputProps) {
         />
       </div>
       {search.length > 0 && filteredArray.length > 0 &&
-        <div className="absolute top-50 z-[1000] left-1 bg-white border-gray-lighter border rounded-b-md max-h-[200px] overflow-y-scroll">
+        <div className="absolute top-50 z-[1000] left-1 bg-black border-gray-lighter border rounded-b-md max-h-[200px] overflow-y-scroll dark:bg-black dark:text-white">
           {filteredArray?.filter(item => !selectedValues.includes(item.value)).map((item, index) => (
             <FilterItem 
               key={index}

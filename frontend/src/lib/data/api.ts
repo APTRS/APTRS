@@ -707,3 +707,9 @@ export async function fetchPermissions() {
   const response = await getOrRedirect(url, authHeaders());;
   return response.data;
 }
+
+export async function fetchCWE() {
+  const url = apiUrl('vulndb/cwe/');
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}

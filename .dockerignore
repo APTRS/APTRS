@@ -1,4 +1,4 @@
-**/migrations
+#**/migrations   # required for consistent migrations 
 APTRS/.env
 
 # Byte-compiled / optimized / DLL files

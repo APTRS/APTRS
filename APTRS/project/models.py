@@ -85,6 +85,7 @@ class Vulnerability(models.Model):
     vulnerabilityreferlnk = models.TextField(blank=True,null=True,validators=[xss_validator])
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, editable=False,to_field='id',related_name='vulnerability_created_by')
     last_updated_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True,to_field='id',related_name='vulnerability_last_updated_by')
+    cwe = models.JSONField(null=True, blank=True)
 
 
     class Meta:

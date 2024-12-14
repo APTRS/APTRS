@@ -10,12 +10,14 @@ export type Vulnerability = {
   vulnerabilityreferlnk?: string
   cvssscore?: number | string | null
   cvssvector?: string | null
+  cwe?: string[];
 }
 export type ProjectVulnerability = Omit<Vulnerability, 'id'> & {
   id: number
   project: number | string
   POC: string
   instance:VulnerabilityInstance[]
+  cwe?: string[];
 }
 export type VulnerabilityInstance =  { 
   id?: string | number | undefined
