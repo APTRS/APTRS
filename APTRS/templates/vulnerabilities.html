@@ -40,8 +40,15 @@
               </div>
     
           </div>
-
-
+          
+          {% if vulnerabilities.cwe  %}
+          <h3 class="vulnerabilities-details-title">CWE</h3>
+          <ul class="vulnerabilities-details-details">
+              {% for cwe_item in vulnerabilities.cwe %}
+                  <li>{{ cwe_item }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
     
              <h3 class="vulnerabilities-details-title">Description</h3>
                 <span class=vulnerabilities-details-details>
