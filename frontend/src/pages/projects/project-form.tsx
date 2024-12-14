@@ -111,16 +111,47 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
       [name]: value,
     }));
   };
-  const handleOwnerChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const owners = event.target.value.split(',').map(owner => owner.trim());
+
+  const handleCompanyChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const value = event.target.value; // This will be a string
+  
+    // Update form data with the single string value
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ['companyname']: value[0],
+    }));
+    console.log(formData.companyname);
+  
+    // Set or clear the error for companyname
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      companyname: value !== '' ? '' : 'Company Name is required'
+    }));
+  };
+
+  const handleOwnerChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const value = event.target.value;
+    if (typeof value === 'string') {
+      setFormData({
+        ...formData,
+        owner: value.split(',').map(owner => owner.trim())
+      });
+    } else {
+      // Handle the case where the value is not a string (e.g., select options)
+      setFormData({
+        ...formData,
+        owner: Array.isArray(value) ? value : [value] // For multi-selects, ensure it’s an array avoid split , if , in single value
+      });
+    }
+    //const owners = event.target.value.split(',').map(owner => owner.trim());
     
     // Update form data
-    setFormData({ ...formData, owner: owners });
+   // setFormData({ ...formData, owner: owners });
     
     // Set or clear error based on the owners array
     setErrors((prevErrors) => ({
       ...prevErrors,
-      owner: owners.length > 0 && owners[0] !== '' ? '' : 'Project Owner is required'
+      owner: value.length > 0 && value[0] !== '' ? '' : 'Project Owner is required'
     }));
   };
   
@@ -352,8 +383,10 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                       <CompanySelect 
                         name="companyname"
                         id="companyname"
+                        defaultValue={''}
                         value={formData.companyname || ''} 
-                        changeHandler={handleChange}
+                        changeHandler={handleCompanyChange}
+                        multiple={false}
                         error={errors.companyname ? true : false}
                       />
                     }

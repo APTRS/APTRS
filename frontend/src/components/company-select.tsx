@@ -15,7 +15,7 @@ interface CompanySelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 export default function CompanySelect(props: React.PropsWithChildren<CompanySelectProps>) {
   
   const [companies, setCompanies] = useState<Company[]>();
-  const [value, setValue] = useState<string[]>([]);
+  const [value, setValue] = useState<string>('');
   useEffect(() => {
     const loadCompanies = async () => {
       try {
@@ -30,24 +30,31 @@ export default function CompanySelect(props: React.PropsWithChildren<CompanySele
     loadCompanies()
   }, []);
   useEffect(() => {
-    setValue(props.value)
+    setValue(props.value || ''); 
   }, [props.value])
   
-  const handleChange = (event:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    props.changeHandler && props.changeHandler(event)
-    
-  }
+ const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+     props.changeHandler && props.changeHandler(event);
+   };
+ 
+
+  
   if(typeof companies === 'undefined'){
     console.log("Company is undefiended")
     return (<SingleInputSkeleton />)
   }
   return (
-            <FilterInput
-              name={props.name}
-              defaultValue={value}
-              searchArray={companies && companies.map(company => ({label: company.name as string, value: company.name as string}))}
-              onSelect={handleChange}
-              
-            />
-  )
+    <FilterInput
+      name={props.name}
+      defaultValue={value}
+      autoFocus={props.autoFocus}
+      multiple={props.multiple}
+      searchArray={companies.map((company) => ({
+        label: company.name as string,
+        value: company.name as string,
+      }))}
+      onSelect={handleChange}
+    />
+  );
+  
 }

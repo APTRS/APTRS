@@ -45,7 +45,13 @@ function ProjectView(): JSX.Element {
   const [saving, setSaving] = useState(false);
   
   const handleOwnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setOwner(e.target.value.split(',').map(owner => owner.trim()));
+    if (Array.isArray(e.target.value)) {
+      setOwner(e.target.value.map(owner => owner.trim()));
+    } else if (typeof e.target.value === 'string') {
+      setOwner(e.target.value.split(',').map(owner => owner.trim()));
+    }
+
+    //setOwner(e.target.value.split(',').map(owner => owner.trim()));
   };
 
   const cancelEditing = () => {

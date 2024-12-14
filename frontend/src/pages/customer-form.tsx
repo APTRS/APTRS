@@ -127,6 +127,24 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     }));
     
   };
+
+  const handleCompanyChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const value = event.target.value; // This will be a string
+  
+    // Update form data with the single string value
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ['company']: value[0],
+    }));
+    console.log(formData.company);
+  
+    // Set or clear the error for companyname
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      company: value !== '' ? '' : 'Company Name is required'
+    }));
+  };
+
   //needed a customer handler for phone number
   const handlePhoneInputChange = (value:string) => {
     setEditing(true)
@@ -255,14 +273,15 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
               Company
             </label>
             <div className="relative">
-              <CompanySelect
-                name="company"
-                id="company"
-                value={formData.company}
-                changeHandler={handleChange}
-                error={errors.company ? true : false}
-                required={true}
-              />
+             <CompanySelect 
+                                      name="companyname"
+                                      id="companyname"
+                                      defaultValue={''}
+                                      value={formData.company || ''} 
+                                      changeHandler={handleCompanyChange}
+                                      multiple={false}
+                                      error={errors.company ? true : false}
+                                    />
               {errors.company && <FormErrorMessage message={errors.company} />}
             </div>
           </div>

@@ -56,9 +56,24 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
     setFormData(defaultFormData);
     onClose();
   };
-  const handleOwnerChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData({ ...formData, owner: event.target.value.split(',').map(owner => owner.trim()) });
+  const handleOwnerChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    // Ensure event.target.value is a string before we split
+    const value = event.target.value;
+    
+    if (typeof value === 'string') {
+      setFormData({
+        ...formData,
+        owner: value.split(',').map(owner => owner.trim())
+      });
+    } else {
+      // Handle the case where the value is not a string (e.g., select options)
+      setFormData({
+        ...formData,
+        owner: Array.isArray(value) ? value : [value] // For multi-selects, ensure it’s an array avoid split , if , in single value
+      });
+    }
   };
+  
   const saveRetest = async () => {
     
     let updatedOwner = formData.owner;
