@@ -18,7 +18,7 @@ from xlsxwriter.workbook import Workbook
 from docxtpl import DocxTemplate,RichText
 from django.shortcuts import get_object_or_404
 from datetime import datetime
-import jinja2
+from jinja2.sandbox import SandboxedEnvironment
 import html
 import traceback
 
@@ -36,18 +36,14 @@ base_url = ""
 token = None
 
 
-def CheckReport(Report_format,Report_type,pk,url,standard,request):
+def CheckReport(Report_format,Report_type,pk,url,standard,request,access_token):
     global base_url
     base_url = url
     if Report_format == "excel":
         response =  CreateExcel(pk)
 
     global token
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        token = auth_header.split(' ')[1] if auth_header.startswith('Bearer ') else None
-    else:
-        token = request.cookies.get('access_token')
+    token = access_token
     if Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
     if Report_format == "pdf":
@@ -107,7 +103,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
                 'standard':standard,'totalvulnerability':totalvulnerability,'totalretest':totalretest,'projectscope':projectscope,
                 'page_break': RichText('\f'),'new_line': RichText('\n')
                 }
-        jinja_env = jinja2.Environment()
+        jinja_env = SandboxedEnvironment(autoescape=True)
         jinja_env.trim_blocks = True
         jinja_env.lstrip_blocks = True
         doc.render(context,jinja_env)

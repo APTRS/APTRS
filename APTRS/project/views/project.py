@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status, views
 from rest_framework.decorators import (api_view, permission_classes)
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
@@ -266,6 +266,8 @@ def project_report(request, pk):
     except ValueError as e:
         logging.error(f"Error: {e}")
         return Response({"Status": "Failed", "Message": "Report Standards are not provided"})
-        
-    output = CheckReport(report_format,report_type,pk,url,standard,request)
+    
+    refresh = RefreshToken.for_user(request.user) # generate new token for user to access auth protected images for report, user token in request might be close to expiry, so refreshing it to have new 30 mins token
+    access_token = refresh.access_token
+    output = CheckReport(report_format,report_type,pk,url,standard,request,access_token)
     return output

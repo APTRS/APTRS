@@ -21,7 +21,8 @@ import io, os
 import urllib.request
 from urllib.parse import urlparse
 from html.parser import HTMLParser
-
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import docx, docx.table
 from docx import Document
 from docx.shared import RGBColor, Pt, Inches
@@ -52,20 +53,25 @@ def is_url(url):
     care if it's a url or a file path, and they're pretty distinguishable
     """
     parts = urlparse(url)
+    print(all([parts.scheme, parts.netloc, parts.path]))
     return all([parts.scheme, parts.netloc, parts.path])
 
-def fetch_image(url):
+def fetch_image(url, headers, base_url):
     """
     Attempts to fetch an image from a url. 
     If successful returns a bytes object, else returns None
 
     :return:
     """
-    try:
-        with urllib.request.urlopen(url) as response:
-            # security flaw?
-            return io.BytesIO(response.read())
-    except urllib.error.URLError:
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    full_url = base_url + url
+    headers = {
+        "Authorization": f"Bearer {headers}"
+    }
+    response = requests.get(full_url, headers=headers,verify=False)
+    if response.status_code == 200:
+        return io.BytesIO(response.content)
+    else:
         return None
 
 def remove_last_occurence(ls, x):
@@ -183,7 +189,7 @@ class HtmlToDocx(HTMLParser):
         self.table_style = DEFAULT_TABLE_STYLE
         self.paragraph_style = DEFAULT_PARAGRAPH_STYLE
 
-    def set_initial_attrs(self, document=None):
+    def set_initial_attrs(self, document=None, headers=None, base_url=None):
         self.tags = {
             'span': [],
             'list': [],
@@ -192,6 +198,8 @@ class HtmlToDocx(HTMLParser):
             self.doc = document
         else:
             self.doc = Document()
+        self.headers = headers
+        self.base_url = base_url
         self.bs = self.options['fix-html'] # whether or not to clean with BeautifulSoup
         self.document = self.doc
         self.include_tables = True #TODO add this option back in?
@@ -307,10 +315,10 @@ class HtmlToDocx(HTMLParser):
             return
         src = current_attrs['src']
         # fetch image
-        src_is_url = is_url(src)
+        src_is_url = True #is_url(self.base_url + src) APTRS does not support local images
         if src_is_url:
             try:
-                image = fetch_image(src)
+                image = fetch_image(src,self.headers, self.base_url)
             except urllib.error.URLError:
                 image = None
         else:
@@ -319,7 +327,7 @@ class HtmlToDocx(HTMLParser):
         if image:
             try:
                 if isinstance(self.doc, docx.document.Document):
-                    self.doc.add_picture(image)
+                    self.doc.add_picture(image,width=Inches(6.69291), height=Inches(4.2244094))
                 else:
                     self.add_image_to_cell(self.doc, image)
             except FileNotFoundError:
@@ -629,12 +637,12 @@ class HtmlToDocx(HTMLParser):
             self.get_tables()
         self.feed(html)
 
-    def add_html_to_document(self, html, document):
+    def add_html_to_document(self, html, document,headers, base_url):
         if not isinstance(html, str):
             raise ValueError('First argument needs to be a %s' % str)
         elif not isinstance(document, docx.document.Document) and not isinstance(document, docx.table._Cell):
             raise ValueError('Second argument needs to be a %s' % docx.document.Document)
-        self.set_initial_attrs(document)
+        self.set_initial_attrs(document,headers, base_url)
         self.run_process(html)
 
     def add_html_to_cell(self, html, cell):

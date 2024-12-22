@@ -25,19 +25,10 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 ![GitHub contributors from allcontributors.org](https://img.shields.io/github/all-contributors/aptrs/aptrs)
 
 
-**Support APTRS**
-
-
-<a href="https://github.com/sponsors/APTRS"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Sponsor APTRS" width="230" height="50"></a>
-<br/><br/>
-
-If you've found APTRS helpful and valuable, your support through donations is greatly appreciated.
-
-
 ## Documentation
 
-> [!WARNING]  
-> Please ensure to review the Deployment Guide for configuration and security instructions from the documentation.
+> [!Note]  
+> Please ensure to review the Installation and Deployment Guide from the documentation.
 
 
 
@@ -50,7 +41,18 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 > [!NOTE]  
 > Default creds are sourav.kalal@aptrs.com & I-am-Weak-Password-Please-Change-Me
 
+Quick Installation
 
+> [!Warning]  
+> Please ensure to review the documentation for Security Configuration for ENV and other Installation methods.
+
+```bash
+git clone https://github.com/APTRS/APTRS
+cd APTRS
+cp env.docker .env
+nano .env
+docker-compose up 
+```
 
 
 
@@ -66,6 +68,19 @@ If you've found APTRS helpful and valuable, your support through donations is gr
 - Dynamically add POC, Description and Recommendations
 - Manage Customers and Companies
 - Manage Project Status, Schedules and Retest
+
+
+## Support APTRS
+
+If you've found APTRS helpful and valuable, please consider supporting the project. Your donations are crucial in helping maintain and improve APTRS, which is primarily maintained by a single dedicated developer. Your support will ensure the continued development of new features, timely updates, and the overall sustainability of the project. Every contribution, no matter how small, makes a significant difference and is greatly appreciated. Thank you for your generosity and support!
+<div style="display: flex; flex-direction: column; align-items: center; border: 1px solid #000; padding: 10px; width: 350px;"><b>Bitcoin</b>
+  <img src="https://raw.githubusercontent.com/APTRS/APTRS-Changelog/refs/heads/main/images/BTC.png" alt="BTC Wallet QR Code" width="200" height="200">
+  <p style="margin-top: 10px; text-align: center;">bc1qusxngf2w5gl2g8hw82ggct59227k4963f9fwhm</p>
+</div>
+<br/><br/>
+<a href="https://github.com/sponsors/APTRS"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Sponsor APTRS" width="230" height="50"></a>
+<br/><br/>
+
 
 
 ## Sponsor

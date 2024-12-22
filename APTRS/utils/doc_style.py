@@ -3,8 +3,9 @@ from docx.shared import Inches, Pt
 from docx import Document
 import io
 from lib.htmldocx import HtmlToDocx
-from utils.image_parsing import find_images
+import logging
 
+logger = logging.getLogger(__name__)
 
 def apply_font_style(element, font_name, font_size):
     if hasattr(element, 'font'):
@@ -27,22 +28,8 @@ def get_subdoc(doc,raw_html, headers, base_url):
     temp_parser = HtmlToDocx()
 
     if raw_html is not None:
-
-        images = find_images(raw_html, headers, base_url)
-        '''
-        CKEDITOR HTML allow images like POC images, html imc tag will have src=/api/project/getimage/?filename=img-uuid.jpg
-        The use of API allow to handle both case in case images stored on cloud bucket or locally
-        with that images are mostly POC and contain senstive info, its easy to prevent direct access to image as /api/* need auth token.
-        This also fix, ckeditor html direclty stored in db, if s3 url used in case of s3 allowed, having signed url in src would fail to load images if signed url expired 
-
-        Adding fix for docxtpl , instead of url for src replacing it with image byte 
-        '''
-        # Convert image src paths - doctpl does not support loading img over url, adding image full path
-        for i, img in enumerate(images):
-            raw_html = raw_html.replace(img['html_tag'], f"{{{{img{i}}}}}")
-
         # Convert HTML to temporary DOCX
-        temp_parser.add_html_to_document(raw_html, temp_doc)
+        temp_parser.add_html_to_document(raw_html, temp_doc,headers, base_url)
 
         # Resize images in the temporary DOCX
         ## https://stackoverflow.com/questions/76571366/resizing-all-images-in-a-word-document-using-python
@@ -83,18 +70,8 @@ def get_subdoc(doc,raw_html, headers, base_url):
         sub_docxtpl = DocxTemplate(subdoc_tmp)
         context = {}
 
-        # handle image bytes and place image byte as inline imaage in doc
-        for i, img in enumerate(images):
-            img_obj = InlineImage(sub_docxtpl, img['bytes'],width=Inches(6.69291), height=Inches(4.2244094))
-            context[f"img{i}"] = img_obj
-
-        sub_docxtpl.render(context)
         sub_docxtpl.save(subdoc_tmp)
         subdoc_tmp.seek(0)
-
-
-
-
         # Create docxtpl subdoc object
         subdoc = doc.new_subdoc(subdoc_tmp)
         return subdoc
