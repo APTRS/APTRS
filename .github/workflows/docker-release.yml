@@ -1,6 +1,7 @@
 name: 'Build and Publish Release to DockerHub'
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
