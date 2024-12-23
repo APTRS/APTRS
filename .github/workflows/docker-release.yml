@@ -3,8 +3,7 @@ name: 'Build and Publish Release to DockerHub'
 on:
   release:
     types: [created]
-  workflow_dispatch:
-
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   buildx:
@@ -33,8 +32,11 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
             TAG="${DOCKER_IMAGE}:${VERSION}"
+          elif [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            TAG="${DOCKER_IMAGE}:${VERSION}"
           else
-            echo "Not a tag, skipping."
+            echo "No valid version provided."
             exit 1
           fi
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
