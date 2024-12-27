@@ -5,6 +5,7 @@ import Layout from './layouts/layout';
 import Home from './pages/home';
 import Login from './pages/login';
 import Vulnerabilities from './pages/vulnerabilities';
+import VulnerabilityRender from './pages/VulnerabilityRender';
 import VulnerabilityForm from './pages/vulnerability-form';
 import Customers from './pages/customers';
 import Projects from './pages/projects/projects'
@@ -71,6 +72,7 @@ const App: React.FC = () => {
                     <Route path="/projects/:projectId/vulnerability/add/:id" element={<VulnerabilityForm action='addToProject'/>} />
                     <Route path="/projects/:projectId/vulnerability/edit/:id" element={<VulnerabilityForm action='saveToProject'/>} />
                     <Route path="/projects/:projectId/vulnerability/edit/:id/:tab" element={<VulnerabilityForm action='saveToProject'/>} />
+                    <Route path="/projects/:projectId/vulnerability/view/:id" element={<VulnerabilityRender action='ViewVulnerability'/>} />
                     <Route path="/companies/:id/edit" element={<CompanyForm />} />
                     <Route path="/companies/new" element={<CompanyForm />} />
                     <Route path="/config" element={<Config />} />

@@ -398,6 +398,14 @@ export async function getProjectVulnerability(id: string | undefined) {
   const response = await getOrRedirect(url, authHeaders());
   return response.data;
 }
+
+export async function RenderProjectVulnerability(id: string | undefined) {
+  if(!id) return null;
+  const url = apiUrl(`project/vulnerability/view/${id}/`);
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
 export async function fetchVulnerabilityInstances(id: string | number | undefined): Promise<VulnerabilityInstance[]>  {
   const url = apiUrl(`project/vulnerability/instances/${id}/`);
   const response = await getOrRedirect(url, authHeaders());

@@ -30,11 +30,22 @@ p {
 
   }
   ::-webkit-scrollbar {
-    @apply w-2 h-2;
+    width: 10px;
+    height: 20px;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #f7f4ed;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full;
+    background: #9a9999;
+    border-radius: 100vh;
+    border: 3px solid #f6f7ed;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #858585;
   }
 
   input:-webkit-autofill,
