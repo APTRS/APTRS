@@ -3,6 +3,7 @@ services:
 
   nginx:
     build:
+      context: .
       dockerfile: ./docker/Dockerfile_frontend
     volumes:
       - static_volume:/home/aptrs/APTRS/APTRS/static/
