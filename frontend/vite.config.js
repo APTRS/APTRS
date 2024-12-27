@@ -1,12 +1,9 @@
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { splitVendorChunkPlugin } from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
-  optimizeDeps: {
-    //include: ['@workspace/ckeditor5'],
-  },
   build: {
     commonjsOptions: {
       include: [/node_modules/],
@@ -17,15 +14,20 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('@open-ish') || id.includes('tslib')) {
+              return '@open-ish';
+            }
+            
             if (id.includes('ckeditor5')) {
               return 'ckeditor5';
-            }
-            if (id.includes('react')) {
-              return 'react';
             }
             if (id.includes('lodash')) {
               return 'lodash';
             }
+            if (id.includes('axios')) {
+              return 'axios';
+            }
+            // Add more conditions here to split other large dependencies
             return 'vendor';
           }
         },
@@ -46,4 +48,4 @@ export default defineConfig({
     silent: true,
     setupFiles: ['./tests/setup.ts']
   }
-})
+});
