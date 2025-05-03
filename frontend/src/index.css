@@ -18,6 +18,10 @@ p {
 }
 
 @layer components {
+
+  .my-react-select-container .my-react-select__option {
+    @apply dark:bg-gray-700 dark:hover:bg-black dark:text-white;
+  }
   .PhoneInputInput {
     @apply block w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm bg-black text-black;
   }
@@ -304,20 +308,28 @@ strong {
   }
 
   .dark .react-select__menu {
-    @apply bg-gray-800 text-white;
+    background-color: gray !important;
+  color: white !important;
   }
 
-  .react-select__option {
-    @apply cursor-pointer px-3 py-2;
+  .dark .react-select__option {
+    background-color: gray !important;
+    color: white !important;
   }
 
+  .dark .react-select__menu-list{
+    background-color: gray !important;
+    color: white !important;
+  }
+
+  .dark .react-select__option:hover {
+    background-color: gray !important;
+    color: white !important;
+  }
   .react-select__option:hover {
     @apply bg-gray-100;
   }
 
-  .dark .react-select__option:hover {
-    @apply bg-gray-700;
-  }
 
   .react-select__option--is-selected {
     @apply bg-gray-700 text-white;

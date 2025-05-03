@@ -18,9 +18,8 @@ import {PasswordDescription, validPassword} from '../components/passwordValidato
 import ShowPasswordButton from '../components/show-password-button';
 import { WithAuth } from "../lib/authutils";
 import { parseErrors } from '../lib/utilities';
-import CompanySelect from '../components/company-select';
 import { FormSkeleton } from '../components/skeletons'
-import { getCustomer } from '../lib/data/api';
+import { getCustomer, fetchCompanies } from '../lib/data/api';
 import { upsertCustomer} from '../lib/data/api';
 import { Customer } from '../lib/data/definitions'
 import toast from 'react-hot-toast';
@@ -29,6 +28,8 @@ import { currentUserCan } from '../lib/utilities';
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { CountryCode, E164Number } from 'libphonenumber-js/core';
+import Select from 'react-select';
+
 interface FormErrors {
   full_name?: string
   email?: string
@@ -69,6 +70,8 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     is_active: true
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [companies, setCompanies] = useState<{ name: string }[]>([]);
+
   //listen for the escape key and input to form elements
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -109,6 +112,20 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     };
     loadCustomer();
   }, [id]);
+
+  useEffect(() => {
+    const loadCompanies = async () => {
+      try {
+        const companiesData = await fetchCompanies();
+        setCompanies(companiesData.map((company: { name: string }) => ({ name: company.name })));
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+      }
+    };
+
+    loadCompanies();
+  }, []);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value, checked, options } = event.target as HTMLInputElement & HTMLSelectElement;
     setEditing(true)
@@ -128,20 +145,17 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     
   };
 
-  const handleCompanyChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const value = event.target.value; // This will be a string
-  
-    // Update form data with the single string value
+  const handleCompanyChange = (selectedOption: { value: string; label: string } | null) => {
+    const value = selectedOption ? selectedOption.value : '';
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      ['company']: value[0],
+      company: value,
     }));
-    console.log(formData.company);
-  
-    // Set or clear the error for companyname
+
     setErrors((prevErrors) => ({
       ...prevErrors,
-      company: value !== '' ? '' : 'Company Name is required'
+      company: value !== '' ? '' : 'Company Name is required',
     }));
   };
 
@@ -273,15 +287,16 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
               Company
             </label>
             <div className="relative">
-             <CompanySelect 
-                                      name="companyname"
-                                      id="companyname"
-                                      defaultValue={''}
-                                      value={formData.company || ''} 
-                                      changeHandler={handleCompanyChange}
-                                      multiple={false}
-                                      error={errors.company ? true : false}
-                                    />
+              <Select
+              className="my-react-select-container"
+   classNamePrefix="my-react-select"
+                name="companyname"
+                id="companyname"
+                value={formData.company ? { value: formData.company, label: formData.company } : null}
+                onChange={handleCompanyChange}
+                options={companies.map((company) => ({ value: company.name, label: company.name }))}
+                isClearable
+              />
               {errors.company && <FormErrorMessage message={errors.company} />}
             </div>
           </div>
@@ -291,7 +306,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
               Position
             </label>
             <div className="relative">
-              <input
+              <input 
                 name="position"
                 id="position"
                 value={formData.position}
