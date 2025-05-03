@@ -19,7 +19,7 @@ import { WithAuth } from "../lib/authutils";
 import Button from '../components/button';
 import ShowPasswordButton from '../components/show-password-button';
 import { FormSkeleton } from '../components/skeletons'
-import { getUser } from '../lib/data/api';
+import { getUser, fetchPermissionGroups } from '../lib/data/api';
 import { upsertUser } from '../lib/data/api';
 import { useCurrentUser } from '../lib/customHooks';
 import { User } from '../lib/data/definitions'
@@ -27,12 +27,10 @@ import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { phoneRegex, emailRegex, usernameRegex, parseErrors } from '../lib/utilities';
-import PermissionGroupSelect from '../components/permission-group-select';
 import { currentUserCan } from '../lib/utilities'
 import { useNavigate } from 'react-router-dom';
 import { CountryCode, E164Number } from 'libphonenumber-js/core';
-
-
+import Select, { MultiValue } from 'react-select';
 
 interface FormErrors {
   username?: string
@@ -89,6 +87,20 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
   //used in phone number input
   const defaultCountry = currentUser?.location?.country as CountryCode | undefined
   const [errors, setErrors] = useState<FormErrors>({});
+  const [permissionGroups, setPermissionGroups] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    const loadPermissionGroups = async () => {
+      try {
+        const data = await fetchPermissionGroups();
+        setPermissionGroups(data.map((group: { name: string }) => ({ value: group.name, label: group.name })));
+      } catch (error) {
+        console.error('Error fetching permission groups:', error);
+      }
+    };
+
+    loadPermissionGroups();
+  }, []);
 
   function passwordMismatch():boolean {
     if(!formData.password && !formData.password_check){
@@ -174,6 +186,13 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
       [name]: inputValue,
     }));
     
+  };
+  const handlePermissionGroupChange = (newValue: MultiValue<{ value: string; label: string }>, actionMeta: any) => {
+    const selectedValues = newValue.map(option => option.value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      groups: selectedValues,
+    }));
   };
   const [passwordVisible, setPasswordVisible] = useState(false)
   const closeModal = (force:boolean = false) =>  {
@@ -411,13 +430,16 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
                 >
                   <span className="label-text">Permission Groups</span>
                 </label>
-                <PermissionGroupSelect 
-                  name='groups'
+                <Select
+                  name="groups"
                   id="groups"
-                  multiple={true}
-                  value={formData.groups}
-                  changeHandler={handleChange}
-                  error={errors.groups ? true : false}
+                  isMulti
+                  value={(formData.groups ?? []).map((group) => ({ value: group, label: group }))}
+                  onChange={handlePermissionGroupChange}
+                  options={permissionGroups}
+                  isClearable
+                  className="react-select-container"
+                  classNamePrefix="react-select"
                 />
                  {errors.groups && <FormErrorMessage message={errors.groups} />}
             </div>
@@ -490,6 +512,7 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
               </Button>
           </div>
       </div>
+        
         
         
         
