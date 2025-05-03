@@ -236,6 +236,8 @@ class Instanceserializers(serializers.ModelSerializer):
         fields = ('id','URL', 'Parameter', 'status')
 
 class Vulnerabilityserializers(serializers.ModelSerializer):
+    created_by = serializers.CharField(source='created_by.username', read_only=True)
+    last_updated_by = serializers.CharField(source='last_updated_by.username', read_only=True)
 
     class Meta:
         model = Vulnerability

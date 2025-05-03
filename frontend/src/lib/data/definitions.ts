@@ -12,6 +12,8 @@ export type Vulnerability = {
   cvssvector?: string | null
   cwe?: string[];
   published?: boolean
+  created_by?: string;
+  last_updated_by?: string;
 }
 export type ProjectVulnerability = Omit<Vulnerability, 'id'> & {
   id: number
