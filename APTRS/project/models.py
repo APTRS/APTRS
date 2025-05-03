@@ -87,7 +87,7 @@ class Vulnerability(models.Model):
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, editable=False,to_field='id',related_name='vulnerability_created_by')
     last_updated_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True,to_field='id',related_name='vulnerability_last_updated_by')
     cwe = models.JSONField(null=True, blank=True)
-
+    published = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (("project", "vulnerabilityname"),)

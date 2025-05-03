@@ -10,6 +10,7 @@ def custom_permission_required(allowed_permissions):
     def decorator(view_func):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
+            print("Request User:", request.user)
             if hasattr(request, 'user') and request.user.is_superuser:  # Check if user is superuser/admin
                 return view_func(request, *args, **kwargs)
 

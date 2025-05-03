@@ -37,6 +37,7 @@ urlpatterns = [
     path('vulnerability/add/vulnerability/',vulnerability.create_vulnerability,name="Add vulnerability"),
     path('vulnerability/Nessus/csv/<str:pk>/', vulnerability.Nessus_CSV),
     path('vulnerability/view/<str:pk>/',vulnerability.vulnerability_view),
+    path('vulnerability/findings/publish/', vulnerability.publish_vulnerabilities, name='publish-vulnerabilities'),
 
     # Vulnerability Instances
     path('vulnerability/instances/<str:pk>/',vulnerability.projectvulninstances),

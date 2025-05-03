@@ -254,9 +254,10 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
             'project',
             'created_by',
             'last_updated_by',
-            'cwe'
+            'cwe',
+            'published'
         ]
-        read_only_fields = ['status', 'created_by', 'last_updated_by']
+        read_only_fields = ['status', 'created_by', 'last_updated_by','published']
 
     def create(self, validated_data):
         request = self.context.get("request")
@@ -278,3 +279,12 @@ class VulnerableinstanceSerializerNessus(serializers.ModelSerializer):
     class Meta:
         model = Vulnerableinstance
         fields = '__all__'
+
+class PublishVulnerabilitySerializer(serializers.Serializer):
+    ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        help_text="List of vulnerability IDs to publish or unpublish."
+    )
+    publish = serializers.BooleanField(
+        help_text="Set to True to publish vulnerabilities, False to unpublish."
+    )

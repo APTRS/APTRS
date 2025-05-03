@@ -507,6 +507,12 @@ export async function updateProjectInstanceStatus(data: any): Promise<any> {
   return response.data;
 }
 
+export async function publishVulnerabilities(ids: number[], publish: boolean): Promise<any> {
+  const url = apiUrl('project/vulnerability/findings/publish/');
+  const data = { ids, publish };
+  const response = await postOrRedirect(url, data, authHeaders());
+  return response.data;
+}
 
 export async function fetchCompanies() {
   const url = apiUrl('customer/all-company');

@@ -1,4 +1,5 @@
 import{ ReactNode } from 'react'
+import { b } from 'vite/dist/node/types.d-aGj9QkWt'
 
 export type Vulnerability = {
   id: number
@@ -10,6 +11,7 @@ export type Vulnerability = {
   cvssscore?: number | string | null
   cvssvector?: string | null
   cwe?: string[];
+  published?: boolean
 }
 export type ProjectVulnerability = Omit<Vulnerability, 'id'> & {
   id: number
