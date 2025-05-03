@@ -90,24 +90,37 @@ interface ModalScopeFormProps {
   onClose: () => void
   afterSave: () => void
 }
-export function ModalScopeForm(props: ModalScopeFormProps):JSX.Element{
-  const [showModal, setShowModal] = useState(true)
+export function ModalScopeForm(props: ModalScopeFormProps): JSX.Element {
+  const [showModal, setShowModal] = useState(true);
   const clearModal = () => {
-    props.onClose()
-    setShowModal(false)
-  }
-  return(
-    <Dialog handler={clearModal} open={showModal}  size="md" className="modal-box w-full bg-white p-4 rounded-md dark:bg-black" >
-          <DialogBody className='max-w-[600px] '>
-          <ScopeForm 
-            projectId={props.projectId}
-            onClose={clearModal}
-            description={props.description}
-            scope={props.scope}
-            id={props.id}
-            afterSave={props.afterSave}
-          />
-          </DialogBody>
-        </Dialog>
-  )
+    props.onClose();
+    setShowModal(false);
+  };
+  return (
+    <Dialog
+      handler={clearModal}
+      open={showModal}
+      size="md"
+      className="modal-box w-full bg-white p-4 rounded-md dark:bg-black"
+      placeholder="Modal Scope Form Dialog"
+      onPointerEnterCapture={() => {}}
+      onPointerLeaveCapture={() => {}}
+    >
+      <DialogBody
+        className="max-w-[600px]"
+        placeholder="Dialog Body"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      >
+        <ScopeForm
+          projectId={props.projectId}
+          onClose={clearModal}
+          description={props.description}
+          scope={props.scope}
+          id={props.id}
+          afterSave={props.afterSave}
+        />
+      </DialogBody>
+    </Dialog>
+  );
 }

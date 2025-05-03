@@ -14,6 +14,10 @@ import DataTable from 'react-data-table-component';
 import { toast } from 'react-hot-toast';
 import useCustomStyles from '../components/tableStyle'
 
+// Ensure proper type casting for Material Tailwind components
+const DialogComponent = Dialog as unknown as React.FC<{ handler: () => void; open: boolean; size: string; className: string; children: React.ReactNode }>; 
+const DialogBodyComponent = DialogBody as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+
 export function Groups() {
   const theme = useContext(ThemeContext);
   const customStyles = useCustomStyles(theme);
@@ -141,11 +145,11 @@ export function Groups() {
       <PageTitle title='User Groups' />
       {/* modal content */}
         {showModal &&
-        <Dialog handler={clearModal} open={showModal} size="md" className="rounded-md dark:bg-black dark:text-white" >
-          <DialogBody>
+        <DialogComponent handler={clearModal} open={showModal} size="md" className="rounded-md dark:bg-black dark:text-white">
+          <DialogBodyComponent>
           {group  && <GroupForm group={group} onSave={() => setRefresh(true)} onClose={clearModal}/>}
-          </DialogBody>
-        </Dialog>
+          </DialogBodyComponent>
+        </DialogComponent>
         }
         {/* END modal content */}
       <div className="flow-root">

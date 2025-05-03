@@ -9,6 +9,9 @@ import { useEffect, useState, createContext } from 'react';
 import { LoginUser } from '../lib/data/definitions';
 import { ThemeIcon } from '../components/themeIcon';
 
+// Ensure proper type casting for Avatar component
+const AvatarComponent = Avatar as unknown as React.FC<{ src: string; size: string; className?: string; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+
 export const ThemeContext = createContext('light');
 
 const Layout: React.FC = () => {
@@ -66,7 +69,7 @@ const Layout: React.FC = () => {
                 <ThemeIcon size="md" theme={theme} toggleTheme={toggleTheme} className="mr-4" />
                 {currentUser.profilepic ? (
                   <Link className="text-white" to="/profile">
-                    <Avatar src={avatarUrl(currentUser.profilepic as string)} size="lg" />
+                    <AvatarComponent src={avatarUrl(currentUser.profilepic as string)} size="lg" />
                   </Link>
                 ) : (
                   <div className="bg-primary text-neutral-content rounded-full w-12 h-12 flex items-center justify-center">

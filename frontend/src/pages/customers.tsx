@@ -22,6 +22,9 @@ import { HeaderFilter, ClearFilter } from "../components/headerFilter";
 import { toast } from 'react-hot-toast'
 import useCustomStyles from '../components/tableStyle'
 
+// Ensure proper type casting for Material Tailwind components
+const DialogComponent = Dialog as unknown as React.FC<{ handler: () => void; open: boolean; size: string; className: string; children: React.ReactNode }>; 
+const DialogBodyComponent = DialogBody as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
 
 export function Customers() {
   const theme = useContext(ThemeContext);
@@ -283,18 +286,18 @@ export function Customers() {
       <PageTitle title='Customers' />
       {/* modal content */}
       {showModal &&
-      <Dialog handler={clearModal} open={showModal} size="md" className="p-4 rounded-md dark:bg-black dark:text-white">
+      <DialogComponent handler={clearModal} open={showModal} size="md" className="p-4 rounded-md dark:bg-black dark:text-white">
     
         <form method="dialog" onSubmit={clearModal}>
         <Button className="absolute right-4 top-4  rounded-full text-lg w-8 h-8 flex justify-center items-center">
         <span className="dark:bg-white">X</span>
       </Button>
         </form>
-        <DialogBody className="w-full dark:bg-black dark:text-white">
+        <DialogBodyComponent className="w-full dark:bg-black dark:text-white">
         {customerId   && <CustomerForm id={customerId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
         {!customerId && <CustomerForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
-        </DialogBody>
-      </Dialog>
+        </DialogBodyComponent>
+      </DialogComponent>
       }
       {/* END modal content */}
       <div className="flow-root">

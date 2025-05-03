@@ -23,6 +23,10 @@ interface UserWithActions extends User {
   actions: JSX.Element;
 }
 
+// Ensure proper type casting for Material Tailwind components
+const DialogComponent = Dialog as unknown as React.FC<{ handler: () => void; open: boolean; size: string; className: string; children: React.ReactNode }>; 
+const DialogBodyComponent = DialogBody as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+
 export function Users() {
   const initialState: DatasetState = {
     mode: 'idle',
@@ -295,17 +299,17 @@ export function Users() {
         
       {/* modal content */}
         {showModal &&
-        <Dialog handler={clearModal} open={showModal} size="sm" className="modal-box w-[500px] bg-white dark:bg-black dark:text-white p-4 rounded-md" >
+        <DialogComponent handler={clearModal} open={showModal} size="sm" className="modal-box w-[500px] bg-white dark:bg-black dark:text-white p-4 rounded-md">
           <form method="dialog" onSubmit={hideModal}>
             <Button className="bg-gray visible absolute right-2 top-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
               <span className="text-gray-400 hover:text-white-900">x</span>
             </Button>
           </form>
-          <DialogBody className='max-w-[600px] dark:bg-black '>
+          <DialogBodyComponent className='max-w-[600px] dark:bg-black '>
           {userId   && <UserForm id={userId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
           {!userId && <UserForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
-          </DialogBody>
-        </Dialog>
+          </DialogBodyComponent>
+        </DialogComponent>
         }
         
         {/* END modal content */}

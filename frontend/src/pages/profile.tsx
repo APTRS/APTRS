@@ -22,7 +22,7 @@ import {
   ChangeEvent, 
   FormEvent
 } from 'react';
-import type {Country} from 'react-phone-number-input';
+import { Country } from 'react-phone-number-input';
 
 interface FormErrors {
   email?: string
@@ -81,7 +81,7 @@ export const Profile = () => {
     setPasswordVisible((prevState) => !prevState);
   }
   
-  const handlePhoneInputChange = (value:string) => {
+  const handlePhoneInputChange = (value?: string | undefined): void => {
     setFormData({
       ...formData,
       number:value

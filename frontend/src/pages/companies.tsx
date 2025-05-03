@@ -17,6 +17,10 @@ import { useDataReducer, DatasetState, DatasetAction, DEFAULT_DATA_LIMIT } from 
 import { HeaderFilter, ClearFilter } from "../components/headerFilter";
 import useCustomStyles from '../components/tableStyle'
 
+// Ensure proper type casting for Material Tailwind components
+const DialogComponent = Dialog as unknown as React.FC<{ handler: () => void; open: boolean; size: string; className: string; children: React.ReactNode }>; 
+const DialogBodyComponent = DialogBody as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+
 export function Companies() {
   const theme = useContext(ThemeContext);
   const initialState: DatasetState = {
@@ -216,17 +220,17 @@ export function Companies() {
       <PageTitle title='Companies' />
       {/* modal content */}
         {showModal &&
-        <Dialog handler={clearModal} open={showModal} size="xs" className="rounded-md dark:bg-black dark:text-white" >
+        <DialogComponent handler={clearModal} open={showModal} size="xs" className="rounded-md dark:bg-black dark:text-white" >
           <form method="dialog" onSubmit={clearModal}>
             <Button className="bg-gray visible absolute right-2 top-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
               <span className="text-gray-400 hover:text-white-900">x</span>
             </Button>
           </form>
-          <DialogBody>
+          <DialogBodyComponent>
           {companyId   && <CompanyForm id={companyId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
           {!companyId && <CompanyForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
-          </DialogBody>
-        </Dialog>
+          </DialogBodyComponent>
+        </DialogComponent>
         }
         {/* END modal content */}
       <div className="flow-root">

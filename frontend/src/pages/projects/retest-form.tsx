@@ -1,18 +1,19 @@
 import { useState, ChangeEvent, useRef } from 'react';
-import {  insertProjectRetest } from '../../lib/data/api';
+import { insertProjectRetest } from '../../lib/data/api';
 import 'react-datepicker/dist/react-datepicker.css';
 import { StyleLabel, StyleTextfield, FormErrorMessage } from '../../lib/formstyles';
 import UserSelect from '../../components/user-select';
 import { currentUserCan } from '../../lib/utilities';
+import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 
-import {
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter
-} from "@material-tailwind/react";
 import { useCurrentUser } from '../../lib/customHooks';
-import DatePicker  from 'react-datepicker';
+import DatePicker from 'react-datepicker';
+
+// Ensure proper type casting for Material Tailwind components
+const DialogComponent = Dialog as unknown as React.FC<{ open: boolean; handler: () => void; size: string; className: string; children: React.ReactNode }>;
+const DialogHeaderComponent = DialogHeader as unknown as React.FC<{ className: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+const DialogBodyComponent = DialogBody as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+const DialogFooterComponent = DialogFooter as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
 
 interface RetestFormProps {
   projectId: number;
@@ -23,28 +24,27 @@ interface RetestFormProps {
 
 export default function RetestForm({ projectId, onClose, afterSave, open }: RetestFormProps) {
   const currentUser = useCurrentUser();
-  const startDateRef=useRef()
-  const endDateRef=useRef()
+  const startDateRef = useRef();
+  const endDateRef = useRef();
   const defaultFormData = {
     project: projectId,
     startdate: '',
     enddate: '',
-    owner:[''] 
-  }
+    owner: ['']
+  };
   const [formData, setFormData] = useState(defaultFormData);
   const [error, setError] = useState('');
-  const handleDatePicker = (input: string, value:string): void => {
+  const handleDatePicker = (input: string, value: string): void => {
     // format dates as YYYY-MM-DD
     const formattedDate = value ? new Date(value).toISOString().split('T')[0] : '';
     setFormData((prevFormData: typeof formData) => ({
       ...prevFormData,
       [input]: formattedDate,
     }));
-    if(input === 'startdate'){
+    if (input === 'startdate') {
       setMinEndDate(new Date(value));
     }
-
-  }
+  };
   const [minEndDate, setMinEndDate] = useState(new Date());
 
   const [errors, setErrors] = useState({
@@ -59,7 +59,7 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
   const handleOwnerChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     // Ensure event.target.value is a string before we split
     const value = event.target.value;
-    
+
     if (typeof value === 'string') {
       setFormData({
         ...formData,
@@ -73,9 +73,8 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
       });
     }
   };
-  
+
   const saveRetest = async () => {
-    
     let updatedOwner = formData.owner;
     if (!formData.owner || formData.owner.length === 0 || (formData.owner.length === 1 && formData.owner[0] === '')) {
       updatedOwner = [currentUser?.username || ''];
@@ -112,81 +111,79 @@ export default function RetestForm({ projectId, onClose, afterSave, open }: Rete
       setError("Error saving retest");
     }
   };
-  
+
   const userNotSet = () => formData.owner.length === 0 || formData.owner.length === 1 && formData.owner[0] === '';
   return (
-          <Dialog open={open} handler={onClose} size='sm'className='dark:bg-black dark:text-white'>
-            <DialogHeader className='dark:bg-black dark:text-white'>New Retest</DialogHeader>
-            <DialogBody>
-                {currentUserCan('Manage Projects') && (
-                  <>
-                    <label className={StyleLabel}>
-                      Retest Owner
-                      {userNotSet() &&
-                        <span className='block text-sm'>
-                          Will be assigned to you unless you select different users.
-                        </span>
-                      }
-                    </label>
-                    <div className='max-w-md'>
-                      <UserSelect
-                        name='owner'
-                        multiple={true}
-                        value={formData.owner.join(', ')}
-                        changeHandler={handleOwnerChange}
-                        autoFocus
-                        required={true}
-                      />
-                    </div>
-                  </>
-                )}
-                <div className="flex min-w-lg mb-2">
-                  {error && <FormErrorMessage message={error} />}
-                  <div className="w-1/2">
-                    <label className={StyleLabel}>Start Date</label>
-                      
-                      <DatePicker
-                        id="startdate"
-                        name="startdate"
-                        ref={startDateRef}
-                        placeholderText='Select date'
-                        className={StyleTextfield}
-                        dateFormat="yyyy-MM-dd"
-                        selectsStart
-                        autoComplete="off"
-                        onChange={(date:string) => handleDatePicker('startdate', date)}
-                        selected={formData.startdate ? new Date(formData.startdate) : ''}
-                      />
-                      {errors.startDate && <FormErrorMessage message={errors.startDate} />}
-                  
-                  </div>
-                  <div className='ml-4 w-1/2'>
-                    <label className={StyleLabel}>End Date</label>
-                    <DatePicker
-                      id='enddate'
-                      name='enddate'
-                      ref={endDateRef}
-                      placeholderText='Select date'
-                      dateFormat="yyyy-MM-dd"
-                      selectsEnd
-                      autoComplete="off"
-                      onChange={(date: string) => handleDatePicker('enddate', date)}
-                      selected={formData.enddate ? new Date(formData.enddate) : ''}
-                      className={StyleTextfield}
-                      required={true}
-                      minDate={minEndDate}
-                    />
-                    {errors.endDate && <FormErrorMessage message={errors.endDate} />}
-                </div>
-                
-              </div>
-            </DialogBody>
-            <DialogFooter>
-              <button className='bg-primary rounded-md text-white mx-1 p-2'  onClick={saveRetest}>Save</button>
-              <button className='bg-secondary rounded-md text-white mx-1 p-2'  onClick={onCancel}>Cancel</button>
-            </DialogFooter>
-          </Dialog>
-  )
+    <DialogComponent open={open} handler={onClose} size='sm' className='dark:bg-black dark:text-white'>
+      <DialogHeaderComponent className='dark:bg-black dark:text-white'>New Retest</DialogHeaderComponent>
+      <DialogBodyComponent>
+        {currentUserCan('Manage Projects') && (
+          <>
+            <label className={StyleLabel}>
+              Retest Owner
+              {userNotSet() &&
+                <span className='block text-sm'>
+                  Will be assigned to you unless you select different users.
+                </span>
+              }
+            </label>
+            <div className='max-w-md'>
+              <UserSelect
+                name='owner'
+                multiple={true}
+                value={formData.owner.join(', ')}
+                changeHandler={handleOwnerChange}
+                autoFocus
+                required={true}
+              />
+            </div>
+          </>
+        )}
+        <div className="flex min-w-lg mb-2">
+          {error && <FormErrorMessage message={error} />}
+          <div className="w-1/2">
+            <label className={StyleLabel}>Start Date</label>
+
+            <DatePicker
+              id="startdate"
+              name="startdate"
+              ref={startDateRef}
+              placeholderText='Select date'
+              className={StyleTextfield}
+              dateFormat="yyyy-MM-dd"
+              selectsStart
+              autoComplete="off"
+              onChange={(date: string) => handleDatePicker('startdate', date)}
+              selected={formData.startdate ? new Date(formData.startdate) : ''}
+            />
+            {errors.startDate && <FormErrorMessage message={errors.startDate} />}
+          </div>
+          <div className='ml-4 w-1/2'>
+            <label className={StyleLabel}>End Date</label>
+            <DatePicker
+              id='enddate'
+              name='enddate'
+              ref={endDateRef}
+              placeholderText='Select date'
+              dateFormat="yyyy-MM-dd"
+              selectsEnd
+              autoComplete="off"
+              onChange={(date: string) => handleDatePicker('enddate', date)}
+              selected={formData.enddate ? new Date(formData.enddate) : ''}
+              className={StyleTextfield}
+              required={true}
+              minDate={minEndDate}
+            />
+            {errors.endDate && <FormErrorMessage message={errors.endDate} />}
+          </div>
+        </div>
+      </DialogBodyComponent>
+      <DialogFooterComponent>
+        <button className='bg-primary rounded-md text-white mx-1 p-2' onClick={saveRetest}>Save</button>
+        <button className='bg-secondary rounded-md text-white mx-1 p-2' onClick={onCancel}>Cancel</button>
+      </DialogFooterComponent>
+    </DialogComponent>
+  );
 }
 
 

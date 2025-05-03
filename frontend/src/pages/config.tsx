@@ -4,10 +4,17 @@ import * as api from "../lib/data/api"
 import { currentUserCan } from '../lib/utilities'
 import { AccessDenied } from "./access-denied"
 import { PageTitle } from "../components/page-title"
-import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 import { StyleTextfield, FormErrorMessage } from "../lib/formstyles"
 import { toast } from "react-hot-toast"
-import { Spinner } from "@material-tailwind/react"
+import { Spinner, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react"
+
+// Ensure proper type casting for Material Tailwind components
+const SpinnerComponent = Spinner as unknown as React.FC<React.HTMLAttributes<HTMLDivElement>>;
+const DialogComponent = Dialog as unknown as React.FC<{ open: boolean; handler: React.Dispatch<React.SetStateAction<boolean>>; className: string; children: React.ReactNode }>; 
+const DialogHeaderComponent = DialogHeader as unknown as React.FC<{ className: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+const DialogBodyComponent = DialogBody as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+const DialogFooterComponent = DialogFooter as unknown as React.FC<{ className?: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+
 export default function Config() {
     if (!currentUserCan('Manage Configurations')) {
         return <AccessDenied />
@@ -65,7 +72,7 @@ function ReportStandards() {
   }, [])
   return (
       <div className="mt-4 mb-2 min-h-[200px]">
-          <h2 className='text-xl'>Report Standards {loading && <Spinner className="inline ml-1 -mt-1 h-4 w-4 text-center"/>}</h2>
+          <h2 className='text-xl'>Report Standards {loading && <SpinnerComponent className="inline ml-1 -mt-1 h-4 w-4 text-center" />}</h2>
           {loading ? <></> :
           <>
             <ul className='cursor-text'>
@@ -76,19 +83,19 @@ function ReportStandards() {
             <button className="text-primary underline text-sm ml-6" onClick={() => setShowAddReportStandard(true)}>Add New</button>
           </>
         }
-          <Dialog open={showAddReportStandard} handler={setShowAddReportStandard} className="dark:bg-black dark:text-white">
-              <DialogHeader className="dark:text-white">Add Report Standard</DialogHeader>
-              <DialogBody>
+          <DialogComponent open={showAddReportStandard} handler={setShowAddReportStandard} className="dark:bg-black dark:text-white">
+              <DialogHeaderComponent className="dark:text-white">Add Report Standard</DialogHeaderComponent>
+              <DialogBodyComponent>
                   <form>
                     <input type="text" placeholder="Name" className={StyleTextfield} value={name} onChange={(e) => setName(e.target.value)} />
                     {errors.name && <FormErrorMessage message={errors.name} />}
                 </form>
-              </DialogBody>
-              <DialogFooter>
+              </DialogBodyComponent>
+              <DialogFooterComponent>
                   <button className="bg-secondary p-2 text-white rounded-md disabled:opacity-50" onClick={handleCancel}>Cancel</button>
                   <button type="submit" onClick={handleSave} className="bg-primary p-2 ml-2 text-white rounded-md disabled:opacity-50">Save</button>
-              </DialogFooter>
-          </Dialog>
+              </DialogFooterComponent>
+          </DialogComponent>
           
         </div>
     )
@@ -137,7 +144,7 @@ function ProjectTypes() {
   }
   return (
       <div className="mt-4 mb-2">
-        <h2 className='text-xl'>Project Types {loading && <Spinner className="inline ml-1 -mt-1 h-4 w-4 text-center"/>}</h2>
+        <h2 className='text-xl'>Project Types {loading && <SpinnerComponent className="inline ml-1 -mt-1 h-4 w-4 text-center" />}</h2>
             {loading ? <></> :
             <>
             <ul className='cursor-text'>
@@ -146,19 +153,19 @@ function ProjectTypes() {
                 ))}
             </ul>
             <button className="text-primary underline text-sm ml-6" onClick={() => setShowAddProjectType(true)}>Add New</button>
-            <Dialog open={showAddProjectType} handler={setShowAddProjectType} className="dark:bg-black dark:text-white">
-            <DialogHeader className="dark:text-white">Add Project Type</DialogHeader>
-              <DialogBody>
+            <DialogComponent open={showAddProjectType} handler={setShowAddProjectType} className="dark:bg-black dark:text-white">
+            <DialogHeaderComponent className="dark:text-white">Add Project Type</DialogHeaderComponent>
+              <DialogBodyComponent>
                 <form>
                     <input type="text" placeholder="Name" className={StyleTextfield} value={name} onChange={(e) => setName(e.target.value)} />
                     {errors.name && <FormErrorMessage message={errors.name} />}
                 </form>
-              </DialogBody>
-              <DialogFooter>
+              </DialogBodyComponent>
+              <DialogFooterComponent>
                 <button className="bg-secondary p-2 text-white rounded-md disabled:opacity-50" onClick={handleCancel}>Cancel</button>
                 <button type="submit" onClick={handleSave} className="bg-primary p-2 ml-2 text-white rounded-md disabled:opacity-50">Save</button>
-              </DialogFooter>
-            </Dialog>
+              </DialogFooterComponent>
+            </DialogComponent>
             </>
           }
           </div>

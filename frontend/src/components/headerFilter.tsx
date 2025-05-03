@@ -1,11 +1,18 @@
 import { useState, useRef } from 'react'
 import { BackspaceIcon, FunnelIcon } from '@heroicons/react/24/outline'
-import { PiKeyReturnThin } from "react-icons/pi"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DatasetState } from '../lib/useDataReducer'
 import { CiCircleRemove } from "react-icons/ci";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa6";
+import { PiKeyReturnThin } from "react-icons/pi";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import React from "react";
+
+// Ensure proper type casting for react-icons components
+const CiCircleRemoveIcon = CiCircleRemove as unknown as React.FC<React.SVGProps<SVGSVGElement>>;
+const PiKeyReturnThinIcon = PiKeyReturnThin as unknown as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaArrowUpIcon = FaArrowUp as unknown as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaArrowDownIcon = FaArrowDown as unknown as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface HeaderFilterProps {
   label: string;
@@ -28,16 +35,18 @@ interface ClearFilterProps {
   clearFilter: (event: any) => void;
   
 }
+
 export function ClearFilter({queryParams, clearFilter }: ClearFilterProps): JSX.Element {
   if(!isFiltered(queryParams)) {
     return <></>
   }
   return (
       <div className='text-sm text-center my-4'  onClick={clearFilter}>
-          <CiCircleRemove className='w-4 h-4 text-secondary inline'/> Clear filter
+          <CiCircleRemoveIcon className='w-4 h-4 text-secondary inline' /> Clear filter
       </div>
   )
 }
+
 interface HeaderFilterProps {
   label: string;
   name: string;
@@ -49,6 +58,7 @@ interface HeaderFilterProps {
   handleSort?: (name: string, order: string) => void;
   currentFilter: DatasetState['queryParams'];
 }
+
 export function HeaderFilter({label, name, defaultValue, isDate = false, isBoolean = false, onChange, onCommit, handleSort, currentFilter }: HeaderFilterProps): JSX.Element {
   const [active, setActive] = useState(isBoolean ? false : Boolean(defaultValue))
   const [value, setValue] = useState(defaultValue)
@@ -157,10 +167,14 @@ export function HeaderFilter({label, name, defaultValue, isDate = false, isBoole
           <BackspaceIcon className='-ml-8 w-5 h-5 text-secondary' onClick={()=>clearValue()}/>
         )}
         {active && focus && !isBoolean &&
-          <span className='absolute top-10 left-4 bg-white bg-opacity-75 p-1 w-5/8 border border-gray-300 rounded-md dark:bg-black'><PiKeyReturnThin className='inline w-5 h-5' /> to search</span>
+          <span className='absolute top-10 left-4 bg-white bg-opacity-75 p-1 w-5/8 border border-gray-300 rounded-md dark:bg-black'>
+            <PiKeyReturnThinIcon className='inline w-5 h-5' /> to search
+          </span>
         }
         {active && focus && isBoolean &&
-          <span className='absolute top-20 left-4 bg-white  p-1 w-5/8 border border-gray-300 rounded-md'><PiKeyReturnThin className='inline w-5 h-5' /> to search</span>
+          <span className='absolute top-20 left-4 bg-white  p-1 w-5/8 border border-gray-300 rounded-md'>
+            <PiKeyReturnThinIcon className='inline w-5 h-5' /> to search
+          </span>
         }
         {!value && !isBoolean  && 
           <FunnelIcon key={name+ 'icon'} className='-ml-6 w-3 h-3' /> 
@@ -175,7 +189,7 @@ export function HeaderFilter({label, name, defaultValue, isDate = false, isBoole
     )}
     {!active && handleSort && (
       <span onClick={()=>handleSort(name, nextSort)} className={`cursor-pointer ml-1 ${sortDirection === '' ? 'opacity-20 hover:opacity-100' : ''} ${isSorted  ? 'text-primary' : ''}`}>
-        {(sortDirection === 'asc' || sortDirection === '') ? <FaArrowUp className='inline w-4 h-4' /> : <FaArrowDown className='inline w-4 h-4' />}
+        {(sortDirection === 'asc' || sortDirection === '') ? <FaArrowUpIcon className='inline w-4 h-4' /> : <FaArrowDownIcon className='inline w-4 h-4' />}
       </span>
     )}
     </>

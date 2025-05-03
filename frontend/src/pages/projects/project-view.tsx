@@ -21,14 +21,17 @@ import VulnerabilityTable from '../../components/vulnerability-table';
 import {
   Tabs,
   TabsHeader,
-  TabsBody,
   Tab,
+  TabsBody,
   TabPanel
 } from "@material-tailwind/react";
 import ScopeTable from '../../components/scope-table';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
-
+// Ensure proper type casting for Material Tailwind components
+const TabsHeaderComponent = TabsHeader as unknown as React.FC<{ className: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+const TabComponent = Tab as unknown as React.FC<{ key: string; value: string; onClick: () => void; className: string; children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
+const TabsBodyComponent = TabsBody as unknown as React.FC<{ children: React.ReactNode; placeholder?: string; onPointerEnterCapture?: () => void; onPointerLeaveCapture?: () => void }>;
 
 function ProjectView(): JSX.Element {
   const navigate = useNavigate();
@@ -134,14 +137,14 @@ function ProjectView(): JSX.Element {
         <Tabs value={selectedTab}>
           <div className="max-w-screen flex-1 rounded-lg bg-white dark:bg-black dark:text-white px-6 pb-4">
             <PageTitle title='Project Details' />
-            <TabsHeader className='mt-4 dark:bg-gray-200 bg-gray-700'>
-              <Tab key="summary" value="summary" onClick={() => setSelectedTab('summary')}className='text-white '>Summary</Tab>
-              <Tab key="vulnerabilities" value="vulnerabilities" onClick={() => setSelectedTab('vulnerabilities')}className='text-white '>Vulnerabilities</Tab>
-              <Tab key="scopes" value="scopes" onClick={() => setSelectedTab('scopes')}className='text-white '>Scopes</Tab>
-              <Tab key="retest" value="retest" onClick={() => setSelectedTab('retest')}className='text-white '>Retest</Tab>
-              <Tab key="reports" value="reports" onClick={() => setSelectedTab('reports')}className='text-white '>Reports</Tab>
-            </TabsHeader>
-            <TabsBody>
+            <TabsHeaderComponent className='mt-4 dark:bg-gray-200 bg-gray-700'>
+              <TabComponent key="summary" value="summary" onClick={() => setSelectedTab('summary')} className='text-white '>Summary</TabComponent>
+              <TabComponent key="vulnerabilities" value="vulnerabilities" onClick={() => setSelectedTab('vulnerabilities')} className='text-white '>Vulnerabilities</TabComponent>
+              <TabComponent key="scopes" value="scopes" onClick={() => setSelectedTab('scopes')} className='text-white '>Scopes</TabComponent>
+              <TabComponent key="retest" value="retest" onClick={() => setSelectedTab('retest')} className='text-white '>Retest</TabComponent>
+              <TabComponent key="reports" value="reports" onClick={() => setSelectedTab('reports')} className='text-white '>Reports</TabComponent>
+            </TabsHeaderComponent>
+            <TabsBodyComponent>
               <TabPanel value="summary">
                 {currentUserCan('Manage Projects') && (
                   <Link className='text-primary underline' to={`/projects/${project.id}/edit`}>Edit Project</Link>
@@ -270,7 +273,7 @@ function ProjectView(): JSX.Element {
                   <ReportForm projectId={Number(id)} scopeCount={scopes.length} />
                 </div>
               </TabPanel>
-            </TabsBody>
+            </TabsBodyComponent>
           </div>
         </Tabs>
       )}

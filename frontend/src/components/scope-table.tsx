@@ -162,11 +162,19 @@ export default function ScopeTable(props: ScopeTableProps): JSX.Element {
             <button className='bg-secondary text-white p-2 rounded-md inline ' onClick={addBulkScopes}>
               Add Multiple
             </button>
-            <Dialog handler={cancelBulkScopes} open={showDialog} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black" >
+            <Dialog
+              handler={cancelBulkScopes}
+              open={showDialog}
+              size="sm"
+              className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black"
+              placeholder="Bulk Scopes Dialog"
+              onPointerEnterCapture={() => {}}
+              onPointerLeaveCapture={() => {}}
+            >
               <label 
                 htmlFor="bulkScopes"
                 className={StyleLabel}>
-                Enter URLs with (optional) description seperated by comma, one pair per line
+                Enter URLs with (optional) description separated by comma, one pair per line
               </label>
               <textarea
                 name="bulkScopes"

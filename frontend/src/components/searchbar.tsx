@@ -92,7 +92,15 @@ export default function SearchBar({ onSearch, onClear, searchTerm="", placeHolde
       {(!searchValue && showShortcut) &&
         <span className="absolute text-sm  inset-y-2 right-[7rem] flex items-center p-1 rounded-lg text-gray border border-gray">&#8984;+K</span>
       }
-      <Button className="bg-secondary ml-2" onClick={()=> handleSearch()}>Search</Button>
+      <Button
+        className="bg-secondary ml-2"
+        onClick={() => handleSearch()}
+        placeholder="Search Button"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      >
+        Search
+      </Button>
     </div>
   )
 }

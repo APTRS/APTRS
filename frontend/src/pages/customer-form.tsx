@@ -28,7 +28,7 @@ import { useCurrentUser } from '../lib/customHooks';
 import { currentUserCan } from '../lib/utilities';
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
-import { CountryCode } from 'libphonenumber-js/core';
+import { CountryCode, E164Number } from 'libphonenumber-js/core';
 interface FormErrors {
   full_name?: string
   email?: string
@@ -146,7 +146,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
   };
 
   //needed a customer handler for phone number
-  const handlePhoneInputChange = (value:string) => {
+  const handlePhoneInputChange = (value?: E164Number | undefined): void => {
     setEditing(true)
     setFormData({
       ...formData,

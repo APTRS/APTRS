@@ -279,49 +279,89 @@ interface StatusFormProps {
   selected: number[]
 }
 function UpdateStatusDialog(props: StatusFormProps): React.JSX.Element {
-  const  {visible, onCancel, onSave, selected} = props
+  const { visible, onCancel, onSave, selected } = props;
   const clearDialogs = () => {
-    onCancel()
-  }
+    onCancel();
+  };
   const [status, setStatus] = useState('');
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setStatus(event.target.value);
   };
-  const updateStatus = async(event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+  const updateStatus = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     try {
-      if(!status){
-        setError("Please select a status")
-        return
+      if (!status) {
+        setError("Please select a status");
+        return;
       }
-      await api.bulkUpdateVulnerabilityStatus(selected, status)
-      toast.success('Status updated')
-      onSave()
-      setStatus('')
+      await api.bulkUpdateVulnerabilityStatus(selected, status);
+      toast.success('Status updated');
+      onSave();
+      setStatus('');
     } catch (error) {
-      console.error('Error updating status:', error)
-      toast.error(String(error))
+      console.error('Error updating status:', error);
+      toast.error(String(error));
     }
-  }
+  };
   return (
-    <Dialog handler={clearDialogs} open={visible} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black">
-      <DialogHeader className='dark:text-white'>Update Status</DialogHeader>
-      <DialogBody>
+    <Dialog
+      handler={clearDialogs}
+      open={visible}
+      size="sm"
+      className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black"
+      placeholder="Update Status Dialog"
+      onPointerEnterCapture={() => {}}
+      onPointerLeaveCapture={() => {}}
+    >
+      <DialogHeader
+        className="dark:text-white"
+        placeholder="Dialog Header"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      >
+        Update Status
+      </DialogHeader>
+      <DialogBody
+        placeholder="Dialog Body"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      >
         <div>
           <label className={StyleLabel}>Change status to:</label>
           {error && <FormErrorMessage message={error} />}
-          <select className={StyleTextfield} value={status} onChange={handleChange} required>
-          <option value="">Select...</option>
-          {['Vulnerable', 'Confirm Fixed', 'Accepted Risk'].map((status) => ( 
-            <option key={`status-${status}`} value={status}>{status}</option>
-          ))}
+          <select
+            className={StyleTextfield}
+            value={status}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select...</option>
+            {["Vulnerable", "Confirm Fixed", "Accepted Risk"].map((status) => (
+              <option key={`status-${status}`} value={status}>
+                {status}
+              </option>
+            ))}
           </select>
         </div>
       </DialogBody>
-      <DialogFooter>
-        <button className="bg-primary rounded-md text-white mx-1 p-2" onClick={updateStatus}>Update</button>
-        <button className="bg-secondary rounded-md text-white mx-1 p-2" onClick={onCancel}>Cancel</button>
+      <DialogFooter
+        placeholder="Dialog Footer"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      >
+        <button
+          className="bg-primary rounded-md text-white mx-1 p-2"
+          onClick={updateStatus}
+        >
+          Update
+        </button>
+        <button
+          className="bg-secondary rounded-md text-white mx-1 p-2"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
       </DialogFooter>
     </Dialog>
   );
@@ -401,9 +441,9 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
     }
   }
   return (
-          <Dialog key={`instance-${props?.data?.id}`} handler={clearDialog} open={isOpen} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black" >
-            <DialogHeader className='dark:text-white'>{props?.data?.id === 'new' ? 'Add URL' : 'Edit URL'}</DialogHeader>
-              <DialogBody>
+          <Dialog key={`instance-${props?.data?.id}`} handler={clearDialog} open={isOpen} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black" placeholder="Instance Form Dialog" onPointerEnterCapture={() => {}} onPointerLeaveCapture={() => {}}>
+            <DialogHeader className='dark:text-white' placeholder="Dialog Header" onPointerEnterCapture={() => {}} onPointerLeaveCapture={() => {}}>{props?.data?.id === 'new' ? 'Add URL' : 'Edit URL'}</DialogHeader>
+              <DialogBody placeholder="Dialog Body" onPointerEnterCapture={() => {}} onPointerLeaveCapture={() => {}}>
                 <div className="flex min-w-fit mb-2">
                   <div className="w-1/2">
                   <input
@@ -446,7 +486,7 @@ function InstanceForm(props: InstanceFormProps): React.JSX.Element {
               </div>
                 </div>
             </DialogBody>
-            <DialogFooter>
+            <DialogFooter placeholder="Dialog Footer" onPointerEnterCapture={() => {}} onPointerLeaveCapture={() => {}}>
             <button className='bg-primary rounded-md text-white mx-1 p-2'  onClick={saveInstance}>Save</button>
             <button className='bg-secondary rounded-md text-white mx-1 p-2'  onClick={clearDialog}>Cancel</button>
             </DialogFooter>
@@ -470,7 +510,7 @@ function BulkInstanceForm(props: BulkInstanceFormProps): React.JSX.Element {
 
   const clearDialog = () => {
     setShowDialog(false);
-    setBulkUrls('')
+    setBulkUrls('');
     props.onCancel();
   };
 
@@ -479,7 +519,7 @@ function BulkInstanceForm(props: BulkInstanceFormProps): React.JSX.Element {
   };
 
   const saveBulkUrls = async () => {
-    const lines = bulkUrls.split('\n').map(urlWithParams => {
+    const lines = bulkUrls.split('\n').map((urlWithParams) => {
       const [url, ...parameter] = urlWithParams.trim().split(',');
       return { URL: url, Parameter: parameter.join(' '), status: 'Vulnerable', error: !url };
     });
@@ -496,7 +536,15 @@ function BulkInstanceForm(props: BulkInstanceFormProps): React.JSX.Element {
   };
 
   return (
-    <Dialog handler={clearDialog} open={showDialog} size="sm" className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black">
+    <Dialog
+      handler={clearDialog}
+      open={showDialog}
+      size="sm"
+      className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black"
+      placeholder="Bulk Instance Form Dialog"
+      onPointerEnterCapture={() => {}}
+      onPointerLeaveCapture={() => {}}
+    >
       <label htmlFor="bulkUrls" className={StyleLabel}>
         Enter URLs with optional parameters, one per line. URL first followed by a comma and then parameters (if any)
       </label>
@@ -513,12 +561,18 @@ function BulkInstanceForm(props: BulkInstanceFormProps): React.JSX.Element {
         onClick={saveBulkUrls}
         className="bg-primary cursor-pointer disabled:bg-gray-300 mt-2"
         disabled={bulkUrls.trim() === ''}
+        placeholder="Save Button"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
       >
         Add
       </Button>
       <Button
         onClick={clearDialog}
         className="bg-red-600 cursor-pointer disabled:bg-gray-300 mt-2 ml-2"
+        placeholder="Cancel Button"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
       >
         Cancel
       </Button>

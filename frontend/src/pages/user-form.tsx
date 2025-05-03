@@ -30,7 +30,7 @@ import { phoneRegex, emailRegex, usernameRegex, parseErrors } from '../lib/utili
 import PermissionGroupSelect from '../components/permission-group-select';
 import { currentUserCan } from '../lib/utilities'
 import { useNavigate } from 'react-router-dom';
-import { CountryCode } from 'libphonenumber-js/core';
+import { CountryCode, E164Number } from 'libphonenumber-js/core';
 
 
 
@@ -151,7 +151,7 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
     loadData();
   }, [id]);
   //needed a customer handler for phone number
-  const handlePhoneInputChange = (value:string) => {
+  const handlePhoneInputChange = (value?: E164Number | undefined): void => {
     setFormData({
       ...formData,
       number:value
