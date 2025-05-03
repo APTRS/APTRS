@@ -25,16 +25,17 @@ class Projectserializers(serializers.ModelSerializer):
     status = serializers.CharField(read_only=True)
     owner = serializers.ListField(child=serializers.CharField(), write_only=True)
     companyname = serializers.CharField(write_only=True)
+    standard = serializers.ListField(child=serializers.CharField(), required=False)  # Add the standard field
 
     class Meta:
         model = Project
-        fields = ('id','name', 'description', 'projecttype', 'startdate','enddate','testingtype','projectexception','status','owner','companyname')
+        fields = ('id', 'name', 'description', 'projecttype', 'startdate', 'enddate', 'testingtype', 'projectexception', 'status', 'owner', 'companyname', 'standard')
 
     def to_representation(self, instance):
         rep = super(Projectserializers, self).to_representation(instance)
         rep['companyname'] = instance.companyname.name
         rep['owner'] = [user.username for user in instance.owner.all()]
-
+        rep['standard'] = instance.standard  # Ensure the standard field is included in the representation
         return rep
 
     def get_user_permissions(self, user):
@@ -46,14 +47,12 @@ class Projectserializers(serializers.ModelSerializer):
 
         return permissions
 
-
-
-
     def create(self, validated_data):
         # Access the request object from the context
         request = self.context.get('request')
         owners_usernames = validated_data.pop('owner', [])
         company_name = validated_data.pop('companyname', None)
+        validated_data['standard'] = validated_data.get('standard', [])  # Handle the standard field
         if company_name:
             try:
                 company = Company.objects.get(name=company_name)
@@ -94,6 +93,8 @@ class Projectserializers(serializers.ModelSerializer):
         request = self.context.get('request')
         owners_usernames = validated_data.pop('owner', [])
         validated_data.pop('companyname', None)
+        if 'standard' in validated_data:
+            instance.standard = validated_data['standard']  # Update the standard field
         if request and request.user:
             if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):
                 if owners_usernames:

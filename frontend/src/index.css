@@ -169,6 +169,7 @@ strong {
 }
 
 
+
 .custom-ckeditor-dark {
   /* Overrides the border radius setting in the theme. */
   --ck-border-radius: 4px;
@@ -281,6 +282,68 @@ strong {
 
   --ck-color-link-default: hsl(190, 100%, 75%);
 
+
+}
+
+@layer utilities {
+  .react-select__control {
+    @apply bg-white border border-gray-300 rounded-md shadow-sm text-sm;
+  }
+
+  .dark .react-select__control {
+    @apply bg-gray-900 border-gray-700 text-white;
+  }
+
+  .dark .react-select__multi-value__label {
+  background-color: gray !important;
+  color: white !important;
+  }
+
+  .react-select__menu {
+    @apply bg-white text-sm;
+  }
+
+  .dark .react-select__menu {
+    @apply bg-gray-800 text-white;
+  }
+
+  .react-select__option {
+    @apply cursor-pointer px-3 py-2;
+  }
+
+  .react-select__option:hover {
+    @apply bg-gray-100;
+  }
+
+  .dark .react-select__option:hover {
+    @apply bg-gray-700;
+  }
+
+  .react-select__option--is-selected {
+    @apply bg-gray-700 text-white;
+  }
+
+  .react-select__multi-value {
+    @apply bg-gray-100 text-white-800 rounded px-2;
+  }
+
+  
+  .react-select__multi-value__label {
+    @apply bg-black text-white-100;
+  }
+
+  .react-select__multi-value__remove {
+    @apply text-white-500;
+  }
+
+  .dark .react-select__multi-value__remove {
+    @apply text-red-500;
+    background-color: gray !important;
+  }
+
+  .react-select__multi-value__remove:hover {
+    @apply text-red-500;
+  }
 
 }
 

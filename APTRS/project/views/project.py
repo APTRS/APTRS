@@ -260,9 +260,9 @@ def project_report(request, pk):
     #url = request.build_absolute_uri()
     url = get_base_url(request)
     try:
-        standard = request.query_params.getlist('Standard')
+        standard = Project.objects.get(pk=pk).standard
         if not standard:
-            raise ValueError("No 'Standard' query parameter found.")
+            raise ValueError("No 'Standard' in Project.")
     except ValueError as e:
         logging.error(f"Error: {e}")
         return Response({"Status": "Failed", "Message": "Report Standards are not provided"})

@@ -1,4 +1,3 @@
-
 import{ ReactNode } from 'react'
 
 export type Vulnerability = {
@@ -45,6 +44,7 @@ export interface Project  {
   projectexception: string
   companyname: string
   owner: string[]
+  standard?: string[]; // Added standard field
 }
 export interface Company  {
   id?: number

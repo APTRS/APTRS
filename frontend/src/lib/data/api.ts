@@ -273,19 +273,16 @@ interface ProjectReportParams {
   projectId: number
   Format: string
   Type: string
-  Standard: string[]
 }
 interface APIParams {
-  Standard: string;
   Format: string
   Type: string
 }
 export async function getProjectReport(props: ProjectReportParams) {
   //convet standard from array to string
-  const { projectId, Standard, ...params } = props;
+  const { projectId, ...params } = props;
   const toSubmit: APIParams = {
     ...params,
-    Standard: Standard.join(','),
   };
   const url = apiUrl(`project/report/${projectId}/`);
   const config = {

@@ -5,6 +5,7 @@ import  {
   FormEvent
 } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Select from 'react-select';
 import {
   StyleTextfield,
   StyleLabel,
@@ -20,7 +21,7 @@ import { currentUserCan } from '../../lib/utilities'
 import Button from '../../components/button';
 import { FormSkeleton } from '../../components/skeletons'
 import { getProject } from '../../lib/data/api';
-import { upsertProject, fetchProjectTypes} from '../../lib/data/api';
+import { upsertProject, fetchProjectTypes, fetchReportStandards } from '../../lib/data/api';
 import { Project } from '../../lib/data/definitions'
 import { isAfter } from 'date-fns'
 import DatePicker from "react-datepicker";
@@ -48,6 +49,11 @@ interface ProjectType {
   name: string
 }
 
+interface ReportStandard {
+  id: number
+  name: string
+}
+
 function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
   const params = useParams()
   const { id: routeId } = params;
@@ -59,6 +65,8 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
   const [editing, setEditing] = useState(false)
   const [saveError, setSaveError] = useState('');
   const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
+  const [standards, setStandards] = useState<ReportStandard[]>([]);
+  const [selectedStandards, setSelectedStandards] = useState<string[]>([]);
   const [formData, setFormData] = useState<Project>({
     name: '',
     description: '',
@@ -70,6 +78,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
     projectexception: '',
     companyname: '',
     owner: [currentUser?.username as string],
+    standard: [], // Added standard field
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const navigate = useNavigate()
@@ -83,6 +92,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
         try {
           const projectData = await getProject(id) as Project;
           setFormData(projectData);
+          setSelectedStandards(projectData.standard || []); // Populate selectedStandards with the standard field from API response
         } catch (error) {
           console.error("Error fetching project data:", error);
           setLoadingError(true);
@@ -91,12 +101,33 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
           setLoading(false);
         }
       }
-      const data = await fetchProjectTypes()
+      const data = await fetchProjectTypes();
       const sortedData = data.sort((a: ProjectType, b: ProjectType) => a.name.localeCompare(b.name));
-      setProjectTypes(sortedData)      
-    }
+      setProjectTypes(sortedData);      
+    };
     loadData();
   }, [id]);
+
+  useEffect(() => {
+    const loadStandards = async () => {
+      try {
+        const result = await fetchReportStandards();
+        setStandards(result);
+      } catch (err) {
+        console.error('Error fetching standards:', err);
+      }
+    };
+    loadStandards();
+  }, []);
+
+  const handleStandardChange = (selectedOptions: any) => {
+    const selectedValues = selectedOptions.map((option: any) => option.value);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      standard: selectedValues,
+    }));
+  };
+
   const handleCKchange = (name:string, value:string):void => {
     setEditing(true)
     setFormData((prevFormData) => ({
@@ -422,6 +453,21 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                 </div>
               </div>
               
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">Standards</label>
+                <Select
+                  isMulti
+                  options={standards.map(standard => ({ value: standard.name, label: standard.name }))}
+                  value={selectedStandards.map(standard => ({ value: standard, label: standard }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(option => option.value);
+                    setSelectedStandards(selectedValues);
+                    handleStandardChange(selectedOptions);
+                  }}
+                  className="react-select-container"
+                  classNamePrefix="react-select"
+                />
+              </div>
              
             </div>
             

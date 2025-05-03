@@ -36,6 +36,7 @@ class Project(models.Model):
     projectexception = models.TextField(unique = False, null = True, blank = True,validators=[xss_validator])
     owner = models.ManyToManyField(CustomUser,blank=True)
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
+    standard = models.JSONField(default=list) 
 
     def clean(self):
         if self.enddate < self.startdate:

@@ -1,27 +1,22 @@
 import { useState, useEffect, ChangeEvent } from 'react';
-import {  fetchReportStandards, 
-          getProjectReport
-        } from '../../lib/data/api';
+import { getProjectReport } from '../../lib/data/api';
 import { Scope } from '../../lib/data/definitions';
 import 'react-datepicker/dist/react-datepicker.css';
-import { StyleTextfield, FormErrorMessage, StyleCheckbox } from '../../lib/formstyles';
+import { StyleTextfield, FormErrorMessage } from '../../lib/formstyles';
 import { toast } from 'react-hot-toast';
-
 
 interface ReportFormProps {
   projectId: number;
   scopeCount: number;
 }
 export default function ReportForm(props: ReportFormProps) {
-  const {projectId} = props
-  const [scopeCount, setScopeCount] = useState(props.scopeCount)
+  const { projectId } = props;
+  const [scopeCount, setScopeCount] = useState(props.scopeCount);
   const [error, setError] = useState('');
-  const [standards, setStandards] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     projectId,
     Format: '',
-    Type: '',
-    Standard: [] as string[]
+    Type: ''
   });
   const [loading, setLoading] = useState(false);
   const [scopes, setScopes] = useState<Scope[]>([]);
@@ -29,33 +24,14 @@ export default function ReportForm(props: ReportFormProps) {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { Standard } = formData;
-    if (Standard.includes(event.target.value)) {
-      setFormData({ ...formData, Standard: Standard.filter(item => item !== event.target.value) });
-    } else {
-      setFormData({ ...formData, Standard: [...Standard, event.target.value] });
-    }
-  };
-  
-
   const isValid = () => {
-    return formData.Format && formData.Type && formData.Standard.length > 0;
-  };
-
-  const loadStandards = async () => {
-    const data = await fetchReportStandards();
-    setStandards(data);
+    return formData.Format && formData.Type;
   };
 
   useEffect(() => {
-    setScopeCount(props.scopeCount)
+    setScopeCount(props.scopeCount);
   }, [props]);
 
-  useEffect(() => {
-    loadStandards();
-  }, []);
-  
   const fetchReport = async () => {
     setLoading(true);
     try {
@@ -127,29 +103,12 @@ export default function ReportForm(props: ReportFormProps) {
         <option value="docx">Microsoft Word</option>
         <option value="excel">Microsoft Excel</option>
       </select>
-      <label htmlFor='Type'className='dark:text-white'>Type</label>
+      <label htmlFor='Type' className='dark:text-white'>Type</label>
       <select name='Type' id='Type' className={StyleTextfield} onChange={handleChange}>
         <option value="">Select...</option>
         <option value="Audit">Audit</option>
         <option value="Re-Audit">Re-Audit</option>
       </select>
-      <div className='mt-4'>
-        {standards.map((standard: any) => (
-          <div key={standard.id}>
-            <input
-              type="checkbox"
-              id={`Standard_${standard.id}`}
-              name="Standard[]"
-              value={standard.name}
-              className={StyleCheckbox + 'dark:text-white'}
-              onChange={handleCheckboxChange}
-            />
-            <label className='ml-2 dark:text-white' htmlFor={`Standard_${standard.id}`}>
-              {standard.name}
-            </label>
-          </div>
-        ))}
-      </div>
       <button className='bg-primary text-white p-2 rounded-md block mt-6 disabled:opacity-50' disabled={loading || !isValid()} onClick={fetchReport}>Fetch Report</button>
     </>
   );

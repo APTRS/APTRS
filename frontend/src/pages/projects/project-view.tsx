@@ -200,6 +200,12 @@ function ProjectView(): JSX.Element {
                     </div>
                   </div>
                   <div className="mt-4">
+                    <label className={StyleLabel}>Standards</label>
+                    <div className="relative cursor-text dark:text-white">
+                    {project.standard?.length ? project.standard.join(', ') : 'None'}
+                    </div>
+                  </div>
+                  <div className="mt-4">
                     <label className={StyleLabel}>Type</label>
                     <div className="relative cursor-text dark:text-white">{project.projecttype}</div>
                   </div>
