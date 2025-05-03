@@ -31,15 +31,20 @@ const Login: React.FC<LoginProps> = ({onSuccess}) => {
     setBtnDisabled(true)
     try {
       const result = await login(email,password)
-      if(!result){
-        //bad email & password
-        setLoginError(true)
-        setBtnDisabled(false)
+      
+      if (!result) {
+        // Bad email & password
+        setLoginError(true);
+        setBtnDisabled(false);
       } else {
-        if(onSuccess) {
-          onSuccess()
+        if (onSuccess) {
+          onSuccess();
         } else {
-          navigate('/dashboard')
+          if (result.isStaff) {
+            navigate('/dashboard');
+          } else {
+            navigate('/customer-dashboard'); // Redirect to customer dashboard for non-staff users
+          }
         }
       }     
     } catch (error) {
