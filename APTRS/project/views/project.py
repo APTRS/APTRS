@@ -88,7 +88,7 @@ def getproject(request, pk):
         # First get the project with all required relations
         project = Project.objects.prefetch_related('owner').select_related('companyname').get(pk=pk)
         user_company_id = request.user.company.id
-        
+
         # Check permissions:
         # 1. Staff and admin can access any project
         # 2. Customer users can only access projects from their company
@@ -100,7 +100,7 @@ def getproject(request, pk):
                     request.user.username, pk
                 )
                 return Response({"message": "You are not authorized to view this project"}, status=status.HTTP_403_FORBIDDEN)
-    
+
     except ObjectDoesNotExist:
         logger.error("Project not found for id=%s", pk)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -139,7 +139,7 @@ class GetMyProjects(views.APIView):
             is_active=True,
             is_completed=False
         ).values('pk')
-        
+
         # Find projects with active retests
         projects_with_retests = Project.objects.filter(Exists(retest_exists))
 
@@ -212,14 +212,14 @@ def complete_project_status(request, pk):
             "validation_errors": validation_result['errors'],
             "details": validation_result['details']
         }, status=status.HTTP_400_BAD_REQUEST)
-    
+
     # Set the project status to 'Completed'
     project.status = 'Completed'
     project.save()
-    
-    
+
+
     project.vulnerability_set.all().update(
-        published=True, 
+        published=True,
         published_date=timezone.now()
     )
     logger.info("All vulnerabilities for project ID %s marked as published", safe_pk)
@@ -232,7 +232,7 @@ def complete_project_status(request, pk):
         is_active=False
     )
     logger.info("All retests for project ID %s marked as completed", safe_pk)
-    
+
     send_completion_email_async.delay(project.id)
     logger.info("Project completion email notification queued for project ID %s", safe_pk)
 
@@ -256,7 +256,7 @@ def reopen_project_status(request, pk):
     # Set the project status back to active (In Progress)
     project.status = 'In Progress'
     project.save()
-    
+
     # Find any retests that are on hold (is_active=False AND is_completed=False)
     # and reactivate them when reopening the project
     retests_updated = ProjectRetest.objects.filter(
@@ -264,10 +264,10 @@ def reopen_project_status(request, pk):
         is_active=False,
         is_completed=False  # Only retests that are on hold (inactive but not completed)
     ).update(is_active=True)
-    
+
     if retests_updated > 0:
         logger.info("Reactivated %s on-hold retests for project ID %s", retests_updated, safe_pk)
-    
+
     latest_status = project.calculate_status
 
     return Response({
@@ -286,14 +286,14 @@ def hold_project_status(request, pk):
     except ObjectDoesNotExist:
         logger.error("Project not found for id=%s", pk)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     # Get reason_for_hold from request data
     reason_for_hold = request.data.get('reason_for_hold', '')
-    
+
     project.status = 'On Hold'
     project.hold_reason = reason_for_hold  # Store the reason for hold
     project.save()
-    
+
     # Update all active, non-completed retests to inactive
     ProjectRetest.objects.filter(
         project=project,
@@ -304,7 +304,7 @@ def hold_project_status(request, pk):
     send_hold_email_async.delay(project.id)
 
     return Response({
-        'message': f'Status of project {pk} updated to On Hold', 
+        'message': f'Status of project {pk} updated to On Hold',
         'latest_status': project.status,
         'reason_for_hold': reason_for_hold
     })
@@ -313,7 +313,7 @@ def hold_project_status(request, pk):
 
 def report_validation(report_type,project, is_customer):
 
-    # Validating report type  
+    # Validating report type
     if report_type not in ['Audit', 'Re-Audit']:
             return Response({"Status": "Failed", "Message": "Report type is incorrect. Only Audit or Re-Audit are supported"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -327,13 +327,13 @@ def report_validation(report_type,project, is_customer):
     #has_scope = PrjectScope.objects.filter(project=project).exists()
     if not project.prjectscope_set.exists():
         return Response({"Status": "Failed", "Message": "Project has no Sccope added, Kindly add Scope to generate project"})
-    
+
     #Checking if project has any vulnerabilities added
     #has_vulnerabilities = Vulnerability.objects.filter(project=project).exists()
     vulnerabilities = project.vulnerability_set.all()
     if not vulnerabilities:
         return Response({"Status": "Failed", "Message": "Project has no vulnerabilities, Kindly add vulnerabilities to generate project"})
-    
+
     if is_customer and not vulnerabilities.filter(published=True).exists():
         return Response({"Status": "Failed", "Message": "Project has no published vulnerabilities, Kindly publish vulnerabilities to generate project"})
 
@@ -346,7 +346,7 @@ def report_validation(report_type,project, is_customer):
             logger.error("Vulnerability %s has no Instance added", vulnerability.vulnerabilityname)
             response_data = {"Status": "Failed", "Message": f"Vulnerability {vulnerability.vulnerabilityname} has no Instance added, Kindly add Instance to generate project"}
             return Response(response_data)
-        
+
     # If all validations pass, return None
     logger.info("All validations passed for project %s", project.id)
     return None
@@ -366,21 +366,21 @@ def project_report(request, pk):
         if not is_staff and not is_superuser:
             if user_company_id != project.companyname.id:
                 return Response({"message": "You are not authorized to view this project"}, status=status.HTTP_403_FORBIDDEN)
-            
+
 
         report_format = request.query_params.get('Format')
         report_type = request.query_params.get('Type')
-        
+
         # For staff users, allow all formats (pdf, excel, docx)
         # For non-staff users, only allow pdf and excel
         allowed_formats = ['pdf', 'excel', 'docx'] if is_staff else ['pdf', 'excel']
-        
+
         if not report_format in allowed_formats:
             formats_message = "pdf, excel, and docx" if is_staff else "pdf and excel"
             logger.error(f"Report Format is incorrect. Only {formats_message} are supported for this user type")
             return Response({"Status": "Failed", "Message": f"Report Format is incorrect. Only {formats_message} are supported for your user type"})
 
-          
+
         response = report_validation(report_type,project, is_staff)
         if response:
             return response
@@ -388,11 +388,11 @@ def project_report(request, pk):
     except Exception as e:
         logger.error(e)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
-    
-    
+
+
     url = get_base_url(request)
     standard = project.standard
-        
+
     # generate new token for user to access auth protected images for report, user token in request might be close to expiry, so refreshing it to have new 30 mins token
     if not is_staff:
         access_token = create_image_access_token(request.user)

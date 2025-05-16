@@ -18,7 +18,7 @@ class AddProjectAPITest(APITestCase):
     def setUp(self):
         """Set up test environment before each test method"""
         self.client = APIClient(REMOTE_ADDR='127.0.0.1')
-        
+
     def tearDown(self):
         """Clean up after each test method"""
         # Django TestCase automatically rolls back the transaction after each test
@@ -65,7 +65,7 @@ class AddProjectAPITest(APITestCase):
             "Manage Company",
             "Manage Configurations"
         ]
-        
+
         # Create all required permissions in a single query
         for permission_name in required_permissions:
             CustomPermission.objects.get_or_create(
@@ -106,10 +106,10 @@ class AddProjectAPITest(APITestCase):
             elif created:
                 # If perms is already a queryset of permission objects
                 group.list_of_permissions.set(perms)
-                
+
         # Create company
         Company.objects.get_or_create(name='OWASP', defaults={'address': 'USA'})
-        
+
         # Note: We will not create project data here as it's better to create fresh for each test
 
     def login_user(self, user_data):
@@ -120,10 +120,10 @@ class AddProjectAPITest(APITestCase):
             "password": user_data['password']
         }
         login_response = self.client.post(login_url, login_data, format='json')
-        self.assertEqual(login_response.status_code, status.HTTP_200_OK, 
+        self.assertEqual(login_response.status_code, status.HTTP_200_OK,
                         f"User login failed: {login_response.content.decode('utf-8')}")
         return login_response.data.get('access', '')
-        
+
     def test_add_company(self):
         """Test adding a company"""
         token = self.login_user(self.admin_user_data)
@@ -131,10 +131,10 @@ class AddProjectAPITest(APITestCase):
         company_data = {'name': 'OWASP_test', 'address': 'USA'}
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         add_company_response = self.client.post(add_company_url, company_data, format='json')
-        self.assertEqual(add_company_response.status_code, status.HTTP_200_OK, 
+        self.assertEqual(add_company_response.status_code, status.HTTP_200_OK,
                         f"Adding company failed: {add_company_response.content.decode('utf-8')}")
         print("Company added successfully")
-        
+
         # Verify company was created
         self.assertTrue(Company.objects.filter(name='OWASP_test').exists(),
                        "Company was not created in the database")
@@ -208,32 +208,32 @@ class AddProjectAPITest(APITestCase):
         }
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = self.client.post(add_vulnerability_url, vulnerability_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED,
                         f"Adding vulnerability failed: {response.content.decode('utf-8')}")
         return response.data
-        
+
     def test_generate_report(self):
         """Test report generation for different formats"""
         # Login as admin user
         token = self.login_user(self.admin_user_data)
         self.client = APIClient(REMOTE_ADDR='127.0.0.1')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        
+
         # Create test data directly in the database to avoid API dependencies
         user = get_user_model().objects.get(username="user")
         admin_user = get_user_model().objects.get(username="admin")
-        
+
         # Make sure user has a company
         company = Company.objects.get(name="OWASP")
         user.company = company
         user.save()
-        
+
         # Make sure admin user has a company
         admin_user.company = company
         admin_user.save()
-        
+
         print(f"User: {user.id}, Company: {company.id}, Admin: {admin_user.id}")
-        
+
         # Create project with required data for report generation
         project = Project.objects.create(
             name="Report Test Project",
@@ -247,11 +247,11 @@ class AddProjectAPITest(APITestCase):
             status="Open",
             standard=["OWASP Top 10 web", "OWASP Top 10 API", "NIST"]
         )
-        
+
         # Add owner to project
         project.owner.add(user)
         project.save()
-        
+
         # Add multiple scopes to the project - required for report generation
         scopes_data = [
             {"scope": "https://api.aptrs.com", "description": "API Test Scope"},
@@ -263,7 +263,7 @@ class AddProjectAPITest(APITestCase):
                 scope=scope_data["scope"],
                 description=scope_data["description"]
             )
-        
+
         # Add multiple vulnerabilities with instances to the project
         vulnerabilities_data = [
             {
@@ -296,7 +296,7 @@ class AddProjectAPITest(APITestCase):
                 ]
             }
         ]
-        
+
         # Create vulnerabilities and their instances
         for vuln_data in vulnerabilities_data:
             # Create vulnerability
@@ -315,7 +315,7 @@ class AddProjectAPITest(APITestCase):
                 last_updated_by=user,
                 published=True  # Ensure vulnerability is published
             )
-            
+
             # Create instances for this vulnerability
             for instance_data in vuln_data["instances"]:
                 Vulnerableinstance.objects.create(
@@ -325,35 +325,35 @@ class AddProjectAPITest(APITestCase):
                     Parameter=instance_data["param"],
                     status=instance_data["status"]
                 )
-        
+
         # Verify the project exists in the database before proceeding
         project_id = project.id
-        self.assertTrue(Project.objects.filter(id=project_id).exists(), 
+        self.assertTrue(Project.objects.filter(id=project_id).exists(),
                         f"Project with ID {project_id} does not exist in the database")
-        
+
         # Verify scopes exist
-        self.assertTrue(PrjectScope.objects.filter(project_id=project_id).exists(), 
+        self.assertTrue(PrjectScope.objects.filter(project_id=project_id).exists(),
                         f"Scopes for project ID {project_id} do not exist in the database")
-        
+
         # Verify vulnerabilities exist
-        self.assertTrue(Vulnerability.objects.filter(project_id=project_id).exists(), 
+        self.assertTrue(Vulnerability.objects.filter(project_id=project_id).exists(),
                         f"Vulnerabilities for project ID {project_id} do not exist in the database")
-        
+
         # Verify instances exist
-        self.assertTrue(Vulnerableinstance.objects.filter(project_id=project_id).exists(), 
+        self.assertTrue(Vulnerableinstance.objects.filter(project_id=project_id).exists(),
                         f"Vulnerability instances for project ID {project_id} do not exist in the database")
-        
+
         # Check vulnerability count
         vuln_count = Vulnerability.objects.filter(project_id=project_id).count()
-        self.assertEqual(vuln_count, len(vulnerabilities_data), 
+        self.assertEqual(vuln_count, len(vulnerabilities_data),
                          f"Expected {len(vulnerabilities_data)} vulnerabilities, found {vuln_count}")
-        
+
         # Check vulnerability instances count
         expected_instance_count = sum(len(v["instances"]) for v in vulnerabilities_data)
         instance_count = Vulnerableinstance.objects.filter(project_id=project_id).count()
-        self.assertEqual(instance_count, expected_instance_count, 
+        self.assertEqual(instance_count, expected_instance_count,
                          f"Expected {expected_instance_count} vulnerability instances, found {instance_count}")
-        
+
         # Test report generation for different formats
         report_formats = ['excel', 'pdf', 'docx']
         for report_format in report_formats:
@@ -361,11 +361,11 @@ class AddProjectAPITest(APITestCase):
             token = self.login_user(self.admin_user_data)
             self.client = APIClient(REMOTE_ADDR='127.0.0.1')
             self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-            
+
             # Use the project ID from the newly created project
             report_url = f"/api/project/report/{project_id}/?Format={report_format}&Type=Audit"
             print(f"Testing {report_format} report generation for project ID {project_id}")
-            
+
             response = self.client.get(report_url)
               # Print more information for debugging
             print(f"Report generation response status: {response.status_code}")
@@ -376,7 +376,7 @@ class AddProjectAPITest(APITestCase):
                     print(f"Response content: {error_content}")
                 except UnicodeDecodeError:
                     print("Response contains binary data that cannot be decoded as UTF-8")
-            
-            self.assertEqual(response.status_code, status.HTTP_200_OK, 
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK,
                              f"Generating {report_format} report failed with status code {response.status_code}")
             print(f"Report is generated successfully: {report_format}")

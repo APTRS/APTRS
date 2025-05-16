@@ -7,7 +7,8 @@ Please refer to this table to understand the currently supported versions of the
 | Version | Supported          |
 | ------- | ------------------ |
 | 0.x.x   | :x:                |
-| 1.x.x   | :white_check_mark: |
+| 1.x.x   | :x:                |
+| 2.x.x   | :white_check_mark: |
 
 
 ## Reporting a Vulnerability

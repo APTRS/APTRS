@@ -79,10 +79,9 @@ const Vulnerabilities = () => {
   function handlePageChange(page: number){
     dispatch({ type: 'set-page', payload: page });
   }
-  
-  const handleDelete = async (ids: any[]) => {
+    const handleDelete = async (ids: any[]): Promise<void> => {
     if (!confirm('Are you sure?')) {
-      return false;
+      return;
     }
     try {
       const count = ids.length;
@@ -101,7 +100,6 @@ const Vulnerabilities = () => {
         dispatch({ type: 'reset'});
         setSelected([])
     };
-    return false;
   };
   function formatRows(rows: VulnWithActions[]):VulnWithActions[] {
     let temp: any = []
@@ -198,9 +196,8 @@ const Vulnerabilities = () => {
     },
     
   ]
-  
-  const deleteMultiple = () => {
-    return handleDelete(selected)
+    const deleteMultiple = () => {
+    handleDelete(selected);
   }
   if(state.error){
     console.error(state.error)
