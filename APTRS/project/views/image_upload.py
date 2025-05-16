@@ -1,7 +1,7 @@
 import logging
 import os
 from django.conf import settings
-from rest_framework.decorators import (api_view, permission_classes)
+from rest_framework.decorators import permission_classes
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.response import Response
@@ -16,29 +16,6 @@ from utils.token import verify_image_access_token
 
 logger = logging.getLogger(__name__)
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated,IsAdminUser])
-def delete_images(request):
-
-    image_paths = request.data
-    deleted_images = []
-    failed_images = []
-    for path in image_paths:
-        path = os.path.basename(path)
-        fullimage_path =  os.path.normpat(os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, path))
-        if fullimage_path.startswith(settings.CKEDITOR_UPLOAD_LOCATION):
-            try:
-                os.remove(fullimage_path)
-                deleted_images.append(image_paths)
-            except FileNotFoundError:
-                failed_images.append(image_paths)
-        else:
-            return Response({'message': 'Error, Invalid Image path provided'})
-    response_data = {
-        'deleted_images': deleted_images,
-        'failed_images': failed_images
-    }
-    return Response(response_data)
 
 class ImageUploadView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]

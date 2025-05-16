@@ -54,6 +54,5 @@ urlpatterns = [
 
     # images
     path('ckeditor/imageupload/', image_upload.ImageUploadView.as_view(),),
-    path('ckeditor/delete-images/', image_upload.delete_images, name='delete_images'),
     path('getimage/', GetImageView.as_view(), name='get_image'),
 ]
