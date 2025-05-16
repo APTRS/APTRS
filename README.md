@@ -63,6 +63,7 @@ docker-compose up
 - Custom Report Template in Docx or HTML/CSS
 - Manage All Projects in one place
 - Maintain the Vulnerability Database
+- Customer Dashboard, allow customer to login and check projects and download reports
 - Easily Generate PDF, DOCX and Excel Report
 - Easily Customize PDF and DOCX Report Template
 - Dynamically add POC, Description and Recommendations
@@ -72,16 +73,39 @@ docker-compose up
 
 ## Support APTRS
 
-If you've found APTRS helpful and valuable, please consider supporting the project. Your donations are crucial in helping maintain and improve APTRS, which is primarily maintained by a single dedicated developer. Your support will ensure the continued development of new features, timely updates, and the overall sustainability of the project. Every contribution, no matter how small, makes a significant difference and is greatly appreciated. Thank you for your generosity and support!
-<div style="display: flex; flex-direction: column; align-items: center; border: 1px solid #000; padding: 10px; width: 350px;"><b>Bitcoin</b>
-  <img src="https://raw.githubusercontent.com/APTRS/APTRS-Changelog/refs/heads/main/images/BTC.png" alt="BTC Wallet QR Code" width="200" height="200">
-  <p style="margin-top: 10px; text-align: center;">bc1qusxngf2w5gl2g8hw82ggct59227k4963f9fwhm</p>
+APTRS is an open-source project that takes significant time and effort to maintain. If you're using APTRS in your work or find it valuable, please consider supporting its development.
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <h3>🚀 Why Support?</h3>
+        <ul align="left">
+          <li>Ensure active development of new features</li>
+          <li>Help maintain and improve existing functionality</li>
+          <li>Support faster bug fixes and timely updates</li>
+          <li>Enable better documentation and tutorials</li>
+          <li>Show appreciation for a tool you use professionally</li>
+        </ul>
+      </td>
+      <td align="center" width="350">
+        <div style="border: 1px solid #e1e4e8; border-radius: 6px; padding: 16px; background-color: #f6f8fa;">
+          <h3>Bitcoin Donations</h3>
+          <img src="https://raw.githubusercontent.com/APTRS/APTRS-Changelog/refs/heads/main/images/BTC.png" alt="BTC Wallet QR Code" width="200" height="200" style="border-radius: 10px;">
+          <p><code>bc1qusxngf2w5gl2g8hw82ggct59227k4963f9fwhm</code></p>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="margin-top: 20px;">
+    <a href="https://github.com/sponsors/APTRS">
+      <img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&style=for-the-badge&color=%23fe8e86" alt="Sponsor APTRS">
+    </a>
+  </div>
+  
+  <p><em>Your support makes a meaningful difference in keeping this project alive and evolving!</em> 💖</p>
 </div>
-<br/><br/>
-<a href="https://github.com/sponsors/APTRS"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Sponsor APTRS" width="230" height="50"></a>
-<br/><br/>
-
-
 
 ## Sponsor
 
