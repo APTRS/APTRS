@@ -8,7 +8,6 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from utils.filters import CompanyFilter, UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
-from django.core.cache import cache
 from django.db.models import Q, Count, Case, When, IntegerField
 
 #local imports
@@ -111,7 +110,7 @@ def customeradd(request):
     serializer = CustomerSerializer(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):
         user = serializer.save()
-        
+
         send_token_email(user, token_type='invitation')
         cache.delete('all_customer_data')
         return Response(serializer.data)
@@ -175,25 +174,25 @@ def customeredit(request,pk):
 def resend_invitation_api(request, user_id):
     """
     API endpoint to resend an invitation email to a user.
-    
+
     This endpoint requires the user to be authenticated and have admin privileges.
-    
+
     Args:
         request: The HTTP request object
         user_id (int): The ID of the user to resend the invitation to
-        
+
     Returns:
         Response: A JSON response with the result of the operation
     """
     try:
         user = CustomUser.objects.get(pk=user_id)
-        
+
         # Send invitation email
         send_token_email(user, token_type='invitation')
-        
+
         return Response({'message': f'Invitation email sent to {user.email}'})
-        
-            
+
+
     except CustomUser.DoesNotExist:
         logger.warning(f"Attempt to resend invitation to non-existent user ID: {user_id}")
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -269,7 +268,7 @@ def companydelete(request):
 @permission_classes([IsAuthenticated])
 def getproject_details(request):
     user_company = request.user.company
-    
+
     response_data = getproject_details_core(user_company)
     return Response(response_data)
 
@@ -319,10 +318,9 @@ def getCompanyProject(request):
     No pagination - returns all matching projects.
     """
     user_company = request.user.company
-    
+
     if not user_company:
-        return Response({"error": "User is not associated with any company"}, 
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "User is not associated with any company"}, status=status.HTTP_400_BAD_REQUEST)
 
     # Create a single query to get both types of projects
     all_projects = Project.objects.filter(
@@ -357,16 +355,16 @@ def getCompanyProject(request):
         )),
         total_count=Count('id')
     )
-    
+
     # Serialize projects without pagination
     serializer = ProjectSerializer(all_projects, many=True)
-    
+
     # Create response with both projects and counts
     response_data = {
         'projects': serializer.data,
         'counts': status_counts
     }
-    
+
     # Return all projects and counts in the response
     return Response(response_data)
 
@@ -377,18 +375,18 @@ def get_completed_projects(request):
     """
     Get all completed projects for the current customer.
     This endpoint is meant for customer users to view their past projects.
-    
+
     Supports filtering by:
     - name: Filter by project name (case-insensitive)
     - projecttype: Filter by project type (case-insensitive)
     - testingtype: Filter by testing type (case-insensitive)
     - startdate: Filter projects that start on or after this date (format: YYYY-MM-DD)
     - enddate_before: Filter projects that end on or before this date (format: YYYY-MM-DD)
-    
+
     Supports pagination with:
     - limit: Number of results per page (default: 20, max: 50)
     - offset: Number of results to skip
-    
+
     Supports sorting with:
     - sort: Field to sort by (default: 'enddate')
     - order_by: Sort order ('asc' or 'desc', default: 'desc')
@@ -396,43 +394,43 @@ def get_completed_projects(request):
     try:
         # Get the company ID of the current user
         user_company_id = request.user.company.id
-        
+
         # Get sorting parameters
         sort_order = request.GET.get('order_by', 'desc')
         sort_field = request.GET.get('sort', 'enddate')
-        
+
         # Ensure sort field is valid to prevent SQL injection
         valid_sort_fields = ['id', 'name', 'projecttype', 'testingtype', 'startdate', 'enddate']
         if sort_field not in valid_sort_fields:
             sort_field = 'enddate'  # Default to enddate if invalid field
-        
+
         # Apply sort direction
         if sort_order == 'asc':
             sort_field = sort_field
         else:
             sort_field = f'-{sort_field}'
-            
+
         # Get all completed projects for the company
         projects = Project.objects.filter(
             companyname_id=user_company_id,
             status='Completed'
         ).order_by(sort_field)
-        
+
         # Apply filters using ProjectFilter
         project_filter = ProjectFilter(request.GET, queryset=projects)
         filtered_projects = project_filter.qs
-        
+
         # Additional filter for testingtype which is not in the default ProjectFilter
         testingtype = request.GET.get('testingtype')
         if testingtype:
             filtered_projects = filtered_projects.filter(testingtype__icontains=testingtype)
-        
+
         # Apply pagination
         paginator, paginated_projects = paginate_queryset(filtered_projects, request)
-        
+
         # Serialize the projects
         serializer = ProjectSerializer(paginated_projects, many=True)
-        
+
         # Return response with pagination data
         return Response({
             'count': paginator.count,

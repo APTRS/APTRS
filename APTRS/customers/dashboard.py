@@ -4,9 +4,7 @@ from django.db.models import Count, F, ExpressionWrapper, DurationField
 from datetime import timedelta
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
-from datetime import timedelta
 import calendar
-from django.core.cache import cache
 
 #local imports
 from project.models import Project, ProjectRetest, Vulnerability

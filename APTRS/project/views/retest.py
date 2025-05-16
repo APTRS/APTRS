@@ -11,8 +11,8 @@ from utils.permissions import custom_permission_required
 from .validation import validate_project_completeness
 from ..models import (ProjectRetest)
 from ..serializers import (Retestserializers)
-from ..tasks import send_completion_retest_email_async, send_hold_retest_email_async    
-    
+from ..tasks import send_completion_retest_email_async, send_hold_retest_email_async
+
 logger = logging.getLogger(__name__)
 
 @api_view(['DELETE'])
@@ -34,7 +34,7 @@ def Retestdelete(request,pk):
 def RetestList(request,pk):
     retest = ProjectRetest.objects.filter(project=pk).order_by('id')
     user_company_id = request.user.company.id
-    
+
     # Get the project first, then access its company ID
     try:
         project_company_id = retest.first().project.companyname_id if retest.exists() else None
@@ -83,7 +83,7 @@ def complete_retest_status(request, pk):
     except ObjectDoesNotExist:
         logger.error("Retest not found for id=%s", safe_pk)
         return Response({"message": "Retest not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     validation_result = validate_project_completeness(projectretest.project.id)
     if not validation_result['valid']:
         logger.warning(f"Project {pk} completeness validation failed: {validation_result['errors']}")
@@ -98,13 +98,13 @@ def complete_retest_status(request, pk):
     projectretest.is_completed = True
     projectretest.is_active = False  # A completed retest is no longer active
     projectretest.save()
-    
+
     # Get the updated project status after the retest update
     project = projectretest.project
-    
+
     send_completion_retest_email_async.delay(projectretest.id)
     logger.info("Retest completion email notification queued for retest ID %s", safe_pk)
-    
+
     return Response({
         'message': f'Retest {safe_pk} marked as completed',
         'project_status': project.status
@@ -120,7 +120,7 @@ def markProjectRetestHold(request, pk):
     except ObjectDoesNotExist:
         logger.error("Retest not found for id=%s", pk)
         return Response({"message": "Retest not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     # Set the retest as on hold (inactive but not completed)
     reason_for_hold = request.data.get('reason_for_hold', '')
     projectretest.is_active = False
@@ -129,11 +129,11 @@ def markProjectRetestHold(request, pk):
     projectretest.project.status = 'On Hold'
     projectretest.project.hold_reason = reason_for_hold
     projectretest.project.save()
-    
+
     # Get the updated project status after the retest update
     project = projectretest.project
     send_hold_retest_email_async.delay(projectretest.id)
-    
+
     return Response({
         'message': f'Retest {pk} marked as on hold',
         'project_status': project.status

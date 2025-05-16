@@ -41,7 +41,7 @@ def update_vulnerability(sender, instance, created, **kwargs):
             if instance.status != CONFIRMED:
                 status_changed = True
             instance.status = CONFIRMED
-            
+
             # Set fixed_date when changing to CONFIRMED status
             if hasattr(instance, 'fixed_date'):
                 if original_status != CONFIRMED and not instance.fixed_date:
@@ -56,7 +56,7 @@ def update_vulnerability(sender, instance, created, **kwargs):
             fields_to_update = ['status']
             if hasattr(instance, 'fixed_date'):
                 fields_to_update.append('fixed_date')
-            
+
             # Use save to update fields properly
             instance.save(update_fields=fields_to_update)
 
@@ -82,13 +82,13 @@ def update_vulnerableinstance(sender, instance, created, **kwargs):
             # Set fixed_date if status is changing to CONFIRMED and no fixed_date already set
             if original_status != CONFIRMED and not vulnerability.fixed_date:
                 vulnerability.fixed_date = timezone.now()
-        
+
         # Clear fixed_date if status is changing from CONFIRMED to something else
         if original_status == CONFIRMED and vulnerability.status != CONFIRMED:
             vulnerability.fixed_date = None
 
         print(vulnerability.fixed_date)
-            
+
         vulnerability.save()
 
 @receiver(models.signals.pre_save, sender=Project)
@@ -99,19 +99,19 @@ def update_project_status(sender, instance, **kwargs):
     else:
         try:
             previous_instance = sender.objects.get(id=instance.id)
-            
+
             # Only recalculate status if dates changed and status is not manually set
             if ((previous_instance.startdate != instance.startdate or
                  previous_instance.enddate != instance.enddate) and
                 instance.status != 'Completed' and instance.status != 'On Hold'):
-                
+
                 # Check if there are active retests for this project
                 active_retests_exist = ProjectRetest.objects.filter(
                     project=instance,
                     is_active=True,
                     is_completed=False
                 ).exists()
-                
+
                 # Only recalculate if there are no active retests
                 # Active retests will control the status through their own signals
                 if not active_retests_exist:
@@ -130,17 +130,17 @@ def update_projectretest_status(sender, instance, **kwargs):
     else:  # Existing retest being updated
         try:
             previous_instance = sender.objects.get(id=instance.id)
-            
+
             # If dates changed or active/completion status changed, update project status
             if (previous_instance.startdate != instance.startdate or
                     previous_instance.enddate != instance.enddate or
                     previous_instance.is_active != instance.is_active or
                     previous_instance.is_completed != instance.is_completed):
-                
+
                 # Ensure we update the project status after saving this retest
                 # This is done in the post_save signal so we have the latest retest state
                 pass
-                
+
         except sender.DoesNotExist:
             pass  # Ignore if previous instance doesn't exist (during loaddata)
 
@@ -152,21 +152,21 @@ def update_project_after_retest_change(sender, instance, **kwargs):
     """
     try:
         project = instance.project
-        
+
         # If retest is active and not completed, it should influence project status
         if instance.is_active and not instance.is_completed:
             # Calculate status based on retest dates
             current_date = timezone.now().date()
-            
+
             if current_date < instance.startdate:
                 project.status = 'Upcoming'
             elif instance.startdate <= current_date <= instance.enddate:
                 project.status = 'In Progress'
             elif current_date > instance.enddate:
                 project.status = 'Delay'
-                
+
             project.save(update_fields=['status'])
-        
+
         # If retest was completed or made inactive, check if other active retests exist
         elif instance.is_completed or not instance.is_active:
             other_active_retests = ProjectRetest.objects.filter(
@@ -174,7 +174,7 @@ def update_project_after_retest_change(sender, instance, **kwargs):
                 is_active=True,
                 is_completed=False
             ).exclude(id=instance.id).exists()
-            
+
             if not other_active_retests:
                 # If this was the only active retest and it's now completed/inactive,
                 # the project status should revert to its original state or to "Completed"
@@ -183,7 +183,7 @@ def update_project_after_retest_change(sender, instance, **kwargs):
                 else:
                     # Recalculate based on project dates
                     project.status = project.calculate_status
-                    
+
                 project.save(update_fields=['status'])
     except Project.DoesNotExist:
         pass  # Ignore if project doesn't exist

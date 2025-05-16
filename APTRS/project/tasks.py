@@ -39,19 +39,19 @@ def send_completion_email_async(entity_id):
     """
     Asynchronously send a project completion email.
     This ensures the UI remains responsive while emails are processed in the background.
-    
+
     Args:
         entity_id (int): ID of the completed project
     """
     send_completion_notification(entity_id, False)
-    
+
 
 @shared_task
 def send_completion_retest_email_async(entity_id):
     """
     Asynchronously send a retest completion email.
     This ensures the UI remains responsive while emails are processed in the background.
-    
+
     Args:
         entity_id (int): ID of the completed retest
     """
@@ -59,10 +59,10 @@ def send_completion_retest_email_async(entity_id):
 
 @shared_task
 def send_hold_email_async(entity_id):
-    
+
     send_hold_notification(entity_id, False)
 
 @shared_task
 def send_hold_retest_email_async(entity_id):
-    
+
     send_hold_notification(entity_id, True)
