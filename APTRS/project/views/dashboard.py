@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from django.db.models import Q
 
 from ..models import Project, ProjectRetest
-from ..serializers import Projectserializers, Retestserializers
 
 logger = logging.getLogger(__name__)
 

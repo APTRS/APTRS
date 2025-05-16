@@ -71,14 +71,14 @@ def getprojectscopes(request,pk):
     except ObjectDoesNotExist:
         logger.error("Project not found for id=%s", pk)
         return Response({"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     user_company_id = request.user.company.id
     project_company_id = project.companyname.id if project.companyname else None
 
     if not request.user.is_staff and not request.user.is_superuser:
         if user_company_id != project_company_id:
             return Response({"message": "You do not have permission to view this project."}, status=status.HTTP_403_FORBIDDEN)
-        
+
 
     projectscope = PrjectScope.objects.filter(project=project)
     serializer = PrjectScopeserializers(projectscope,many=True)

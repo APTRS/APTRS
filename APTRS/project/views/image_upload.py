@@ -71,9 +71,9 @@ class GetImageView(APIView):
     Image are required during report
         - Customer can request to generate report for the project but they are not allowed to access the image.
 
-        - Report API generate a new customer with allow_image_access True, 
+        - Report API generate a new customer with allow_image_access True,
         - The token is used by report generation function to access images.
-        - The token is never shared with customer.  
+        - The token is never shared with customer.
         - The Auth token does not have allow_image_access set, means customer cannot directly call the image API.
         - Before generating the report, Customer Validation is in place, hence generated token will only be used to access the image of the Customer Projects only.
 
@@ -89,7 +89,7 @@ class GetImageView(APIView):
             else:
                 # Try to get token from cookie
                 token = request.COOKIES.get('access_token')
-                
+
             # Verify the token
             allow_access = verify_image_access_token(token)
             if not allow_access:
@@ -99,12 +99,12 @@ class GetImageView(APIView):
             return Response({"error": "Filename parameter is required"}, status=400)
 
         image_data, content_type, error = get_image_data(filename)
-        
+
         if error:
             if "not found" in error.lower():
                 raise Http404(error)
             return Response({"error": error}, status=500)
-            
+
         return HttpResponse(image_data, content_type=content_type)
 
 

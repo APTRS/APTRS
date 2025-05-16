@@ -39,7 +39,7 @@ class Project(models.Model):
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
     standard = models.JSONField(default=list)
     hold_reason = models.TextField(null=True, blank=True, help_text="Reason why the project is on hold")
-    
+
     def clean(self):
         if self.enddate < self.startdate:
             raise ValidationError(_('End date cannot be earlier than start date'))
@@ -50,14 +50,14 @@ class Project(models.Model):
         # If project is marked as "On Hold", preserve this status
         if self.status == 'On Hold':
             return 'On Hold'
-            
+
         # Check if there are any active retests (not completed and is active)
         active_retests = ProjectRetest.objects.filter(
             project=self,
             is_active=True,
             is_completed=False
         ).order_by('-startdate')
-        
+
         if active_retests.exists():
             active_retest = active_retests.first()
             # Use retest dates for status calculation
@@ -67,7 +67,7 @@ class Project(models.Model):
                 return 'In Progress'
             elif current_date > active_retest.enddate:
                 return 'Delay'
-            
+
 
         else:
             # If no active retest, use project dates for status calculation
@@ -81,10 +81,10 @@ class Project(models.Model):
                 return 'Delay'
 
     def save(self, *args, **kwargs):
-        # Clear hold_reason if status is not "On Hold" 
+        # Clear hold_reason if status is not "On Hold"
         if self.status != 'On Hold' and self.hold_reason:
             self.hold_reason = None
-            
+
         if self.status != 'Completed' and self.status != 'On Hold':
             self.status = self.calculate_status
         super(Project, self).save(*args, **kwargs)
@@ -133,16 +133,16 @@ class Vulnerability(models.Model):
         # If unpublished, clear the published date
         elif not self.published:
             self.published_date = None
-        
+
         # Set fixed_date when a vulnerability is marked as fixed for the first time
         if self.status == CONFIRMED and not self.fixed_date:
             self.fixed_date = timezone.now()
         # If not confirmed fixed, clear the fixed date
         elif self.status != CONFIRMED:
             self.fixed_date = None
-            
+
         super(Vulnerability, self).save(*args, **kwargs)
-        
+
     def __str__(self):
         return self.vulnerabilityname
 
@@ -183,10 +183,10 @@ class ProjectRetest(models.Model):
         This is used for display purposes.
         """
         current_date = timezone.now().date()
-        
+
         if not self.is_active:
             return None
-            
+
         if self.is_completed:
             return 'Completed'
 
@@ -200,7 +200,7 @@ class ProjectRetest(models.Model):
     def save(self, *args, **kwargs):
         # Save the retest first
         super(ProjectRetest, self).save(*args, **kwargs)
-        
+
         # Then update the project's status if this is an active retest
         if self.is_active and not self.is_completed:
             project = self.project
@@ -214,7 +214,7 @@ class ProjectRetest(models.Model):
                 is_active=True,
                 is_completed=False
             ).exclude(pk=self.pk).exists()
-            
+
             if not other_active_retests:
                 project.status = 'Completed'
                 project.save(update_fields=['status'])

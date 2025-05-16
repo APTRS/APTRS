@@ -3,7 +3,6 @@ import logging
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from rest_framework import status
-from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -29,7 +28,7 @@ from .serializers import (ChangePasswordSerializer, CustomGroupSerializer,
 from .token_utils import validate_token as validate_token_util
 from .token_utils import process_token as process_token_util
 from .tasks import send_email_task
-   
+
 logger = logging.getLogger(__name__)
 
 
@@ -443,27 +442,27 @@ def user_detail(request, pk):
 def validate_token_api(request, token):
     """
     Unified API endpoint to validate both invitation and password reset tokens.
-    
+
     This endpoint returns whether a token is valid and its type.
-    
+
     Args:
         request: The HTTP request object
         token (str): The token string to validate
-        
+
     Returns:
         Response: A JSON response with validation status and token details
     """
     is_valid, user, token_obj, message, token_type = validate_token_util(token)
-    
+
     data = {
         'valid': is_valid,
         'message': message,
         'token_type': token_type,
     }
-    
+
     if is_valid and user:
         data['user_email'] = user.email
-    
+
     return Response(data)
 
 
@@ -471,31 +470,31 @@ def validate_token_api(request, token):
 def process_token_api(request, token):
     """
     Unified API endpoint to process both invitation and password reset tokens.
-    
+
     This endpoint sets/resets the password for a user associated with the token.
-    
+
     Args:
         request: The HTTP request object
         token (str): The token string to process
-        
+
     Returns:
         Response: A JSON response with processing result
     """
     # Extract password from the request data
     password = request.data.get('password')
-    
+
     if not password:
         return Response({'error': 'Password is required'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     # Validate password
     try:
         validate_password(password)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     # Process the token
     success, user, message, token_type = process_token_util(token, password)
-    
+
     if success:
         data = {
             'success': True,
@@ -512,23 +511,23 @@ def process_token_api(request, token):
 def request_password_reset_api(request):
     """
     API endpoint to request a password reset email.
-    
+
     This endpoint sends a password reset email to the user's email address if it exists.
-    
+
     Args:
         request: The HTTP request object containing the user's email
-        
+
     Returns:
         Response: A JSON response with the result of the request
     """
     email = request.data.get('email')
-    
+
     if not email:
         return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
     send_email_task.delay(email, 'password_reset')
     return Response({'message': 'If your email is registered, you will receive a password reset link shortly.'})
-    
-    
+
+
 
 
 

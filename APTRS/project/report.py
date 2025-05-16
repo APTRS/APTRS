@@ -113,7 +113,7 @@ def generate_vulnerability_document(pk,Report_type,standard):
         response['Content-Disposition'] = f'attachment; filename={project.name}vulnerability_report.docx'
         doc.save(response)
         return response
-    
+
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         logger.error("Traceback: " + traceback.format_exc())
@@ -170,7 +170,7 @@ def CreateExcel(pk, is_staff):
         response['Content-Disposition'] = f'attachment; filename={project_name}vulnerability_report.xlsx'
 
         return response
-    
+
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         return Response({"Status": "Failed", "Message": "Something Went Wrong"})
@@ -189,10 +189,10 @@ def GetHTML(Report_type,pk,standard,request,is_staff):
         else:
             # Non-staff users can only see published vulnerabilities
             vuln = Vulnerability.objects.filter(
-                project=project, 
+                project=project,
                 published=True
             ).order_by('-cvssscore')
-            
+
             # Filter instances to only include those related to published vulnerabilities
             instances = Vulnerableinstance.objects.filter(
                 project=project,
@@ -251,7 +251,7 @@ def GetHTML(Report_type,pk,standard,request,is_staff):
             # Handle template not found error
             logger.error("Something Went Wrong: %s", e)
             return Response({"Status": "Failed", "Message": "Something Went Wrong"})
-        
+
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         return Response({"Status": "Failed", "Message": "Something Went Wrong"})

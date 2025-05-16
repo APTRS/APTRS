@@ -4,8 +4,6 @@ from html.parser import HTMLParser
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from jinja2.sandbox import SandboxedEnvironment
-from docxtpl import InlineImage
 
 ALLOWED_TAGS = settings.ALLOWED_TAGS
 

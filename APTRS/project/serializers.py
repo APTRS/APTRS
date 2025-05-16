@@ -44,7 +44,7 @@ class Projectserializers(serializers.ModelSerializer):
         if request and not request.user.is_staff:
             rep['description'] = embed_images_in_html(rep['description'])
             rep['projectexception'] = embed_images_in_html(rep['projectexception'])
-            
+
         return rep
 
     def get_user_permissions(self, user):
@@ -168,20 +168,20 @@ class Retestserializers(serializers.ModelSerializer):
         queryset=CustomUser.objects.all(),
         many=True
     )
-    
+
     class Meta:
         model = ProjectRetest
         fields = ('id', 'project', 'startdate', 'enddate', 'is_active', 'is_completed', 'owner', 'created_at')
-    
+
     def get_status(self, obj):
         """Calculate status from is_active and is_completed fields"""
-        
-        
+
+
         if obj.is_completed:
             return 'Completed'
         if not obj.is_active:
             return 'On Hold'
-            
+
         # Calculate status based on dates
         current_date = timezone.now().date()
         if current_date < obj.startdate:
@@ -202,7 +202,7 @@ class Retestserializers(serializers.ModelSerializer):
 
         # Check for existing active, non-completed retests
         existing_retests = ProjectRetest.objects.filter(
-            project=project, 
+            project=project,
             is_completed=False
         )
         if self.instance:
@@ -223,7 +223,7 @@ class Retestserializers(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         owners_usernames = validated_data.pop('owner', [])
-        
+
         # Set default values for new fields
         validated_data['is_active'] = True
         validated_data['is_completed'] = False

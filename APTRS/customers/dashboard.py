@@ -13,7 +13,7 @@ from project.models import Project, ProjectRetest, Vulnerability
 
 
 def getproject_details_core(user_company):
-    
+
     # Fetch all projects with required related objects in a single query
     # Filter by company and prefetch related owner data
     projects = Project.objects.filter(
@@ -25,7 +25,7 @@ def getproject_details_core(user_company):
     ).only(
         'id', 'name', 'startdate', 'enddate', 'status', 'companyname'
     )
-    
+
     # Fetch all project retests with required related objects in a single query
     # Filter by company and prefetch related owner data and project
     retests = ProjectRetest.objects.filter(
@@ -37,55 +37,55 @@ def getproject_details_core(user_company):
     ).only(
         'id', 'startdate', 'enddate', 'is_active', 'is_completed', 'project'
     )
-    
+
     # Current date for status calculations
     current_date = timezone.now().date()
-    
+
     # Filter retests by calculated status
     active_retests = []
     delay_retests = []
     upcoming_retests = []
     on_hold_retests = []
-    
+
     # Collect projects with active retests to exclude them from project lists
     projects_with_active_retests = set()
-    
+
     for r in retests:
         # Skip completed retests
         if r.is_completed:
             continue
-            
+
         # For any non-completed retest, track the project ID
         projects_with_active_retests.add(r.project.id)
-            
+
         # On hold retests
         if not r.is_active:
             on_hold_retests.append(r)
             continue
-            
+
         # Active but not completed retests - calculate status based on dates
         start_date = r.startdate
         end_date = r.enddate
-        
+
         if current_date < start_date:
             upcoming_retests.append(r)
         elif current_date <= end_date:
             active_retests.append(r)
         else:
             delay_retests.append(r)
-            
+
     # Create filtered querysets for different statuses - exclude projects with active retests
     active_projects = [p for p in projects if p.status == 'In Progress' and p.id not in projects_with_active_retests]
     delay_projects = [p for p in projects if p.status == 'Delay' and p.id not in projects_with_active_retests]
     upcoming_projects = [p for p in projects if p.status == 'Upcoming' and p.id not in projects_with_active_retests]
     on_hold_projects = [p for p in projects if p.status == 'On Hold' and p.id not in projects_with_active_retests]
-    
+
     # Count projects by status - combined counts for projects and retests
     active_count = len(active_projects) + len(active_retests)
     delay_count = len(delay_projects) + len(delay_retests)
     upcoming_count = len(upcoming_projects) + len(upcoming_retests)
     on_hold_count = len(on_hold_projects) + len(on_hold_retests)
-    
+
     # Prepare detailed project data - keep projects and retests separate
     active_projects_data = []
     for project in active_projects:
@@ -97,7 +97,7 @@ def getproject_details_core(user_company):
             'status': project.status,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in project.owner.all()]
         })
-    
+
     # Prepare retest data separately
     active_retests_data = []
     for retest in active_retests:
@@ -110,7 +110,7 @@ def getproject_details_core(user_company):
             'project_id': retest.project.id,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in retest.owner.all()]
         })
-    
+
     delay_projects_data = []
     for project in delay_projects:
         delay_projects_data.append({
@@ -121,7 +121,7 @@ def getproject_details_core(user_company):
             'status': project.status,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in project.owner.all()]
         })
-    
+
     # Prepare delay retest data separately
     delay_retests_data = []
     for retest in delay_retests:
@@ -134,7 +134,7 @@ def getproject_details_core(user_company):
             'project_id': retest.project.id,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in retest.owner.all()]
         })
-    
+
     upcoming_projects_data = []
     for project in upcoming_projects:
         upcoming_projects_data.append({
@@ -145,7 +145,7 @@ def getproject_details_core(user_company):
             'status': project.status,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in project.owner.all()]
         })
-    
+
     # Prepare upcoming retest data separately
     upcoming_retests_data = []
     for retest in upcoming_retests:
@@ -158,7 +158,7 @@ def getproject_details_core(user_company):
             'project_id': retest.project.id,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in retest.owner.all()]
         })
-        
+
     # Prepare on hold project data
     on_hold_projects_data = []
     for project in on_hold_projects:
@@ -170,7 +170,7 @@ def getproject_details_core(user_company):
             'status': project.status,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in project.owner.all()]
         })
-    
+
     # Prepare on hold retest data separately
     on_hold_retests_data = []
     for retest in on_hold_retests:
@@ -183,7 +183,7 @@ def getproject_details_core(user_company):
             'project_id': retest.project.id,
             'owners': [{'username': user.username, 'full_name': user.full_name} for user in retest.owner.all()]
         })
-    
+
     # Restructured response with combined counts but separate project and retest details
     response_data = {
         'counts': {
@@ -210,7 +210,7 @@ def getproject_details_core(user_company):
             'retests': on_hold_retests_data
         }
     }
-    
+
     return response_data
 
 
@@ -223,14 +223,14 @@ def getVulnerabilityDashboardStats_core(user_company):
     1. Vulnerability counts by severity for vulnerable, published vulnerabilities
     2. Monthly trends of Critical/High/Medium vulnerabilities for the past 5 months
     """
-    
-    
+
+
     cache_key = f'vulnerability_dashboard_stats_{user_company.id}'
     cached_data = cache.get(cache_key)
-    
+
     if cached_data:
         return cached_data
-    
+
     # Calculate date range for the last 5 months using timezone-aware datetime objects
     current_date = timezone.now()
     # Get first day of current month with the same timezone
@@ -242,7 +242,7 @@ def getVulnerabilityDashboardStats_core(user_company):
         last_day_prev_month = five_months_ago - timedelta(days=1)
         # Then get first day of that previous month
         five_months_ago = last_day_prev_month.replace(day=1)
-    
+
     # Part 1: Directly get counts per severity in a single query
     severity_counts = dict(
         Vulnerability.objects.filter(
@@ -254,7 +254,7 @@ def getVulnerabilityDashboardStats_core(user_company):
         .annotate(count=Count('id'))
         .values_list('vulnerabilityseverity', 'count')
     )
-    
+
     # Format the counts with proper keys
     counts_by_severity = {
         'Critical': severity_counts.get('Critical', 0),
@@ -264,7 +264,7 @@ def getVulnerabilityDashboardStats_core(user_company):
         'None': severity_counts.get('None', 0) + severity_counts.get('Info', 0),
         'total': sum(severity_counts.values())
     }
-    
+
     # Part 2: Monthly trends - use a more efficient query with database-level aggregation
     # Generate a list of the last 5 months for reference
     months = []
@@ -281,7 +281,7 @@ def getVulnerabilityDashboardStats_core(user_company):
             month_date = month_date.replace(year=month_date.year + 1, month=1)
         else:
             month_date = month_date.replace(month=month_date.month + 1)
-    
+
     # Query for trends with optimized database aggregation
     trends = (
         Vulnerability.objects.filter(
@@ -298,19 +298,19 @@ def getVulnerabilityDashboardStats_core(user_company):
         .values('month_key', 'vulnerabilityseverity')
         .annotate(count=Count('id'))
     )
-    
+
     # Create a more efficient dictionary for lookups
     trend_data = {}
     for item in trends:
         month_key = item['month_key'].strftime('%Y-%m')
         severity = item['vulnerabilityseverity']
         count = item['count']
-        
+
         if month_key not in trend_data:
             trend_data[month_key] = {'Critical': 0, 'High': 0, 'Medium': 0}
-            
+
         trend_data[month_key][severity] = count
-    
+
     # Format the monthly trends response using the pre-generated months list
     monthly_trends = []
     for month in months:
@@ -323,12 +323,12 @@ def getVulnerabilityDashboardStats_core(user_company):
             'High': trend_data.get(month_key, {}).get('High', 0),
             'Medium': trend_data.get(month_key, {}).get('Medium', 0)
         })
-    
+
     response_data = {
         'severity_counts': counts_by_severity,
         'monthly_trends': monthly_trends
     }
-    
+
     cache.set(cache_key, response_data, 60 * 60)
     return response_data
 
@@ -390,9 +390,9 @@ def getOrganizationVulnerabilityStats_core(user_company):
     if total_vulns > 0:
         # Formula: (1 - (High * 0.6 + Medium * 0.3 + Low * 0.1) / Total) * 100
         weighted_score = (
-            severity_counts['High'] * 0.6 + 
-            severity_counts['Medium'] * 0.3 + 
-            severity_counts['Low'] * 0.1 + 
+            severity_counts['High'] * 0.6 +
+            severity_counts['Medium'] * 0.3 +
+            severity_counts['Low'] * 0.1 +
             severity_counts['Critical'] * 0.9  # Adding Critical with higher weight
         )
         security_score = max(0, min(100, (1 - (weighted_score / total_vulns)) * 100))
@@ -407,7 +407,7 @@ def getOrganizationVulnerabilityStats_core(user_company):
     # Get previous quarter counts
     previous_severity_counts = {
         'Critical': 0,
-        'High': 0, 
+        'High': 0,
         'Medium': 0,
         'Low': 0,
         'None': 0,
@@ -425,8 +425,8 @@ def getOrganizationVulnerabilityStats_core(user_company):
     prev_total = previous_severity_counts['total']
     if prev_total > 0:
         prev_weighted_score = (
-            previous_severity_counts['High'] * 0.6 + 
-            previous_severity_counts['Medium'] * 0.3 + 
+            previous_severity_counts['High'] * 0.6 +
+            previous_severity_counts['Medium'] * 0.3 +
             previous_severity_counts['Low'] * 0.1 +
             previous_severity_counts['Critical'] * 0.9
         )
