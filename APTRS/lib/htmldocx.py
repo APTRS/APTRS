@@ -7,7 +7,7 @@ the idea is that there is a method that converts html files into docx
 but also have api methods that let user have more control e.g. so they
 can nest calls to something like 'convert_chunk' in loops
 
-user can pass existing document object as arg 
+user can pass existing document object as arg
 (if they want to manage rest of document themselves)
 
 How to deal with block level style applied over table elements? e.g. text align
@@ -49,7 +49,7 @@ def get_filename_from_url(url):
 
 def is_url(url):
     """
-    Not to be used for actually validating a url, but in our use case we only 
+    Not to be used for actually validating a url, but in our use case we only
     care if it's a url or a file path, and they're pretty distinguishable
     """
     parts = urlparse(url)
@@ -58,7 +58,7 @@ def is_url(url):
 
 def fetch_image(url, headers, base_url):
     """
-    Attempts to fetch an image from a url. 
+    Attempts to fetch an image from a url.
     If successful returns a bytes object, else returns None
 
     :return:
@@ -257,7 +257,7 @@ class HtmlToDocx(HTMLParser):
                 # TODO map colors to named colors (and extended colors...)
                 # For now set color to black to prevent crashing
             self.run.font.color.rgb = RGBColor(*colors)
-            
+
         if 'background-color' in style:
             if 'rgb' in style['background-color']:
                 color = color = re.sub(r'[a-z()]+', '', style['background-color'])
@@ -298,7 +298,7 @@ class HtmlToDocx(HTMLParser):
         else:
             list_style = styles['LIST_BULLET']
 
-        self.paragraph = self.doc.add_paragraph(style=list_style)            
+        self.paragraph = self.doc.add_paragraph(style=list_style)
         self.paragraph.paragraph_format.left_indent = Inches(min(list_depth * LIST_INDENT, MAX_INDENT))
         self.paragraph.paragraph_format.line_spacing = 1
 
@@ -373,7 +373,7 @@ class HtmlToDocx(HTMLParser):
                 child_parser.add_html_to_cell(cell_html, docx_cell)
                 cell_col += 1
             cell_row += 1
-        
+
         # skip all tags until corresponding closing tag
         self.instances_to_skip = len(table_soup.find_all('table'))
         self.skip_tag = 'table'
@@ -447,7 +447,7 @@ class HtmlToDocx(HTMLParser):
 
         if tag in ['mark']:
             self.paragraph = self.doc.add_paragraph()
-        
+
         if tag in ['blockquote']:
             self.paragraph = self.doc.add_paragraph()
             self.paragraph.paragraph_format.left_indent = Inches(1)
@@ -455,7 +455,7 @@ class HtmlToDocx(HTMLParser):
         elif tag == 'li':
             self.handle_li()
 
-            
+
 
         elif tag == "hr":
 
@@ -551,7 +551,7 @@ class HtmlToDocx(HTMLParser):
             self.paragraph = self.doc.add_paragraph()
             self.apply_paragraph_style()
 
-      
+
         # There can only be one nested link in a valid html document
         # You cannot have interactive content in an A tag, this includes links
         # https://html.spec.whatwg.org/#interactive-content
@@ -569,7 +569,7 @@ class HtmlToDocx(HTMLParser):
 
             # add font style and name
             for tag in self.tags:
-                
+
                 if tag in font_styles:
                     font_style = font_styles[tag]
                     setattr(self.run.font, font_style, True)
@@ -579,7 +579,7 @@ class HtmlToDocx(HTMLParser):
                     self.run.font.name = font_name
 
                 if tag == 'mark':
-                    self.run.font.highlight_color = 7 
+                    self.run.font.highlight_color = 7
                 if tag == 'blockquote':
                     self.run.font.italic = True
                     self.paragraph.paragraph_format.left_indent = Inches(1)
@@ -626,7 +626,7 @@ class HtmlToDocx(HTMLParser):
             self.include_tables = False
             return
             # find other way to do it, or require this dependency?
-        self.tables = self.ignore_nested_tables(self.soup.find_all('table'))  
+        self.tables = self.ignore_nested_tables(self.soup.find_all('table'))
         self.table_no = 0
 
     def run_process(self, html):
@@ -656,7 +656,7 @@ class HtmlToDocx(HTMLParser):
         # cells must end with a paragraph or will get message about corrupt file
         # https://stackoverflow.com/a/29287121
         if not self.doc.paragraphs:
-            self.doc.add_paragraph('')  
+            self.doc.add_paragraph('')
 
     def parse_html_file(self, filename_html, filename_docx=None):
         with open(filename_html, 'r') as infile:
@@ -667,23 +667,23 @@ class HtmlToDocx(HTMLParser):
             path, filename = os.path.split(filename_html)
             filename_docx = '%s/new_docx_file_%s' % (path, filename)
         self.doc.save('%s.docx' % filename_docx)
-    
+
     def parse_html_string(self, html):
         self.set_initial_attrs()
         self.run_process(html)
         return self.doc
 
 if __name__=='__main__':
-    
+
     arg_parser = argparse.ArgumentParser(description='Convert .html file into .docx file with formatting')
     arg_parser.add_argument('filename_html', help='The .html file to be parsed')
     arg_parser.add_argument(
-        'filename_docx', 
-        nargs='?', 
-        help='The name of the .docx file to be saved. Default new_docx_file_[filename_html]', 
+        'filename_docx',
+        nargs='?',
+        help='The name of the .docx file to be saved. Default new_docx_file_[filename_html]',
         default=None
     )
-    arg_parser.add_argument('--bs', action='store_true', 
+    arg_parser.add_argument('--bs', action='store_true',
         help='Attempt to fix html before parsing. Requires bs4. Default True')
 
     args = vars(arg_parser.parse_args())

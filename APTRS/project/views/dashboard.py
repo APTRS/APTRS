@@ -21,7 +21,7 @@ def get_dashboard_data(request):
     try:
         current_date = timezone.now().date()
         user = request.user
-        
+
         # Initialize status counts and data containers
         status_data = {
             'Delay': {'count': 0, 'projects': [], 'retests': []},
@@ -35,22 +35,22 @@ def get_dashboard_data(request):
             ~Q(status='Completed'),
             owner=user
         ).select_related('companyname')
-        
+
         # Get retests where user is directly an owner - include both active and on-hold retests
         user_retests = ProjectRetest.objects.filter(
             is_completed=False,  # Not completed
             owner=user
         ).select_related('project__companyname')
-        
+
         # Identify projects that have active retests (to exclude them from the projects list)
         projects_with_active_retests = set(retest.project.id for retest in user_retests if not retest.is_completed)
-        
+
         # Process each project - exclude those with active retests
         for project in projects:
             # Skip projects that have active retests
             if project.id in projects_with_active_retests:
                 continue
-                
+
             # Use the existing project status - map to our dashboard status keys
             if project.status == 'On Hold':
                 status_key = 'On Hold'
@@ -62,7 +62,7 @@ def get_dashboard_data(request):
                 status_key = 'Delay'
             else:
                 continue  # Skip other statuses like Completed
-            
+
             # Serialize project data to include only required fields
             project_data = {
                 'id': project.id,
@@ -74,11 +74,11 @@ def get_dashboard_data(request):
                 'status': status_key,
                 'project_type': project.projecttype,
             }
-            
+
             # Add to appropriate status category
             status_data[status_key]['projects'].append(project_data)
             status_data[status_key]['count'] += 1
-        
+
         # Process each retest
         for retest in user_retests:
             # Determine retest status
@@ -103,11 +103,11 @@ def get_dashboard_data(request):
                 'end_date': retest.enddate,
                 'status': status_key,
             }
-            
+
             # Add to appropriate status category
             status_data[status_key]['retests'].append(retest_data)
             status_data[status_key]['count'] += 1
-        
+
         # Format final response
         response_data = {
             'status_counts': {
@@ -129,9 +129,9 @@ def get_dashboard_data(request):
                 'Upcoming': status_data['Upcoming']['retests'],
             },
         }
-        
+
         return Response(response_data, status=status.HTTP_200_OK)
-    
+
     except Exception as e:
         logger.error(f"Error fetching dashboard data: {str(e)}")
         return Response(
