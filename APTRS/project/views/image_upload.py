@@ -1,6 +1,5 @@
 import logging
 import os
-from django.conf import settings
 from rest_framework.decorators import permission_classes
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
