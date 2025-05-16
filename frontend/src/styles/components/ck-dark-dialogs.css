@@ -1,0 +1,135 @@
+/* CKEditor Dark Mode Dialog Styles */
+
+/* Common dialog styling */
+.dark .ck.ck-dialog-container .ck.ck-dialog {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.dark .ck.ck-dialog .ck-dialog__body,
+.dark .ck-dialog__body {
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .ck.ck-dialog .ck-dialog__title,
+.dark .ck.ck-dialog__title {
+  color: #e5e7eb !important;
+  background-color: #1f2937 !important;
+  font-weight: 600 !important;
+  padding: 1rem !important;
+}
+
+.dark .ck.ck-dialog .ck-dialog__footer,
+.dark .ck.ck-dialog__footer {
+  background-color: #1f2937 !important;
+  border-top: 1px solid #4b5563 !important;
+  padding: 0.75rem !important;
+}
+
+/* Special Characters Dialog */
+.dark .ck.ck-special-characters-navigation,
+.dark .ck-special-characters-navigation {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+  padding: 0.5rem !important;
+}
+
+.dark .ck.ck-character-grid,
+.dark .ck-character-grid,
+.dark .ck-character-grid__tiles {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .ck.ck-character-grid__tile,
+.dark .ck-character-grid__tile {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #e5e7eb !important;
+  border-radius: 0.25rem !important;
+  transition: all 0.15s ease !important;
+  margin: 2px !important;
+}
+
+.dark .ck.ck-character-grid__tile:hover,
+.dark .ck-character-grid__tile:hover {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  transform: scale(1.1) !important;
+  z-index: 10 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+}
+
+.dark .ck.ck-character-grid__tile.ck-on,
+.dark .ck-character-grid__tile.ck-on {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+/* Tab navigation in dialogs */
+.dark .ck.ck-dialog .ck-dialog__tabs {
+  background-color: #1f2937 !important;
+  border-bottom-color: #4b5563 !important;
+}
+
+.dark .ck.ck-dialog .ck-dialog__tab {
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .ck.ck-dialog .ck-dialog__tab:hover {
+  background-color: #374151 !important;
+}
+
+.dark .ck.ck-dialog .ck-dialog__tab.ck-on {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: white !important;
+}
+
+/* Dialog inputs and labels */
+.dark .ck.ck-dialog .ck-labeled-field-view__label {
+  color: #e5e7eb !important;
+}
+
+.dark .ck.ck-dialog .ck-input-text {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .ck.ck-dialog .ck-input-text:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3) !important;
+}
+
+/* Dialog buttons */
+.dark .ck.ck-dialog .ck.ck-button:not(.ck-off):not(.ck-disabled) {
+  background-color: #2563eb !important;
+  color: white !important;
+}
+
+.dark .ck.ck-dialog .ck.ck-button.ck-off {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .ck.ck-dialog .ck.ck-button:hover {
+  background-color: #3b82f6 !important;
+}
+
+/* Special case for close button */
+.dark .ck.ck-dialog .ck.ck-button.ck-dialog__close {
+  background-color: transparent !important;
+  color: #e5e7eb !important;
+}
+
+.dark .ck.ck-dialog .ck.ck-button.ck-dialog__close:hover {
+  background-color: #374151 !important;
+}

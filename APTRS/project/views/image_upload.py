@@ -11,8 +11,8 @@ from ..serializers import (ImageSerializer)
 from django.core.files.storage import default_storage
 import uuid
 from django.http import HttpResponse, Http404
-import boto3
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+from utils.image_handler import get_image_data
+from utils.token import verify_image_access_token
 
 logger = logging.getLogger(__name__)
 
@@ -61,52 +61,55 @@ class ImageUploadView(APIView):
 
 
 
+
+
+
 class GetImageView(APIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    """
+    View to handle image retrieval for Ckeditor which includes = (Project Exception, Description) & Vulnerability Description, POC, Solution, Reference Link section.
+    Most of the Images contain sensitive information, so only admin or internal user are allowed to access them.
+    Image are required during report
+        - Customer can request to generate report for the project but they are not allowed to access the image.
+
+        - Report API generate a new customer with allow_image_access True, 
+        - The token is used by report generation function to access images.
+        - The token is never shared with customer.  
+        - The Auth token does not have allow_image_access set, means customer cannot directly call the image API.
+        - Before generating the report, Customer Validation is in place, hence generated token will only be used to access the image of the Customer Projects only.
+
+    """
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         filename = request.GET.get('filename')
+        if not request.user.is_staff:
+            # Extract token from Authorization header (Bearer token)
+            auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ')[1]
+            else:
+                # Try to get token from cookie
+                token = request.COOKIES.get('access_token')
+                
+            # Verify the token
+            allow_access = verify_image_access_token(token)
+            if not allow_access:
+                return Response({"error": "You do not have permission to access this image."}, status=403)
+
         if not filename:
             return Response({"error": "Filename parameter is required"}, status=400)
 
-        if settings.USE_S3:
-            try:
-                s3_client = boto3.client(
-                    's3',
-                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                    region_name=settings.AWS_S3_REGION_NAME,
-                    endpoint_url=settings.AWS_S3_ENDPOINT_URL
-                )
-                file_path = os.path.join('poc', filename)
-                s3_object = s3_client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_path)
-                content_type = s3_object['ContentType']
-                image_data = s3_object['Body'].read()
+        image_data, content_type, error = get_image_data(filename)
+        
+        if error:
+            if "not found" in error.lower():
+                raise Http404(error)
+            return Response({"error": error}, status=500)
+            
+        return HttpResponse(image_data, content_type=content_type)
 
-                return HttpResponse(image_data, content_type=content_type)
 
-            except s3_client.exceptions.NoSuchKey:
-                raise Http404("Image not found in S3")
-            except (NoCredentialsError, PartialCredentialsError) as e:
-                logger.error(str(e))
-                return Response({"error": "Something Went Wrong"}, status=500)
-            except Exception as e:
-                logger.error(str(e))
-                return Response({"error": "Something Went Wrong"}, status=500)
 
-        else:
-            file_path = os.path.join(settings.CKEDITOR_UPLOAD_LOCATION, filename)
-            if default_storage.exists(file_path):
-                image_file = default_storage.open(file_path)
-                content_type = self._get_content_type(filename)
-                return HttpResponse(image_file.read(), content_type=content_type)
-            else:
-                raise Http404("Image not found")
 
-    def _get_content_type(self, filename):
-        ext = os.path.splitext(filename)[-1].lower()
-        content_types = {
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.png': 'image/png',
-        }
-        return content_types.get(ext, 'application/octet-stream')
+
+
+

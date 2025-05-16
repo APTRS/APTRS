@@ -36,18 +36,19 @@ base_url = ""
 token = None
 
 
-def CheckReport(Report_format,Report_type,pk,url,standard,request,access_token):
+def CheckReport(Report_format,Report_type,pk,url,standard,request,access_token,is_staff):
     global base_url
     base_url = url
     if Report_format == "excel":
-        response =  CreateExcel(pk)
+        response =  CreateExcel(pk, is_staff)
 
     global token
     token = access_token
+
+    if Report_format == "pdf":
+        response = GetHTML(Report_type,pk,standard,request,is_staff)
     if Report_format == "docx":
         response = generate_vulnerability_document(pk,Report_type,standard)
-    if Report_format == "pdf":
-        response = GetHTML(Report_type,pk,standard,request)
 
     return response
 
@@ -119,10 +120,19 @@ def generate_vulnerability_document(pk,Report_type,standard):
         return Response({"Status": "Failed", "Message": "Something Went Wrong"})
 
 
-def CreateExcel(pk):
+def CreateExcel(pk, is_staff):
     try:
         project_name = Project.objects.values_list('name', flat=True).get(id=pk)
-        instances = Vulnerableinstance.objects.filter(project_id=pk).select_related('vulnerabilityid').order_by('-vulnerabilityid__cvssscore')
+        if is_staff:
+            # Staff can see all vulnerabilities
+            instances = Vulnerableinstance.objects.filter(project_id=pk).select_related('vulnerabilityid').order_by('-vulnerabilityid__cvssscore')
+        else:
+            # Non-staff users can only see published vulnerabilities
+            instances = Vulnerableinstance.objects.filter(
+                project_id=pk,
+                vulnerabilityid__published=True
+            ).select_related('vulnerabilityid').order_by('-vulnerabilityid__cvssscore')
+
         output = io.BytesIO()
         book = Workbook(output)
         sheet = book.add_worksheet('Vulnerabilities')
@@ -168,16 +178,26 @@ def CreateExcel(pk):
 
 
 
-def GetHTML(Report_type,pk,standard,request):
+def GetHTML(Report_type,pk,standard,request,is_staff):
     try:
 
-        project = Project.objects.get(pk=pk)
-
-        ## Get All Projects Vulnerability filter higher to lower CVSS Score
-        vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
-
-        #### Get ALL Instances for the Projects  (Not using Vulnerability colum)  ### Need to optimize to speed up the HTML generation
-        instances = Vulnerableinstance.objects.filter(project=project)
+        project = Project.objects.get(pk=pk)        ## Get All Projects Vulnerability filter higher to lower CVSS Score
+        if is_staff:
+            # Staff can see all vulnerabilities
+            vuln = Vulnerability.objects.filter(project=project).order_by('-cvssscore')
+            instances = Vulnerableinstance.objects.filter(project=project)
+        else:
+            # Non-staff users can only see published vulnerabilities
+            vuln = Vulnerability.objects.filter(
+                project=project, 
+                published=True
+            ).order_by('-cvssscore')
+            
+            # Filter instances to only include those related to published vulnerabilities
+            instances = Vulnerableinstance.objects.filter(
+                project=project,
+                vulnerabilityid__published=True
+            )
         project_manager_group = CustomGroup.objects.get(name='Project Manager')
 
         projectmanagers = CustomUser.objects.filter(groups=project_manager_group)
@@ -191,13 +211,13 @@ def GetHTML(Report_type,pk,standard,request):
         info = vuln.filter((Q(status='Vulnerable')) & (Q(vulnerabilityseverity='Informational') | Q(vulnerabilityseverity='None'))).count()
 
         custom_style = Style(
-        colors=("#FF491C", "#F66E09", "#FBBC02", "#20B803", "#3399FF"),
-        background='transparent',
-        plot_background='transparent',
-        legend_font_size=0,
-        legend_box_size=0,
-        value_font_size=40
-        )
+            colors=("#FF491C", "#F66E09", "#FBBC02", "#20B803", "#3399FF"),
+            background='transparent',
+            plot_background='transparent',
+            legend_font_size=0,
+            legend_box_size=0,
+            value_font_size=40
+            )
         pie_chart = pygal.Pie(style=custom_style)
         pie_chart.legend_box_size = 0
 

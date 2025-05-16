@@ -11,6 +11,7 @@
     "@ckeditor/ckeditor5-react": "^9.0.0",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.10",
+    "@types/dompurify": "^3.0.5",
     "@types/react": "^18.2.19",
     "@types/react-dom": "^18.2.18",
     "@types/testing-library__jest-dom": "^6.0.0",
@@ -23,7 +24,10 @@
     "ckeditor5": "^43.0.0",
     "clsx": "^2.0.0",
     "date-fns": "^3.6.0",
+    "dompurify": "^3.2.5",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-confirm-alert": "^3.0.6",
     "react-data-table-component": "^7.6.2",
     "react-datepicker": "^4.24.0",
     "react-dom": "^18.2.0",
@@ -39,7 +43,7 @@
     "zod": "^3.22.4"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --host --port 5173",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest --typecheck",

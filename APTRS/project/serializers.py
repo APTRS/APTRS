@@ -1,10 +1,11 @@
 from rest_framework import serializers
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from accounts.models import CustomUser
 from customers.models import Company
 from .models import (PrjectScope, Project, ProjectRetest, Vulnerability,
                      Vulnerableinstance)
-
+from utils.image_handler import embed_images_in_html
 
 def validate_file_extension(value):
     allowed_extensions = ['jpg', 'jpeg', 'png']
@@ -26,16 +27,24 @@ class Projectserializers(serializers.ModelSerializer):
     owner = serializers.ListField(child=serializers.CharField(), write_only=True)
     companyname = serializers.CharField(write_only=True)
     standard = serializers.ListField(child=serializers.CharField(), required=False)  # Add the standard field
+    hold_reason = serializers.CharField(read_only=True, allow_blank=True, required=False)
+    testingtype = serializers.CharField(allow_blank=True, required=False)
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description', 'projecttype', 'startdate', 'enddate', 'testingtype', 'projectexception', 'status', 'owner', 'companyname', 'standard')
+        fields = ('id', 'name', 'description', 'projecttype', 'startdate', 'enddate', 'testingtype', 'projectexception', 'status', 'owner', 'companyname', 'standard','hold_reason')
 
     def to_representation(self, instance):
+        request = self.context.get('request')
         rep = super(Projectserializers, self).to_representation(instance)
         rep['companyname'] = instance.companyname.name
         rep['owner'] = [user.username for user in instance.owner.all()]
         rep['standard'] = instance.standard  # Ensure the standard field is included in the representation
+
+        if request and not request.user.is_staff:
+            rep['description'] = embed_images_in_html(rep['description'])
+            rep['projectexception'] = embed_images_in_html(rep['projectexception'])
+            
         return rep
 
     def get_user_permissions(self, user):
@@ -158,13 +167,30 @@ class Retestserializers(serializers.ModelSerializer):
         slug_field='username',
         queryset=CustomUser.objects.all(),
         many=True
-
     )
-    status = serializers.CharField(read_only=True)
+    
     class Meta:
         model = ProjectRetest
-        fields = ('id', 'project', 'startdate', 'enddate', 'status', 'owner')
-
+        fields = ('id', 'project', 'startdate', 'enddate', 'is_active', 'is_completed', 'owner', 'created_at')
+    
+    def get_status(self, obj):
+        """Calculate status from is_active and is_completed fields"""
+        
+        
+        if obj.is_completed:
+            return 'Completed'
+        if not obj.is_active:
+            return 'On Hold'
+            
+        # Calculate status based on dates
+        current_date = timezone.now().date()
+        if current_date < obj.startdate:
+            return 'Upcoming'
+        elif obj.startdate <= current_date <= obj.enddate:
+            return 'In Progress'
+        elif current_date > obj.enddate:
+            return 'Delay'
+        return 'Unknown'
 
     def validate(self, attrs):
         project = attrs.get('project')
@@ -174,8 +200,11 @@ class Retestserializers(serializers.ModelSerializer):
         if enddate and startdate and enddate < startdate:
             raise serializers.ValidationError("End date cannot be earlier than start date.")
 
-        # Check for existing non-completed retests
-        existing_retests = ProjectRetest.objects.filter(project=project, status__in=['Upcoming', 'In Progress', 'Delay'])
+        # Check for existing active, non-completed retests
+        existing_retests = ProjectRetest.objects.filter(
+            project=project, 
+            is_completed=False
+        )
         if self.instance:
             existing_retests = existing_retests.exclude(id=self.instance.id)
 
@@ -194,6 +223,10 @@ class Retestserializers(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         owners_usernames = validated_data.pop('owner', [])
+        
+        # Set default values for new fields
+        validated_data['is_active'] = True
+        validated_data['is_completed'] = False
 
         if request and request.user:
             if request.user.is_superuser or 'Assign Projects' in self.get_user_permissions(request.user):
@@ -201,7 +234,7 @@ class Retestserializers(serializers.ModelSerializer):
                     owners = []
                     for username in owners_usernames:
                         try:
-                            user = CustomUser.objects.get(email=username)
+                            user = CustomUser.objects.get(email=username)  # Changed from email to username
                             if not user.is_active:
                                 raise serializers.ValidationError(f"Owner '{username}' is not an active user")
                             owners.append(user)
@@ -213,10 +246,10 @@ class Retestserializers(serializers.ModelSerializer):
                     return project_retest
                 else:
                     raise serializers.ValidationError("owner field is missing")
-            else:  # If request user is not an admin o have assign permission
-                validated_data['owner'] = [request.user]
-                project = ProjectRetest.objects.create(**validated_data)
-                return project
+            else:  # If request user is not an admin or doesn't have assign permission
+                project_retest = ProjectRetest.objects.create(**validated_data)
+                project_retest.owner.set([request.user])
+                return project_retest
         else:
             raise serializers.ValidationError("Invalid request")
 
@@ -260,6 +293,18 @@ class Vulnerabilityserializers(serializers.ModelSerializer):
             'published'
         ]
         read_only_fields = ['status', 'created_by', 'last_updated_by','published']
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        rep = super(Vulnerabilityserializers, self).to_representation(instance)
+
+        if request and not request.user.is_staff:
+            rep['vulnerabilitydescription'] = embed_images_in_html(rep['vulnerabilitydescription'])
+            rep['POC'] = embed_images_in_html(rep['POC'])
+            rep['vulnerabilitysolution'] = embed_images_in_html(rep['vulnerabilitysolution'])
+            rep['vulnerabilityreferlnk'] = embed_images_in_html(rep['vulnerabilityreferlnk'])
+
+        return rep
 
     def create(self, validated_data):
         request = self.context.get("request")

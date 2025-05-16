@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+import uuid
+from django.utils import timezone
+from datetime import timedelta
 
 class CustomPermission(models.Model):
     """Custom permission model."""
@@ -12,9 +15,6 @@ class CustomPermission(models.Model):
 
 class CustomGroup(models.Model):
     """Custom group model."""
-    #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
-    #name = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
-    #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='custom_group')
     name = models.CharField(max_length=150, null=True, blank=True)
     list_of_permissions = models.ManyToManyField(CustomPermission, blank=True)
     description = models.CharField(max_length=150, null=True, blank=True)
@@ -67,3 +67,33 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+
+class CustomerInvitation(models.Model):
+    """Store invitation tokens for customer users."""
+    TOKEN_TYPES = (
+        ('invitation', 'Invitation Token'),
+        ('password_reset', 'Password Reset Token'),
+    )
+    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='invitations')
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+    token_type = models.CharField(max_length=20, choices=TOKEN_TYPES, default='invitation')
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only set expiry on creation
+            self.expires_at = timezone.now() + timedelta(hours=24)
+        super().save(*args, **kwargs)
+
+    @property
+    def is_valid(self):
+        """Check if the invitation token is still valid."""
+        return not self.is_used and timezone.now() < self.expires_at
+
+    def __str__(self):
+        return f"{self.get_token_type_display()} for {self.user.email}"
+

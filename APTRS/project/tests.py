@@ -8,7 +8,6 @@ from accounts.models import CustomPermission, CustomGroup
 from customers.models import Company
 from django.test import Client
 from rest_framework.test import APIClient
-from urllib.parse import urlencode
 
 class CustomTestClient(Client):
     def request(self, **request):

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if is_retest %}Re-audit{% else %}Project{% endif %} Completion Notification</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 0; background-color: #ffffff;">
+        <!-- Header Section -->
+        <div style="background-color: #2c3e50; padding: 20px; text-align: center; color: white;">
+            <h1 style="margin: 0; font-size: 24px;">{% if is_retest %}Re-audit{% else %}Project{% endif %} Completion Notification</h1>
+        </div>
+        
+        <!-- Main Content -->
+        <div style="padding: 30px 20px; background-color: #ffffff;">
+            <p style="margin-top: 0;">Dear {{ company_name }},</p>
+            
+            <p>We are pleased to inform you that your {% if is_retest %}re-audit for project{% else %}project{% endif %} <strong>"{{ project_name }}"</strong> has been successfully completed.</p>
+            
+            <div style="background-color: #f8f9fa; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                <div style="margin-bottom: 8px;">
+                    <span style="font-weight: bold; color: #2c3e50;">{% if is_retest %}Re-audit for Project{% else %}Project{% endif %}:</span> {{ project_name }}
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <span style="font-weight: bold; color: #2c3e50;">Completion Date:</span> {{ completion_date }}
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <span style="font-weight: bold; color: #2c3e50;">Type:</span> {{ project.projecttype }} {% if is_retest %}(Re-audit){% endif %}
+                </div>
+                {% if project.description %}
+                <div style="margin-bottom: 8px;">
+                    <span style="font-weight: bold; color: #2c3e50;">Summary:</span> {{ project.description|truncatechars:150|striptags }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <p>Our team has finalized all {% if is_retest %}re-audit{% else %}project{% endif %} deliverables and completed all required tasks. The final report and any associated documentation are now available in your project portal.</p>
+            
+            <p>Please review the completed {% if is_retest %}re-audit{% else %}project{% endif %} materials at your earliest convenience. If you have any questions or need clarification on any aspect of the work completed, please don't hesitate to contact us.</p>
+            
+            <div style="margin: 25px 0; text-align: center;">
+                <a href="{{ project_url }}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 24px; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center;">View {% if is_retest %}Re-audit{% else %}Project{% endif %} Details</a>
+            </div>
+            
+            <p>Thank you for your partnership on this {% if is_retest %}re-audit{% else %}project{% endif %}. We look forward to working with you again in the future.</p>
+            
+            <p>Best regards,</p>
+            <p>The Application Penetration Test Reporting System Team</p>
+        </div>
+        
+        <!-- Footer Section -->
+        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #e9ecef;">
+            <p style="margin: 5px 0;">This is an automated message. Please do not reply directly to this email.</p>
+            <p style="margin: 5px 0;">&copy; {% now "Y" %} Application Penetration Test Reporting System. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -14,6 +14,10 @@ interface CompanySelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 }
 export default function UserSelect(props: React.PropsWithChildren<CompanySelectProps>) {
   const [users, setUsers] = useState<User[]>();
+  const [theme, setTheme] = useState<'light' | 'dark'>(
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  );
+  
   useEffect(() => {
     const loadUsers = async () => {
       try {
@@ -29,6 +33,25 @@ export default function UserSelect(props: React.PropsWithChildren<CompanySelectP
     }
     loadUsers()
   }, []);
+  
+  // Monitor theme changes
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, { attributes: true });
+    
+    return () => observer.disconnect();
+  }, []);
+  
   const handleChange = (event:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     console.log(event)
     props.changeHandler && props.changeHandler(event)

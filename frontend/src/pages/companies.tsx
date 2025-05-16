@@ -217,15 +217,15 @@ export function Companies() {
   
   return(
     <>
-      <PageTitle title='Companies' />
-      {/* modal content */}
-        {showModal &&
-        <DialogComponent handler={clearModal} open={showModal} size="xs" className="rounded-md dark:bg-black dark:text-white" >
-          <form method="dialog" onSubmit={clearModal}>
-            <Button className="bg-gray visible absolute right-2 top-4 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-              <span className="text-gray-400 hover:text-white-900">x</span>
+      <PageTitle title='Companies' />      {/* modal content */}        {showModal &&
+        <DialogComponent handler={clearModal} open={showModal} size="xs" className="rounded-lg bg-white/85 dark:bg-gray-800/75 backdrop-blur-md shadow-lg border border-gray-200/60 dark:border-gray-700/60 dark:text-white relative" >
+          <div className="absolute top-2 right-2 z-10">            <Button 
+              onClick={clearModal} 
+              className="bg-white/85 dark:bg-gray-800/75 backdrop-blur-md text-gray-800 border border-gray-200/60 dark:border-gray-700/60 hover:bg-gray-100/90 hover:text-gray-900 rounded-lg w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-700/80 dark:hover:text-white dark:text-white shadow-sm"
+            >
+              <span className="text-xl font-bold text-black dark:text-white">×</span>
             </Button>
-          </form>
+          </div>
           <DialogBodyComponent>
           {companyId   && <CompanyForm id={companyId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
           {!companyId && <CompanyForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}

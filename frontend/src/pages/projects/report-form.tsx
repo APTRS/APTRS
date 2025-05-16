@@ -98,16 +98,16 @@ export default function ReportForm(props: ReportFormProps) {
       {error && <FormErrorMessage message={error} />}
       <label htmlFor='Format' className='dark:text-white'>Format</label>
       <select name='Format' id='Format' className={StyleTextfield} onChange={handleChange}>
-        <option value="">Select...</option>
-        <option value="pdf">PDF</option>
-        <option value="docx">Microsoft Word</option>
-        <option value="excel">Microsoft Excel</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="">Select...</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="pdf">PDF</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="docx">Microsoft Word</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="excel">Microsoft Excel</option>
       </select>
       <label htmlFor='Type' className='dark:text-white'>Type</label>
       <select name='Type' id='Type' className={StyleTextfield} onChange={handleChange}>
-        <option value="">Select...</option>
-        <option value="Audit">Audit</option>
-        <option value="Re-Audit">Re-Audit</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="">Select...</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="Audit">Audit</option>
+        <option className="dark:bg-gray-800 dark:text-white" value="Re-Audit">Re-Audit</option>
       </select>
       <button className='bg-primary text-white p-2 rounded-md block mt-6 disabled:opacity-50' disabled={loading || !isValid()} onClick={fetchReport}>Fetch Report</button>
     </>

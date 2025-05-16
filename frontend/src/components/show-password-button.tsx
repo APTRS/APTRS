@@ -7,7 +7,7 @@ function ShowPasswordButton({passwordVisible = false, clickHandler}: ShowPasswor
   return(
             <button
             type="button"      
-            className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600 dark:text-black"
+            className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600 dark:text-white"
                   onClick={clickHandler}
               >
                 {passwordVisible ? (

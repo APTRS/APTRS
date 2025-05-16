@@ -138,11 +138,11 @@ export default function ScopeTable(props: ScopeTableProps): JSX.Element {
     {
       name: 'Description',
       selector: (row: ScopeWithActions) => row.description,
-      maxWidth: '10em'
+      maxWidth: '30em'
     }
   ]
   return (
-      <div className='max-w-2xl'>
+      <div className=''>
         <div className='mb-4'>
         {newScope ? 
           <ScopeForm projectId={Number(projectId)} onClose={()=>setNewScope(false)} afterSave={handleScopeChanges}/>
@@ -166,7 +166,7 @@ export default function ScopeTable(props: ScopeTableProps): JSX.Element {
               handler={cancelBulkScopes}
               open={showDialog}
               size="sm"
-              className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-black"
+              className="modal-box w-[500px] bg-white p-4 rounded-md dark:bg-gray-800"
               placeholder="Bulk Scopes Dialog"
               onPointerEnterCapture={() => {}}
               onPointerLeaveCapture={() => {}}

@@ -28,6 +28,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useCurrentUser } from '../../lib/customHooks';
 
+// Custom styles for DatePicker and dark mode
+// Custom CSS styles have been consolidated in index.css
+
 interface FormErrors {
   name?: string
   description?: string
@@ -67,6 +70,9 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
   const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
   const [standards, setStandards] = useState<ReportStandard[]>([]);
   const [selectedStandards, setSelectedStandards] = useState<string[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>(
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  );
   const [formData, setFormData] = useState<Project>({
     name: '',
     description: '',
@@ -119,6 +125,89 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
     };
     loadStandards();
   }, []);
+
+  // Monitor theme changes
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, { attributes: true });
+    
+    return () => observer.disconnect();
+  }, []);  // Shared Select component styles that respond to theme changes
+  const getSelectStyles = () => ({
+    control: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: theme === 'dark' 
+        ? 'rgba(55, 65, 81, 0.75)' 
+        : 'rgba(255, 255, 255, 0.85)',
+      borderColor: theme === 'dark'
+        ? state.isFocused ? 'rgba(99, 102, 241, 0.8)' : 'rgba(75, 85, 99, 0.6)'
+        : state.isFocused ? 'rgba(59, 130, 246, 0.5)' : 'rgb(209, 213, 219)',
+      borderWidth: '1px',
+      borderStyle: 'solid',
+      borderRadius: '0.375rem',
+      boxShadow: state.isFocused 
+        ? theme === 'dark'
+          ? '0 0 0 1px rgba(99, 102, 241, 0.4)'
+          : '0 0 0 1px rgba(59, 130, 246, 0.3)'
+        : 'none',
+      color: theme === 'dark' ? 'white' : 'black',
+      '&:hover': {
+        borderColor: theme === 'dark'
+          ? 'rgba(99, 102, 241, 0.8)'
+          : 'rgba(59, 130, 246, 0.5)'
+      }
+    }),
+    menu: (base: any) => ({
+      ...base,
+      backgroundColor: theme === 'dark'
+        ? 'rgba(55, 65, 81, 0.9)'
+        : 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(4px)',
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: state.isFocused 
+        ? theme === 'dark'
+          ? 'rgba(75, 85, 99, 0.8)' 
+          : 'rgba(243, 244, 246, 0.8)'
+        : 'transparent',
+      color: theme === 'dark' ? 'white' : 'black',
+    }),
+    singleValue: (base: any) => ({
+      ...base,
+      color: theme === 'dark' ? 'white' : 'black',
+    }),
+    multiValue: (base: any) => ({
+      ...base,
+      backgroundColor: theme === 'dark'
+        ? 'rgba(75, 85, 99, 0.8)'
+        : 'rgba(243, 244, 246, 0.8)',
+    }),
+    multiValueLabel: (base: any) => ({
+      ...base,
+      color: theme === 'dark' ? 'white' : 'black',
+    }),
+    multiValueRemove: (base: any) => ({
+      ...base,
+      color: theme === 'dark' ? 'white' : 'black',
+      '&:hover': {
+        backgroundColor: theme === 'dark' 
+          ? 'rgba(239, 68, 68, 0.8)' 
+          : 'rgba(252, 165, 165, 0.8)',
+        color: theme === 'dark' ? 'white' : 'black',
+      },
+    }),
+  });
 
   const handleStandardChange = (selectedOptions: any) => {
     const selectedValues = selectedOptions.map((option: any) => option.value);
@@ -174,18 +263,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
         owner: Array.isArray(value) ? value : [value] // For multi-selects, ensure it’s an array avoid split , if , in single value
       });
     }
-    //const owners = event.target.value.split(',').map(owner => owner.trim());
-    
-    // Update form data
-   // setFormData({ ...formData, owner: owners });
-    
-    // Set or clear error based on the owners array
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      owner: value.length > 0 && value[0] !== '' ? '' : 'Project Owner is required'
-    }));
   };
-  
   
   const handleDatePicker = (input: string, value:string): void => {
     setFormData((prevFormData) => ({
@@ -193,8 +271,7 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
       [input]: value,
     }));
   }
-  
-  const handleCancel = (event:any) =>  {
+    const handleCancel = (event:any) =>  {
     event.preventDefault()
     if(editing){
       if(!confirm('Quit without saving?')){
@@ -202,13 +279,17 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
       }
     } 
     navigate(-1)
-  }
+  };  
+  
   const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
     setBtnDisabled(true);
     event.preventDefault();
     const newErrors: FormErrors = {};
-    if (formData.name && formData.name.length < 3) {
+    if (!formData.name || formData.name.length < 3) {
       newErrors.name = 'Name should be at least three characters';
+    }
+    if (!formData.projecttype || formData.projecttype === '') {
+      newErrors.projecttype = 'Project Type is required';
     }
     //convert dates if necessary
     const formatDate = (value:any) => {
@@ -228,9 +309,11 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
     }
     if (!formData.owner || formData.owner.length === 0 || formData.owner[0] === '') {
       newErrors.owner = 'Project Owner is required';
-    }
-    if (!formData.companyname || formData.companyname === '') {
+    }    if (!formData.companyname || formData.companyname === '') {
       newErrors.companyname = 'Company is required';
+    }
+    if (!formData.projecttype || formData.projecttype === '') {
+      newErrors.projecttype = 'Project Type is required';
     }
     
     
@@ -250,194 +333,208 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
   }
   if(loading) return <FormSkeleton numInputs={5}/>
   if (loadingError) return <ModalErrorMessage message={"Error loading project"} />
-
   return (
-          <div className="flex-1 rounded-lg  px-6 pb-4 pt-8">
-          {saveError && <FormErrorMessage message={saveError} />}
-          <form action="" onSubmit={handleSubmit} id="projectForm" method="POST">
+    <div className="flex-1 rounded-lg bg-white/85 dark:bg-gray-800/75 backdrop-blur-md shadow-lg border border-gray-200/60 dark:border-gray-700/60 px-6 pb-4 pt-8">
+        {saveError && <FormErrorMessage message={saveError} />}
+        <form action="" onSubmit={handleSubmit} id="projectForm" method="POST" className="space-y-6">
           <PageTitle title={id ? "Edit Project" : "Create Project"} />
-      
-          <div className='grid grid-cols-2 gap-4'>
-            <div className="w-full mb-4">
-              <div className='flex'>
-                <div className="w-1/2 pr-2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="name"
-                  >
-                    Name
-                  </label>
-                  
-                  <div className="relative">
-                    <input
-                      name="name"
-                      id="name"
-                      value = {formData.name || ''}
-                      className={StyleTextfield}
-                      onChange={handleChange}
-                      type="text"
-                      required
-                    />
-                    {errors.name && <p>{errors.name}</p>} 
-                  </div>
-              </div>  
-              <div className="w-1/2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="projecttype"
-                  >
-                    Type
-                  </label>
-                  <div className="relative">
-                    <select name="projecttype"
-                        value={formData.projecttype} 
+          
+          {/* Project Basic Information Section */}          <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <h2 className="text-xl font-medium text-gray-800 dark:text-gray-200 mb-4">Basic Information</h2>
+            
+            <div className="space-y-4">
+                {/* Row 1: Name and Type */}
+                <div className='flex flex-col sm:flex-row gap-4'>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="name"
+                    >
+                      Name <span className="text-red-500">*</span>
+                    </label>
+                    
+                    <div className="relative">                    
+                      <input
+                        name="name"
+                        id="name"
+                        value = {formData.name || ''}
+                        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 bg-white/85 text-black dark:bg-gray-800/75 dark:text-white dark:placeholder:text-gray-400 dark:border-gray-700/60 transition-all focus:border-primary dark:focus:border-primary focus:outline-none"
                         onChange={handleChange}
-                        className={StyleTextfield}
+                        type="text"
+                        placeholder="Enter project name"
                         required
-                      >
-                      <option value=''>Select...</option>
-                      {projectTypes.map((type) =>
-                          <option key={`type-${type.id}`} value={type.name}>{type.name}</option>
-                      )}
-                    </select>
-                    {errors.projecttype && <p>{errors.projecttype}</p>} 
+                      />
+                      {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>} 
+                    </div>
+                  </div>  
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="projecttype"
+                    >
+                      Type <span className="text-red-500">*</span>
+                    </label>                  
+                    <div className="relative">                    
+                      <Select
+                        name="projecttype"
+                        id="projecttype"
+                        value={formData.projecttype ? { value: formData.projecttype, label: formData.projecttype } : null}
+                        onChange={(selected) => {
+                          const event = {
+                            target: {
+                              name: 'projecttype',
+                              value: selected ? selected.value : ''
+                            }
+                          } as React.ChangeEvent<HTMLInputElement>;
+                          handleChange(event);
+                          
+                          // Clear the error when a valid value is selected
+                          if (selected) {
+                            setErrors(prev => ({...prev, projecttype: undefined}));
+                          }
+                        }}
+                        options={projectTypes.map((type) => ({ value: type.name, label: type.name }))}
+                        placeholder="Select a project type"
+                        className="my-react-select-container"
+                        classNamePrefix="my-react-select"
+                        styles={getSelectStyles()}
+                        required
+                      />
+                      {errors.projecttype && <p className="mt-1 text-sm text-red-500">{errors.projecttype}</p>} 
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className='flex mt-4'>
-                <div className="w-1/2 pr-2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="testingtype"
-                  >
-                    Testing Type
-                  </label>
-                  <div className="relative">
-                    <input
-                      name="testingtype"
-                      id="testingtype"
-                      value = {formData.testingtype || ''}
-                      placeholder='Black Box, White Box etc'
-                      onChange={handleChange}
-                      className={StyleTextfield}
-                      type="text"
+
+                {/* Row 2: Testing Type and Status */}
+                <div className='flex flex-col sm:flex-row gap-4'>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="testingtype"
+                    >
+                      Testing Type
+                    </label>
+                    <div className="relative">                    
+                      <input                      
+                        name="testingtype"
+                        id="testingtype"
+                        value = {formData.testingtype || ''}
+                        placeholder='Black Box, White Box, etc.'
+                        onChange={handleChange}
+                        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 bg-white/85 text-black dark:bg-gray-800/75 dark:text-white dark:placeholder:text-gray-400 dark:border-gray-700/60 transition-all focus:border-primary dark:focus:border-primary focus:outline-none"
+                        type="text"
+                      />
+                      {errors.testingtype && <p className="mt-1 text-sm text-red-500">{errors.testingtype}</p>} 
+                    </div>
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="status"
+                    >
+                      Status 
+                    </label>
+                    <div className="relative">                    
+                      <input
+                        name="status"
+                        id="status"
+                        value = {formData.status || ''}
+                        placeholder='Auto-calculated from date'
+                        onChange={handleChange}
+                        className="peer block w-full rounded-md border border-gray-300 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 bg-gray-100/50 text-gray-500 dark:bg-gray-700/75 dark:text-gray-400 dark:border-gray-700/60 cursor-not-allowed"
+                        type="text"
+                        disabled                      
+                      />
+                      {formData.status && <span className='text-xs italic ml-2 text-gray-500 dark:text-gray-400'>Auto-calculated from date</span>}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Row 3: Start Date and End Date */}
+                <div className='flex flex-col sm:flex-row gap-4'>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="startdate"
+                    >
+                      Start Date <span className="text-red-500">*</span>
+                    </label>                  
+                    <DatePicker
+                      id="startdate"
+                      name="startdate"
+                      autoComplete="off"
+                      className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 bg-white/85 text-black dark:bg-gray-800/75 dark:text-white dark:placeholder:text-gray-400 dark:border-gray-700/60 transition-all focus:border-primary dark:focus:border-primary focus:outline-none"
+                      placeholderText='Select date'
+                      dateFormat="yyyy-MM-dd"
+                      onChange={(date:string) => handleDatePicker('startdate', date)}
+                      selected={formData.startdate ? new Date(formData.startdate) : ''}
                       required
                     />
-                    {errors.testingtype && <FormErrorMessage message={errors.testingtype} />} 
+                    {errors.startdate && <p className="mt-1 text-sm text-red-500">{errors.startdate}</p>} 
                   </div>
-                </div>
-                <div className="w-1/2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="status"
-                  >
-                    Status 
-                  </label>
-                  <div className="relative">
-                    <input
-                      name="status"
-                      id="status"
-                      value = {formData.status || ''}
-                      placeholder='Auto-calculated from date'
-                      onChange={handleChange}
-                      className={StyleTextfield}
-                      type="text"
-                      disabled                      
-                    />
-                    {formData.status && <span className='text-xs italic ml-2'>Auto-calculated from date</span>}
-                    
-                    
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-            <div className="w-full pl-8">
-              <div className='flex mb-4'>
-                <div className="w-1/2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="startdate"
-                  >
-                    Start Date
-                  </label>
-                  <DatePicker
-                    id="startdate"
-                    name="startdate"
-                    autoComplete="off"
-                    className={StyleTextfield}
-                    placeholderText='Select date'
-                    dateFormat="yyyy-MM-dd"
-                    onChange={(date:string) => handleDatePicker('startdate', date)}
-                    selected={formData.startdate ? new Date(formData.startdate) : ''}
-                    required
-                  />
-                  {errors.startdate && <FormErrorMessage message={errors.startdate} />} 
-                  
-                </div>
-                <div className="w-1/2 ml-2 ">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="enddate"
-                  >
-                    End Date
-                  </label>
-                  <DatePicker   
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="enddate"
+                    >
+                      End Date <span className="text-red-500">*</span>
+                    </label>                  
+                    <DatePicker   
                       id="enddate"
                       name="enddate"
                       autoComplete="off"
-                      className={StyleTextfield}
+                      className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 bg-white/85 text-black dark:bg-gray-800/75 dark:text-white dark:placeholder:text-gray-400 dark:border-gray-700/60 transition-all focus:border-primary dark:focus:border-primary focus:outline-none"
                       minDate={formData.startdate ? new Date(formData.startdate) : null}
                       placeholderText='Select date'
                       dateFormat="yyyy-MM-dd"
                       onChange={(date:string) => handleDatePicker('enddate', date)}
                       selected={formData.enddate ? new Date(formData.enddate) : ''}
                       required
-                  />
-                  {errors.enddate && <FormErrorMessage message={errors.enddate} />} 
-                </div>
-              </div>
-              <div className='flex'>
-                <div className="w-1/2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="companyname"
-                  >
-                    Company
-                  </label>
-                  
-                  
-                  <div className="relative">
-                    
-                    {/* only show company select for new objects */}
-                    {!formData.id  &&
-                      <CompanySelect 
-                        name="companyname"
-                        id="companyname"
-                        defaultValue={''}
-                        value={formData.companyname || ''} 
-                        changeHandler={handleCompanyChange}
-                        multiple={false}
-                        error={errors.companyname ? true : false}
-                      />
-                    }
-                    {formData.id &&
-                      <div className='mt-5'>{formData.companyname}</div>
-                    }
-                    
-                    {errors.companyname && <FormErrorMessage message={errors.companyname} />} 
+                    />
+                    {errors.enddate && <p className="mt-1 text-sm text-red-500">{errors.enddate}</p>} 
                   </div>
                 </div>
-                <div className="w-1/2 pl-2">
-                  <label
-                    className={StyleLabel}
-                    htmlFor="owner"
-                  >
-                    Project Owner
-                  </label>
-                  <div className="relative">
-                    {(currentUserCan('Manage Projects') && currentUserCan('Assign Projects')) ? (
-                      <UserSelect
+                
+                {/* Row 4: Company and Project Owner */}
+                <div className='flex flex-col sm:flex-row gap-4'>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="companyname"
+                    >
+                      Company <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      {/* only show company select for new objects */}
+                      {!formData.id  &&
+                        <CompanySelect 
+                          name="companyname"
+                          id="companyname"
+                          defaultValue={''}
+                          value={formData.companyname || ''} 
+                          changeHandler={handleCompanyChange}
+                          multiple={false}
+                          error={errors.companyname ? true : false}
+                        />
+                      }
+                      {formData.id &&
+                        <div className='p-2 bg-gray-100/50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-700/60'>
+                          {formData.companyname}
+                        </div>
+                      }
+                      {errors.companyname && <p className="mt-1 text-sm text-red-500">{errors.companyname}</p>} 
+                    </div>
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className={`${StyleLabel} inline-block mb-2`}
+                      htmlFor="owner"
+                    >
+                      Project Owner <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      {(currentUserCan('Manage Projects') && currentUserCan('Assign Projects')) ? (
+                        <UserSelect
                           name='owner'
                           defaultValue={formData.owner}
                           value={formData.owner || ''} 
@@ -445,40 +542,50 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                           multiple={true}
                           error={errors.owner ? true : false}
                         />
-                    ) :
-                      <div className='mt-5'>{formData.owner}</div>
-                    }
-                    {errors.owner && <FormErrorMessage message={errors.owner} />} 
+                      ) : (
+                        <div className='p-2 bg-gray-100/50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-700/60'>
+                          {formData.owner}
+                        </div>
+                      )}
+                      {errors.owner && <p className="mt-1 text-sm text-red-500">{errors.owner}</p>} 
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-white">Standards</label>
-                <Select
-                  isMulti
-                  options={standards.map(standard => ({ value: standard.name, label: standard.name }))}
-                  value={selectedStandards.map(standard => ({ value: standard, label: standard }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(option => option.value);
-                    setSelectedStandards(selectedValues);
-                    handleStandardChange(selectedOptions);
-                  }}
-                  className="react-select-container"
-                  classNamePrefix="react-select"
-                />
-              </div>
-             
+                
+                {/* Row 5: Standards */}
+                <div className="w-full">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Standards
+                  </label>
+                  <Select
+                    isMulti
+                    options={standards.map(standard => ({ value: standard.name, label: standard.name }))}
+                    value={selectedStandards.map(standard => ({ value: standard, label: standard }))}
+                    onChange={(selectedOptions) => {
+                      const selectedValues = selectedOptions.map(option => option.value);
+                      setSelectedStandards(selectedValues);
+                      handleStandardChange(selectedOptions);
+                    }}
+                    className="my-react-select-container"
+                    classNamePrefix="my-react-select"
+                    styles={getSelectStyles()}
+                    placeholder="Select applicable standards"
+                  />
+                </div>
             </div>
-            
           </div>
-          <div className='grid grid-cols-2'>
-              <div className="min-h-[200px] w-full">
+          
+          {/* Project Details Section */}
+          <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <h2 className="text-xl font-medium text-gray-800 dark:text-gray-200 mb-4">Project Details</h2>
+            
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+              <div>
                 <label
-                  className={StyleLabel}
+                  className={`${StyleLabel} inline-block mb-2`}
                   htmlFor="description"
                 >
-                  Description
+                  Description <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <CKWrapper
@@ -486,18 +593,16 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                     data = {formData.description}
                     onChange={handleCKchange}
                   />
-                    
-                  {errors.description && <FormErrorMessage message={errors.description} />} 
+                  {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>} 
                 </div>
               </div>
-              <div className="min-h-[200px] w-full ml-10 pr-10">
+              <div>
                 <label
-                  className={StyleLabel}
+                  className={`${StyleLabel} inline-block mb-2`}
                   htmlFor="projectexception"
                 >
                   Project Exception
                 </label>
-                {/* opacity is a hack to allow date picker above it to display correctly. for some reason it goes behind the ck object when opacity is set to 100 */}
                 <div className='opacity-95'>
                   <div className="relative">
                     <CKWrapper
@@ -505,31 +610,38 @@ function ProjectForm({ id: externalId }: ProjectFormProps): JSX.Element {
                       data = {formData.projectexception}
                       onChange={handleCKchange}
                     />
-                    
-                    {errors.projectexception && <FormErrorMessage message={errors.projectexception} />} 
+                    {errors.projectexception && <p className="mt-1 text-sm text-red-500">{errors.projectexception}</p>} 
                   </div>
                 </div>
               </div>
-              
-              
             </div>
+          </div>
           
-          <div className="p-2 flex">
-            <div className="w-1/2 flex justify-left mt-2">
-              <Button 
-                type="submit" 
-                className="w-sm bg-primary"
-                disabled = {btnDisabled}
-              >
-                  Save
-              </Button>
-              <Button 
-                className="bg-red-500 ml-2"
-                onClick = {handleCancel}
-                disabled={btnDisabled}>
-                  Cancel
-              </Button>
-            </div>
+          <div className="flex items-center justify-start gap-3 pt-2">
+            <Button 
+              type="submit" 
+              className="px-6 py-2 bg-primary hover:bg-primary/90 transition-all"
+              disabled = {btnDisabled}
+            >
+              <span className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-save" viewBox="0 0 16 16">
+                  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                </svg>
+                Save
+              </span>
+            </Button>
+            <Button 
+              className="px-6 py-2 bg-gray-500 hover:bg-gray-600 transition-all"
+              onClick={handleCancel}
+              disabled={btnDisabled}
+            >
+              <span className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                </svg>
+                Cancel
+              </span>
+            </Button>
           </div>
         </form>
       </div>

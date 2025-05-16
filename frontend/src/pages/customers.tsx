@@ -6,13 +6,13 @@ import {
         useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../layouts/layout';
-import { fetchFilteredCustomers, deleteCustomers } from "../lib/data/api";
+import { fetchFilteredCustomers, deleteCustomers, resendInvitation } from "../lib/data/api";
 import { DatasetState, DatasetAction, DEFAULT_DATA_LIMIT, useDataReducer } from '../lib/useDataReducer';
 import { RowsSkeleton } from '../components/skeletons'
 import PageTitle from '../components/page-title';
 import { WithAuth } from "../lib/authutils";
 import { currentUserCan } from "../lib/utilities";
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import Button from '../components/button';
 import CustomerForm from './customer-form';
 import { Dialog, DialogBody } from '@material-tailwind/react'
@@ -69,6 +69,7 @@ export function Customers() {
   const ref = useRef<HTMLDialogElement>(null);
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState([])
+  const [resendingInvitation, setResendingInvitation] = useState<number | null>(null);
   
 
   const openModal = useCallback((id: string ='') => {
@@ -104,8 +105,18 @@ export function Customers() {
       let temp: any = []
       data.results.forEach((row: CustomerWithActions) => {
         row.actions = (<>
-                      <PencilSquareIcon onClick={() => openModal(String(row.id))} className="inline w-6 cursor-pointer"/>
-                      <TrashIcon onClick={() => handleDelete([row.id] as number[])} className="inline w-6 ml-2 cursor-pointer" />                        
+                      <PencilSquareIcon onClick={() => openModal(String(row.id))} className="inline w-6 cursor-pointer hover:text-blue-600"/>
+                      <TrashIcon onClick={() => handleDelete([row.id] as number[])} className="inline w-6 ml-2 cursor-pointer hover:text-red-600" />                        
+                      {row.has_usable_password === false && (
+                        <EnvelopeIcon 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleResendInvitation(row.id);
+                          }} 
+                          className={`inline w-6 ml-2 cursor-pointer hover:text-green-600 ${resendingInvitation === row.id ? 'opacity-50' : ''}`}
+                          title="Resend Invitation"
+                        />
+                      )}
                       </>)
         temp.push(row)
       });
@@ -159,7 +170,7 @@ export function Customers() {
     ...(currentUserCan('Manage Customers') ? [{
       name: 'Action',
       selector: (row: any) => row.actions,
-      maxWidth: '1rem'
+      maxWidth: '10rem'
     }] : []),
     {
       name: <HeaderFilter 
@@ -278,23 +289,41 @@ export function Customers() {
   function handlePageChange(page: number){
     dispatch({ type: 'set-page', payload: page });
   }
+  const handleResendInvitation = async (userId: number | undefined) => {
+    if (userId === undefined) {
+      toast.error('Cannot resend invitation: User ID is missing');
+      return;
+    }
+    
+    try {
+      setResendingInvitation(userId);
+      await resendInvitation(userId);
+      toast.success('Invitation sent successfully');
+    } catch (error) {
+      console.error('Error resending invitation:', error);
+      toast.error('Failed to resend invitation');
+    } finally {
+      setResendingInvitation(null);
+    }
+  };
   if(state.error){
     navigate('/error')
   } 
   return(
     <>
       <PageTitle title='Customers' />
-      {/* modal content */}
+    {/* modal content */}
       {showModal &&
-      <DialogComponent handler={clearModal} open={showModal} size="md" className="p-4 rounded-md dark:bg-black dark:text-white">
-    
-        <form method="dialog" onSubmit={clearModal}>
-        <Button className="absolute right-4 top-4  rounded-full text-lg w-8 h-8 flex justify-center items-center">
-        <span className="dark:bg-white">X</span>
-      </Button>
-        </form>
-        <DialogBodyComponent className="w-full dark:bg-black dark:text-white">
-        {customerId   && <CustomerForm id={customerId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
+      <DialogComponent handler={clearModal} open={showModal} size="md" className="rounded-lg bg-white/85 dark:bg-gray-800/75 backdrop-blur-md shadow-lg border border-gray-200/60 dark:border-gray-700/60 dark:text-white relative">
+        <div className="absolute top-2 right-2 z-10">          <Button 
+            onClick={clearModal} 
+            className="bg-white/85 dark:bg-gray-800/75 backdrop-blur-md text-gray-800 border border-gray-200/60 dark:border-gray-700/60 hover:bg-gray-100/90 hover:text-gray-900 rounded-lg w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-700/80 dark:hover:text-white dark:text-white shadow-sm"
+          >
+            <span className="text-xl font-bold text-black dark:text-white">×</span>
+          </Button>
+        </div>
+        <DialogBodyComponent>
+        {customerId && <CustomerForm id={customerId} forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
         {!customerId && <CustomerForm forwardedRef={ref} setRefresh={setRefresh} onClose={clearModal}/>}
         </DialogBodyComponent>
       </DialogComponent>

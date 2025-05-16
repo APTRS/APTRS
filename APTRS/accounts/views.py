@@ -15,6 +15,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.contrib.auth.password_validation import validate_password
 # local imports
 from utils.filters import UserFilter, paginate_queryset
 from utils.permissions import custom_permission_required
@@ -23,7 +24,12 @@ from .models import CustomGroup, CustomPermission, CustomUser
 from .serializers import (ChangePasswordSerializer, CustomGroupSerializer,
                           CustomPermissionSerializer, CustomUserSerializer,
                           ProfileUserSerializer)
-
+# Using our unified token system instead of separate invitation and password reset modules
+# Import the unified token functions
+from .token_utils import validate_token as validate_token_util
+from .token_utils import process_token as process_token_util
+from .tasks import send_email_task
+   
 logger = logging.getLogger(__name__)
 
 
@@ -93,9 +99,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         data = super().validate(attrs)
-
-        if not self.user.is_staff:
-            raise serializers.ValidationError("Only staff users are allowed to login.")
 
         # Add extra responses here
         data['Status'] = "True"
@@ -256,7 +259,7 @@ def ActiveUserList(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated,IsAdminUser])
+@permission_classes([IsAuthenticated])
 def myprofile(request):
     """
     API endpoint for retrieving the profile information of the authenticated user.
@@ -274,7 +277,7 @@ def myprofile(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated,IsAdminUser ])  ## IsAdminUser is allow only staff internal users not for is_superuser(admin)
+@permission_classes([IsAuthenticated])
 def edit_profile(request):
     """
     API endpoint for editing the profile information of the authenticated user.
@@ -432,3 +435,101 @@ def user_detail(request, pk):
 
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
+
+
+# Unified token endpoints
+
+@api_view(['GET'])
+def validate_token_api(request, token):
+    """
+    Unified API endpoint to validate both invitation and password reset tokens.
+    
+    This endpoint returns whether a token is valid and its type.
+    
+    Args:
+        request: The HTTP request object
+        token (str): The token string to validate
+        
+    Returns:
+        Response: A JSON response with validation status and token details
+    """
+    is_valid, user, token_obj, message, token_type = validate_token_util(token)
+    
+    data = {
+        'valid': is_valid,
+        'message': message,
+        'token_type': token_type,
+    }
+    
+    if is_valid and user:
+        data['user_email'] = user.email
+    
+    return Response(data)
+
+
+@api_view(['POST'])
+def process_token_api(request, token):
+    """
+    Unified API endpoint to process both invitation and password reset tokens.
+    
+    This endpoint sets/resets the password for a user associated with the token.
+    
+    Args:
+        request: The HTTP request object
+        token (str): The token string to process
+        
+    Returns:
+        Response: A JSON response with processing result
+    """
+    # Extract password from the request data
+    password = request.data.get('password')
+    
+    if not password:
+        return Response({'error': 'Password is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Validate password
+    try:
+        validate_password(password)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Process the token
+    success, user, message, token_type = process_token_util(token, password)
+    
+    if success:
+        data = {
+            'success': True,
+            'message': message,
+            'token_type': token_type,
+            'user_email': user.email
+        }
+        return Response(data)
+    else:
+        return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def request_password_reset_api(request):
+    """
+    API endpoint to request a password reset email.
+    
+    This endpoint sends a password reset email to the user's email address if it exists.
+    
+    Args:
+        request: The HTTP request object containing the user's email
+        
+    Returns:
+        Response: A JSON response with the result of the request
+    """
+    email = request.data.get('email')
+    
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+    send_email_task.delay(email, 'password_reset')
+    return Response({'message': 'If your email is registered, you will receive a password reset link shortly.'})
+    
+    
+
+
+
+

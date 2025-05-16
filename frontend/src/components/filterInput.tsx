@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import {StyleTextfield} from '../lib/formstyles'
+// CSS moved to index.css
 
 interface FilterInputProps {
   searchArray: {label: string, value: string}[] | undefined;
@@ -114,30 +115,27 @@ export default function FilterInput(props: FilterInputProps) {
     const obj = { target: { name: name, value: value } };
     return obj as unknown as React.ChangeEvent<HTMLInputElement>;
   }
-  
   return (
-    <div className="relative bg-white dark:bg-black dark:text-white">
-      <div className="flex flex-wrap items-center gap-2 p-2 border rounded">
+    <div className="relative">
+      <div className="flex flex-wrap items-center gap-2 p-2 border rounded-md filter-container">
         {multiple && Array.isArray(selectedValues) && selectedValues.map((value, index) => (
-          <div key={index} className="flex items-center bg-gray-lighter dark:bg-gray-darker rounded-full px-3 py-1">
+          <div key={index} className="flex items-center filter-item rounded-md px-3 py-1">
             <span>{value}</span>
-            <button onClick={() => handleRemove(value)} className="ml-2 text-red-500">x</button>
+            <button onClick={() => handleRemove(value)} className="ml-2 text-red-500 hover:text-red-700 dark:hover:text-red-400">×</button>
           </div>
-        ))}
-        <input
+        ))}<input
           type="text"
           ref={inputRef}
           placeholder={props.prompt || 'Type to see options'}
           value={search}
           onFocus={() => setKbIndex(-1)}
-          className={`flex-grow ${StyleTextfield}`}
+          className="flex-grow py-1 px-2 outline-none bg-transparent text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           autoFocus={autoFocus}
         />
-      </div>
-      {search.length > 0 && filteredArray.length > 0 &&
-        <div className="absolute top-50 z-[1000] left-1 bg-black border-gray-lighter border rounded-b-md max-h-[200px] overflow-y-scroll dark:bg-black dark:text-white">
+      </div>      {search.length > 0 && filteredArray.length > 0 &&
+        <div className="absolute top-full mt-1 z-[1000] w-full filter-dropdown border rounded-md max-h-[200px] overflow-y-auto shadow-lg">
           {filteredArray?.filter(item => !selectedValues.includes(item.value)).map((item, index) => (
             <FilterItem 
               key={index}
@@ -155,12 +153,13 @@ export default function FilterInput(props: FilterInputProps) {
 
 function FilterItem(props: {item: {label: string, value: string}, index: number, kbIndex: number, name: string, onClick: (value: string) => void}) {
   const {item, index, kbIndex, name, onClick} = props;
-  const display = item.value !== item.label ? `${item.value} - ${item.label}` : item.value;
-  return (
+  const display = item.value !== item.label ? `${item.value} - ${item.label}` : item.value;  return (
     <div 
     onClick={() => onClick(item.value)} 
     id={`item-${name}-${index}`} 
-    className={`p-2 cursor-pointer dark:bg-black dark:text-white ${kbIndex === index ? 'bg-blue text-white' : 'bg-gray-lightest text-gray-darkest hover:bg-blue hover:text-white'}`} 
+    className={`p-2 cursor-pointer ${kbIndex === index 
+      ? 'bg-blue-500/80 text-white dark:bg-indigo-600/80' 
+      : 'text-gray-900 dark:text-white hover:bg-blue-500/70 hover:text-white dark:hover:bg-indigo-600/80'}`} 
     key={index}
   >
     {display}

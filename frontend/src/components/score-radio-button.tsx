@@ -11,7 +11,7 @@ export function ScoreRadioButton({ name, label, value, scoreData, onChange }: Sc
   const isChecked = scoreData[name] === value;
   return (
     <ListItem
-      className="p-0"
+      className="p-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-md transition-colors duration-200"
       placeholder="Score Radio Button ListItem"
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
@@ -44,7 +44,7 @@ export function ScoreRadioButton({ name, label, value, scoreData, onChange }: Sc
             onPointerLeaveCapture={() => {}}
           />
         </ListItemPrefix>
-        <span className="dark:text-white">{label}</span>
+        <span className="text-gray-700 dark:text-white font-medium">{label}</span>
       </label>
     </ListItem>
   );

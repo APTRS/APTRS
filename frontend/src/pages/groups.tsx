@@ -145,7 +145,7 @@ export function Groups() {
       <PageTitle title='User Groups' />
       {/* modal content */}
         {showModal &&
-        <DialogComponent handler={clearModal} open={showModal} size="md" className="rounded-md dark:bg-black dark:text-white">
+        <DialogComponent handler={clearModal} open={showModal} size="md" className="rounded-md dark:bg-gray-800 dark:text-white">
           <DialogBodyComponent>
           {group  && <GroupForm group={group} onSave={() => setRefresh(true)} onClose={clearModal}/>}
           </DialogBodyComponent>

@@ -1,0 +1,26 @@
+/* Custom scrolling styles for search results */
+.scrollable-results::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollable-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable-results::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.scrollable-results::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .scrollable-results::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark .scrollable-results::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

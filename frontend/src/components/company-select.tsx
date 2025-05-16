@@ -16,6 +16,10 @@ export default function CompanySelect(props: React.PropsWithChildren<CompanySele
   
   const [companies, setCompanies] = useState<Company[]>();
   const [value, setValue] = useState<string>('');
+  const [theme, setTheme] = useState<'light' | 'dark'>(
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  );
+  
   useEffect(() => {
     const loadCompanies = async () => {
       try {
@@ -29,9 +33,28 @@ export default function CompanySelect(props: React.PropsWithChildren<CompanySele
     }
     loadCompanies()
   }, []);
+  
   useEffect(() => {
     setValue(props.value || ''); 
   }, [props.value])
+  
+  // Monitor theme changes
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, { attributes: true });
+    
+    return () => observer.disconnect();
+  }, []);
   
  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
      props.changeHandler && props.changeHandler(event);

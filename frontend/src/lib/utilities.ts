@@ -1,4 +1,5 @@
 import { getAuthUser } from './data/api'
+import DOMPurify from 'dompurify';
 
 type ObjectWithProperty = {
   [key: string]: string | number | boolean; // Define the types of properties you expect
@@ -62,12 +63,25 @@ export const currentUserCan = (group: string): boolean => {
   }
   return user.permissions?.includes(group) || false
 }
+
+export const currentUserStaff = (): boolean => {
+  const user = getAuthUser()
+  if (user?.is_staff) {
+    return true
+  }
+  else {
+    return false
+  }
+}
+
+  
 export const getProjectStatusColor = (status: string): string => {
   const colorMap: { [key: string]: string } = {
     'Upcoming': 'text-blue-600',
     'In Progress': 'text-yellow-600',
     'Delay': 'text-red-600',
-    'Completed': 'text-green-600'
+    'Completed': 'text-green-600',
+    'On Hold': 'text-red-800'
   }
   return colorMap[status] || 'text-primary'
 }
@@ -101,6 +115,35 @@ export const parseErrors = (error: any): any => {
   }
   return error
 }
+
+/**
+ * Format a date string to a more readable format
+ * @param dateString The date string to format
+ * @param formatType 'long' (default) or 'short' for month format
+ * @returns Formatted date string or 'N/A' if invalid
+ */
+export const formatDate = (dateString?: string, formatType: 'long' | 'short' = 'long'): string => {
+  if (!dateString) return 'N/A';
+  try {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: formatType,
+      day: 'numeric'
+    });
+  } catch (e) {
+    return dateString;
+  }
+};
+
+/**
+ * Creates a sanitized markup object for dangerouslySetInnerHTML
+ * @param htmlContent The HTML content to sanitize
+ * @returns Object with __html property containing sanitized HTML
+ */
+export const createMarkup = (htmlContent: string | null | undefined): { __html: string } => {
+  if (!htmlContent) return { __html: '' };
+  return { __html: DOMPurify.sanitize(htmlContent) };
+};
 
 
 

@@ -1,6 +1,8 @@
 import { uploadFile } from '../lib/data/api';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import 'ckeditor5/ckeditor5.css';
+import '../styles/components/ck-dark-dialogs.css';
+import '../styles/components/ck-dark-fix.css';
 
 import {
     ClassicEditor,
@@ -149,7 +151,7 @@ class Editor extends ClassicEditor {
 			Undo
 		],
 		fontSize: {
-			options: [10, 12, 14, 14.5, 15, 'default', 18, 20, 22, 24, 28, 30, 32],
+			options: [10, 12, 14, 'default', 18, 20, 22],
 			supportAllValues: true
 		},
 		image: {
@@ -205,7 +207,7 @@ export const CKWrapper = (props: CKEditorProps) => {
     const { id, data, onChange, onReady, readOnly = false } = props;
 	const lockId = 'CKWrapper-read-only';
     return (
-        <div className="dark:text-black ck-content mb-4">
+        <div className="dark:text-black ck-content">
             <CKEditor
                 id={id}
                 data={props.data}
@@ -226,10 +228,6 @@ export const CKWrapper = (props: CKEditorProps) => {
                     } else {
                         editor.disableReadOnlyMode(lockId);
                     }
-					if (document.getElementsByTagName('html')[0].className === 'dark') {
-					const editorElements = document.querySelectorAll(`.ck`);
-					editorElements.forEach(element => {element.classList.add('custom-ckeditor-dark'); } )
-				}
                     if (onReady) onReady(editor);
                 }}
             />

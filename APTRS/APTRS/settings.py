@@ -446,3 +446,24 @@ CVSS_BASE_HIGH = "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:L"
 
 CVSS_BASE_SCORE_CRITICAL = 9.6
 CVSS_BASE_CRITICAL = "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N"
+
+# Email Configuration
+USE_EMAIL = os.getenv('USE_EMAIL')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Automated Penetration Test Reporting System <support@aptrs.com>')
+
+# Email timeout settings
+EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', 60))  # seconds
+
+# Configure if using an email service with rate limits
+EMAIL_THROTTLE = os.getenv('EMAIL_THROTTLE', 'False') == 'True'
+EMAIL_THROTTLE_RATE = int(os.getenv('EMAIL_THROTTLE_RATE', 100))  # Max emails per day
+
+# Frontend URL for email links
+FRONTEND_URL = os.getenv('FRONTEND_URL')
+

@@ -5,6 +5,21 @@ import React, {
   FormEvent,
   RefObject
 } from 'react';
+
+// Add custom styles for PhoneInput in dark mode
+const phoneInputStyles = `
+  .dark .PhoneInputInput {
+    background-color: rgba(55, 65, 81, 0.75) !important;
+    color: white !important;
+    border-color: rgba(75, 85, 99, 0.6) !important;
+  }
+  .dark .PhoneInputCountrySelectArrow {
+    color: white;
+  }
+  .dark .PhoneInputCountrySelect {
+    color: white;
+  }
+`;
 import { useNavigate } from 'react-router-dom';
 import {
   StyleTextfield,
@@ -14,8 +29,6 @@ import {
   ModalErrorMessage
 } from '../lib/formstyles'
 import Button from '../components/button';
-import {PasswordDescription, validPassword} from '../components/passwordValidator';
-import ShowPasswordButton from '../components/show-password-button';
 import { WithAuth } from "../lib/authutils";
 import { parseErrors } from '../lib/utilities';
 import { FormSkeleton } from '../components/skeletons'
@@ -29,6 +42,8 @@ import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { CountryCode, E164Number } from 'libphonenumber-js/core';
 import Select from 'react-select';
+import { useContext } from 'react';
+import { ThemeContext } from '../layouts/layout';
 
 interface FormErrors {
   full_name?: string
@@ -36,8 +51,6 @@ interface FormErrors {
   number?: string
   position?: string
   company?: string
-  password?: string
-  password_check?: string
 }
 interface CustomerFormProps {
   id?: string; // Make the ID parameter optional
@@ -55,9 +68,9 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const currentUser = useCurrentUser()
+  const theme = useContext(ThemeContext); // Get current theme
   const defaultCountry = currentUser?.location?.country  as CountryCode | undefined
   const [saveError, setSaveError] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false)
   const [editing, setEditing] = useState(false)
   const [formData, setFormData] = useState<Customer>({
     full_name: '',
@@ -65,8 +78,6 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     number: '',
     position: '',
     company: '',
-    password: '',
-    password_check: '',
     is_active: true
   });
   const [errors, setErrors] = useState<FormErrors>({});
@@ -188,41 +199,43 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     if (formData.full_name && formData.full_name.length < 3) {
       newErrors.full_name = 'Name should be at least three characters';
     }
-    if(!id){
-      if(formData.password != formData.password_check){
-        newErrors.password_check = 'Passwords do not match'
-      }
-      if(!id && !formData.password){
-        newErrors.password = 'Password is required'
-      }
-    }
     if (Object.keys(newErrors).length >  0) {
       setErrors(newErrors);
       console.error('Form failed validation:', newErrors);
     } else {
       try {
         await upsertCustomer(formData as Customer);
-        toast.success('Customer saved.')
+        toast.success('Customer saved. An invitation email has been sent to the customer.');
         if(setRefresh){
           setRefresh(true)
         }
         closeModal(true)
       } catch (error) {
         setErrors(parseErrors(error))
-      }
-    }
+      }    }
     setBtnDisabled(false);
-  }
+  };
+  
   function canSubmit():boolean {
-    if(id){
-      return true;
-    }
-    return !btnDisabled && validPassword(formData.password) && formData.password === formData.password_check
+    return !btnDisabled;
   }
-  if(loading) return <FormSkeleton numInputs={5}/>
-  if (loadingError) return <ModalErrorMessage message={"Error loading customer"} />
+  if(loading) return <FormSkeleton numInputs={5}/>;
+  if (loadingError) return <ModalErrorMessage message={"Error loading customer"} />;
+    // Custom styles for the PhoneInput in dark mode
+  const phoneInputDarkModeStyle = `
+    .dark .PhoneInputInput {
+      background-color: rgba(55, 65, 81, 0.75) !important;
+      color: white !important;
+      border-color: rgba(75, 85, 99, 0.6) !important;
+    }
+    .dark .PhoneInputCountrySelectArrow {
+      color: white !important;
+    }
+  `;
+
   return (
-    <div className="w-full flex-1 rounded-lg bg-white dark:bg-black">
+    <div className="w-full flex-1 rounded-lg bg-white/85 dark:bg-gray-800/75 backdrop-blur-md">
+      <style>{phoneInputDarkModeStyle}</style>
       <h1 className="mb-3 text-2xl px-4">
         {id ? "Edit" : "Create"} Customer
       </h1>
@@ -235,13 +248,12 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             <label className={StyleLabel} htmlFor="name">
               Name
             </label>
-            <div className="relative">
-              <input
+            <div className="relative">                <input
                 name="full_name"
                 id="full_name"
                 value={formData.full_name}
                 onChange={handleChange}
-                className={StyleTextfield}
+                className={`${StyleTextfield} dark:bg-gray-800/75 dark:text-white dark:border-gray-700/60`}
                 type="text"
                 required
               />
@@ -252,12 +264,11 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             <label className={StyleLabel} htmlFor="email">
               Email
             </label>
-            <div className="relative">
-              <input
+            <div className="relative">                <input
                 name="email"
                 id="email"
                 value={formData.email}
-                className={StyleTextfield}
+                className={`${StyleTextfield} dark:bg-gray-800/75 dark:text-white dark:border-gray-700/60`}
                 onChange={handleChange}
                 type="text"
                 autoComplete='off'
@@ -270,13 +281,12 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             <label className={StyleLabel} htmlFor="number">
               Phone number
             </label>
-            <div className="relative pr-2">
-              <PhoneInput
+            <div className="relative pr-2">              <PhoneInput
                 value={formData.number}
                 onChange={handlePhoneInputChange}
                 name="number"
                 defaultCountry={defaultCountry}
-                className={StyleTextfield}
+                className={`${StyleTextfield} dark:bg-gray-800/75 dark:text-white dark:border-gray-700/60`}
                 id="number"
               />
               {errors.number && <FormErrorMessage message={errors.number} />}
@@ -286,16 +296,62 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             <label className={StyleLabel} htmlFor="company">
               Company
             </label>
-            <div className="relative">
-              <Select
-              className="my-react-select-container"
-   classNamePrefix="my-react-select"
+            <div className="relative">              <Select
+                className="my-react-select-container"
+                classNamePrefix="my-react-select"
                 name="companyname"
                 id="companyname"
                 value={formData.company ? { value: formData.company, label: formData.company } : null}
                 onChange={handleCompanyChange}
                 options={companies.map((company) => ({ value: company.name, label: company.name }))}
-                isClearable
+                isClearable                styles={{                  control: (base, state) => ({
+                    ...base,
+                    backgroundColor: theme === 'dark' 
+                      ? 'rgba(55, 65, 81, 0.75)' 
+                      : 'rgba(255, 255, 255, 0.85)',
+                    borderColor: theme === 'dark'
+                      ? state.isFocused ? 'rgba(99, 102, 241, 0.8)' : 'rgba(75, 85, 99, 0.6)'
+                      : state.isFocused ? 'rgba(59, 130, 246, 0.5)' : 'rgb(229, 231, 235)',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderRadius: '0.375rem', // rounded-md
+                    boxShadow: state.isFocused 
+                      ? theme === 'dark' 
+                        ? '0 0 0 1px rgba(99, 102, 241, 0.4)'
+                        : '0 0 0 1px rgba(59, 130, 246, 0.3)'
+                      : 'none',
+                    color: theme === 'dark' ? 'white' : 'black',
+                    '&:hover': {
+                      borderColor: theme === 'dark'
+                        ? 'rgba(99, 102, 241, 0.8)'
+                        : 'rgba(59, 130, 246, 0.5)'
+                    }
+                  }),
+                  menu: (base) => ({
+                    ...base,
+                    backgroundColor: theme === 'dark'
+                      ? 'rgba(55, 65, 81, 0.9)'
+                      : 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(4px)',
+                  }),
+                  option: (base, state) => ({
+                    ...base,
+                    backgroundColor: state.isFocused 
+                      ? theme === 'dark' 
+                        ? 'rgba(75, 85, 99, 0.8)' 
+                        : 'rgba(243, 244, 246, 0.8)'
+                      : 'transparent',
+                    color: theme === 'dark' ? 'white' : 'black',
+                  }),
+                  singleValue: (base) => ({
+                    ...base,
+                    color: theme === 'dark' ? 'white' : 'black',
+                  }),
+                  input: (base) => ({
+                    ...base,
+                    color: theme === 'dark' ? 'white' : 'black',
+                  })
+                }}
               />
               {errors.company && <FormErrorMessage message={errors.company} />}
             </div>
@@ -305,13 +361,12 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             <label className={StyleLabel} htmlFor="position">
               Position
             </label>
-            <div className="relative">
-              <input 
+            <div className="relative">                <input 
                 name="position"
                 id="position"
                 value={formData.position}
                 onChange={handleChange}
-                className={StyleTextfield}
+                className={`${StyleTextfield} dark:bg-gray-800/75 dark:text-white dark:border-gray-700/60`}
                 type="text"
                 required
               />
@@ -319,12 +374,11 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             </div>
           </div>
           <div className="mb-2 flex items-center">
-            <label htmlFor="is_active" className="label cursor-pointer text-left ml-4  mt-8">
-              <input
+            <label htmlFor="is_active" className="label cursor-pointer text-left ml-4  mt-8">              <input
                 type="checkbox"
                 name="is_active"
                 id="is_active"
-                className="rounded-xl toggle toggle-accent mr-2"
+                className="rounded-xl toggle toggle-accent mr-2 dark:bg-gray-700/75"
                 onChange={handleChange}
                 checked={formData.is_active ? true : false}
               />
@@ -332,72 +386,15 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
             </label>
           </div>
         </div>
-        {!id &&
-          <div className="p-0 w-full mt-4 flex justify-center">
-            <fieldset className="w-[300px] form-control rounded-md   p-4 mb-6 border border-lighter" >
-              <legend className='text-sm px-1'>Create Password</legend>
-              <PasswordDescription password={formData.password} />
-              <div className="w-full mt-0">
-                <label 
-                  htmlFor="password"
-                  className='mt-0 mb-2 block text-xs font-medium text-gray-900'
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    name="password"
-                    id="password"
-                    disabled={Boolean(formData.id)}
-                    className={formData.password != formData.password_check ? `${StyleTextfieldError}` :`${StyleTextfield}`}
-                    onChange={handleChange}
-                    type={passwordVisible ? "text" : "password"}
-                    required={true}
-                    autoComplete="off"
-                  />
-                  <ShowPasswordButton passwordVisible={passwordVisible} clickHandler={() => setPasswordVisible(!passwordVisible)} />
-                  
-                </div>
-                {errors.password && <FormErrorMessage message={errors.password} />}
-                
-                
-              </div>
-              <div className="w-full mt-2">
-                <label 
-                  htmlFor="password_check"
-                  className='mt-0 mb-2 block text-xs font-medium text-gray-900'
-                >
-                  Repeat password
-                </label>
-                <div className="relative">
-                  <input
-                    name="password_check"
-                    id="password_check"
-                    className={formData.password != formData.password_check ? `${StyleTextfieldError}` :`${StyleTextfield}`}
-                    onChange={handleChange}
-                    disabled={Boolean(formData.id)}
-                    type={passwordVisible ? "text" : "password"}
-                    required={true}
-                    autoComplete="off"
-                  />
-                  <ShowPasswordButton passwordVisible={passwordVisible} clickHandler={() => setPasswordVisible(!passwordVisible)} />
-                    
-                </div>
-                {formData.password != formData.password_check && <p className='text-xs mt-2 ml-1 text-red-500'>Passwords should match</p>}
-              </div>
-            </fieldset>
-          </div>
-        }
-        <div className="w-full flex justify-center">
-          <Button 
-            className="cursor-pointer bg-primary disabled:bg-gray-light disabled:border-gray-light disabled:shadow-none dark:text-white"
+        <div className="w-full flex justify-center">          <Button 
+            className="cursor-pointer bg-primary disabled:bg-gray-light disabled:border-gray-light disabled:shadow-none dark:text-white hover:bg-primary-dark"
             disabled={!canSubmit()}
             type="submit">
               Save
           </Button>
           <Button 
             type="button"
-            className="bg-red-500 ml-1"
+            className="bg-red-500 ml-1 hover:bg-red-600 dark:text-white"
             onClick = {() => closeModal()}
             >
               Cancel

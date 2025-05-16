@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import project, retest, vulnerability,image_upload, scope
+from .views import project, retest, vulnerability, image_upload, scope, dashboard
 from .views.image_upload import GetImageView
 
 urlpatterns = [
+    ## Dashboard
+    path('dashboard/data/', dashboard.get_dashboard_data, name='dashboard-data'),
     ## Project
     path('edit-project/<str:pk>/',project.project_edit),
     path('get-projects/',project.GetAllProjects.as_view()),
@@ -14,6 +16,7 @@ urlpatterns = [
     path('delete-project/',project.deleteproject),
     path('status/completed/<str:pk>/',project.complete_project_status),
     path('status/reopen/<str:pk>/',project.reopen_project_status),
+    path('status/hold/<str:pk>/',project.hold_project_status),
     path('report/<str:pk>/', project.project_report,name="generate report"),
 
     # Scope
@@ -27,6 +30,7 @@ urlpatterns = [
     path('Retest/add',retest.Retestadd),
     path('Retest/delete/<str:pk>/',retest.Retestdelete),
     path('retest/status/completed/<str:pk>/',retest.complete_retest_status),
+    path('retest/status/hold/<str:pk>/',retest.markProjectRetestHold),
 
     # Project Vulnerability
     path('findings/<str:pk>/',vulnerability.projectfindingview),
@@ -38,6 +42,7 @@ urlpatterns = [
     path('vulnerability/Nessus/csv/<str:pk>/', vulnerability.Nessus_CSV),
     path('vulnerability/view/<str:pk>/',vulnerability.vulnerability_view),
     path('vulnerability/findings/publish/', vulnerability.publish_vulnerabilities, name='publish-vulnerabilities'),
+    path('customer/vulnerability/<str:pk>/', vulnerability.get_project_vulnerability),
 
     # Vulnerability Instances
     path('vulnerability/instances/<str:pk>/',vulnerability.projectvulninstances),

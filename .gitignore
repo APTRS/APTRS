@@ -227,3 +227,6 @@ APTRS/sqlite_dump.sql
 APTRS/templates/.~lock.report.docx#
 !APTRS/lib/
 
+run.sh
+APTRS/nohup.out
+APTRS/media/poc/** 

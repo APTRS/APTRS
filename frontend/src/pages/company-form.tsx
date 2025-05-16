@@ -193,41 +193,38 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
         console.error('Error submitting form:', error);
         setSaveError(String(error))
         // Handle error (e.g., show error message)
-      }
-    }
+      }    }
     setBtnDisabled(false);
-  }
+  };  
+  
   const fileInput = (): JSX.Element => {
     return (
       <input type="file"
         name="img"
         onChange={handleImage}
         accept="image/*"
-        className={`text-sm text-white dark:text-gray-darkest
+        className={`text-sm text-gray-700 dark:text-white-300
                   file:text-white
-                    file:mr-5 file:py-2 file:px-6
-                    file:rounded-full file:border-0
+                    file:mr-5 file:py-2.5 file:px-7
+                    file:rounded-lg file:border-0
                     file:text-sm file:font-medium
-                    file:bg-primary
+                    file:bg-primary file:shadow-md
                     file:cursor-pointer
-                    hover:file:bg-secondary`}
+                    hover:file:bg-secondary transition-all duration-300 ease-in-out`}
       />
     )
   }
-  
-  if(loading) return <FormSkeleton numInputs={3}/>
+    if(loading) return <FormSkeleton numInputs={3}/>
   if (loadingError) return <ModalErrorMessage message={"Error loading company"} />
-
   return (
-    <div className="max-w-xl min-w-lg flex-1 rounded-lg">
+    <div className="max-w-xl min-w-lg flex-1 rounded-lg p-6 bg-white/85 dark:bg-gray-800/75 backdrop-blur-md shadow-lg border border-gray-200/60 dark:border-gray-700/60">
       
-      <h1 className="mb-3 text-2xl dark:text-white">
+      <h1 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
         {id ? "Edit" : "Create"} Company
       </h1>
       {saveError && <FormErrorMessage message={saveError} />}
       <form onSubmit={handleSubmit} id="projectForm" encType='multipart/form-data' method="POST">
-        {/* Form inputs */}
-        <div className="w-full mb-4">
+        {/* Form inputs */}        <div className="w-full mb-5">
           <label 
             htmlFor="name"
             className={StyleLabel}>
@@ -237,7 +234,7 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
             <input
               name="name"
               id="name"
-              className={StyleTextfield}
+              className={`${StyleTextfield} focus:ring-2 focus:ring-blue-500/30 dark:focus:ring-blue-500/40 transition-shadow`}
               value={formData.name}
               onChange={handleChange}
               type="text"
@@ -245,8 +242,7 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
             />
             {errors.name && <FormErrorMessage message={errors.name} />}
           </div>
-        </div>
-        <div className="w-full mb-4">
+        </div>        <div className="w-full mb-5">
           <label 
             className={StyleLabel}
             htmlFor="address">
@@ -256,7 +252,7 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
             <input
               name="address"
               id="address"
-              className={StyleTextfield}
+              className={`${StyleTextfield} focus:ring-2 focus:ring-blue-500/30 dark:focus:ring-blue-500/40 transition-shadow`}
               value={formData.address}
               onChange={handleChange}
               type="text"
@@ -264,23 +260,19 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
             />
             {errors.address && <FormErrorMessage message={errors.address} />}
           </div>
-        </div>
-        <div className="w-full mb-4">
+        </div>        <div className="w-full mb-6">
           <label 
               className={StyleLabel}
               htmlFor="img">
               Logo image
-          </label>
-          {fileDataURL &&
-            <div>
-              <img src={fileDataURL} alt="cover photo" className="max-w-full max-h-60" />
-              <button className='underline text-red-500' onClick={removeImage}>Remove logo</button>
+          </label>          {fileDataURL &&
+            <div className="p-4 bg-gray-50/90 dark:bg-gray-700/60 rounded-lg shadow-inner backdrop-blur-sm">
+              <img src={fileDataURL} alt="cover photo" className="max-w-full max-h-60 rounded-md shadow-sm mx-auto" />
+              <button className='mt-3 text-sm px-4 py-1.5 bg-red-50/90 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded-md hover:bg-red-100 dark:hover:bg-red-800/50 transition-colors' onClick={removeImage}>Remove logo</button>
             </div>
-          }
-          {!fileDataURL &&
-            <div className="flex flex-col items-center justify-end  p-2 rounded-md">
-              <p className="text-2xl text-center dark:text-white">Upload a logo</p>
-              <div className='mt-10 ml-36'>
+          }{!fileDataURL &&
+            <div className="flex flex-col items-center justify-end p-6 rounded-lg bg-gray-50/90 dark:bg-gray-700/60 backdrop-blur-sm border border-dashed border-gray-300/70 dark:border-gray-600/70">              <p className="text-xl text-center text-gray-700 dark:text-white font-medium">Upload a logo</p>
+              <div className='mt-6 flex justify-center'>
                 {fileInput()}
               </div>
             </div>
@@ -298,17 +290,16 @@ function CompanyForm({ id: companyId, forwardedRef, setRefresh, onClose }: Compa
           </div> */}
         </div>
         {/* Submit button */}
-        
-        <div className="p-2 flex">
-          <div className="w-1/2 flex justify-left">
+          <div className="pt-4 flex">
+          <div className="flex justify-left space-x-3">
                 <Button 
-                className="bg-primary disabled:bg-slate-200 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+                className="bg-primary disabled:bg-slate-200 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none py-2 px-6"
                 disabled={btnDisabled}
                 type="submit">
                   Save
               </Button>
               <Button 
-                className="bg-red-500 ml-1"
+                className="bg-red-500 hover:bg-red-600 transition-colors py-2 px-6"
                 onClick={() => closeModal()}
                 disabled={btnDisabled}>
                   Cancel

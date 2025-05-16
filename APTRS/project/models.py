@@ -22,6 +22,7 @@ PROJECT_STATUS_CHOICES = [
         ('Upcoming', 'Upcoming'),
         ('In Progress', 'In Progress'),
         ('Delay', 'Delay'),
+        ('On Hold', 'On Hold'),
         ('Completed', 'Completed'),
     ]
 
@@ -32,12 +33,13 @@ class Project(models.Model):
     projecttype = models.CharField(max_length=100, unique = False, null = False, blank = False, default=None)
     startdate = models.DateField()
     enddate = models.DateField()
-    testingtype = models.CharField(max_length=100, unique = False, null = False, blank = False, default="White Box")
+    testingtype = models.CharField(max_length=100, unique = False, null = True, blank = True, default="White Box")
     projectexception = models.TextField(unique = False, null = True, blank = True,validators=[xss_validator])
     owner = models.ManyToManyField(CustomUser,blank=True)
     status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
-    standard = models.JSONField(default=list) 
-
+    standard = models.JSONField(default=list)
+    hold_reason = models.TextField(null=True, blank=True, help_text="Reason why the project is on hold")
+    
     def clean(self):
         if self.enddate < self.startdate:
             raise ValidationError(_('End date cannot be earlier than start date'))
@@ -45,15 +47,45 @@ class Project(models.Model):
     @property
     def calculate_status(self):
         current_date = timezone.now().date()
-        if current_date < self.startdate:
-            return 'Upcoming'
-        elif self.startdate <= current_date <= self.enddate:
-            return 'In Progress'
-        elif current_date > self.enddate:
-            return 'Delay'
+        # If project is marked as "On Hold", preserve this status
+        if self.status == 'On Hold':
+            return 'On Hold'
+            
+        # Check if there are any active retests (not completed and is active)
+        active_retests = ProjectRetest.objects.filter(
+            project=self,
+            is_active=True,
+            is_completed=False
+        ).order_by('-startdate')
+        
+        if active_retests.exists():
+            active_retest = active_retests.first()
+            # Use retest dates for status calculation
+            if current_date < active_retest.startdate:
+                return 'Upcoming'
+            elif active_retest.startdate <= current_date <= active_retest.enddate:
+                return 'In Progress'
+            elif current_date > active_retest.enddate:
+                return 'Delay'
+            
+
+        else:
+            # If no active retest, use project dates for status calculation
+            if self.status == 'Completed':
+                return 'Completed'
+            elif current_date < self.startdate:
+                return 'Upcoming'
+            elif self.startdate <= current_date <= self.enddate:
+                return 'In Progress'
+            elif current_date > self.enddate:
+                return 'Delay'
 
     def save(self, *args, **kwargs):
-        if self.status != 'Completed':
+        # Clear hold_reason if status is not "On Hold" 
+        if self.status != 'On Hold' and self.hold_reason:
+            self.hold_reason = None
+            
+        if self.status != 'Completed' and self.status != 'On Hold':
             self.status = self.calculate_status
         super(Project, self).save(*args, **kwargs)
 
@@ -82,6 +114,8 @@ class Vulnerability(models.Model):
     vulnerabilitydescription = models.TextField(blank=True,null=True,validators=[xss_validator])
     POC = models.TextField(default=None,blank=True,null=True,validators=[xss_validator])
     created = models.DateTimeField(auto_now_add=True,editable=False,null=True)
+    published_date = models.DateTimeField(null=True, blank=True)
+    fixed_date = models.DateTimeField(null=True, blank=True)
     vulnerabilitysolution = models.TextField(blank=True,null=True,validators=[xss_validator])
     vulnerabilityreferlnk = models.TextField(blank=True,null=True,validators=[xss_validator])
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, editable=False,to_field='id',related_name='vulnerability_created_by')
@@ -92,6 +126,23 @@ class Vulnerability(models.Model):
     class Meta:
         unique_together = (("project", "vulnerabilityname"),)
 
+    def save(self, *args, **kwargs):
+        # Set published_date when a vulnerability is published for the first time
+        if self.published and not self.published_date:
+            self.published_date = timezone.now()
+        # If unpublished, clear the published date
+        elif not self.published:
+            self.published_date = None
+        
+        # Set fixed_date when a vulnerability is marked as fixed for the first time
+        if self.status == CONFIRMED and not self.fixed_date:
+            self.fixed_date = timezone.now()
+        # If not confirmed fixed, clear the fixed date
+        elif self.status != CONFIRMED:
+            self.fixed_date = None
+            
+        super(Vulnerability, self).save(*args, **kwargs)
+        
     def __str__(self):
         return self.vulnerabilityname
 
@@ -117,7 +168,9 @@ class ProjectRetest(models.Model):
     startdate = models.DateField()
     enddate = models.DateField()
     owner = models.ManyToManyField(CustomUser,blank=True)
-    status = models.CharField(max_length=20, choices=PROJECT_STATUS_CHOICES)
+    is_active = models.BooleanField(default=True)
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def clean(self):
         if self.enddate < self.startdate:
@@ -125,7 +178,18 @@ class ProjectRetest(models.Model):
 
     @property
     def calculate_status(self):
+        """
+        Calculate what the status would be based on dates.
+        This is used for display purposes.
+        """
         current_date = timezone.now().date()
+        
+        if not self.is_active:
+            return None
+            
+        if self.is_completed:
+            return 'Completed'
+
         if current_date < self.startdate:
             return 'Upcoming'
         elif self.startdate <= current_date <= self.enddate:
@@ -134,6 +198,23 @@ class ProjectRetest(models.Model):
             return 'Delay'
 
     def save(self, *args, **kwargs):
-        if self.status != 'Completed':
-            self.status = self.calculate_status
+        # Save the retest first
         super(ProjectRetest, self).save(*args, **kwargs)
+        
+        # Then update the project's status if this is an active retest
+        if self.is_active and not self.is_completed:
+            project = self.project
+            project.save()  # This will trigger project's save method which calls calculate_status
+        # If retest is completed and was active, update project status back to completed
+        elif self.is_completed and self.is_active:
+            project = self.project
+            # Check if there are other active retests
+            other_active_retests = ProjectRetest.objects.filter(
+                project=project,
+                is_active=True,
+                is_completed=False
+            ).exclude(pk=self.pk).exists()
+            
+            if not other_active_retests:
+                project.status = 'Completed'
+                project.save(update_fields=['status'])

@@ -14,8 +14,7 @@ module.exports = withMT({
   ],
 
   theme: {
-    extend: {
-      colors: {
+    extend: {      colors: {
         primary: '#4090C7',
         secondary: '#D60C5F',
         white: '#ffffff',
@@ -28,9 +27,16 @@ module.exports = withMT({
         'gray-dark': '#989696',
         'gray-darker': '#706f6f',
         'gray-darkest': '#4a4848',
+        'gray-50': '#f9fafb',
+        'gray-100': '#f3f4f6',
+        'gray-200': '#e5e7eb',
+        'gray-300': '#d1d5db',
+        'gray-400': '#9ca3af',
+        'gray-500': '#6b7280',
+        'gray-600': '#4b5563',
         'gray-700': '#374151',
         'gray-800': '#1f2937',
-        'border-gray-200': '#989696',
+        'gray-900': '#111827',
         'custom-gray': '#6b7280',
         'custom-bg': '#374151',
         'brand-light': '#fdcdd4',

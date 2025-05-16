@@ -1,6 +1,6 @@
 // App.tsx
 import React from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Layout from './layouts/layout';
 import Home from './pages/home';
 import Login from './pages/login';
@@ -21,6 +21,12 @@ import ErrorPage from './pages/error-page';
 import AccessDenied from './pages/access-denied';
 import Profile from './pages/profile';
 import Config from './pages/config';
+import CustomerDashboard from './pages/customerview/customer-dashboard';
+import CustomerProjectView from './pages/customerview/ProjectView';
+import CustomerProjectDetails from './pages/customerview/ProjectDetails';
+import CustomerVulnerabilityView from './pages/customerview/Vulnerability-view'
+import PastProject from './pages/customerview/PastProject';
+import SetPassword from './pages/set-password'; // Importing SetPassword page
 import { useEffect } from 'react';
 import { refreshAuth, getAuthUser, shouldRefreshToken } from './lib/data/api';
 import Logout from './pages/logout';
@@ -30,7 +36,28 @@ import.meta.env.VITE_APP_ENV
 const App: React.FC = () => {
   const user = getAuthUser()
   const navigate = useNavigate()
-  useEffect(() => {
+  const location = useLocation()
+  
+  useEffect(() => {    // Define paths that should be accessible without authentication
+    const publicPaths = [
+      '/set-password', // Invitation acceptance page
+      '/reset-password', // Password reset page
+      '/activate-account', // Account activation page
+    ];
+
+    // Check if the current path is in the public paths list
+    const isPublicPath = publicPaths.some(path => 
+      location.pathname.startsWith(path)
+    );
+
+    if (!user && !isPublicPath) {
+      if (!localStorage.getItem('redirect')) {
+        localStorage.setItem('redirect', document.location.pathname);
+      }
+      console.log('Redirecting to login page...' + document.location.pathname);
+      navigate('/');
+    }
+    
     const refreshUser = async () => {
       try {
         const refreshedUser = await refreshAuth();
@@ -46,7 +73,8 @@ const App: React.FC = () => {
     // Call the refreshUser function every 28 minutes, token valid for 30 mins, 2 mins buffer time to refresh at 28th mins
     const intervalId = setInterval(refreshUser, 1680000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [location.pathname]);
+  
   if(shouldRefreshToken()){
     refreshAuth()
   }
@@ -54,9 +82,11 @@ const App: React.FC = () => {
         
         
             <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route path="/" element={<Home />} />
+              <Route path="/" element={<Layout />}>                <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                {/* Routes for handling invitation links and password reset - accessible without being logged in */}
+                <Route path="/set-password/:token" element={<SetPassword />} />
+                <Route path="/reset-password/:token" element={<SetPassword />} />
                 {user ? 
                   <>
                     <Route path="/dashboard" element={<Dashboard />} />
@@ -86,6 +116,11 @@ const App: React.FC = () => {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/access-denied" element={<AccessDenied />} />
                     <Route path="/logout" element={<Logout />} />
+                    <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+                    <Route path="/customer-projects" element={<CustomerProjectView />} />
+                    <Route path="/customer/project/:id" element={<CustomerProjectDetails />} />  
+                    <Route path="/customer/project/vulnerability/view/:id" element={<CustomerVulnerabilityView />} />
+                    <Route path="/customer/past-project" element={<PastProject  pageTitle='Past Projects'/>} />
                     <Route path="*" element={<ErrorPage is404={true}/>} />
                   </>
                 : 
@@ -93,7 +128,7 @@ const App: React.FC = () => {
                     <Route path="404" element={<ErrorPage is404={true}/>} />
                     <Route path="/access-denied" element={<AccessDenied />} />
                     <Route path="/error" element={<ErrorPage />} />
-                    <Route path="*" element={<Navigate to="/" replace />}/>
+                    
                   </>
                 }                
               </Route>

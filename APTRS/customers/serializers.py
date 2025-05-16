@@ -6,6 +6,7 @@ from rest_framework import serializers
 from django.conf import settings
 from utils.s3_utils import generate_presigned_url
 from .models import Company
+from project.models import Vulnerability
 
 class CompanySerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False)
@@ -33,20 +34,20 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False)
     company = serializers.CharField(write_only=True)
+    
     class Meta:
         model = CustomUser
-        fields = ['id', 'full_name', 'email', 'is_active', 'number', 'position','password','company']
-        read_only_fields = ['date_joined','is_staff']
+        fields = ['id', 'full_name', 'email', 'is_active', 'number', 'position', 'company']
+        read_only_fields = ['date_joined', 'is_staff']
 
     def to_representation(self, instance):
         rep = super(CustomerSerializer, self).to_representation(instance)
         rep['company'] = instance.company.name
+        rep['has_usable_password'] = instance.has_usable_password()
         return rep
 
     def create(self, validated_data):
-
         company_name = validated_data.pop('company', None)
         if company_name:
             try:
@@ -55,25 +56,24 @@ class CustomerSerializer(serializers.ModelSerializer):
             except Company.DoesNotExist as exc:
                 raise serializers.ValidationError("Company with provided name does not exist") from exc
 
-        # Set is_staff to True by default for new user
+        # Set is_staff to False for customer user
         validated_data['is_staff'] = False
-
-        if 'password' not in validated_data:
-            raise serializers.ValidationError("Password is required for creating a new user.")
-        password = validated_data.pop('password')
-        try:
-            # Validate the password
-            validate_password(password)
-        except ValidationError as e:
-            raise serializers.ValidationError({"password": e.messages})
+        
+        # Always ignore password - all customers use invitation system
+        if 'password' in validated_data:
+            validated_data.pop('password')
+        
+        # Create the user
         user = CustomUser.objects.create(**validated_data)
-        user.set_password(password)
+        
+        # Always set unusable password - password will be set through invitation
+        user.set_unusable_password()
         user.save()
 
+        # Assign customer group
         customer_group, _ = CustomGroup.objects.get_or_create(name='Customer')
         user.groups.add(customer_group)
-
-
+        
         return user
 
 
@@ -99,3 +99,15 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
         return super().update(instance, validated_data)
+
+
+class VulnerabilityListSerializer(serializers.ModelSerializer):
+        name = serializers.CharField(source='vulnerabilityname')
+        severity = serializers.CharField(source='vulnerabilityseverity')
+        project = serializers.CharField(source='project.name')
+        project_id = serializers.IntegerField(source='project.id')
+        date = serializers.DateTimeField(source='published_date', format='%Y-%m-%d')
+        
+        class Meta:
+            model = Vulnerability
+            fields = ['id', 'name', 'severity', 'project', 'project_id', 'date']

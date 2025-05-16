@@ -1,0 +1,52 @@
+/* Additional CKEditor Dark Mode fixes - especially for link dialogs */
+
+/* Main dialog bg */
+.ck.ck-responsive-form {
+  background: var(--ck-color-base-background) !important;
+}
+
+/* Input text and background */
+.ck.ck-responsive-form input.ck-input {
+  background: var(--ck-color-base-background) !important;
+  color: var(--ck-color-text) !important;
+  border-color: var(--ck-color-base-border) !important;
+}
+
+/* Labels for inputs */
+.ck.ck-responsive-form label {
+  color: var(--ck-color-text) !important;
+}
+
+/* Links in editor */
+.ck-content a {
+  color: #2563eb !important;
+}
+
+.dark .ck-content a {
+  color: #60a5fa !important;
+}
+
+/* Dark mode variables */
+.dark .ck {
+  --ck-color-base-background: #1f2937 !important;
+  --ck-color-base-border: #4b5563 !important;
+  --ck-color-text: #e5e7eb !important;
+  --ck-color-button-default-hover-background: #374151 !important;
+  --ck-color-button-on-background: #2563eb !important;
+  --ck-color-button-on-hover-background: #3b82f6 !important;
+  --ck-color-base-focus: #60a5fa !important;
+  --ck-focus-ring: 1px solid #60a5fa !important;
+  --ck-color-button-save: #2563eb !important;
+  --ck-color-button-save-hover: #3b82f6 !important;
+}
+
+/* Make tables more visible in dark mode */
+.dark .ck-content table {
+  border-color: #4b5563 !important;
+}
+
+.dark .ck-content table td, 
+.dark .ck-content table th {
+  border-color: #4b5563 !important;
+  background-color: #374151 !important;
+}

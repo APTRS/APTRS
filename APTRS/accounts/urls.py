@@ -3,12 +3,10 @@ from django.urls import path
 
 # local imports
 from . import views
-from .views import MyTokenObtainPairView,LogoutGetView, MyTokenRefreshView
+from .views import MyTokenObtainPairView, LogoutGetView, MyTokenRefreshView
 
 
 urlpatterns = [
-
-
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', MyTokenRefreshView.as_view(), name='token_refresh'),
     path('logout/', LogoutGetView.as_view(), name='logout'),
@@ -27,4 +25,11 @@ urlpatterns = [
     path('list/permission/', views.list_permissions, name='List All Permissions'),
     path('groups/update/<int:pk>/', views.edit_group, name='update_group'),
     path('groups/list/', views.list_custom_groups, name='List All Groups'),
+    
+    path('token/validate/<str:token>/', views.validate_token_api, name='validate_token'),
+    path('token/process/<str:token>/', views.process_token_api, name='process_token'),
+    path('token/reset/request/', views.request_password_reset_api, name='request_password_reset'),
+    
+    
+   
 ]

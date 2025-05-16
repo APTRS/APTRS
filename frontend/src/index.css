@@ -1,363 +1,1439 @@
-@config "../tailwind.config.cjs";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-ul {
-  @apply list-disc;
-  padding-left: 1.5rem
-}
-p {
-  @apply mb-1;
-}
 
-.ck-editor__editable {
-  max-height: 400px;
-}
-.react-datepicker-popper {
-  z-index: 9999 !important;
-}
-
-@layer components {
-
-  .my-react-select-container .my-react-select__option {
-    @apply dark:bg-gray-700 dark:hover:bg-black dark:text-white;
+@layer base {
+  ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
   }
+  
+  p {
+    margin-bottom: 0.25rem;
+  }
+  
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.375;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.625;
+  }
+  
+  h5 {
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 2;
+  }
+  
+  h6 {
+    font-size: 1rem;
+    font-weight: 100;
+    line-height: 2;
+  }
+  
+  strong {
+    font-weight: 700;
+  }
+}
+
+@layer components {  /* Material Tailwind Tab Styles */
+  /* Material Tailwind default tabs override for better appearance */
+  .material-tailwind-tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem 0.375rem 0 0;
+    color: #ffffff;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .material-tailwind-tab.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    font-weight: 600;
+    border-bottom: 3px solid #ffffff;
+  }
+  
+  .material-tailwind-tab:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Dark mode specific styles */
+  .dark .material-tailwind-tab.active {
+    background-color: #1f2937; 
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+  }
+  
+  /* Header background */
+  .material-tailwind-tabs-header {
+    background: linear-gradient(to right, #1e40af, #3b82f6);
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 0.25rem;
+  }
+  
+  .dark .material-tailwind-tabs-header {
+    background: linear-gradient(to right, #1e3a8a, #2563eb);
+  }
+  
+  /* Panel styling */
+  .material-tailwind-panel {
+    background-color: white;
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .dark .material-tailwind-panel {
+    background-color: #1f2937;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Specific styles for project view tabs */
+  .project-tabs .material-tailwind-tab {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .project-tabs .material-tailwind-tab.active {
+    background-color: white;
+    color: #3b82f6;
+  }
+  
+  .dark .project-tabs .material-tailwind-tab.active {
+    background-color: #1f2937;
+    color: #60a5fa;
+  }
+  
+  /* Material Tailwind Tables - better appearance */
+  .material-tailwind-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .material-tailwind-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #4b5563;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .dark .material-tailwind-table th {
+    color: #e5e7eb;
+    background-color: #374151;
+    border-bottom-color: #4b5563;
+  }
+  
+  .material-tailwind-table tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+  
+  .dark .material-tailwind-table tr:nth-child(even) {
+    background-color: #283548;
+  }
+  
+  .material-tailwind-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+  }
+  
+  .dark .material-tailwind-table td {
+    border-bottom-color: #4b5563;
+    color: #e5e7eb;
+  }
+  
+  /* Status badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .status-active {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: rgb(16, 185, 129);
+  }
+  
+  .dark .status-active {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: rgb(52, 211, 153);
+  }
+  
+  .status-pending {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: rgb(245, 158, 11);
+  }
+  
+  .dark .status-pending {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: rgb(251, 191, 36);
+  }
+  
+  .status-hold {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: rgb(239, 68, 68);
+  }
+  
+  .dark .status-hold {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: rgb(248, 113, 113);
+  }
+  
+  /* Dialog styles for CKEditor special characters and other dialogs */
+  .dark .ck.ck-dialog,
+  .dark .ck-dialog__body,
+  .dark .ck-dialog__body .ck-rounded-corners,
+  .dark .ck.ck-dialog__main,
+  .dark .ck-dialog__footer,
+  .dark .ck.ck-dialog__footer,
+  .dark .ck.ck-button.ck-dialog__close,
+  .dark .ck-dialog__title,
+  .dark .ck-dialog__body_expanded,
+  .dark .ck.ck-special-characters-navigation,
+  .dark .ck-dialog__tabs,
+  .dark .ck.ck-balloon-panel,
+  .dark .ck-dialog__tab,
+  .dark .ck-dialog__body_scrollable,
+  .dark .ck-dialog__body_overflow {
+    background: #1f2937 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  /* Dialog Special Characters Grid */
+  .dark .ck.ck-character-grid,
+  .dark .ck.ck-character-grid__tiles {
+    background: #1f2937 !important;
+    border-color: #4b5563 !important;
+  }
+  
+  .dark .ck-character-grid__tile {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  .dark .ck-character-grid__tile:hover,
+  .dark .ck-character-grid__tile:focus {
+    background-color: #60a5fa !important;
+    color: #1f2937 !important;
+  }
+  
+  /* Dialog labels and inputs */
+  .dark .ck-dialog__label {
+    color: #e5e7eb !important;
+  }
+  
+  .dark .ck-dialog__tab.ck-on {
+    background: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  /* CKEditor styles */
+  .dark .ck-editor {
+    --ck-color-base-foreground: #1f2937;
+    --ck-color-base-background: #111827;
+    --ck-color-base-border: #4b5563;
+    --ck-color-text: #e5e7eb;
+    --ck-color-shadow-drop: rgba(0, 0, 0, 0.2);
+    --ck-color-shadow-inner: rgba(0, 0, 0, 0.1);
+    --ck-color-focus-border: #3b82f6;
+    --ck-color-focus-outer-shadow: rgba(59, 130, 246, 0.3);
+    --ck-color-button-default-background: #1f2937;
+    --ck-color-button-default-hover-background: #374151;
+    --ck-color-button-on-background: #374151;
+    --ck-color-button-on-hover-background: #4b5563;
+    --ck-color-button-default-active-background: #374151;
+    --ck-color-button-on-active-background: #4b5563;
+    --ck-color-list-background: #1f2937;
+    --ck-color-panel-background: #1f2937;
+    --ck-color-panel-border: #4b5563;
+    --ck-color-toolbar-background: #1f2937;
+    --ck-color-toolbar-border: #4b5563;
+  }
+
+  /* Make CKEditor content visible in dark mode */
+  .dark .ck-content {
+    background-color: #1f2937 !important;
+    color: #e5e7eb !important;
+  }
+    /* Fix for CKEditor dropdown menus in dark mode */
+  .dark .ck-dropdown__panel,
+  .dark .ck.ck-responsive-form,
+  .dark .ck.ck-balloon-panel {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+    z-index: 9999 !important; /* Ensure dropdown appears above other elements */
+  }
+  
+  /* Fix specifically for the link edit form and balloon panels */
+  .dark .ck.ck-link-form,
+  .dark .ck.ck-link-actions,
+  .dark .ck-balloon-panel_visible {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  /* Fix for CKEditor dropdown items in dark mode */
+  .dark .ck-list__item {
+    color: #e5e7eb !important;
+  }
+  
+  .dark .ck-list__item:hover,
+  .dark .ck-list__item_active {
+    background-color: #374151 !important;
+  }
+    /* Fix for CKEditor labels and inputs in dark mode */
+  .dark .ck-labeled-field-view__input,
+  .dark .ck-labeled-field-view__input-wrapper .ck-input-text,
+  .dark .ck.ck-labeled-field-view .ck-input-text {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  /* Fix for all form labels in CKEditor */
+  .dark .ck.ck-labeled-field-view > .ck.ck-labeled-field-view__label {
+    color: #e5e7eb !important;
+  }
+    /* Fix for CKEditor button states in dark mode */
+  .dark .ck.ck-button.ck-on {
+    background-color: #374151 !important;
+    color: #e5e7eb !important;
+    border-color: #4b5563 !important;
+  }
+  
+  .dark .ck.ck-button:hover {
+    background-color: #4b5563 !important;
+  }
+  
+  /* Improve button styling in dark mode */
+  .dark .ck.ck-button {
+    color: #e5e7eb !important;
+    border-color: #4b5563 !important;
+  }
+  
+  /* Special styling for dropdown buttons */
+  .dark .ck-dropdown .ck-button.ck-dropdown__button:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
+  }
+    /* Enhance link visibility in dark mode */
+  .dark .ck-content a {
+    color: #93c5fd !important;
+  }
+  
+  /* Fix for link editing dialog in dark mode */
+  .dark .ck.ck-link-form .ck-labeled-field-view__input {
+    color: #e5e7eb !important;
+  }
+  
+  /* Fix for link text and URL in link editing dialog */
+  .dark .ck.ck-link-form .ck-input {
+    color: #e5e7eb !important;
+    background-color: #1f2937 !important;
+  }
+  
+  /* Fix for link URL text and display text in the editor */
+  .dark .ck-content .ck-link_selected {
+    color: #93c5fd !important;
+    background-color: rgba(37, 99, 235, 0.1) !important;
+  }
+    /* Fix for edit link UI text in CKEditor */
+  .dark .ck.ck-link-actions .ck-button .ck-button__label {
+    color: #e5e7eb !important;
+  }
+    /* Fix for link URL preview and display text in the link form */
+  .dark .ck.ck-link-form_layout-vertical .ck-labeled-field-view .ck-input-text,
+  .dark .ck.ck-link-form .ck-labeled-field .ck-input.ck-input-text,
+  .dark .ck.ck-input-text {
+    color: #e5e7eb !important;
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+  }
+  
+  /* Fix for the URL preview text in link dialog */
+  .dark .ck.ck-link-form .ck-button.ck-button-save,
+  .dark .ck.ck-link-form .ck-button.ck-button-cancel,
+  .dark .ck.ck-link-form .ck-button.ck-link-actions__preview,
+  .dark .ck.ck-link-actions .ck-link-actions__preview {
+    color: #e5e7eb !important;
+  }
+  
+  /* Fix for URL text in the link preview */
+  .dark .ck.ck-link-actions .ck-link-actions__preview .ck-button__label {
+    color: #60a5fa !important;
+    opacity: 1 !important;
+  }
+  
+  /* Fix for link text visible in editor */
+  .dark .ck-content[role="textbox"] a {
+    color: #60a5fa !important; /* Brighter blue for better contrast in dark mode */
+    background-color: rgba(59, 130, 246, 0.1) !important; /* Light blue background for better visibility */
+    padding: 0 2px;
+    text-decoration: underline;
+  }
+  
+  /* Fix for unlinked text in link dialog */
+  .dark .ck.ck-link-form .ck-button.ck-link-actions__preview .ck-button__label {
+    color: #60a5fa !important;
+    text-decoration: underline;
+  }
+  
+  /* Ensure the text in all dialog buttons is visible */
+  .dark .ck.ck-button .ck-button__label {
+    color: #e5e7eb !important;
+  }
+  /* Fix for CKEditor dropdowns that appear at bottom of page */
+  .ck.ck-editor {
+    margin-bottom: 3rem;
+  }
+  
+  /* Ensure CKEditor dropdowns are visible when they would extend beyond viewport */
+  .ck.ck-dropdown .ck-dropdown__panel {
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 9999 !important;
+  }
+  
+  /* Smart positioning for dropdowns near bottom of page */
+  .ck.ck-dropdown.ck-dropdown_bottom-ui-position .ck-dropdown__panel {
+    bottom: calc(100% + 2px) !important;
+    top: auto !important;
+  }
+    /* Force dropdowns to display upward when in the last editor on the page */
+  .editor-with-dropdown .ck-dropdown .ck-dropdown__panel {
+    bottom: calc(100% + 2px) !important;
+    top: auto !important;
+    position: absolute !important;
+  }
+  
+  /* Direct and specific fixes for CKEditor Link Dialog */
+  .dark .ck.ck-link-form .ck-input.ck-input-text {
+    background-color: #1f2937 !important;
+    color: #e5e7eb !important;
+    border-color: #4b5563 !important;
+  }
+  
+  /* Fix for link URL text field that shows as white in screenshot */
+  .dark .ck.ck-responsive-form .ck-input, 
+  .dark .ck.ck-responsive-form .ck-input-text,
+  .dark .ck.ck-link-form .ck-labeled-field .ck-input {
+    background-color: #1f2937 !important;
+    color: #e5e7eb !important;
+    border-color: #4b5563 !important;
+  }
+    /* Ensure tab panel has enough vertical space */
+  .tab-panel-with-editor {
+    padding-bottom: 6rem !important;
+    min-height: 500px;
+  }
+  
+  /* Additional space for editor at the bottom of page with dropdown */
+  .editor-with-dropdown {
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Make dropdowns appear above other elements at the page bottom */
+  .editor-with-dropdown .ck-dropdown__panel {
+    z-index: 9999 !important;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  /* Enhanced form accessibility and transitions */
+  .form-field:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(64, 144, 199, 0.3);
+    border-radius: 0.375rem;
+  }
+  
+  /* Enhanced focus states for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(64, 144, 199, 0.5), 0 0 0 4px rgba(255, 255, 255, 1);
+  }
+  
+  .dark button:focus-visible,
+  .dark input:focus-visible,
+  .dark select:focus-visible,
+  .dark textarea:focus-visible,
+  .dark a:focus-visible {
+    box-shadow: 0 0 0 2px rgba(64, 144, 199, 0.5), 0 0 0 4px rgba(17, 24, 39, 1);
+  }
+  
+  /* Form element states */
+  input:autofill,
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #111827 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  
+  .dark input:autofill,
+  .dark input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #1f2937 inset !important;
+    -webkit-text-fill-color: #e5e7eb !important;
+    caret-color: #e5e7eb !important;
+  }
+  
+  /* Vulnerability form mobile responsive improvements */
+ 
+    /* Enhanced form accessibility and transitions */
+  .form-field:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(64, 144, 199, 0.3);
+    border-radius: 0.375rem;
+  }
+  
+  /* Enhanced focus states for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(64, 144, 199, 0.5), 0 0 0 4px rgba(255, 255, 255, 1);
+  }
+  
+  /* Form element states */
+  input:autofill,
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #111827 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  
+  .dark input:autofill,
+  .dark input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #1f2937 inset !important;
+    -webkit-text-fill-color: #e5e7eb !important;
+    caret-color: #e5e7eb !important;
+  }
+  
+  /* Vulnerability form mobile responsive improvements */
+
+  
+  
+  /* Phone Input styles */
   .PhoneInputInput {
-    @apply block w-full rounded-md border border-gray-200 py-[9px] pl-2 text-sm bg-black text-black;
+    display: block;
+    width: 100%;
+    border-radius: 0.375rem;
+    border-width: 1px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 0.5rem;
+    font-size: 0.875rem;
+    outline: none;
+    border-color: #e5e7eb;
   }
-
+  
   .dark .PhoneInputInput {
-    @apply bg-black text-white;
+    background-color: rgba(31, 41, 55, 0.75);
+    color: white;
+    border-color: rgba(75, 85, 99, 0.6);
   }
+  
   .dark .PhoneInputCountrySelect {
-    @apply bg-black text-white;
-
+    background-color: rgba(31, 41, 55, 0.75);
+    color: white;
   }
+  
+  /* DatePicker styles */
+  .react-datepicker-popper {
+    z-index: 9999 !important;
+  }
+  
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  
+  .react-datepicker__input-container input {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-color: rgb(229, 231, 235);
+  }
+    /* Fix for date picker calendar positioning and horizontal scrolling */
+  .react-datepicker-wrapper {
+    display: inline-block;
+    width: auto;
+  }
+
+  .date-filter-input {
+    width: 120px !important; /* Adequate width for date format */
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+  }
+
+  /* Fix popper positioning */
+  .react-datepicker-popper {
+    z-index: 999 !important; /* Ensure calendar appears above other elements */
+    position: absolute !important;
+    inset: auto auto auto auto !important; /* Reset inset to let it position naturally */
+    transform: none !important; /* Reset transform */
+  }
+
+  /* Prevent horizontal scroll in data tables when date pickers are active */
+  .rdt_TableCell {
+    overflow: visible !important;
+  }
+
+  .rdt_TableCol {
+    overflow: visible !important;
+  }
+
+  .rdt_TableCol_Sortable {
+    overflow: visible !important;
+    position: relative;
+  }
+  /* Ensure dropdown menus in tables are visible */
+  .react-datepicker-popper[data-placement^="bottom"] {
+    margin-top: 10px !important;
+  }
+
+  .react-datepicker-popper[data-placement^="top"] {
+    margin-bottom: 10px !important;
+  }
+  
+  /* Date Picker Container Styles */
+  .date-picker-container {
+    position: relative;
+    width: 120px;
+  }
+  
+  .date-picker-container .react-datepicker-wrapper {
+    width: 100%;
+  }
+  
+  .date-picker-container .react-datepicker__input-container {
+    width: 100%;
+  }
+  
+  .date-picker-container .react-datepicker__input-container input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    background-color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .dark .date-picker-container .react-datepicker__input-container input {
+    background-color: rgba(55, 65, 81, 0.75);
+    border-color: rgba(75, 85, 99, 0.6);
+    color: white;
+  }
+  /* Force calendar visibility */
+  .react-datepicker {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+    border-radius: 4px;
+    height: auto !important; /* Allow the calendar to expand to its natural height */
+  }
+  
+  /* Make sure the calendar stays above everything */
+  .react-datepicker-popper {
+    z-index: 10000 !important;
+    position: fixed !important; /* Use fixed position for better visibility */
+    margin-top: 5px !important;
+    transform: translate3d(0, 0, 0) !important; /* Reset any transforms */
+  }
+  
+  /* Override any styles that might be hiding the calendar */
+  .react-datepicker-popper[data-placement^="bottom"] {
+    padding-top: 10px;
+  }
+  
+  .react-datepicker-popper[data-placement^="top"] {
+    padding-bottom: 10px;
+  }
+    /* Ensure month container shows all dates */
+  .react-datepicker__month-container {
+    border-radius: 0.3rem;
+  }
+  
+  .dark .react-datepicker__month-container {
+    color: white;
+  }
+  
+  /* Make sure we can see all date rows */
+  .react-datepicker__month {
+    margin: 0.4rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 200px !important;
+  }
+  
+  .react-datepicker__week {
+    display: flex !important;
+    width: 100% !important;
+    margin-bottom: 5px !important;
+    justify-content: space-around !important;
+  }
+  
+  /* Set proper height for the day cells */
+  .react-datepicker__day {
+    width: 2rem !important;
+    height: 2rem !important;
+    line-height: 2rem !important;
+    margin: 0 !important;
+  }
+  
+  /* Make sure table columns don't hide the datepicker */
+  .rdt_TableCell, .rdt_TableCol, .rdt_TableCol_Sortable {
+    overflow: visible !important;
+    position: relative !important;
+  }
+  
+  /* Ensure the date filter inputs are clearly clickable */
+  .date-picker-container {
+    cursor: pointer;
+  }
+  
+  /* Force visibility for calendar day elements */
+  .react-datepicker__day {
+    display: inline-block !important;
+  }
+  
+  /* Style improvements for date picker in the filter */
+  .date-filter-input {
+    cursor: pointer !important;
+  }
+  
+  /* Clear top-level positioning that might interfere */
+  .rdt_TableHead, 
+  .rdt_TableHeadRow, 
+  .rdt_TableCol {
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  /* Table scrolling styles */
+  .rdt_Table {
+    overflow: auto;
+    max-height: 70vh !important; /* Add max height to enable scrolling */
+  }
+  
+  /* Fix for calendar positioning on top of table */
+  .react-datepicker-popper {
+    transform: none !important;
+    top: auto !important;
+    position: fixed !important; /* Use fixed position to avoid table scrolling issues */
+    margin-top: -200px !important; /* Move calendar above the table */
+  }
+
+  /* Dark mode styles for DatePicker */
+  .dark .react-datepicker__input-container input {
+    background-color: rgba(55, 65, 81, 0.75);
+    border-color: rgba(75, 85, 99, 0.6);
+    color: white;
+  }
+  
+  .dark .react-datepicker-ignore-onclickoutside {
+    background-color: #000000 !important;
+    color: white !important;
+  }
+  
+  .dark .react-datepicker {
+    background-color: #000000 !important;
+    border-color: rgba(75, 85, 99, 0.6) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark .react-datepicker__header {
+    background-color: #000000 !important;
+    border-bottom-color: rgba(75, 85, 99, 0.6) !important;
+  }
+  .react-datepicker__header {
+    background-color: #000000 !important;
+ 
+  }
+  .dark .react-datepicker__current-month {
+    background-color: #000000 !important;
+    color: white !important;
+  }
+  
+  .dark .react-datepicker__day-names {
+    background-color: #000000 !important;
+  }
+  
+  .dark .react-datepicker__day-name {
+    color: white !important;
+  }
+  
+  .dark .react-datepicker__day {
+    background-color: #000000 !important;
+    color: white !important;
+    transition: all 0.1s ease !important;
+  }
+  
+  .dark .react-datepicker__day:hover {
+    background-color: rgba(75, 85, 99, 0.8) !important;
+    color: white !important;
+    border-radius: 0.3rem;
+  }
+  
+  .dark .react-datepicker__day:focus {
+    border: 2px solid white !important;
+    color: white !important;
+  }
+  
+  .dark .react-datepicker__day--selected, 
+  .dark .react-datepicker__day--keyboard-selected {
+    background-color: rgba(99, 102, 241, 0.8) !important;
+    color: white !important;
+    font-weight: bold;
+  }
+  
+  .dark .react-datepicker__day--today {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
+  /* Fix for buttons in date picker */
+  .dark .react-datepicker__navigation-icon::before {
+    border-color: white !important;
+  }
+  
+  .dark .react-datepicker__navigation:hover *::before {
+    border-color: rgba(99, 102, 241, 0.8) !important;
+  }
+  
+  /* Fix for the popup triangle/arrow */
+  .dark .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before,
+  .dark .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::after {
+    border-bottom-color: #000000 !important;
+  }
+  
+  .dark .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before,
+  .dark .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::after {
+    border-top-color: #000000 !important;
+  }
+  
+  .dark .react-datepicker__day--keyboard-selected {
+    background-color: rgba(99, 102, 241, 0.6);
+    color: white;
+  }
+  
+  .react-datepicker, 
+  .react-datepicker__month-container, 
+  .react-datepicker__day, 
+  .react-datepicker__header, 
+  .react-datepicker__day-names {
+    transition: none !important;
+  }
+
+  /* Additional date filter styles to fix calendar display */
+  .react-datepicker__month-container {
+    border-radius: 0.3rem;
+  }
+
+  .dark .react-datepicker__month-container {
+    color: white;
+  }
+
+  /* Fix calendar display to show all rows */
+  .react-datepicker__day-names, 
+  .react-datepicker__week {
+    display: flex !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+  }
+
+  .react-datepicker__day {
+    margin: 0.2rem !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    border-radius: 50% !important;
+  }
+
+  /* Ensure table and datepicker don't conflict */
+  .table-container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Make datepicker appear above everything else */
+  .date-picker-container {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Custom calendar container to ensure full height */
+  .custom-calendar-container {
+    display: block !important;
+    min-height: 300px !important;
+  }
+  
+  .custom-calendar-container .react-datepicker {
+    min-height: 250px !important;
+    width: auto !important;
+    min-width: 220px !important;
+    padding-bottom: 10px !important;
+  }
+  
+  /* Fix for calendar positioning - overriding existing styles that may truncate the calendar */
+  .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
+    top: 0 !important;
+    margin-top: -8px !important;
+  }
+  
+  /* Ensure there's enough space for all calendar rows */
+  .react-datepicker__day-names, 
+  .react-datepicker__week {
+    display: flex !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+  }
+  
+  /* Make days properly sized and spaced */
+  .react-datepicker__day-name,
+  .react-datepicker__day {
+    margin: 0.166rem !important;
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+    line-height: 1.7rem !important;
+    text-align: center !important;
+  }
+
+  /* Date Dialog Styles */
+  .date-picker-container {
+    position: relative;
+    width: 120px;
+  }
+
+  .date-dialog {
+    animation: fadein 0.2s;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Date Picker Styles for Dialog */
+  .date-dialog .react-datepicker {
+    font-size: 0.9rem;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    width: 100%;
+  }
+
+  .date-dialog .react-datepicker__month-container {
+    float: none;
+    width: 100%;
+  }
+
+  .date-dialog .react-datepicker__header {
+    border-bottom: 1px solid #e5e7eb;
+    padding-top: 8px;
+  }
+
+  .dark .date-dialog .react-datepicker__header {
+    background-color: transparent;
+    border-bottom: 1px solid #4b5563;
+  }
+
+  .date-dialog .react-datepicker__month {
+    margin: 0.5rem 0;
+  }
+
+  .date-dialog .react-datepicker__day-names, 
+  .date-dialog .react-datepicker__week {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .date-dialog .react-datepicker__day-name,
+  .date-dialog .react-datepicker__day {
+    margin: 0.3rem 0;
+    width: 2rem;
+    line-height: 2rem;
+    text-align: center;
+  }
+
+  .dark .date-dialog .react-datepicker__current-month,
+  .dark .date-dialog .react-datepicker__day-name {
+    color: #e5e7eb;
+  }
+
+  .dark .date-dialog .react-datepicker__day {
+    color: #e5e7eb;
+  }
+
+  .dark .date-dialog .react-datepicker__day:hover {
+    background-color: #4b5563;
+  }
+
+  .date-dialog .react-datepicker__day--selected {
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 50%;
+  }
+
+  .date-dialog .react-datepicker__day--keyboard-selected {
+    background-color: #93c5fd;
+    border-radius: 50%;
+  }
+
+  .dark .date-dialog .react-datepicker__day--keyboard-selected {
+    background-color: #2563eb;
+  }
+  /* Single Calendar Range Picker Styles */
+  .date-dialog .react-datepicker {
+    min-width: 280px !important;
+    font-size: 0.9rem;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .date-dialog .react-datepicker__month-container {
+    float: none;
+    width: 100%;
+  }
+  
+  /* Enhanced Range Picker Styles */
+  .enhanced-range-picker {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px !important;
+    padding: 8px !important;
+    background-color: white !important;
+  }
+  
+  .dark .enhanced-range-picker {
+    background-color: #1F2937 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  
+  .enhanced-range-picker .react-datepicker__header {
+    background-color: transparent !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    padding-bottom: 8px !important;
+  }
+  
+  .dark .enhanced-range-picker .react-datepicker__header {
+    border-bottom: 1px solid #4B5563 !important;
+  }
+  
+  .enhanced-range-picker .react-datepicker__day-names {
+    margin-top: 4px !important;
+  }
+  
+  .enhanced-range-picker .react-datepicker__day-name {
+    color: #6B7280 !important;
+    font-weight: 500 !important;
+  }
+  
+  .dark .enhanced-range-picker .react-datepicker__day-name {
+    color: #9CA3AF !important;
+  }
+  
+  .enhanced-range-picker .react-datepicker__current-month {
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .enhanced-range-picker .react-datepicker__day {
+    margin: 0.25rem !important;
+    border-radius: 50% !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    line-height: 2.2rem !important;
+    transition: all 0.15s ease !important;
+  }
+  
+  /* Make sure range selection is visible with improved styling */
+  .react-datepicker__day--in-selecting-range,
+  .react-datepicker__day--in-range {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+    border-radius: 0 !important;
+    color: #1F2937 !important;
+    position: relative !important;
+  }
+  
+  .dark .react-datepicker__day--in-selecting-range,
+  .dark .react-datepicker__day--in-range {
+    background-color: rgba(59, 130, 246, 0.4) !important;
+    color: white !important;
+  }
+  
+  .react-datepicker__day--range-start,
+  .react-datepicker__day--selecting-range-start,
+  .react-datepicker__day--range-end {
+    background-color: #3b82f6 !important;
+    border-radius: 50% !important;
+    color: white !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+    z-index: 2 !important;
+  }
+
+  /* Fix for calendar visibility */
+  .date-dialog .react-datepicker__month {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0.5rem 0 !important;
+  }
+
+  .date-dialog .react-datepicker__week {
+    display: flex !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+    margin: 0.15rem 0 !important;
+  }
+
+  .date-dialog .react-datepicker__day {
+    margin: 0.15rem !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    line-height: 2.2rem !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Ensure the datepicker always has the same height */
+  .date-dialog .react-datepicker__month {
+    min-height: 240px !important;
+  }
+
+  /* Date Range Dialog Styles */
+  .react-datepicker {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: white;
+  }
+
+  .dark .react-datepicker {
+    background-color: #1F2937;
+    border-color: #4B5563;
+  }
+
+  .dark .react-datepicker__header {
+    background-color: #374151;
+    border-bottom-color: #4B5563;
+  }
+
+  .dark .react-datepicker__current-month,
+  .dark .react-datepicker__day-name {
+    color: white;
+  }
+
+  .dark .react-datepicker__day {
+    color: #E5E7EB;
+  }
+
+  .dark .react-datepicker__day:hover {
+    background-color: #4B5563;
+  }
+
+  .dark .react-datepicker__day--selected,
+  .dark .react-datepicker__day--in-selecting-range,
+  .dark .react-datepicker__day--in-range {
+    background-color: #3B82F6;
+    color: white;
+  }
+
+  .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range),
+  .react-datepicker__day--in-range {
+    background-color: rgba(59, 130, 246, 0.5);
+    color: white;
+  }
+
+  .dark .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range),
+  .dark .react-datepicker__day--in-range {
+    background-color: rgba(59, 130, 246, 0.5);
+    color: white;
+  }
+
+  .react-datepicker__day--keyboard-selected {
+    background-color: rgba(59, 130, 246, 0.5);
+  }
+
+  .react-datepicker__day--today {
+    font-weight: bold;
+  }
+
+  .dark .react-datepicker__day--today {
+    color: #93C5FD;
+  }
+
+  /* Ensure month containers are displayed side by side */
+  .react-datepicker__month-container {
+    float: left;
+    margin: 0 8px;
+  }
+
+  /* Time input styles */
+  .time-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.375rem;
+  }
+
+  .dark .time-input-container {
+    border-color: #4B5563;
+  }
+
+  .time-input {
+    width: 2.5rem;
+    text-align: center;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    margin: 0 0.25rem;
+  }
+
+  .dark .time-input {
+    background-color: #1F2937;
+    border-color: #4B5563;
+    color: white;
+  }
+
+  .time-separator {
+    margin: 0 0.25rem;
+    font-weight: bold;
+  }
+
+  .dark .time-separator {
+    color: white;
+  }
+
+  .period-selector {
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+
+  .dark .period-selector {
+    background-color: #1F2937;
+    border-color: #4B5563;
+    color: white;
+  }  /* Custom tab styles for better visibility */
+  .tabs-custom .tabs-header {
+    border-bottom-width: 1px;
+    border-color: #e5e7eb; /* border-gray-200 equivalent */
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background-image: linear-gradient(to bottom, #f9fafb, #f3f4f6); /* from-gray-50 to-gray-100 */
+  }
+  
+  .dark .tabs-custom .tabs-header {
+    border-color: #374151; /* dark:border-gray-700 */
+    background-image: linear-gradient(to bottom, #374151, #1f2937); /* dark:from-gray-700 dark:to-gray-800 */
+  }
+  
+  .tabs-custom .tab {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+    border-bottom-width: 2px;
+    border-color: transparent;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+  
+  .tabs-custom .tab-active {
+    @apply text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 bg-white dark:bg-gray-900;
+  }
+  
+  .tabs-custom .tab:not(.tab-active):hover {
+    @apply text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800;
+  }
+  
+  .tabs-custom .tab-panel {
+    @apply p-4 bg-white dark:bg-gray-900 rounded-b-lg border-x border-b border-gray-200 dark:border-gray-700 animate-fadeIn;
+  }
+  
+  /* Improved card styles */
+  .card {
+    @apply bg-white dark:bg-gray-900 shadow-sm rounded-lg p-6 mb-6 border border-gray-100 dark:border-gray-800 transition-all duration-200;
+  }
+  
+  .card:hover {
+    @apply shadow-md border-gray-200 dark:border-gray-700;
+  }
+  
+  /* Material Tailwind Tab Overrides */
+  .material-tailwind-tabs {
+    @apply overflow-visible;
+  }
+  
+  .material-tailwind-tabs .tabs-header {
+    @apply rounded-t-lg bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800;
+  }
+  
+  .material-tailwind-tabs .active-tab {
+    @apply bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 font-medium rounded-t-lg shadow-sm;
+  }
+  
+  .material-tailwind-tabs .inactive-tab {
+    @apply text-white dark:text-gray-200 hover:bg-blue-700 dark:hover:bg-blue-900 transition-all;
+  }
+  
+  /* Dialog Styles for Special Characters and other popup dialogs */
+  .dark .ck.ck-dialog,
+  .dark .ck-dialog__body,
+  .dark .ck-dialog__body .ck-rounded-corners,
+  .dark .ck.ck-dialog__main,
+  .dark .ck-dialog__footer,
+  .dark .ck.ck-dialog__footer,
+  .dark .ck.ck-button.ck-dialog__close,
+  .dark .ck-dialog__title,
+  .dark .ck-dialog__body_expanded,
+  .dark .ck.ck-special-characters-navigation,
+  .dark .ck-dialog__tabs,
+  .dark .ck.ck-balloon-panel,
+  .dark .ck-dialog__tab,
+  .dark .ck-dialog__body_scrollable,
+  .dark .ck-dialog__body_overflow {
+    background: #1f2937 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  /* Dialog Special Characters Grid */
+  .dark .ck.ck-character-grid {
+    background: #1f2937 !important;
+  }
+  
+  .dark .ck.ck-character-grid__tiles {
+    background: #1f2937 !important;
+  }
+  
+  .dark .ck.ck-character-grid__tile {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  .dark .ck.ck-character-grid__tile:hover,
+  .dark .ck.ck-character-grid__tile:focus {
+    background-color: #60a5fa !important;
+    color: #1f2937 !important;
+  }
+  
+  /* Selected tab in special characters dialog */
+  .dark .ck.ck-dialog__body .ck-tab.ck-on {
+    background: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #e5e7eb !important;
+  }
+  
+  /* Animation keyframes */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
+@layer utilities {
+  /* Scrollbar styles */
   ::-webkit-scrollbar {
     width: 10px;
     height: 20px;
   }
+  
   ::-webkit-scrollbar-track {
     border-radius: 100vh;
     background: #f7f4ed;
   }
-
+  
   ::-webkit-scrollbar-thumb {
     background: #9a9999;
     border-radius: 100vh;
     border: 3px solid #f6f7ed;
   }
-
+  
   ::-webkit-scrollbar-thumb:hover {
     background: #858585;
   }
-
-  input:-webkit-autofill,
-  textarea:-webkit-autofill,
-  select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px hsl(var(--background)) inset !important;
-    box-shadow: 0 0 0 1000px hsl(var(--background)) inset !important;
-    -webkit-text-fill-color: hsl(var(--foreground)) !important;
-  }
-
-  .dark input:-webkit-autofill,
-  textarea:-webkit-autofill,
-  select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px hsl(var(--background)) inset !important;
-    box-shadow: 0 0 0 1000px hsl(var(--background)) inset !important;
-    -webkit-text-fill-color: hsl(var(--foreground)) !important;
-    background: black;
+  
+  .dark ::-webkit-scrollbar-track {
+    background: #1f2937;
   }
   
-  .dark .react-datepicker-ignore-onclickoutside {
-    @apply bg-black text-white !important;
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border: 3px solid #1f2937;
   }
-  .dark .react-datepicker-popper .react-datepicker__month-container{
-    @apply bg-black !important;
-
-  }
-  .dark .react-datepicker__day {
-    @apply bg-black text-white !important;
-    @apply transition-none !important;
-
-  }
-  .dark .react-datepicker__current-month {
-    @apply bg-black text-white !important;
-  }
-
-  .dark .react-datepicker__day-names{
-    @apply bg-black !important;
-
-  }
-  .dark .react-datepicker__day-names{
-    @apply bg-black !important;
-
-  }
-  .dark .react-datepicker__day-name {
-    @apply text-white !important;
-  }
-  .dark .react-datepicker__header {
-    @apply bg-black !important;
-
-  }
-.dark .react-datepicker__day:hover {
-  @apply bg-gray-700 text-white border-2 border-white !important; /* Adds a box on hover */
-  @apply transition-none !important;
-}
-
-.dark .react-datepicker__day:focus {
-  @apply border-2 border-custom-gray bg-custom-bg text-white !important;
-  @apply transition-none !important;
-}
-.react-datepicker, 
-.react-datepicker__month-container, 
-.react-datepicker__day, 
-.react-datepicker__header, 
-.react-datepicker__day-names {
-  @apply transition-none !important;
-}
-
-.dark .sc-bXCLTC.eVrcSZ option {
-  @apply bg-black text-white !important;
-
-}
-
-.dark .shadow {
-
-  background: #374151 !important;
   
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
 }
-
-.dark .ck-content {
-  color: white;
-}
-
-.dark .hhVXlv{
-  @apply  bg-black text-white;
-}
-
-}
-
-.shadow {
-
-  background: #374151 !important;
-
-}
-
-h1 {
-  @apply text-4xl font-bold leading-tight;
-}
-
-h2 {
-  @apply text-3xl font-semibold leading-snug;
-}
-
-h3 {
-  @apply text-2xl font-medium leading-normal;
-}
-
-h4 {
-  @apply text-xl font-normal leading-relaxed;
-}
-
-h5 {
-  @apply text-lg font-light leading-loose;
-}
-
-h6 {
-  @apply text-base font-thin leading-loose;
-}
-
-strong {
-  @apply font-bold;
-}
-
-
-
-.custom-ckeditor-dark {
-  /* Overrides the border radius setting in the theme. */
-  --ck-border-radius: 4px;
-
-  /* Overrides the default font size in the theme. */
-  --ck-font-size-base: 14px;
-
-  /* Helper variables to avoid duplication in the colors. */
-  --ck-custom-background: hsl(270, 1%, 29%);
-  --ck-custom-foreground: hsl(255, 3%, 18%);
-  --ck-custom-border: hsl(300, 1%, 22%);
-  --ck-custom-white: hsl(0, 0%, 100%);
-  --ck-color-base-background: hsl(270, 1%, 29%);
-
-  /* -- Overrides generic colors. ------------------------------------------------------------- */
-
-  --ck-color-base-foreground: var(--ck-custom-background);
-  --ck-color-focus-border: hsl(208, 90%, 62%);
-  --ck-color-text: hsl(0, 0%, 98%);
-  --ck-color-shadow-drop: hsla(0, 0%, 0%, 0.2);
-  --ck-color-shadow-inner: hsla(0, 0%, 0%, 0.1);
-
-  /* -- Overrides the default .ck-button class colors. ---------------------------------------- */
-
-  --ck-color-button-default-background: var(--ck-custom-background);
-  --ck-color-button-default-hover-background: hsl(270, 1%, 22%);
-  --ck-color-button-default-active-background: hsl(270, 2%, 20%);
-  --ck-color-button-default-active-shadow: hsl(270, 2%, 23%);
-  --ck-color-button-default-disabled-background: var(--ck-custom-background);
-
-  --ck-color-button-on-background: var(--ck-custom-foreground);
-  --ck-color-button-on-hover-background: hsl(255, 4%, 16%);
-  --ck-color-button-on-active-background: hsl(255, 4%, 14%);
-  --ck-color-button-on-active-shadow: hsl(240, 3%, 19%);
-  --ck-color-button-on-disabled-background: var(--ck-custom-foreground);
-
-  --ck-color-button-action-background: hsl(168, 76%, 42%);
-  --ck-color-button-action-hover-background: hsl(168, 76%, 38%);
-  --ck-color-button-action-active-background: hsl(168, 76%, 36%);
-  --ck-color-button-action-active-shadow: hsl(168, 75%, 34%);
-  --ck-color-button-action-disabled-background: hsl(168, 76%, 42%);
-  --ck-color-button-action-text: var(--ck-custom-white);
-
-  --ck-color-button-save: hsl(120, 100%, 46%);
-  --ck-color-button-cancel: hsl(15, 100%, 56%);
-
-  /* -- Overrides the default .ck-dropdown class colors. -------------------------------------- */
-
-  --ck-color-dropdown-panel-background: var(--ck-custom-background);
-  --ck-color-dropdown-panel-border: var(--ck-custom-foreground);
-
-  /* -- Overrides the default .ck-dialog class colors. ----------------------------------- */
-
-  --ck-color-dialog-background: var(--ck-custom-background);
-  --ck-color-dialog-form-header-border: var(--ck-custom-border);
-
-  /* -- Overrides the default .ck-splitbutton class colors. ----------------------------------- */
-
-  --ck-color-split-button-hover-background: var(--ck-color-button-default-hover-background);
-  --ck-color-split-button-hover-border: var(--ck-custom-foreground);
-
-  /* -- Overrides the default .ck-input class colors. ----------------------------------------- */
-
-  --ck-color-input-background: var(--ck-custom-background);
-  --ck-color-input-border: hsl(257, 3%, 43%);
-  --ck-color-input-text: hsl(0, 0%, 98%);
-  --ck-color-input-disabled-background: hsl(255, 4%, 21%);
-  --ck-color-input-disabled-border: hsl(250, 3%, 38%);
-  --ck-color-input-disabled-text: hsl(0, 0%, 78%);
-
-  /* -- Overrides the default .ck-labeled-field-view class colors. ---------------------------- */
-
-  --ck-color-labeled-field-label-background: var(--ck-custom-background);
-
-  /* -- Overrides the default .ck-list class colors. ------------------------------------------ */
-
-  --ck-color-list-background: var(--ck-custom-background);
-  --ck-color-list-button-hover-background: var(--ck-color-base-foreground);
-  --ck-color-list-button-on-background: var(--ck-color-base-active);
-  --ck-color-list-button-on-background-focus: var(--ck-color-base-active-focus);
-  --ck-color-list-button-on-text: var(--ck-color-base-background);
-
-  /* -- Overrides the default .ck-balloon-panel class colors. --------------------------------- */
-
-  --ck-color-panel-background: var(--ck-custom-background);
-  --ck-color-panel-border: var(--ck-custom-border);
-
-  /* -- Overrides the default .ck-toolbar class colors. --------------------------------------- */
-
-  --ck-color-toolbar-background: var(--ck-custom-background);
-  --ck-color-toolbar-border: var(--ck-custom-border);
-
-  /* -- Overrides the default .ck-tooltip class colors. --------------------------------------- */
-
-  --ck-color-tooltip-background: hsl(252, 7%, 14%);
-  --ck-color-tooltip-text: hsl(0, 0%, 93%);
-
-  /* -- Overrides the default colors used by the ckeditor5-image package. --------------------- */
-
-  --ck-color-image-caption-background: hsl(0, 0%, 97%);
-  --ck-color-image-caption-text: hsl(0, 0%, 20%);
-
-  /* -- Overrides the default colors used by the ckeditor5-widget package. -------------------- */
-
-  --ck-color-widget-blurred-border: hsl(0, 0%, 87%);
-  --ck-color-widget-hover-border: hsl(43, 100%, 68%);
-  --ck-color-widget-editable-focus-background: var(--ck-custom-white);
-
-  /* -- Overrides the default colors used by the ckeditor5-link package. ---------------------- */
-
-  --ck-color-link-default: hsl(190, 100%, 75%);
-
-
-}
-
-@layer utilities {
-  .react-select__control {
-    @apply bg-white border border-gray-300 rounded-md shadow-sm text-sm;
-  }
-
-  .dark .react-select__control {
-    @apply bg-gray-900 border-gray-700 text-white;
-  }
-
-  .dark .react-select__multi-value__label {
-  background-color: gray !important;
-  color: white !important;
-  }
-
-  .react-select__menu {
-    @apply bg-white text-sm;
-  }
-
-  .dark .react-select__menu {
-    background-color: gray !important;
-  color: white !important;
-  }
-
-  .dark .react-select__option {
-    background-color: gray !important;
-    color: white !important;
-  }
-
-  .dark .react-select__menu-list{
-    background-color: gray !important;
-    color: white !important;
-  }
-
-  .dark .react-select__option:hover {
-    background-color: gray !important;
-    color: white !important;
-  }
-  .react-select__option:hover {
-    @apply bg-gray-100;
-  }
-
-
-  .react-select__option--is-selected {
-    @apply bg-gray-700 text-white;
-  }
-
-  .react-select__multi-value {
-    @apply bg-gray-100 text-white-800 rounded px-2;
-  }
-
-  
-  .react-select__multi-value__label {
-    @apply bg-black text-white-100;
-  }
-
-  .react-select__multi-value__remove {
-    @apply text-white-500;
-  }
-
-  .dark .react-select__multi-value__remove {
-    @apply text-red-500;
-    background-color: gray !important;
-  }
-
-  .react-select__multi-value__remove:hover {
-    @apply text-red-500;
-  }
-
-}
-
-
-

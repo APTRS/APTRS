@@ -261,197 +261,201 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
   
   if(loading) return <FormSkeleton numInputs={6}/>
   if (loadingError) return <ModalErrorMessage message={"Error loading user"} />
-
   return (
-    <div className="max-w-lg flex-1 rounded-lg bg-white dark:bg-black dark:text-white">
-      <PageTitle title={id ? "Edit User" : "Create User"} />
-      {saveError && <FormErrorMessage message={saveError} />}
+    <div className="max-w-lg flex-1 rounded-xl bg-white shadow-md dark:bg-gray-800 dark:shadow-gray-900 dark:text-white transition-colors duration-200 overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+        <PageTitle title={id ? "Edit User" : "Create User"} />
+        {saveError && <FormErrorMessage message={saveError} />}
+      </div>
       
-      <form onSubmit={handleSubmit} id="projectForm" method="POST">
-        <div className="grid grid-cols-2 gap-3"> 
-        <div>
-          <div className="w-full mb-4">
-          
-            <label 
-              htmlFor="full_name"
-              className={StyleLabel}>
-              Full name
-            </label>
-            <div className="relative">
-              <input
-                name="full_name"
-                id="full_name"
-                className={StyleTextfield}
-                value={formData.full_name}
-                onChange={handleChange}
-                type="text"
-                required={true}
-              />
-              {errors.full_name && <FormErrorMessage message={errors.full_name} />}
-            </div>
-          </div>
-       
-          <div className="w-full mb-4">
-            <label 
-              className={StyleLabel}
-              htmlFor="email">
-                Email
-            </label>
-            <div className="relative">
-              <input
-                name="email"
-                id="email"
-                className={StyleTextfield}
-                value={formData.email}
-                onChange={handleChange}
-                type="text"
-                required={true}
-              />
-              {errors.email && <FormErrorMessage message={errors.email} />}
-            </div>
-          </div>
-          <div className="w-full mb-4">
-            <label 
-              className={StyleLabel}
-              htmlFor="email">
-                Username
-            </label>
-            <div className="relative">
-              <input
-                name="username"
-                id="username"
-                className={StyleTextfield}
-                value={formData.username}
-                onChange={handleChange}
-                type="text"
-                maxLength={20}
-                required={true}
-              />
-              {errors.username && <FormErrorMessage message={errors.username} />}
-            </div>
-          </div>
-        </div>
-        <div>
-        <div className="w-full mb-4">
-          <label 
-            htmlFor="name"
-            className={StyleLabel}>
-            Phone number
-          </label>
-          <div className="relative">
-            <PhoneInput
-              value={formData.number}
-              onChange={handlePhoneInputChange}
-              name="number"
-              defaultCountry={defaultCountry}
-              className={StyleTextfield  + ' pr-2'}
-              id="number"
-              required={true}
-            />
-            {errors.number && <FormErrorMessage message={errors.number} />}
-          </div>
-        </div>
-        <div className="w-full mb-4">
-          <label 
-            htmlFor="position"
-            className={StyleLabel}>
-            Position
-          </label>
-          <div className="relative">
-            <input
-              name="position"
-              id="position"
-              className={StyleTextfield}
-              value={formData.position}
-              onChange={handleChange}
-              type="text"
-              
-            />
-          </div>
-        </div>
-        
-        
-        </div>
-        </div>
-        <div className="flex">
-          <fieldset className="mr-4 form-control rounded-md flex flex-col w-1/2 space-y-4 pb-4 pl-4 border border-slate-200" >
-            <legend className='text-sm'>User Status</legend>
-            <div className="flex items-center">
+      <form onSubmit={handleSubmit} id="projectForm" method="POST" className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-5"> 
+          <div>
+            <div className="w-full mb-7">
               <label 
-                  htmlFor="is_active"
-                  className='label cursor-pointer text-left'
-                >
-                  <input type="checkbox" 
-                    name='is_active' 
-                    id="is_active"
-                    className='rounded-xl toggle toggle-accent mr-2'
-                    onChange={handleChange}
-                    checked={formData.is_active ? true : false} 
-                    disabled = {currentUser?.username == formData.username }
-                  />
-                  {currentUser?.username === formData.username &&
-                    <div className="tooltip tooltip-right" data-tip="You cannot disable for your own account"> 
-                      <span className="label-text">Active</span> 
-                    </div>
-                  }
-                  {currentUser?.username != formData.username &&
-                    <span className="label-text">Active</span> 
-                  }
-                </label>  
+                htmlFor="full_name"
+                className={`${StyleLabel} text-sm font-medium`}>
+                Full name
+              </label>
+              <div className="relative">
+                <input
+                  name="full_name"
+                  id="full_name"
+                  className={`${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200`}
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  type="text"
+                  required={true}
+                  placeholder="Enter full name"
+                />
+                {errors.full_name && <FormErrorMessage message={errors.full_name} />}
+              </div>
+            </div>
+        
+            <div className="w-full mb-5">
+              <label 
+                className={`${StyleLabel} text-sm font-medium`}
+                htmlFor="email">
+                  Email
+              </label>
+              <div className="relative">
+                <input
+                  name="email"
+                  id="email"
+                  className={`${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200`}
+                  value={formData.email}
+                  onChange={handleChange}
+                  type="text"
+                  required={true}
+                  placeholder="user@example.com"
+                />
+                {errors.email && <FormErrorMessage message={errors.email} />}
+              </div>
             </div>
             
-            <div className="flex items-center mb-0 pb-0">
-                <label 
-                  htmlFor="is_superuser"
-                  className='label cursor-pointer'
-                >
-                  <input type="checkbox" 
-                  name='is_superuser'
+            <div className="w-full mb-5">
+              <label 
+                className={`${StyleLabel} text-sm font-medium`}
+                htmlFor="username">
+                  Username
+              </label>
+              <div className="relative">
+                <input
+                  name="username"
+                  id="username"
+                  className={`${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200`}
+                  value={formData.username}
+                  onChange={handleChange}
+                  type="text"
+                  maxLength={20}
+                  required={true}
+                  placeholder="Username"
+                />
+                {errors.username && <FormErrorMessage message={errors.username} />}
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div className="w-full mb-5">
+              <label 
+                htmlFor="number"
+                className={`${StyleLabel} text-sm font-medium`}>
+                Phone number
+              </label>
+              <div className="relative">
+                <PhoneInput
+                  value={formData.number}
+                  onChange={handlePhoneInputChange}
+                  name="number"
+                  defaultCountry={defaultCountry}
+                  className={`${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200 pr-2`}
+                  id="number"
+                  required={true}
+                />
+                {errors.number && <FormErrorMessage message={errors.number} />}
+              </div>
+            </div>
+            
+            <div className="w-full mb-5">
+              <label 
+                htmlFor="position"
+                className={`${StyleLabel} text-sm font-medium`}>
+                Position
+              </label>
+              <div className="relative">
+                <input
+                  name="position"
+                  id="position"
+                  className={`${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200`}
+                  value={formData.position}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="Job title"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex flex-col md:flex-row gap-5 mt-3">
+          <fieldset className="form-control rounded-lg flex flex-col w-full md:w-1/2 space-y-4 p-5 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <legend className="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">User Status</legend>
+            <div className="flex items-center">
+              <label 
+                htmlFor="is_active"
+                className="flex items-center cursor-pointer text-left"
+              >
+                <input type="checkbox" 
+                  name="is_active" 
+                  id="is_active"
+                  className="rounded-xl toggle toggle-accent mr-3 bg-primary"
+                  onChange={handleChange}
+                  checked={formData.is_active ? true : false} 
+                  disabled={currentUser?.username == formData.username}
+                />
+                {currentUser?.username === formData.username ?
+                  <div className="tooltip tooltip-right" data-tip="You cannot disable for your own account"> 
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Active</span> 
+                  </div> :
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Active</span> 
+                }
+              </label>  
+            </div>
+            
+            <div className="flex items-center">
+              <label 
+                htmlFor="is_superuser"
+                className="flex items-center cursor-pointer"
+              >
+                <input type="checkbox" 
+                  name="is_superuser"
                   id="is_superuser"
-                  className='rounded-xl toggle toggle-accent mr-2'
+                  className="rounded-xl toggle toggle-accent mr-3 bg-primary"
                   onChange={handleChange}
                   checked={formData.is_superuser ? true : false} 
-                  disabled = {currentUser?.username == formData.username || currentUser?.isAdmin == false  }
+                  disabled={currentUser?.username == formData.username || currentUser?.isAdmin == false}
                 />
-                {currentUser?.username === formData.username &&
+                {currentUser?.username === formData.username ?
                   <div className="tooltip tooltip-right" data-tip="You cannot disable for your own account"> 
-                    <span className="label-text">Administrator</span> 
-                  </div>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Administrator</span> 
+                  </div> :
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Administrator</span> 
                 }
-                {currentUser?.username != formData.username &&
-                  <span className="label-text">Administrator</span> 
-                }
-                </label>
+              </label>
             </div>
-            <div className="relative pr-2 pt-1">
-                <label 
-                  htmlFor="groups"
-                  className='label pt-0'
-                >
-                  <span className="label-text">Permission Groups</span>
-                </label>
-                <Select
-                  name="groups"
-                  id="groups"
-                  isMulti
-                  value={(formData.groups ?? []).map((group) => ({ value: group, label: group }))}
-                  onChange={handlePermissionGroupChange}
-                  options={permissionGroups}
-                  isClearable
-                  className="react-select-container"
-                  classNamePrefix="react-select"
-                />
-                 {errors.groups && <FormErrorMessage message={errors.groups} />}
+            
+            <div className="relative pt-1">
+              <label 
+                htmlFor="groups"
+                className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Permission Groups
+              </label>
+              <Select
+                name="groups"
+                id="groups"
+                isMulti
+                value={(formData.groups ?? []).map((group) => ({ value: group, label: group }))}
+                onChange={handlePermissionGroupChange}
+                options={permissionGroups}
+                isClearable
+                className="my-react-select-container"
+                classNamePrefix="my-react-select"
+              />
+              {errors.groups && <FormErrorMessage message={errors.groups} />}
             </div>
           </fieldset>
-          <div className="flex flex-col w-1/2">
-            <fieldset className="form-control rounded-md  space-y-2 p-2 border border-slate-200" >
-              <legend className='text-sm'>Password {formData.id ? '(optional)' : ''}</legend>
+          
+          <div className="w-full md:w-1/2">
+            <fieldset className="form-control rounded-lg h-full space-y-4 p-5 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+              <legend className="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">Password {formData.id ? '(optional)' : ''}</legend>
               <PasswordDescription password={formData.password} />
-              <div className="w-full mt-0">
+              
+              <div className="w-full">
                 <label 
                   htmlFor="password"
-                  className='mt-0 mb-2 block text-xs font-medium text-gray-900'
+                  className="mb-2 block text-sm font-medium text-gray-700 dark:text-white"
                 >
                   Password 
                 </label>
@@ -459,22 +463,24 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
                   <input
                     name="password"
                     id="password"
-                    className={passwordMismatch() ? `${StyleTextfieldError}` :`${StyleTextfield}`}
+                    className={passwordMismatch() ? 
+                      `${StyleTextfieldError} dark:bg-gray-800 dark:text-white dark:border-red-500` : 
+                      `${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200`
+                    }
                     onChange={handleChange}
                     type={passwordVisible ? "text" : "password"}
                     required={id ? false : true}
+                    placeholder={id ? "Leave blank to keep current" : "Enter password"}
                   />
                   <ShowPasswordButton passwordVisible={passwordVisible} clickHandler={()=> setPasswordVisible(!passwordVisible)} />
-                  
                 </div>
                 {errors.password && <FormErrorMessage message={errors.password} />}
-                
-                
               </div>
-              <div className="w-full mt-0">
+              
+              <div className="w-full">
                 <label 
                   htmlFor="password_check"
-                  className='mt-0 mb-2 block text-xs font-medium text-gray-900'
+                  className="mb-2 block text-sm font-medium text-gray-700 dark:text-white"
                 >
                   Repeat password
                 </label>
@@ -482,40 +488,39 @@ function UserForm({ id: userId, forwardedRef, setRefresh, onClose }: UserFormPro
                   <input
                     name="password_check"
                     id="password_check"
-                    className={passwordMismatch() ? `${StyleTextfieldError}` :`${StyleTextfield}`}
+                    className={passwordMismatch() ? 
+                      `${StyleTextfieldError} dark:bg-gray-800 dark:text-white dark:border-red-500` : 
+                      `${StyleTextfield} focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200`
+                    }
                     onChange={handleChange}
                     type={passwordVisible ? "text" : "password"}
                     required={id ? false : true}
+                    placeholder={id ? "Leave blank to keep current" : "Confirm password"}
                   />
                   <ShowPasswordButton passwordVisible={passwordVisible} clickHandler={()=> setPasswordVisible(!passwordVisible)} />
-                    
                 </div>
-                {(formData.password || formData.password_check) && (formData.password != formData.password_check) && <p className='text-xs mt-2 ml-1 text-red-500'>Passwords should match</p>}
+                {(formData.password || formData.password_check) && (formData.password != formData.password_check) && 
+                  <p className="text-xs mt-2 text-red-500">Passwords should match</p>
+                }
               </div>
             </fieldset>
           </div>
         </div>
         
-        <div className="p-2 flex">
-          <div className="w-1/2 flex justify-left">
-              <button 
-                className="bg-primary disabled:bg-gray-light text-white p-2 py-1 rounded-md disabled:border-gray-light disabled:shadow-none"
-                disabled={btnDisabled}
-                type="submit">
-                  Save
-              </button>
-              <Button 
-                className="bg-red-500 ml-1"
-                disabled={btnDisabled}
-                onClick = {() => closeModal()}>
-                  Cancel
-              </Button>
-          </div>
-      </div>
-        
-        
-        
-        
+        <div className="flex justify-start mt-6 gap-3">
+          <button 
+            className="bg-primary hover:bg-primary/90 disabled:bg-gray-300 text-white px-5 py-2 rounded-md disabled:cursor-not-allowed shadow-sm hover:shadow transition-all duration-200"
+            disabled={btnDisabled}
+            type="submit">
+              Save
+          </button>
+          <Button 
+            className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-md shadow-sm hover:shadow transition-all duration-200 ml-1"
+            disabled={btnDisabled}
+            onClick={() => closeModal()}>
+              Cancel
+          </Button>
+        </div>
       </form>
     </div>
   )

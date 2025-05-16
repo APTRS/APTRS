@@ -169,6 +169,7 @@ export async function login(email: string, password:string) {
       ...profile
     }
     setAuthUser(mergedUser)
+    
     return result;
   }
 }
@@ -252,14 +253,99 @@ export async function fetchProjects() {
   const response = await getOrRedirect(url, authHeaders());
   return response.data;
 }
-export async function fetchMyProjects() {
-  const url = apiUrl('project/my-projects/');
+
+export async function MyDashbaord() {
+  const url = apiUrl('project/dashboard/data/');
   const response = await getOrRedirect(url, authHeaders());
-  return response.data as FilteredSet;
+  return response.data; // Return the dashboard data directly
 }
+
+// Correctly spelled version for future use
+export async function MyDashboard() {
+  return MyDashbaord(); // Reuse the existing function to maintain backward compatibility
+}
+
 export async function fetchFilteredProjects(params: Record<string, any>): Promise<FilteredSet> {
   const url = apiUrl('project/projects/filter/');
-  const response = await getOrRedirect(url, { params: params, ...authHeaders() });
+  
+  // Log the parameters being sent to the API
+  console.log('API Request - fetchFilteredProjects original params:', params);
+  
+  // Create a new object to avoid modifying the original params
+  const paramsToSend: Record<string, any> = {};
+  
+  // Simplified approach - format dates consistently as YYYY-MM-DD
+  Object.keys(params).forEach(key => {
+    const value = params[key];
+    
+    // Skip empty values
+    if (value === '' || value === null || value === undefined) {
+      return;
+    }
+    
+    // Handle date parameters specially
+    if (key === 'startdate' || key === 'enddate_before') {
+      try {
+        let dateStr = '';
+        
+        // Handle different input formats
+        if (typeof value === 'string') {
+          if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            // Already in YYYY-MM-DD format
+            dateStr = value;
+          } else if (value.includes('T')) {
+            // ISO format - extract date part
+            dateStr = value.split('T')[0];
+          } else {
+            // Other string formats - try to parse
+            const date = new Date(value);
+            if (!isNaN(date.getTime())) {
+              dateStr = date.toISOString().split('T')[0];
+            }
+          }
+        } else if (value instanceof Date) {
+          // Date object - convert to YYYY-MM-DD
+          dateStr = value.toISOString().split('T')[0];
+        }
+        
+        if (dateStr) {
+          paramsToSend[key] = dateStr;
+          console.log(`API: ${key} set to ${dateStr}`);
+        }
+      } catch (error) {
+        console.error(`Error formatting ${key}:`, error);
+      }
+    } else {
+      // For non-date fields, just copy as-is
+      paramsToSend[key] = value;
+    }
+  });
+  
+  // Log specific date parameters for debugging
+  if ('startdate' in paramsToSend) {
+    console.log('API sending startdate:', paramsToSend.startdate);
+  } else {
+    console.warn('startdate not in params to send');
+  }
+  
+  if ('enddate_before' in paramsToSend) {
+    console.log('API sending enddate_before:', paramsToSend.enddate_before);
+  } else {
+    console.warn('enddate_before not in params to send');
+  }
+  
+  console.log('Cleaned API params:', paramsToSend);
+  
+  // Add a query string debugging log to verify the exact URL being called
+  const queryParams = new URLSearchParams();
+  Object.entries(paramsToSend).forEach(([key, value]) => {
+    queryParams.append(key, String(value));
+  });
+  console.log('API Request URL will include:', queryParams.toString());
+  
+  // Send the request with our properly formatted parameters
+  const response = await getOrRedirect(url, { params: paramsToSend, ...authHeaders() });
+  console.log('API Response - projects filter:', response.data);
   return response.data as FilteredSet;
 }
 
@@ -298,16 +384,61 @@ export async function fetchReportStandards() {
   const response = await getOrRedirect(url, authHeaders());
   return response.data
 }
-export async function insertProjectType(name: string) {
-  const url = apiUrl('config/project-type/create/')
-  const response = await postOrRedirect(url, {name}, authHeaders())
-  return response.data
-}
+
 export async function insertReportStandard(name: string) {
   const url = apiUrl('config/standards/create/')
   const response = await postOrRedirect(url, {name}, authHeaders())
   return response.data
 }
+
+export async function getReportStandard(id: string | undefined) {
+  if(!id) return null;
+  const url = apiUrl(`config/standards/${id}/`);
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+export async function updateReportStandard(id: number , name: any): Promise<any> {
+  const url = apiUrl(`config/standards/edit/${id}/`);
+  const response = await postOrRedirect(url, name, authHeaders())
+  return response.data;
+}
+
+// Note: Backend API endpoint needs to be implemented
+export async function deleteReportStandard(id: number): Promise<any> {
+  // TODO: Implement backend API endpoint for deleting report standards
+  const url = apiUrl(`config/standards/delete/${id}/`);
+  const response = await deleteOrRedirect(url, authHeaders())
+  return response.data;
+}
+
+export async function insertProjectType(name: string) {
+  const url = apiUrl('config/project-type/create/')
+  const response = await postOrRedirect(url, {name}, authHeaders())
+  return response.data
+}
+
+export async function getProjectType(id: string | undefined) {
+  if(!id) return null;
+  const url = apiUrl(`config/project-type/${id}/`);
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+export async function updateProjectType(id: number , name: any): Promise<any> {
+  const url = apiUrl(`config/project-type/edit/${id}/`);
+  const response = await postOrRedirect(url, name, authHeaders())
+  return response.data;
+}
+
+// Note: Backend API endpoint needs to be implemented
+export async function deleteProjectType(id: number): Promise<any> {
+  // TODO: Implement backend API endpoint for deleting project types
+  const url = apiUrl(`config/project-type/delete/${id}/`);
+  const response = await deleteOrRedirect(url, authHeaders())
+  return response.data;
+}
+
 export async function getProject(id: string | undefined) {
   if(!id) return null;
   const url = apiUrl(`project/get-project/${id}/`);
@@ -322,9 +453,30 @@ export async function getProjectScopes(id: string | undefined) {
 }
 export async function markProjectAsCompleted(id: number): Promise<any> {
   const url = apiUrl(`project/status/completed/${id}/`);
-  const response = await getOrRedirect(url, authHeaders())
-  return response;
+  try {
+    const response = await getOrRedirect(url, authHeaders());
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      // If validation fails, return the validation errors
+      return { 
+        success: false, 
+        error: error.response.data.message,
+        validation_errors: error.response.data.validation_errors,
+        details: error.response.data.details
+      };
+    }
+    throw error;
+  }
 }
+
+export async function markProjectAsHold(id: number, reason_for_hold?: string): Promise<any> {
+  const url = apiUrl(`project/status/hold/${id}/`);
+  const data = { reason_for_hold };
+  const response = await postOrRedirect(url, data, authHeaders());
+  return response.data;
+}
+
 export async function markProjectAsOpen(id: number): Promise<any> {
   const url = apiUrl(`project/status/reopen/${id}/`);
   const response = await getOrRedirect(url, authHeaders())
@@ -359,9 +511,42 @@ export async function deleteProjectRetest(id: number | number[]): Promise<any> {
 }
 export async function markProjectRetestComplete(id: number): Promise<any> {
   const url = apiUrl(`project/retest/status/completed/${id}/`);
-  const response = await getOrRedirect(url, authHeaders())
-  return response.data;
+  try {
+    const response = await getOrRedirect(url, authHeaders());
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      // If validation fails, return the validation errors
+      return { 
+        success: false, 
+        error: error.response.data.message,
+        validation_errors: error.response.data.validation_errors,
+        details: error.response.data.details
+      };
+    }
+    throw error;
+  }
 }
+
+export async function markProjectRetestHold(id: number, reason_for_hold?: string): Promise<any> {
+  const url = apiUrl(`project/retest/status/hold/${id}/`);
+  const data = { reason_for_hold };
+  try {
+    const response = await postOrRedirect(url, data, authHeaders());
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      // If validation fails, return the validation errors
+      return { 
+        success: false, 
+        error: error.response.data.message,
+        validation_errors: error.response.data.validation_errors
+      };
+    }
+    throw error;
+  }
+}
+
 export async function deleteProjectScope(id: number | number[] ): Promise<any> {
   const url = apiUrl('project/scope/delete/');
   let toDelete = Array.isArray(id) ? id : [id]
@@ -398,9 +583,42 @@ export async function getProjectVulnerability(id: string | undefined) {
 
 export async function RenderProjectVulnerability(id: string | undefined) {
   if(!id) return null;
-  const url = apiUrl(`project/vulnerability/view/${id}/`);
-  const response = await getOrRedirect(url, authHeaders());
-  return response.data;
+    try {
+    // The vulnerability view endpoint returns HTML, not JSON data
+    const url = apiUrl(`project/vulnerability/view/${id}/`);
+    
+    console.log("Requesting HTML from:", url);
+    
+    // Use different options specifically for HTML content
+    const options = {
+      ...authHeaders(),
+      responseType: 'text' as const,  // This ensures axios returns the response as text
+      headers: {
+        ...authHeaders().headers,
+        'Accept': 'text/html, application/xhtml+xml, */*'  // More specific Accept header types
+      }
+    };
+
+    // Make a direct axios call instead of using getOrRedirect for HTML response
+    const response = await axios.get<string>(url, options);
+    
+    console.log("Vulnerability view API response received. Status:", response.status);
+    
+    // Return the HTML content
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error fetching vulnerability HTML template:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+    } else {
+      console.error("Failed to fetch vulnerability HTML template:", error);
+    }
+    return null; 
+  }
 }
 
 export async function fetchVulnerabilityInstances(id: string | number | undefined): Promise<VulnerabilityInstance[]>  {
@@ -724,3 +942,91 @@ export async function fetchCWE() {
   const response = await getOrRedirect(url, authHeaders());
   return response.data;
 }
+
+export async function fetchDashboardProjects() {
+  const url = apiUrl('customer/company/projects/status');
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+export async function fetchLastTenVulnerability() {
+  const url = apiUrl('customer/company/projects/last/findings');
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+
+export async function getVulnerabilityDashboardStats() {
+  const url = apiUrl('customer/company/projects/vulnerability/trends');
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+export async function getOrganizationVulnerabilityStats() {
+  const url = apiUrl('customer/company/projects/vulnerability/stats');
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+// Customer invitation functions
+export const resendInvitation = async (userId: number): Promise<any> => {
+  const url = apiUrl(`customer/token/invitation/resend/${userId}/`);
+  const response = await postOrRedirect(url, {}, authHeaders());
+  return response.data;
+};
+
+export const validateInvitationToken = async (token: string): Promise<any> => {
+  const url = apiUrl(`auth/token/validate/${token}/`);
+  const response = await getOrRedirect(url);
+  return response.data;
+};
+
+export const acceptInvitation = async (token: string, password: string): Promise<any> => {
+  const url = apiUrl(`auth/token/process/${token}/`);
+  const response = await postOrRedirect(url, { password });
+  return response.data;
+};
+
+export const requestPasswordReset = async (email: string): Promise<any> => {
+  const url = apiUrl(`auth/token/reset/request/`);
+  const response = await postOrRedirect(url, { email });
+  return response.data;
+};
+
+
+
+export const CustomerProjectDetails = async (): Promise<any> => {
+  const url = apiUrl(`customer/company/projects/details`);
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+};
+
+
+export async function getCustomerProjectVulnerability(id: string | undefined) {
+  if(!id) return null;
+  const url = apiUrl(`project/customer/vulnerability/${id}/`);
+  const response = await getOrRedirect(url, authHeaders());
+  return response.data;
+}
+
+
+interface CompletedProjectsParams {
+  limit?: number;
+  offset?: number;
+  name?: string;
+  projecttype?: string;
+  testingtype?: string;
+  startdate?: string;
+  enddate_before?: string;
+  sort?: string;
+  order_by?: 'asc' | 'desc';
+}
+
+export const completedProjects = async (params: CompletedProjectsParams = {}): Promise<any> => {
+  const url = apiUrl(`customer/company/projects/completed`);
+  const response = await getOrRedirect(url, { 
+    params,
+    ...authHeaders() 
+  });
+  return response.data;
+};

@@ -26,18 +26,60 @@ class UserFilter(filters.FilterSet):
 
 
 class ProjectFilter(filters.FilterSet):
-    startdate = filters.CharFilter(method='filter_date')
-    enddate = filters.CharFilter(method='filter_date')
+    startdate = filters.CharFilter(method='filter_startdate')
+    enddate_before = filters.CharFilter(method='filter_enddate')
     name = filters.CharFilter(field_name='name', lookup_expr='icontains')
     companyname = filters.CharFilter(field_name='companyname__name', lookup_expr='icontains')
     projecttype = filters.CharFilter(field_name='projecttype', lookup_expr='icontains')
     #owner = filters.CharFilter(field_name='owner', lookup_expr='icontains')
     owner = filters.CharFilter(field_name='owner__username', lookup_expr='icontains')
     status = filters.CharFilter(field_name='status', lookup_expr='icontains')
-
-    def filter_date(self, queryset, name, value):
-        # Convert the start date to a string and perform a case-insensitive contains match
-        return queryset.filter(**{f'{name}__contains': value.lower()})
+    
+    def filter_startdate(self, queryset, name, value):
+        # Handle ISO format date string for start date (after or equal)
+        try:
+            from datetime import datetime
+            import logging
+            
+            logger = logging.getLogger(__name__)
+            logger.info(f"Filtering with startdate: {value}")
+            
+            # Parse ISO format (Python 3.7+ compatible)
+            if 'Z' in value:
+                value = value.replace('Z', '+00:00')
+            date_obj = datetime.fromisoformat(value)
+            
+            # Filter projects that start on or after this date
+            return queryset.filter(startdate__gte=date_obj)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error filtering by startdate: {str(e)}")
+            # Fallback to contains search
+            return queryset.filter(startdate__contains=value)
+    
+    def filter_enddate(self, queryset, name, value):
+        # Handle ISO format date string for end date (before or equal)
+        try:
+            from datetime import datetime
+            import logging
+            
+            logger = logging.getLogger(__name__)
+            logger.info(f"Filtering with enddate_before: {value}")
+            
+            # Parse ISO format (Python 3.7+ compatible)
+            if 'Z' in value:
+                value = value.replace('Z', '+00:00')
+            date_obj = datetime.fromisoformat(value)
+            
+            # Filter projects that end on or before this date
+            return queryset.filter(enddate__lte=date_obj)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error filtering by enddate: {str(e)}")
+            # Fallback to contains search
+            return queryset.filter(enddate__contains=value)
 
     class Meta:
         model = Project

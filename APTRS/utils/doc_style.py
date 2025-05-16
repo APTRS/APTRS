@@ -1,4 +1,4 @@
-from docxtpl import DocxTemplate, InlineImage
+from docxtpl import DocxTemplate
 from docx.shared import Inches, Pt
 from docx import Document
 import io

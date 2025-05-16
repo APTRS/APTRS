@@ -51,20 +51,21 @@ const Layout: React.FC = () => {
   useEffect(() => {
     setCurrentUser(getAuthUser());
   }, [location.pathname]);
-
+  // Check if we're on the login or unauthorized page
+  const isLoginPage = ['/', '/401'].includes(location.pathname);
+  
   return (
     <>
       <ThemeContext.Provider value={theme}>
-        <Toaster />
-        <div className="flex h-screen flex-col md:flex-row md:overflow-hidden dark:bg-black dark:text-white">
-          {!['/', '/401'].includes(location.pathname) && (
-            <div className="w-full flex-none md:w-64 md:mt-20 dark:bg-black">
+        <Toaster />        <div className={`flex h-screen flex-col md:flex-row ${isLoginPage ? '' : 'md:overflow-hidden'} bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 dark:text-white`}>
+          {!isLoginPage && (
+            <div className="w-full flex-none md:w-64 md:mt-20">
               <SideNav theme={theme} toggleTheme={toggleTheme} />
             </div>
           )}
 
-          <div className="flex-grow p-6 md:overflow-y-auto cursor-pointer dark:bg-black">
-            {currentUser && (
+         <div className={`flex-grow ${isLoginPage ? '' : 'p-6 md:overflow-y-auto'} cursor-pointer`}>
+            {!isLoginPage && currentUser && (
               <div className="md:flex md:items-center avatar placeholder md:justify-end hidden">
                 <ThemeIcon size="md" theme={theme} toggleTheme={toggleTheme} className="mr-4" />
                 {currentUser.profilepic ? (
@@ -79,8 +80,7 @@ const Layout: React.FC = () => {
                   </div>
                 )}
               </div>
-            )}
-            <div className="mt-10 z-10 bg-white dark:bg-black mx-3">
+            )}            <div className={`${isLoginPage ? '' : 'mt-10 mx-3'} z-10`}>
               <Outlet />
             </div>
           </div>

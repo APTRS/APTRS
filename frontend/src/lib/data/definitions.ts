@@ -49,6 +49,10 @@ export interface Project  {
   companyname: string
   owner: string[]
   standard?: string[]; // Added standard field
+  hold_reason?: string
+  reason_for_hold?: string
+  delayReason?: string
+  holdReason?: string
 }
 export interface Company  {
   id?: number
@@ -72,8 +76,7 @@ export interface Customer  {
   position?: string
   company?: string 
   is_active?: boolean
-  password?: string
-  password_check?: string
+  has_usable_password?: boolean
 }
 
 export type Scope = {

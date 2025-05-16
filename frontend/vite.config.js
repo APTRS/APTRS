@@ -10,25 +10,33 @@ export default defineConfig({
       exclude: ['ckeditor5-custom-build']
     },
     sourcemap: false,
+    // Increase the warning limit to reduce unnecessary warnings
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Split node_modules into chunks
           if (id.includes('node_modules')) {
-            if (id.includes('@open-ish') || id.includes('tslib')) {
-              return '@open-ish';
-            }
+            
             
             if (id.includes('ckeditor5')) {
               return 'ckeditor5';
             }
-            if (id.includes('lodash')) {
-              return 'lodash';
-            }
+            
             if (id.includes('axios')) {
               return 'axios';
             }
-            // Add more conditions here to split other large dependencies
-            return 'vendor';
+          }
+          
+          // Split application code into logical modules
+          if (id.includes('/src/lib/data/')) {
+            return 'app-data';
+          }
+          if (id.includes('/src/components/')) {
+            return 'app-components';
+          }
+          if (id.includes('/src/pages/')) {
+            return 'app-pages';
           }
         },
       },
@@ -40,8 +48,12 @@ export default defineConfig({
     visualizer({
       filename: './dist/stats.html',
       open: false, // Automatically open the visualization in your default browser
+      gzipSize: true, // Show gzipped sizes
     }),
   ],
+  server: {
+    allowedHosts: ['aptrs.anof.home'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',

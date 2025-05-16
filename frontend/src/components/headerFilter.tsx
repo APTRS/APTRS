@@ -14,17 +14,6 @@ const PiKeyReturnThinIcon = PiKeyReturnThin as unknown as React.FC<React.SVGProp
 const FaArrowUpIcon = FaArrowUp as unknown as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaArrowDownIcon = FaArrowDown as unknown as React.FC<React.SVGProps<SVGSVGElement>>;
 
-interface HeaderFilterProps {
-  label: string;
-  name: string;
-  defaultValue: string;
-  isDate?: boolean;
-  isBoolean?: boolean;
-  onChange: (event: any) => void;
-  onCommit: (event: any) => void;
-  handleSort?: (name: string, order: string) => void;
-}
-
 export function isFiltered(queryParams: DatasetState['queryParams']): boolean {
   const { limit, offset, order_by, sort, ...rest } = queryParams;
   return Object.values(rest).some(value => value !== '');
@@ -132,13 +121,15 @@ export function HeaderFilter({label, name, defaultValue, isDate = false, isBoole
            placeholderText='Select date'
            dateFormat="yyyy-MM-dd"
            onChange={handleDatePicker}
-           selected={value ? new Date(value) : ''}
+           selected={value ? new Date(value) : null}
            onBlur={handleBlur}
            popperProps={{ strategy: "fixed" }}
            autoComplete="off"
            onKeyDown={filterKeyDown}
-           className="dark:bg-black dark:text-white"
-
+           className="p-1 border border-gray-300 rounded-md w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+           calendarClassName="bg-gray-100 border border-gray-400 shadow-lg rounded-md dark:bg-gray-800 dark:border-gray-600 table-datepicker"
+           portalId="datepicker-portal"
+           popperPlacement="bottom-start"
           />) : (
             <div className='block'>
               <label className='ml-2'>{label}</label>

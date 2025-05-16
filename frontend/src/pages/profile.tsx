@@ -251,18 +251,8 @@ export const Profile = () => {
               Email
           </label>
           <div className="relative">
-          {editing ?
-            (<input
-              name="email"
-              id="email"
-              className={StyleTextfield}
-              value={formData.email}
-              onChange={handleChange}
-              type="text"
-              required={true}
-            />
-            ) : <>{currentUser!.email}</>
-          }
+            {/* Email is read-only and cannot be edited */}
+            <>{currentUser!.email}</>
             {errors.email && <FormErrorMessage message={errors.email} />}
           </div>
         </div>
@@ -338,7 +328,7 @@ export const Profile = () => {
             <div className="w-full mt-0">
             <label 
                 htmlFor="oldpassword"
-                className='mt-0 mb-2 block text-xs font-medium text-gray-900'
+                className='mt-0 mb-2 block text-xs font-medium text-gray-900 dark:text-white'
               >
                 Current Password
               </label>
@@ -357,7 +347,7 @@ export const Profile = () => {
               <PasswordDescription password={formData.newpassword} />
               <label 
                 htmlFor="newpassword"
-                className='mt-0 mb-2 block text-xs font-medium text-gray-900'
+                className='mt-0 mb-2 block text-xs font-medium text-gray-900 dark:text-white'
               >
                 New Password
               </label>
@@ -381,7 +371,7 @@ export const Profile = () => {
             <div className="w-full mt-0">
               <label 
                 htmlFor="newpassword_check"
-                className='mt-0 mb-2 block text-xs font-medium text-gray-900'
+                className='mt-0 mb-2 block text-xs font-medium text-gray-900 dark:text-white'
               >
                 Repeat new password
               </label>
