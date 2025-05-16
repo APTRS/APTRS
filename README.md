@@ -117,9 +117,15 @@ APTRS is an open-source project that takes significant time and effort to mainta
 </p>
 
 
+
 ## Security
 
 If you discover any security vulnerabilities in this open-source project, please responsibly disclose it by referring to our [Security Policy](https://github.com/Anof-cyber/APTRS/security/policy). We appreciate and value your efforts to improve the security of this project.
+
+## GitAds Sponsored
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=aptrs/aptrs@github)](https://gitads.dev/v1/ad-track?source=aptrs/aptrs@github)
+
+
 
 ## Contributors ✨
 
