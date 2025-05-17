@@ -2,7 +2,7 @@ import logging
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from django.db.models import Q
 
@@ -11,7 +11,7 @@ from ..models import Project, ProjectRetest
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def get_dashboard_data(request):
     """
     API endpoint to get aggregated dashboard data for both projects and retests.

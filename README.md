@@ -32,7 +32,8 @@ APTRS (Automated Penetration Testing Reporting System) is a Python and Django-ba
 
 
 
-[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://aptrs.com) [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" width="220" height="45">](https://www.postman.com/aptrs-api)
+[<img src="https://i.ibb.co/qnssqbJ/doc.png" alt="APTRS Documentation" width="220" height="45">](https://aptrs.com)
+[<img src="https://fetch.usebruno.com/button.svg" alt="Fetch in Bruno" style="width: 220; height: 45;" width="220" height="45">](https://fetch.usebruno.com?url=https%3A%2F%2Fgithub.com%2FAPTRS%2FAPI-Doc "target=_blank rel=noopener noreferrer")
 
 
 
