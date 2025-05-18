@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from .models import Project, Vulnerability, Vulnerableinstance, ProjectRetest
-from utils.project_status import update_project_status
+from utils.project_status import update_project_status as update_project_status_Utils
 VULNERABLE = 'Vulnerable'
 CONFIRMED = 'Confirm Fixed'
 ACCEPTED_RISK = 'Accepted Risk'
@@ -91,17 +91,15 @@ def update_vulnerableinstance(sender, instance, created, **kwargs):
 
         vulnerability.save()
 
-@receiver(models.signals.pre_save, sender=Project)
+@receiver(models.signals.post_save, sender=Project)
 def update_project_status(sender, instance, **kwargs):
     # For new projects, just use the calculated status (based on dates)
-    if not instance.id:
-        instance.status = instance.calculate_status
+    if instance.id is None:
+        pass
     else:
         try:
-            previous_instance = sender.objects.get(id=instance.id)
-
-            update_project_status(previous_instance)
-        except sender.DoesNotExist:
+            update_project_status_Utils(instance)
+        except Exception as e:
             pass  # Ignore if the previous instance doesn't exist (during loaddata)
 
 
