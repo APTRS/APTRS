@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from customers.models import Company
 from accounts.models import CustomUser
 from utils.validators import xss_validator
-
+from utils.project_status import update_project_status
 VULNERABLE = 'Vulnerable'
 CONFIRMED = 'Confirm Fixed'
 ACCEPTED_RISK = 'Accepted Risk'
@@ -67,8 +67,6 @@ class Project(models.Model):
                 return 'In Progress'
             elif current_date > active_retest.enddate:
                 return 'Delay'
-
-
         else:
             # If no active retest, use project dates for status calculation
             if self.status == 'Completed':
@@ -85,8 +83,9 @@ class Project(models.Model):
         if self.status != 'On Hold' and self.hold_reason:
             self.hold_reason = None
 
-        if self.status != 'Completed' and self.status != 'On Hold':
-            self.status = self.calculate_status
+        # Only update status if project is not completed or on hold
+        if self.status not in ['Completed', 'On Hold']:
+            update_project_status(self)
         super(Project, self).save(*args, **kwargs)
 
     class Meta:
@@ -176,26 +175,7 @@ class ProjectRetest(models.Model):
         if self.enddate < self.startdate:
             raise ValidationError(_('End date cannot be earlier than start date'))
 
-    @property
-    def calculate_status(self):
-        """
-        Calculate what the status would be based on dates.
-        This is used for display purposes.
-        """
-        current_date = timezone.now().date()
 
-        if not self.is_active:
-            return None
-
-        if self.is_completed:
-            return 'Completed'
-
-        if current_date < self.startdate:
-            return 'Upcoming'
-        elif self.startdate <= current_date <= self.enddate:
-            return 'In Progress'
-        elif current_date > self.enddate:
-            return 'Delay'
 
     def save(self, *args, **kwargs):
         # Save the retest first
@@ -204,17 +184,4 @@ class ProjectRetest(models.Model):
         # Then update the project's status if this is an active retest
         if self.is_active and not self.is_completed:
             project = self.project
-            project.save()  # This will trigger project's save method which calls calculate_status
-        # If retest is completed and was active, update project status back to completed
-        elif self.is_completed and self.is_active:
-            project = self.project
-            # Check if there are other active retests
-            other_active_retests = ProjectRetest.objects.filter(
-                project=project,
-                is_active=True,
-                is_completed=False
-            ).exclude(pk=self.pk).exists()
-
-            if not other_active_retests:
-                project.status = 'Completed'
-                project.save(update_fields=['status'])
+            update_project_status(project)
