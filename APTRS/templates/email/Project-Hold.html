@@ -8,20 +8,20 @@
 <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f9f9f9;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 5px; overflow: hidden;">
         <div style="background-color: #1e3a8a; padding: 20px; text-align: center;">
-            <img src="{{logo_url}}" alt="APTRS Logo" style="max-width: 200px; height: auto;">
+            {{ company_name }}
         </div>
         <div style="padding: 30px;">
             <div style="background-color: #fff7ed; border-left: 4px solid #f97316; padding: 15px; margin: 20px 0;">
                 <h2 style="margin-top: 0; color: #f97316;">⚠ {% if is_retest %}Re-audit{% else %}Project{% endif %} On Hold</h2>
                 <p style="margin-bottom: 0;">Your security assessment {% if is_retest %}re-audit{% else %}project{% endif %} has been temporarily placed on hold.</p>
             </div>
-            
+
             <h1 style="color: #1e3a8a; font-size: 24px; margin-top: 0;">{% if is_retest %}Re-audit{% else %}Project{% endif %} Status Update</h1>
-            
+
             <p>Hello {{ company_name }},</p>
-            
+
             <p>This email is to inform you that your security assessment {% if is_retest %}re-audit for project{% else %}project{% endif %} <strong>"{{ project_name }}"</strong> has been placed on hold effective {{ hold_date }}.</p>
-            
+
             <div style="background-color: #f0f4f8; padding: 20px; border-radius: 4px; margin: 20px 0;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
@@ -44,18 +44,15 @@
                         <td style="padding: 8px 0; font-weight: bold; width: 40%;">Assessment Type:</td>
                         <td style="padding: 8px 0;">{{ project.projecttype }}</td>
                     </tr>
-                    <tr>
-                        <td style="padding: 8px 0; font-weight: bold; width: 40%;">Project Manager:</td>
-                        <td style="padding: 8px 0;">{{ project_manager }}</td>
-                    </tr>
+
                 </table>
             </div>
-            
+
             <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 4px; padding: 15px; margin: 20px 0;">
                 <h3 style="margin-top: 0; color: #b91c1c;">Reason for Hold:</h3>
                 <p style="margin-bottom: 0;">{{ hold_reason }}</p>
             </div>
-            
+
             <div style="background-color: #f8f9fa; border: 1px dashed #d1d5db; border-radius: 4px; padding: 15px; margin: 20px 0;">
                 <h3 style="margin-top: 0;">Estimated Timeline:</h3>
                 <p><strong>Hold Start Date:</strong> {{ hold_date }}</p>
@@ -63,24 +60,24 @@
                 <p><strong>Revised {% if is_retest %}Re-audit{% else %}Project{% endif %} End Date:</strong> {{ revised_end_date }}</p>
                 <p style="font-style: italic; color: #6b7280; font-size: 13px;">*These dates are estimates and subject to change based on the resolution of the hold reason.</p>
             </div>
-            
+
             <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
                 <h3 style="margin-top: 0; color: #1d4ed8;">Action Required:</h3>
                 <p style="margin-bottom: 0;">{{ action_needed }}</p>
             </div>
-            
+
             <p>While the {% if is_retest %}re-audit{% else %}project{% endif %} is on hold, you can still access your {% if is_retest %}re-audit{% else %}project{% endif %} dashboard to view current progress and any findings identified before the hold status was applied:</p>
-            
+
             <div style="margin: 25px 0; text-align: center;">
                 <a href="{{ project_url }}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: #ffffff !important; text-decoration: none; padding: 12px 30px; border-radius: 4px; font-weight: bold;">View {% if is_retest %}Re-audit{% else %}Project{% endif %} Details</a>
             </div>
-            
+
             <p>Our team will continue to monitor the situation and will provide updates as they become available. You will be notified immediately when the {% if is_retest %}re-audit{% else %}project{% endif %} is ready to resume.</p>
-            
-            <p>If you have any questions or would like to discuss this further, please contact your {% if is_retest %}re-audit{% else %}project{% endif %} manager {{ project_manager }} directly at {{ manager_email }} or call {{ manager_phone }}.</p>
-            
+
+            <p>If you have any questions or would like to discuss this further, please contact your {% if is_retest %}re-audit{% else %}project{% endif %} manager {{ project_manager }} directly at {{ manager_email }}.</p>
+
             <p>We appreciate your understanding and cooperation during this time.</p>
-            
+
             <p>Best regards,<br>
             The Application Penetration Test Reporting System Team</p>
         </div>

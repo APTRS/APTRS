@@ -170,7 +170,7 @@ def _get_url_data(project_id):
         base_url = f"https://{base_url}"
 
     # Use direct full URL for project
-    project_url = f"https://aptrs.com/api/project/{project_id}"
+    project_url = f"{base_url}/customer/project/{project_id}"
 
     # Logo URL
     logo_url = f"{base_url}/static/images/logo.png" if base_url != "#" else "#"
