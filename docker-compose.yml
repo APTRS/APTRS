@@ -8,7 +8,7 @@ services:
     volumes:
       - static_volume:/home/aptrs/APTRS/APTRS/static/
       - media_volume:/home/aptrs/APTRS/APTRS/media/
-      - ./nginx/logs:/var/log/nginx 
+      - ./nginx/logs:/var/log/nginx
     ports:
       - 80:80
       - 443:443
@@ -49,17 +49,16 @@ services:
     ports:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-    environment:  
+    environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     healthcheck:
       test: ["CMD", "redis-cli","ping"]
-    volumes: 
+    volumes:
       - cache:/data
-        
 
 
   aptrs:
-    image: aptrsproject/aptrs:latest
+    image: ghcr.io/aptrs/aptrs:latest
     env_file: ".env"
     environment:
       POSTGRES_HOST: postgres
@@ -91,7 +90,7 @@ services:
     depends_on:
       - postgres
       - cache
-    
+
     build:
         context: .
         dockerfile: docker/Dockerfile_API
@@ -112,7 +111,7 @@ services:
       - "postgres"
       - "cache"
 
-      
+
 networks:
   aptrs:
 
@@ -122,5 +121,5 @@ volumes:
   static_volume:
   media_volume:
   cache:
-  
-  
+
+
