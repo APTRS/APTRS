@@ -34,10 +34,10 @@ interface ProjectRetest {
 }
 import { useDebounce } from '@uidotdev/usehooks';
 import VulnerabilitiesTab from './VulnerabilitiesTab';
-import { 
-  CalendarIcon, 
-  UserGroupIcon, 
-  ClockIcon, 
+import {
+  CalendarIcon,
+  UserGroupIcon,
+  ClockIcon,
   ExclamationTriangleIcon,
   DocumentTextIcon,
   ArrowPathIcon,
@@ -84,52 +84,52 @@ const ckeditorContentStyles = `
     max-width: 100%;
     overflow-x: auto;
   }
-  
+
   .description-content p, .exceptions-content p {
     margin-bottom: 0.5rem;
   }
-  
+
   .description-content ul, .exceptions-content ul {
     list-style-type: disc;
     padding-left: 1.5rem;
     margin: 0.5rem 0;
   }
-  
+
   .description-content ol, .exceptions-content ol {
     list-style-type: decimal;
     padding-left: 1.5rem;
     margin: 0.5rem 0;
   }
-  
+
   .description-content h1, .exceptions-content h1 {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 1rem 0 0.5rem;
   }
-  
+
   .description-content h2, .exceptions-content h2 {
     font-size: 1.25rem;
     font-weight: bold;
     margin: 1rem 0 0.5rem;
   }
-  
+
   .description-content h3, .exceptions-content h3 {
     font-size: 1.1rem;
     font-weight: bold;
     margin: 0.75rem 0 0.5rem;
   }
-  
+
   .description-content img, .exceptions-content img {
     max-width: 100%;
     height: auto;
   }
-  
+
   .description-content table, .exceptions-content table {
     border-collapse: collapse;
     width: 100%;
     margin: 0.5rem 0;
   }
-  
+
   .description-content table td, .description-content table th,
   .exceptions-content table td, .exceptions-content table th {
     border: 1px solid #ddd;
@@ -141,7 +141,7 @@ export function CustomerProjectDetails(): JSX.Element {
   const { id } = useParams();
   const navigate = useNavigate();
   const theme = useContext(ThemeContext);
-  
+
   // Add the CKEditor styles to the page
   useEffect(() => {
     // Create a style element
@@ -149,12 +149,12 @@ export function CustomerProjectDetails(): JSX.Element {
     style.textContent = ckeditorContentStyles;
     // Add the style to the document head
     document.head.appendChild(style);
-    
+
     // Clean up when the component unmounts
     return () => {
       document.head.removeChild(style);
     };
-  }, []);  const [loading, setLoading] = useState(false);  
+  }, []);  const [loading, setLoading] = useState(false);
   const [project, setProject] = useState<ExtendedCustomerProjectType | null>(null);
   const [vulnerabilities, setVulnerabilities] = useState<any[]>([]);
   const [filteredVulnerabilities, setFilteredVulnerabilities] = useState<any[]>([]);
@@ -176,22 +176,22 @@ export function CustomerProjectDetails(): JSX.Element {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalRows, setTotalRows] = useState<number>(0);
-    
+
   // Load project data from API endpoint
   useEffect(() => {
     if (!id) {
       console.error('No id provided, cannot make API calls');
       return;
     }
-    
+
     setLoading(true);
     console.log('Loading project data for ID:', id);
-    
+
     // Fetch both project details and vulnerabilities
     const fetchData = async () => {
       try {
         console.log('Starting API calls for projectId:', id);
-        
+
         // Enhanced logging to track individual API calls        console.log('Making getProject API call for ID:', id);
         let projectData;
         try {
@@ -212,7 +212,7 @@ export function CustomerProjectDetails(): JSX.Element {
           console.log('Calling getCustomerProjectVulnerability API with projectId:', id);
           vulnData = await getCustomerProjectVulnerability(id);
           console.log('getCustomerProjectVulnerability API call succeeded with response:', vulnData);
-          
+
           // Check for proper data structure
           if (!vulnData || !vulnData.vulnerabilities) {
             console.warn('API response is missing vulnerabilities array:', vulnData);
@@ -228,18 +228,18 @@ export function CustomerProjectDetails(): JSX.Element {
             console.error('Authorization error - This may be due to a company ID mismatch between user and project');
             toast.error("Access denied: You may not have permission to view this project's vulnerabilities");
           }
-          
+
           // Don't throw here, instead continue with whatever data we have (projectData should still be valid)
           // This allows the page to still load with basic project info even if vulnerabilities fail
         }
-        
+
         console.log('Both API calls completed successfully');
-        
+
         if (!projectData) {
           toast.error("Failed to load project data");
           return;
         }
-        
+
         // Process the data
         processProjectData(projectData, vulnData);
       } catch (error) {
@@ -254,26 +254,26 @@ export function CustomerProjectDetails(): JSX.Element {
     };
       // Start the data fetching process
     fetchData();
-    
+
     return () => {}; // No need for cleanup as we're not using a timer anymore
   }, [id]);
-  
+
   // Process the project and vulnerability data
   const processProjectData = (projectData: any, vulnData: any) => {
     if (!projectData) {
       toast.error("Failed to load project data");
       return;
     }
-    
+
     // Create project object with real data and add defaults for missing fields
     const projectWithData: ExtendedCustomerProjectType = {
       ...projectData,      // Use default placeholders for data that might not be available in the API
       scopeItems: projectData.scopeItems || DEFAULT_SCOPE_ITEMS,
       retests: projectData.retests || DEFAULT_RETESTS,
       hasRetests: projectData.hasRetests || false    };
-    
+
     setProject(projectWithData);
-    
+
     if (vulnData && vulnData.vulnerabilities) {
       // Use real vulnerability data from API
       const formattedVulnerabilities = vulnData.vulnerabilities.map((vuln: any) => ({
@@ -292,12 +292,12 @@ export function CustomerProjectDetails(): JSX.Element {
         retestDate: vuln.retest_date || null,
         cve: vuln.cve || null
       }));
-      
+
       // Save vulnerability data
       setVulnerabilities(formattedVulnerabilities);
       setFilteredVulnerabilities(formattedVulnerabilities);
       setTotalRows(formattedVulnerabilities.length);
-      
+
       // Save severity counts from API if available, otherwise calculate them
       if (vulnData.severity_counts) {
         setSeverityCounts(vulnData.severity_counts);
@@ -313,12 +313,12 @@ export function CustomerProjectDetails(): JSX.Element {
           Low: 0,
           Informational: 0
         });
-        
+
         setSeverityCounts(counts);
       }
     } else {
       console.warn("No vulnerability data available:", vulnData);
-      
+
       // Initialize empty vulnerability data - this allows the UI to still display properly      setVulnerabilities([]);
       setFilteredVulnerabilities([]);      setTotalRows(0);
       setSeverityCounts({
@@ -330,7 +330,7 @@ export function CustomerProjectDetails(): JSX.Element {
       });
     }
   };
-  
+
   // Handle search filtering
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 300);
   useEffect(() => {
@@ -368,7 +368,7 @@ export function CustomerProjectDetails(): JSX.Element {
 
     fetchRetests();
   }, [id]);
-  // Fetch project scopes  
+  // Fetch project scopes
   useEffect(() => {
     const fetchScopes = async () => {
       if (id) {
@@ -385,7 +385,7 @@ export function CustomerProjectDetails(): JSX.Element {
       }
     };    fetchScopes();
   }, [id]);
-  
+
   // Function to change rows per page for scope pagination
   const handleScopeRowsPerPageChange = (newRowsPerPage: number) => {
     setScopeRowsPerPage(newRowsPerPage);
@@ -408,43 +408,43 @@ export function CustomerProjectDetails(): JSX.Element {
       toast.error("Project information is not available");
       return;
     }
-    
+
     const reportType = type === 'project' ? 'Audit' : 'Re-Audit';
-    const reportName = type === 'project' 
-      ? `${project?.name} Security Assessment Report` 
+    const reportName = type === 'project'
+      ? `${project?.name} Security Assessment Report`
       : `Consolidated Retest Report`;
-      
+
     try {
       // Show loading toast
       const toastId = 'report-download';
       toast.loading(`Preparing ${reportName} in ${format.toUpperCase()} format...`, {
         id: toastId,
       });
-      
+
       // Call the API to get the report file
       const response = await getProjectReport({
         projectId: parseInt(id),
         Format: format,
         Type: reportType
       });
-      
+
       if (!response) {
         toast.error('Failed to generate report', { id: toastId });
         return;
       }
-      
+
       // Get content type from response headers or use default
-      const contentType = response.headers?.['content-type'] || 
+      const contentType = response.headers?.['content-type'] ||
         (format === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      
+
       // Create a blob URL and trigger download
       const blob = new Blob([response.data], { type: contentType });
-      
+
       // Create a temporary download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      
+
       // Get filename from Content-Disposition header or generate default name
       let filename = '';
       const contentDisposition = response.headers?.['content-disposition'];
@@ -455,24 +455,24 @@ export function CustomerProjectDetails(): JSX.Element {
           filename = filenameMatch[1];
         }
       }
-      
+
       // Use default filename if not found in headers
       if (!filename) {
         const fileExtension = format === 'pdf' ? 'pdf' : 'xlsx';
         filename = `${project.name}-${reportType}-${new Date().toISOString().split('T')[0]}.${fileExtension}`;
       }
-      
+
       link.setAttribute('download', filename);
-      
+
       // Append to document, click, and clean up
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       // Update the toast to success
       toast.success(`${reportName} downloaded successfully!`, { id: toastId });
-      
+
     } catch (error: any) {
       console.error('Error downloading report:', error);
       const errorMessage = error.response?.data?.message || 'Failed to download report. Please try again later.';
@@ -483,30 +483,30 @@ export function CustomerProjectDetails(): JSX.Element {
   const getVulnerabilityStats = () => {
     // Use the severity counts from the API if available, otherwise calculate from the vulnerabilities array
     const total = vulnerabilities.length;
-    
+
     // Use API-provided severity counts when available
     const critical = severityCounts.Critical || vulnerabilities.filter(v => v.severity === 'Critical').length;
     const high = severityCounts.High || vulnerabilities.filter(v => v.severity === 'High').length;
     const medium = severityCounts.Medium || vulnerabilities.filter(v => v.severity === 'Medium').length;
     const low = severityCounts.Low || vulnerabilities.filter(v => v.severity === 'Low').length;
-    
+
     // These still need to be calculated as they're not directly provided by the API
     const fixed = vulnerabilities.filter(v => v.status === 'Fixed' || v.status === 'Verified Fixed').length;
     const open = vulnerabilities.filter(v => v.status === 'Open').length;
-    
+
     return { total, critical, high, medium, low, fixed, open };
   };
-  
+
   const renderSkeleton = () => (
     <div className="animate-pulse">
       <div className="h-12 bg-gray-200 dark:bg-gray-700 w-3/4 rounded mb-6"></div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
         <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
         <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
       </div>
-      
+
       <div className="h-8 bg-gray-200 dark:bg-gray-700 w-1/2 rounded mb-4"></div>
       <div className="space-y-3 mb-8">
         <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -515,14 +515,14 @@ export function CustomerProjectDetails(): JSX.Element {
       </div>
     </div>
   );
-  
+
   const renderTabs = () => (
     <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
       <div className="flex flex-wrap -mb-px">
         <button
           className={`inline-flex items-center p-4 border-b-2 rounded-t-lg ${
-            activeTab === 'overview' 
-              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500' 
+            activeTab === 'overview'
+              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
               : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'
           }`}
           onClick={() => setActiveTab('overview')}
@@ -532,8 +532,8 @@ export function CustomerProjectDetails(): JSX.Element {
         </button>
         <button
           className={`inline-flex items-center p-4 border-b-2 rounded-t-lg ${
-            activeTab === 'vulnerabilities' 
-              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500' 
+            activeTab === 'vulnerabilities'
+              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
               : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'
           }`}
           onClick={() => setActiveTab('vulnerabilities')}
@@ -543,8 +543,8 @@ export function CustomerProjectDetails(): JSX.Element {
         </button>
         <button
           className={`inline-flex items-center p-4 border-b-2 rounded-t-lg ${
-            activeTab === 'scope' 
-              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500' 
+            activeTab === 'scope'
+              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
               : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'
           }`}
           onClick={() => setActiveTab('scope')}
@@ -554,8 +554,8 @@ export function CustomerProjectDetails(): JSX.Element {
         </button>
         <button
           className={`inline-flex items-center p-4 border-b-2 rounded-t-lg ${
-            activeTab === 'retests' 
-              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500' 
+            activeTab === 'retests'
+              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
               : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'
           }`}
           onClick={() => setActiveTab('retests')}
@@ -565,8 +565,8 @@ export function CustomerProjectDetails(): JSX.Element {
         </button>
         <button
           className={`inline-flex items-center p-4 border-b-2 rounded-t-lg ${
-            activeTab === 'reports' 
-              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500' 
+            activeTab === 'reports'
+              ? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
               : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'
           }`}
           onClick={() => setActiveTab('reports')}
@@ -577,10 +577,10 @@ export function CustomerProjectDetails(): JSX.Element {
       </div>
     </div>
   );
-  
+
   const renderProjectHeader = () => {
     if (!project) return null;
-    
+
     return (
       <div className="mb-6">
         <div className="flex items-start justify-between">
@@ -591,20 +591,18 @@ export function CustomerProjectDetails(): JSX.Element {
             <div className="flex flex-wrap gap-2 mt-2">              <span className={`${getProjectStatusColor(project.status)} px-3 py-1 text-sm font-semibold rounded-full border-2`}>
                 {project.status}
               </span>
-              
+
               {project.testingtype && project.testingtype.trim() !== '' && (
                 <span className="bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900 dark:text-indigo-300 px-3 py-1 text-sm font-semibold rounded-full border-2">
                   {project.testingtype}
                 </span>
-              )}
-              
-              <span className="bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300 px-3 py-1 text-sm font-semibold rounded-full border-2 flex items-center">
+              )}              <span className="bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300 px-3 py-1 text-sm font-semibold rounded-full border-2 flex items-center">
                 <CalendarIcon className="w-4 h-4 mr-1" />
                 {formatDate(project.startdate)} - {formatDate(project.enddate)}
               </span>
             </div>
           </div>
-          
+
           <div className="flex gap-3">
             <Button
               onClick={() => navigate('/customer/projects')}
@@ -618,12 +616,12 @@ export function CustomerProjectDetails(): JSX.Element {
       </div>
     );
   };
-  
+
   const renderOverviewTab = () => {
     if (!project) return null;
-    
+
     const stats = getVulnerabilityStats();
-    
+
     return (
       <>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -634,29 +632,40 @@ export function CustomerProjectDetails(): JSX.Element {
               Project Summary
             </h3>            <div className="space-y-3">              <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Description</p>
-                <div 
-                  className="font-medium description-content prose dark:prose-invert prose-sm max-w-none" 
+                <div
+                  className="font-medium description-content prose dark:prose-invert prose-sm max-w-none"
                   dangerouslySetInnerHTML={createMarkup(project.description)}
                 />
-              </div>
-              
-              {project.projectexception && project.projectexception.trim() !== '' && (
+              </div>              {project.projectexception && project.projectexception.trim() !== '' && (
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Project Exceptions</p>
-                  <div 
-                    className="font-medium exceptions-content prose dark:prose-invert prose-sm max-w-none" 
+                  <div
+                    className="font-medium exceptions-content prose dark:prose-invert prose-sm max-w-none"
                     dangerouslySetInnerHTML={createMarkup(project.projectexception)}
                   />
                 </div>
               )}
-              
+
+              {/* Display reason for hold if project is on hold */}
+              {project.status === 'On Hold' && project.hold_reason && (
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Reason for Hold</p>
+                  <div className="font-medium p-2 bg-yellow-50 dark:bg-yellow-900/30 border-l-2 border-yellow-500 text-yellow-700 dark:text-yellow-400 rounded-sm mt-1">
+                    <div className="flex items-center">
+                      <ExclamationTriangleIcon className="w-4 h-4 mr-2 text-yellow-500 flex-shrink-0" />
+                      <p className="text-sm">{project.hold_reason}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Project Type</p>
                 <p className="font-medium">{project.projecttype}</p>
-              </div>              <div>
+              </div><div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Standards</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {Array.isArray(project.standard) && project.standard.length > 0 
+                  {Array.isArray(project.standard) && project.standard.length > 0
                     ? project.standard.map((std, idx) => (
                         <span key={idx} className="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 text-xs rounded">
                           {std}
@@ -668,36 +677,36 @@ export function CustomerProjectDetails(): JSX.Element {
               </div>
             </div>
           </div>
-          
+
           {/* Security Assessment Stats */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white flex items-center">
               <ShieldExclamationIcon className="w-5 h-5 mr-2" />
               Security Assessment
             </h3>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-3 bg-red-50 dark:bg-red-900/30 rounded-lg">
                 <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.critical}</p>
                 <p className="text-sm text-red-800 dark:text-red-300">Critical</p>
               </div>
-              
+
               <div className="text-center p-3 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
                 <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.high}</p>
                 <p className="text-sm text-orange-800 dark:text-orange-300">High</p>
               </div>
-              
+
               <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg">
                 <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.medium}</p>
                 <p className="text-sm text-yellow-800 dark:text-yellow-300">Medium</p>
               </div>
-              
+
               <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
                 <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.low}</p>
                 <p className="text-sm text-blue-800 dark:text-blue-300">Low</p>
               </div>            </div>
           </div>
-          
+
           {/* Team & Timeline */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white flex items-center">
               <UserGroupIcon className="w-5 h-5 mr-2" />
@@ -705,7 +714,7 @@ export function CustomerProjectDetails(): JSX.Element {
             </h3>
             <div className="space-y-3 mb-4">
               {/* Display engineers if available */}
-              {Array.isArray(project.engineers) && project.engineers.length > 0 
+              {Array.isArray(project.engineers) && project.engineers.length > 0
                 ? project.engineers.map((engineer) => (
                     <div key={`eng-${engineer.id}`} className="flex items-center space-x-2">
                       <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
@@ -721,9 +730,9 @@ export function CustomerProjectDetails(): JSX.Element {
                   ))
                 : null
               }
-              
+
               {/* Display owner array if available and engineers array is empty */}
-              {Array.isArray(project.owner) && project.owner.length > 0 && 
+              {Array.isArray(project.owner) && project.owner.length > 0 &&
                (!Array.isArray(project.engineers) || project.engineers.length === 0) ? (
                 project.owner.map((owner, idx) => (
                   <div key={`own-${idx}`} className="flex items-center space-x-2">
@@ -734,25 +743,25 @@ export function CustomerProjectDetails(): JSX.Element {
                     </div>
                     <div>
                       <p className="font-medium">{owner}</p>
-                     
+
                     </div>
                   </div>
                 ))
               ) : null}
-              
+
               {/* Show message if no team members found */}
-              {(!Array.isArray(project.engineers) || project.engineers.length === 0) && 
+              {(!Array.isArray(project.engineers) || project.engineers.length === 0) &&
                (!Array.isArray(project.owner) || project.owner.length === 0) && (
                 <div className="text-gray-500 dark:text-gray-400 text-sm">No team members assigned</div>
               )}
             </div>
-            
+
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <h4 className="font-medium mb-2 flex items-center">
                 <ClockIcon className="w-4 h-4 mr-1" />
                 Timeline
               </h4>
-              
+
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">Start Date</span>
@@ -772,7 +781,7 @@ export function CustomerProjectDetails(): JSX.Element {
             <ShieldExclamationIcon className="w-5 h-5 mr-2" />
             Recent Findings
           </h3>
-          
+
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
@@ -807,7 +816,7 @@ export function CustomerProjectDetails(): JSX.Element {
               </table>
               {vulnerabilities.length > 3 && (
                 <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 text-center">
-                  <button 
+                  <button
                     className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium flex items-center justify-center mx-auto"
                     onClick={() => setActiveTab('vulnerabilities')}
                   >
@@ -824,33 +833,33 @@ export function CustomerProjectDetails(): JSX.Element {
     const renderVulnerabilitiesTab = () => {
     // Use the new VulnerabilitiesTab component instead of implementing the functionality directly
     return <VulnerabilitiesTab project={project} vulnerabilities={vulnerabilities} />;  };
-  
+
   const renderScopeTab = () => {
     if (scopeItems.length === 0) return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8 text-center">
         <p className="text-gray-500 dark:text-gray-400">No scope information available for this project.</p>
       </div>
     );
-    
+
     // Calculate pagination
     const indexOfLastItem = scopeCurrentPage * scopeRowsPerPage;
     const indexOfFirstItem = indexOfLastItem - scopeRowsPerPage;
     const currentScopeItems = scopeItems.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(scopeTotalRows / scopeRowsPerPage);
-    
+
     // Handle page changes
     const handlePreviousPage = () => {
       if (scopeCurrentPage > 1) {
         setScopeCurrentPage(scopeCurrentPage - 1);
       }
     };
-    
+
     const handleNextPage = () => {
       if (scopeCurrentPage < totalPages) {
         setScopeCurrentPage(scopeCurrentPage + 1);
       }
     };
-    
+
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-8">
         <div className="p-4 bg-gray-50 dark:bg-gray-700">
@@ -859,7 +868,7 @@ export function CustomerProjectDetails(): JSX.Element {
             Project Scope
           </h3>
         </div>
-        
+
         <div className="p-6">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -870,7 +879,7 @@ export function CustomerProjectDetails(): JSX.Element {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {currentScopeItems.length > 0 
+                {currentScopeItems.length > 0
                   ? currentScopeItems.map((item) => (
                       <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                         <td className="px-4 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.scope}</td>
@@ -896,7 +905,7 @@ export function CustomerProjectDetails(): JSX.Element {
                     </span>{" "}
                     of <span className="font-medium">{scopeTotalRows}</span> items
                   </p>
-                  
+
                   <div className="flex items-center">
                     <label htmlFor="rows-per-page" className="mr-2 text-sm text-gray-700 dark:text-gray-300">
                       Rows:
@@ -913,15 +922,15 @@ export function CustomerProjectDetails(): JSX.Element {
                     </select>
                   </div>
                 </div>
-                
+
                 {totalPages > 1 && (
                   <div className="flex items-center space-x-2 mt-2 sm:mt-0">
                     <button
                       onClick={handlePreviousPage}
                       disabled={scopeCurrentPage === 1}
-                      className={`relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md 
-                        ${scopeCurrentPage === 1 
-                          ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed' 
+                      className={`relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md
+                        ${scopeCurrentPage === 1
+                          ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
                           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                     >
                       <ChevronLeftIcon className="h-5 w-5 mr-1" />
@@ -933,9 +942,9 @@ export function CustomerProjectDetails(): JSX.Element {
                     <button
                       onClick={handleNextPage}
                       disabled={scopeCurrentPage === totalPages}
-                      className={`relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md 
-                        ${scopeCurrentPage === totalPages 
-                          ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed' 
+                      className={`relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md
+                        ${scopeCurrentPage === totalPages
+                          ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
                           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                     >
                       Next
@@ -947,7 +956,7 @@ export function CustomerProjectDetails(): JSX.Element {
             )}
           </div>
         </div>
-        
+
         <div className="p-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             <span className="font-medium">Note:</span> The assessment was conducted only on the items specified in the scope above.
@@ -958,7 +967,7 @@ export function CustomerProjectDetails(): JSX.Element {
   };
     const renderRetestsTab = () => {
     if (!project) return null;
-    
+
     if (projectRetests.length === 0) {
       return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8 text-center">
@@ -966,7 +975,7 @@ export function CustomerProjectDetails(): JSX.Element {
         </div>
       );
     }
-    
+
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-8">
         <div className="p-4 bg-gray-50 dark:bg-gray-700">
@@ -975,12 +984,12 @@ export function CustomerProjectDetails(): JSX.Element {
             Scheduled Retests
           </h3>
         </div>
-        
+
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {projectRetests.map((retest) => {
             // Determine the status for this retest
             const status = getRetestStatus(retest);
-            
+
             return (
               <div key={retest.id} className="p-6">                <div className="flex items-start justify-between">
                   <div>
@@ -1008,9 +1017,9 @@ export function CustomerProjectDetails(): JSX.Element {
                       </div>
                     </div>
                   </div>
-  
+
                 </div>
-                
+
                 {status === 'Completed' && (
                   <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <h5 className="font-medium text-sm text-gray-900 dark:text-white mb-2">Fixed Issues</h5>
@@ -1030,25 +1039,25 @@ export function CustomerProjectDetails(): JSX.Element {
   };  const renderReportsTab = () => {
     if (!project) return null;
     const isProjectCompleted = project.status === 'Completed';
-    
+
     // Use projectRetests instead of project.retests since it contains the correct data structure
     const hasRetests = projectRetests.length > 0;
-    
+
     // Use the same logic as getRetestStatus to determine completed/incomplete retests
     const hasCompletedRetests = hasRetests && projectRetests.some(r => !r.is_active && r.is_completed);
     const hasIncompleteRetests = hasRetests && projectRetests.some(r => !((!r.is_active && r.is_completed)));
     const hasVulnerabilities = vulnerabilities.length > 0;
-    
+
     // Show retest reports only when there are retests AND all retests are completed
     // This means we have some completed retests and NO incomplete retests
     const showRetestReports = hasRetests && hasCompletedRetests && !hasIncompleteRetests;
-    
+
     console.log("hasRetests", hasRetests);
     console.log("hasCompletedRetests", hasCompletedRetests);
     console.log("hasIncompleteRetests", hasIncompleteRetests);
     console.log("projectRetests", projectRetests);
     console.log("showRetestReports", showRetestReports);
-    
+
     return (
       <div className="space-y-6">        {/* Project Reports - Show if project has at least one vulnerability */}
         {hasVulnerabilities && (
@@ -1059,16 +1068,16 @@ export function CustomerProjectDetails(): JSX.Element {
                 Project Reports
               </h3>
             </div>
-            
+
             <div className="p-6">
               <p className="mb-4 text-gray-600 dark:text-gray-400">
-                {isProjectCompleted 
+                {isProjectCompleted
                   ? "Download comprehensive security assessment reports in your preferred format."
                   : "Download draft security assessment reports in your preferred format."}
               </p>
-              
+
               <div className="flex flex-col md:flex-row gap-4">
-                <button 
+                <button
                   onClick={() => handleDownloadReport('pdf', 'project')}
                   className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
@@ -1083,8 +1092,8 @@ export function CustomerProjectDetails(): JSX.Element {
                   </div>
                   <DocumentDownloadIcon className="w-5 h-5 text-gray-500" />
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => handleDownloadReport('excel', 'project')}
                   className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
@@ -1101,7 +1110,7 @@ export function CustomerProjectDetails(): JSX.Element {
             </div>
           </div>
         )}
-        
+
         {/* Retest Reports - Show based on conditions */}
         {showRetestReports && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
@@ -1117,9 +1126,9 @@ export function CustomerProjectDetails(): JSX.Element {
                   <p className="mb-4 text-gray-600 dark:text-gray-400">
                     Download retest reports for completed security reassessments.
                   </p>
-                  
+
                   <div className="flex flex-col md:flex-row gap-4">
-                    <button 
+                    <button
                       onClick={() => handleDownloadReport('pdf', 'retest')}
                       className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
@@ -1132,8 +1141,8 @@ export function CustomerProjectDetails(): JSX.Element {
                       </div>
                       <DocumentDownloadIcon className="w-5 h-5 text-gray-500" />
                     </button>
-                    
-                    <button 
+
+                    <button
                       onClick={() => handleDownloadReport('excel', 'retest')}
                       className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
@@ -1156,9 +1165,9 @@ export function CustomerProjectDetails(): JSX.Element {
                       Retest reports will be available when the retest is completed.
                     </p>
                   </div>
-                  
+
                   <div className="flex flex-col md:flex-row gap-4 mt-4 opacity-50 pointer-events-none">
-                    <button 
+                    <button
                       className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg"
                     >
                       <div className="mr-4 p-2 bg-red-50 dark:bg-red-900/30 rounded-lg">
@@ -1170,8 +1179,8 @@ export function CustomerProjectDetails(): JSX.Element {
                       </div>
                       <DocumentDownloadIcon className="w-5 h-5 text-gray-500" />
                     </button>
-                    
-                    <button 
+
+                    <button
                       className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg"
                     >
                       <div className="mr-4 p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
@@ -1192,7 +1201,7 @@ export function CustomerProjectDetails(): JSX.Element {
       </div>
     );
   };
-  
+
   // Render different content based on active tab
   const renderTabContent = () => {
     switch(activeTab) {
@@ -1214,7 +1223,7 @@ export function CustomerProjectDetails(): JSX.Element {
     <div className="px-4 py-2 mx-auto">
       <style dangerouslySetInnerHTML={{ __html: ckeditorContentStyles }} />
       <PageTitle title="Project Details" />
-      
+
       {loading ? renderSkeleton() : (
         <>
           {renderProjectHeader()}
