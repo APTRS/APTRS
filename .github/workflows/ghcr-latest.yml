@@ -29,4 +29,4 @@ jobs:
           file: docker/Dockerfile_API
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ github.repository_owner }}/aptrs:latest
+            ghcr.io/${{ github.repository_owner | lower }}/aptrs:latest
