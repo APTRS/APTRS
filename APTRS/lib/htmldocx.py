@@ -18,6 +18,7 @@ The lib is modified to add support for more tags required for APTRS project
 """
 import re, argparse
 import io, os
+import time
 import urllib.request
 from urllib.parse import urlparse, urljoin
 from html.parser import HTMLParser
@@ -57,6 +58,9 @@ def is_url(url):
     return all([parts.scheme, parts.netloc, parts.path])
 
 ALLOWED_IMG_PATH = '/api/project/getimage/?filename='
+IMAGE_FETCH_TIMEOUT = (5, 15)  # (connect, read) seconds
+MAX_IMAGE_BYTES = 10 * 1024 * 1024  # 10 MB
+ALLOWED_IMAGE_CONTENT_TYPES = ('image/png', 'image/jpeg', 'image/gif', 'image/bmp', 'image/webp')
 
 def fetch_image(url, headers, base_url):
     """
@@ -79,11 +83,33 @@ def fetch_image(url, headers, base_url):
     headers = {
         "Authorization": f"Bearer {headers}"
     }
-    response = requests.get(full_url, headers=headers,verify=False)
-    if response.status_code == 200:
-        return io.BytesIO(response.content)
-    else:
+    try:
+        response = requests.get(full_url, headers=headers, verify=False, stream=True, timeout=IMAGE_FETCH_TIMEOUT)
+    except requests.exceptions.RequestException:
         return None
+
+    with response:
+        if response.status_code != 200:
+            return None
+
+        content_type = response.headers.get('Content-Type', '').split(';')[0].strip().lower()
+        if content_type not in ALLOWED_IMAGE_CONTENT_TYPES:
+            return None
+
+        content_length = response.headers.get('Content-Length')
+        if content_length is not None and int(content_length) > MAX_IMAGE_BYTES:
+            return None
+
+        body = io.BytesIO()
+        deadline = time.monotonic() + sum(IMAGE_FETCH_TIMEOUT)
+        for chunk in response.iter_content(chunk_size=65536):
+            if time.monotonic() > deadline:
+                return None
+            body.write(chunk)
+            if body.tell() > MAX_IMAGE_BYTES:
+                return None
+        body.seek(0)
+        return body
 
 def remove_last_occurence(ls, x):
     ls.pop(len(ls) - ls[::-1].index(x) - 1)
