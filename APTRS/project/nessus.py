@@ -3,6 +3,8 @@ import logging
 import json
 import io
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from utils.validators import xss_validator
 from .models import Vulnerability, Project
 from .serializers import VulnerableinstanceSerializerNessus
 
@@ -53,6 +55,13 @@ def save_vulnerability(data, pk):
             vulnerabilitydescription=vulnerability_data['vulnerabilitydescription'],
             vulnerabilitysolution=vulnerability_data['vulnerabilitysolution']
         )
+
+        try:
+            xss_validator(vulnerability.vulnerabilitydescription)
+            xss_validator(vulnerability.vulnerabilitysolution)
+        except ValidationError as e:
+            logger.error("Skipping vulnerability %s for project %s, failed validation: %s", vulnerability_name, pk, e)
+            continue
 
         vulnerability.save()
 

@@ -19,7 +19,7 @@ The lib is modified to add support for more tags required for APTRS project
 import re, argparse
 import io, os
 import urllib.request
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 from html.parser import HTMLParser
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -56,6 +56,8 @@ def is_url(url):
     print(all([parts.scheme, parts.netloc, parts.path]))
     return all([parts.scheme, parts.netloc, parts.path])
 
+ALLOWED_IMG_PATH = '/api/project/getimage/?filename='
+
 def fetch_image(url, headers, base_url):
     """
     Attempts to fetch an image from a url.
@@ -63,8 +65,17 @@ def fetch_image(url, headers, base_url):
 
     :return:
     """
+    # Only ever fetch our own whitelisted image endpoint. Rejects absolute
+    # URLs, protocol-relative "//host/x" and userinfo-authority tricks like
+    # "@evil.com/x" that could otherwise hijack the host after urljoin.
+    if not url.startswith(ALLOWED_IMG_PATH):
+        return None
+
+    full_url = urljoin(base_url, url)
+    if urlparse(full_url).netloc != urlparse(base_url).netloc:
+        return None
+
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    full_url = base_url + url
     headers = {
         "Authorization": f"Bearer {headers}"
     }
